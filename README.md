@@ -20,7 +20,7 @@ Tamamen açık kaynak olarak dağıttığımız sistemi rahatlıkla kullanabilir
 Paketi indirdikten sonra seed'ler ile birlikte migrate etmeniz yeterlidir. Super Admin, Admin ve User yetkileri ve kullanıcıları otomatik tanımlanır.
 
 ### Kullanıcı Bilgileri
-Süper Admin Bilgileri
+'Süper Admin Bilgileri'
 Kullanıcı Adı: super@super.com
 Şifre: password
 
