@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
 
 class PermissionTableSeeder extends Seeder

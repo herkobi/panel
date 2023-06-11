@@ -24,13 +24,14 @@ class UserCreateController extends Controller
 
         $type = 1;
         $terms = 1;
-        $is_super = $request['is_super'];
+        //$is_super = $request['is_super'];
+        $is_super = 0;
         $email_verified_time = Carbon::now()->toDateTimeString();
         $rand = Str::random(36);
 
         if($request->validated())
         {
-            User::create([
+            $user = User::create([
                 'type' => $type,
                 'is_super' => $is_super,
                 'name' => $request['name'],
@@ -40,10 +41,15 @@ class UserCreateController extends Controller
                 'terms' => $terms
             ]);
 
+            foreach($request->role as $role)
+            {
+                $user->assignRole([$role]);
+            }
+
             notyf()->addSuccess('Yeni yönetici başarılı bir şekilde oluşturuldu');
-            return Redirect::route('panel.create.user');
+            return Redirect::route('panel.admins');
         }
 
-        return Redirect::back();
+        return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
     }
 }

@@ -13,37 +13,62 @@
                 <div class="card-body">
                     <form method="POST" action="{{route('panel.store.admin')}}" autocomplete="off">
                         @csrf
-                        <div class="mb-2">
-                            <div class="input-group">
-                                <span class="input-group-text rounded-0 shadow-none bg-white">
-                                    <i class="ri-user-line"></i>
-                                </span>
-                                <input type="text" id="name" placeholder="Ad Soyad" class="form-control border-start-0 rounded-0 shadow-none @error('name') is-invalid @enderror" name="name" required autocomplete="off" autofocus>
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-name">Kullanıcı Ad Soyad</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <span class="input-group-text rounded-0 shadow-none bg-white">
+                                            <i class="ri-user-line"></i>
+                                        </span>
+                                        <input type="text" id="user-name" placeholder="Ad Soyad" class="form-control border-start-0 rounded-0 shadow-none @error('name') is-invalid @enderror" name="name" required autocomplete="off" autofocus>
+                                        @error('name')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-2">
-                            <div class="input-group">
-                                <span class="input-group-text rounded-0 shadow-none bg-white">
-                                    <i class="ri-mail-check-line"></i>
-                                </span>
-                                <input type="email" id="emailaddress" placeholder="E-posta Adresiniz" class="form-control border-start-0 rounded-0 shadow-none @error('email') is-invalid @enderror" name="email" required autocomplete="off">
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-email">E-posta Adresi</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <span class="input-group-text rounded-0 shadow-none bg-white">
+                                            <i class="ri-mail-check-line"></i>
+                                        </span>
+                                        <input type="email" id="user-email" placeholder="E-posta Adresiniz" class="form-control border-start-0 rounded-0 shadow-none @error('email') is-invalid @enderror" name="email" required autocomplete="off">
+                                        @error('email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-2">
-                            <button type="submit" class="btn btn-lg btn-primary w-100 rounded-0 shadow-none text-white">
-                                <i class="ri-check-double-line"></i>
-                                <span>Üyeyi Kaydet</span>
-                            </button>
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-roles">Kullanıcı Rolleri</label>
+                                <div id="user-roles" class="col-md-8">
+                                    @foreach ($roles as $role)
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input rounded-0 shadow-none" type="checkbox" name="role[]" id="user-role" value="{{ $role->id }}">
+                                        <label class="form-check-label" for="user-role">{{ $role->name }}</label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="offset-md-4 col-md-8">
+                                <button type="submit" class="btn btn-lg btn-primary w-100 rounded-0 shadow-none text-white">
+                                    <i class="ri-check-double-line"></i>
+                                    <span>Üyeyi Kaydet</span>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>

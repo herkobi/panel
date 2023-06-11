@@ -184,7 +184,9 @@ class RoleController extends Controller
     {
         if ( auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin' || auth()->user->is_super == '1' )
         {
-            DB::table("role")->where('id',$role->id)->delete();
+            DB::table("roles")->where('id',$role->id)->delete();
+
+            notyf()->addSuccess('Yetki başarılı bir şekilde silindi');
             return Redirect::route('panel.roles');
         }
     }

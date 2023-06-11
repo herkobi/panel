@@ -15,20 +15,24 @@
                         <table class="table table-striped bg-white">
                             <thead>
                                 <tr>
-                                    <th scope="col" class="w-10">Tür</th>
-                                    <th scope="col" class="w-20">Ad Soyad</th>
+                                    <th scope="col" class="w-30">Ad Soyad</th>
                                     <th scope="col" class="w-30">E-posta Adresi</th>
-                                    <th scope="col" class="w-20">İzinler</th>
+                                    <th scope="col" class="w-20">Yetkiler</th>
                                     <th scope="col" class="w-20 text-center">İşlemler</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
                                 <tr>
-                                    <td>{{ $user->is_super == '1' ? 'Süper Yönetici' : 'Yönetici' }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td></td>
+                                    <td>
+                                        <ul class="list-unstyled list-inline">
+                                        @foreach ($user->getRoleNames() as $role)
+                                        <li>{{$role}}</li>
+                                        @endforeach
+                                        </ul>
+                                    </td>
                                     <td></td>
                                 </tr>
                                 @endforeach

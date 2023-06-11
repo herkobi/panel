@@ -77,10 +77,18 @@
                         <div class="mb-3">
                             <div class="row">
                                 <div class="offset-md-2 col-md-10">
-                                    <button type="submit" class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i class="ri-add-line"></i> Kaydet</button>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <button type="submit" class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i class="ri-add-line"></i> Kaydet</button>
+                                        @hasrole('Super Admin')
+                                        <button type="button" class="btn add-btn btn-danger btn-sm rounded-0 shadow-none" onclick="event.preventDefault(); document.getElementById('destroy-form').submit();"><i class="ri-delete-bin-2-line"></i> {{ __('Grubu Sil') }}</button>
+                                        @endhasrole
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </form>
+                    <form action="{{ route('panel.role.destroy', $role->id) }}" method="POST" id="destroy-form">
+                        @csrf
                     </form>
                 </div>
             </div>

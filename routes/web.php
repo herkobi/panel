@@ -54,6 +54,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::post('/role/store/{role}', 'store')->name('role.store');
         Route::get('/role/{role}', 'edit')->name('role.edit');
         Route::post('/role/edit/{role}', 'update')->name('role.update');
+        Route::post('/role/destroy/{role}', 'destroy')->name('role.destroy');
     });
 
     Route::controller(PermissionController::class)->group(function(){
