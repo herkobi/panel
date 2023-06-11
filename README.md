@@ -1,3 +1,4 @@
+
 # Herkobi Panel
 Laravel ile yeni bir projeye başlayacak kişiler için Laravel Fortify üzerine geliştirdiğimiz arayüze (https://github.com/bulentsakarya/laravel-10-fortify-ui), Spatie Permission eklentisini de ekleyerek hazır bir panel oluşturduk.
 
@@ -6,6 +7,7 @@ Bu panel sayesinde kullanıcı yönetimi, yetki ve izin yönetimi gibi işlemler
 Tamamen açık kaynak olarak dağıttığımız sistemi rahatlıkla kullanabilirsiniz.
 
 ## Kullanılan Paketler
+
 - [Laravel Fortify UI](https://github.com/bulentsakarya/laravel-10-fortify-ui)
 - [Laravel Fortify](https://laravel.com/docs/10.x/fortify)
 - [Spatie Permission](https://github.com/spatie/laravel-permission)
@@ -32,5 +34,10 @@ Kullanıcı Adı: admin@admin.com
 Kullanıcı Adı: user@user.com
 Şifre: password
 
+### Ekran Görüntüleri
+![Üye Girişi](https://drive.google.com/file/d/1SGoAeEHokllurQ_r1bidSF0iemgyqr5S/view?usp=drive_link)
+
+![Şifremi Unuttum](https://drive.google.com/file/d/1xzlq9uDWv0nEDaEM-KYw-DxEioKnLdhk/view?usp=drive_link)
+
 ## Lisans
-Herkobi Panel, MIT (https://opensource.org/license/mit/) lisansı ile lisanslanan açık kaynak bir yazılımdır. 
+Herkobi Panel, MIT (https://opensource.org/license/mit/) lisansı ile lisanslanan açık kaynak bir yazılımdır.
