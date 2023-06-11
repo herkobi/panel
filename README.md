@@ -14,3 +14,6 @@ Tamamen açık kaynak olarak dağıttığımız sistemi rahatlıkla kullanabilir
 - Laravel 10 Türkçe Dil Dosyaları (https://github.com/laravel-tr/Laravel10-lang)
 - Php Flasher Notfy (https://github.com/php-flasher/flasher-notyf-laravel)
 - Spatie Permission (https://github.com/spatie/laravel-permission)
+
+## Lisans
+Herkobi Panel, MIT (https://opensource.org/license/mit/) lisansı ile lisanslanan açık kaynak bir yazılımdır. 
