@@ -24,6 +24,8 @@
                                 <label class="form-label col-md-2 fw-semibold mb-0" for="permission-group-type">Kullanıcı Türü</label>
                                 <div class="col-md-10">
                                     <div class="row">
+
+                                        {{ dd($role->type) }}
                                         @foreach (\App\Enums\UserType::cases() as $type)
                                         <div class="col-md-3 mb-2">
                                             <div class="form-check">

@@ -14,63 +14,123 @@ class PermissionTableSeeder extends Seeder
     {
         $permissions = [
             [
-                'role-list',
-                1,
-                'Listeleme'
-            ],
-            [
-                'role-create',
-                1,
-                'Ekleme'
-            ],
-            [
-                'role-edit',
-                1,
-                'Güncelleme'
-            ],
-            [
-                'role-delete',
-                1,
-                'Silme'
-            ],
-            [
                 'admin-list',
-                2,
+                1,
                 'Listeleme'
             ],
             [
                 'admin-create',
-                2,
+                1,
                 'Ekleme'
             ],
             [
                 'admin-edit',
-                2,
+                1,
                 'Güncelleme'
             ],
             [
                 'admin-delete',
+                1,
+                'Silme'
+            ],
+            [
+                'role-list',
+                2,
+                'Listeleme'
+            ],
+            [
+                'role-create',
+                2,
+                'Ekleme'
+            ],
+            [
+                'role-edit',
+                2,
+                'Güncelleme'
+            ],
+            [
+                'role-delete',
                 2,
                 'Silme'
             ],
             [
-                'user-list',
+                'permission-list',
                 3,
                 'Listeleme'
             ],
             [
-                'user-create',
+                'permission-create',
                 3,
                 'Ekleme'
             ],
             [
-                'user-edit',
+                'permission-edit',
                 3,
                 'Güncelleme'
             ],
             [
-                'user-delete',
+                'permission-delete',
                 3,
+                'Silme'
+            ],
+            [
+                'permissiongroup-list',
+                4,
+                'Listeleme'
+            ],
+            [
+                'permissiongroup-create',
+                4,
+                'Ekleme'
+            ],
+            [
+                'permissiongroup-edit',
+                4,
+                'Güncelleme'
+            ],
+            [
+                'permissiongroup-delete',
+                4,
+                'Silme'
+            ],
+            [
+                'user-list',
+                5,
+                'Listeleme'
+            ],
+            [
+                'user-create',
+                5,
+                'Ekleme'
+            ],
+            [
+                'user-edit',
+                5,
+                'Güncelleme'
+            ],
+            [
+                'user-delete',
+                5,
+                'Silme'
+            ],
+            [
+                'setting-list',
+                6,
+                'Listeleme'
+            ],
+            [
+                'setting-create',
+                6,
+                'Ekleme'
+            ],
+            [
+                'setting-edit',
+                6,
+                'Güncelleme'
+            ],
+            [
+                'setting-delete',
+                6,
                 'Silme'
             ]
          ];

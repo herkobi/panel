@@ -27,7 +27,7 @@
                                         @foreach (\App\Enums\UserType::cases() as $type)
                                         <div class="col-md-6 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input rounded-0 shadow-none" type="radio" id="permission-group-type-user" {{ $permissiongroup->type == $type->value ? 'checked' : 0 }} disabled>
+                                                <input class="form-check-input rounded-0 shadow-none" type="radio" id="permission-group-type-user" {{ $permissiongroup->type->value == $type->value ? 'checked' : 0 }} disabled>
                                                 <label class="form-check-label rounded-0 shadow-none" for="permission-group-type-user">{{ \App\Enums\UserType::getTitle($type->value) }}</label>
                                             </div>
                                         </div>

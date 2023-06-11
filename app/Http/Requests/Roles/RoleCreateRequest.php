@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Roles;
 
+use App\Enums\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class RoleCreateRequest extends FormRequest
 {
@@ -26,7 +28,7 @@ class RoleCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', Rule::unique('roles', 'name')],
-            'type' => 'required',
+            'type' => ['required', new Enum(UserType::class) ],
             'desc' => 'string',
         ];
     }
