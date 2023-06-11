@@ -35,9 +35,23 @@ Kullanıcı Adı: user@user.com
 Şifre: password
 
 ### Ekran Görüntüleri
-![Üye Girişi](https://drive.google.com/file/d/1SGoAeEHokllurQ_r1bidSF0iemgyqr5S/view?usp=drive_link)
+![Üye Girişi](https://i.hizliresim.com/ga12pxb.png)
 
-![Şifremi Unuttum](https://drive.google.com/file/d/1xzlq9uDWv0nEDaEM-KYw-DxEioKnLdhk/view?usp=drive_link)
+![Şifremi Unuttum](https://i.hizliresim.com/j6v5pxd.png)
+
+![Üye Ol](https://i.hizliresim.com/bdtryfb.png)
+
+![Panel Ana Sayfa](https://i.hizliresim.com/t1r5i16.png)
+
+![Kullanıcılar](https://i.hizliresim.com/le41kim.png)
+
+![Yöneticiler](https://i.hizliresim.com/cs12gl8.png)
+
+![Yetkiler](https://i.hizliresim.com/p4fe4rv.png)
+
+![İzinler](https://i.hizliresim.com/br9dldp.png)
+
+![İzin Grupları](https://i.hizliresim.com/kf9gv55.png)
 
 ## Lisans
 Herkobi Panel, MIT (https://opensource.org/license/mit/) lisansı ile lisanslanan açık kaynak bir yazılımdır.
