@@ -1,13 +1,16 @@
-# Laravel 10 Başlangıç Kiti
-Laravel 10 ile yeni bir projeye başlayacaksınız ve jquery ile bootstrap kullanmak istiyorsanız bu hazır kit ile hızlı bir şekilde projenize başlayabilirsiniz.
+# Herkobi Panel
+Laravel ile yeni bir projeye başlayacak kişiler için Laravel Fortify üzerine geliştirdiğimiz arayüze (https://github.com/bulentsakarya/laravel-10-fortify-ui), Spatie Permission eklentisini de ekleyerek hazır bir panel oluşturduk.
 
-Laravel 10 başlangıç kiti ile jquery, Bootstrap 5.23, iziToast, simplebar, Remixicon ve Türkçe dil dosyası yüklü şekilde gelmektedir. Ayrıca https://getbootstrap.com/docs/5.3/examples/dashboard/ adresindeki temada örnek olarak eklenmiştir.
+Bu panel sayesinde kullanıcı yönetimi, yetki ve izin yönetimi gibi işlemleriniz hazır halde gelmektedir. Paneli indirdikten sonra sadece kendi sisteminizi yazmaya odaklanmanız yeterli.
+
+Tamamen açık kaynak olarak dağıttığımız sistemi rahatlıkla kullanabilirsiniz.
 
 ## Kullanılan Paketler
 
-- jQuery (https://jquery.com/)
-- Bootstrap 5.2.3 (https://github.com/twbs)
-- iziToast (https://github.com/AppsLab-KE/lara-izitoast)
+- jQuery 3.7.0 (https://jquery.com/)
+- Bootstrap 5.3 (https://github.com/twbs)
 - Simplebar (https://github.com/Grsmto/simplebar)
 - Remixicon (https://github.com/Remix-Design/RemixIcon)
 - Laravel 10 Türkçe Dil Dosyaları (https://github.com/laravel-tr/Laravel10-lang)
+- Php Flasher Notfy (https://github.com/php-flasher/flasher-notyf-laravel)
+- Spatie Permission (https://github.com/spatie/laravel-permission)

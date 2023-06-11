@@ -7,7 +7,6 @@ use App\Http\Requests\PermissionGroups\PermissionGroupCreateRequest;
 use App\Http\Requests\PermissionGroups\PermissionGroupUpdateRequest;
 use App\Models\Permissiongroup;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -21,10 +20,10 @@ class PermissiongroupController extends Controller
      */
     function __construct()
     {
-        //  $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
-        //  $this->middleware('permission:role-create', ['only' => ['create','store']]);
-        //  $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-        //  $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:permissiongroup-list|permissiongroup-create|permissiongroup-edit|permissiongroup-delete', ['only' => ['index','store']]);
+         $this->middleware('permission:permissiongroup-create', ['only' => ['create','store']]);
+         $this->middleware('permission:permissiongroup-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:permissiongroup-delete', ['only' => ['destroy']]);
     }
 
     public function index(): View
@@ -75,7 +74,7 @@ class PermissiongroupController extends Controller
     public function destroy(Permissiongroup $permissiongroup): RedirectResponse
     {
 
-        if(Auth::user()->roles->first()->name === 'Super Admin')
+        if ( auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin' || auth()->user->is_super === '1' )
         {
             if(count($permissiongroup->permission) > 0)
             {
@@ -88,6 +87,5 @@ class PermissiongroupController extends Controller
                 return Redirect::route('panel.permission.groups');
             }
         }
-
     }
 }

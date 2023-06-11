@@ -27,26 +27,34 @@
     @endhasrole
     @hasrole(['Super Admin', 'Admin'])
     <li class="menu-header">Ayarlar</li>
+    @can('settings-list')
     <li class="menu-item {{ request()->routeIs('panel.settings') ? 'active' : '' }}">
         <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.settings') }}" title="Genel Ayarlar">
             <i class="ri-settings-line"></i> <span class="align-middle">Genel Ayarlar</span>
         </a>
     </li>
+    @endcan
+    @can('role-list')
     <li class="menu-item {{ request()->routeIs('panel.roles') ? 'active' : '' }}">
         <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.roles') }}" title="Yetkiler">
             <i class="ri-secure-payment-line"></i> <span class="align-middle">Yetkiler</span>
         </a>
     </li>
+    @endcan
+    @can('permission-list')
     <li class="menu-item {{ request()->routeIs('panel.permissions') ? 'active' : '' }}">
         <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.permissions') }}" title="İzinler">
             <i class="ri-fingerprint-line"></i> <span class="align-middle">İzinler</span>
         </a>
     </li>
+    @endcan
+    @can('permissiongroup-list')
     <li class="menu-item {{ request()->routeIs('panel.permission.groups') ? 'active' : '' }}">
         <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.permission.groups') }}" title="İzin Grupları">
             <i class="ri-file-shield-2-line"></i> <span class="align-middle">İzin Grupları</span>
         </a>
     </li>
+    @endcan
     @endhasrole
     @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
     <li class="menu-item {{ request()->routeIs('panel.twofactor') ? 'active' : '' }}">
