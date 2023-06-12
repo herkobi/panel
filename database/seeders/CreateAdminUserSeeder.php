@@ -17,6 +17,7 @@ class CreateAdminUserSeeder extends Seeder
     {
         $user = User::create([
             'type' => 1,
+            'status' => UserStatus::ACTIVE,
             'is_super' => 0,
             'name' => 'bülent',
             'email' => 'admin@admin.com',
@@ -27,7 +28,7 @@ class CreateAdminUserSeeder extends Seeder
             'terms' => 1
         ]);
 
-        $role = Role::create(['status' => UserStatus::ACTIVE, 'name' => 'Admin', 'type' => UserType::ADMIN, 'desc' => 'Yönetici rolü', 'guard_name' => 'web']);
+        $role = Role::create(['name' => 'Admin', 'type' => UserType::ADMIN, 'desc' => 'Yönetici rolü', 'guard_name' => 'web']);
         $permissions = ['1', '2', '3', '4', '9', '10', '11', '12'];
         $role->syncPermissions($permissions);
         $user->assignRole([$role->id]);

@@ -4,6 +4,14 @@
 <div class="page-content position-relative mb-4">
     <div class="row">
         <div class="col-md-8">
+            <ul class="nav nav-underline">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Kullanıcı İşlemleri</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Yetkiler ve İzinler</a>
+                </li>
+            </ul>
         </div>
         <div class="col-md-4">
             <div class="card rounded-0 shadow-sm border-0 mb-3">
@@ -16,7 +24,7 @@
                     <div class="mb-3 border-bottom pb-3">
                         <div class="row">
                             <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">Durum</label>
-                            <div class="col-md-7">{{$user->status}}</div>
+                            <div class="col-md-7">{{$user->status->title()}}</div>
                         </div>
                     </div>
                     <div class="mb-3 border-bottom pb-3">

@@ -6,7 +6,7 @@
         <div class="col-md-5">
             <div class="card rounded-0 shadow-sm border-0 mb-3">
                 <div class="card-header border-0 bg-white pt-3 pb-3">
-                    <h4 class="card-title mb-0">Grup Ekle</h4>
+                    <h4 class="card-title mb-0">Grup Bilgilerini Düzenle</h4>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('panel.permission.group.update', $permissiongroup->id) }}" method="post">

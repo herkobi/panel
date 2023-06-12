@@ -18,6 +18,7 @@ class CreateSuperAdminUserSeeder extends Seeder
     {
         $user = User::create([
             'type' => 1,
+            'status' => UserStatus::ACTIVE, 
             'is_super' => 1,
             'name' => 'bülent',
             'email' => 'super@super.com',
@@ -28,7 +29,7 @@ class CreateSuperAdminUserSeeder extends Seeder
             'terms' => 1
         ]);
 
-        $role = Role::create(['status' => UserStatus::ACTIVE, 'name' => 'Super Admin', 'type' => UserType::ADMIN, 'desc' => 'Süper yönetici rolü', 'guard_name' => 'web']);
+        $role = Role::create(['name' => 'Super Admin', 'type' => UserType::ADMIN, 'desc' => 'Süper yönetici rolü', 'guard_name' => 'web']);
 
         $user->assignRole([$role->id]);
     }

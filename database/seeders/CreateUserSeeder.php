@@ -17,6 +17,7 @@ class CreateUserSeeder extends Seeder
     {
         $user = User::create([
             'type' => 2,
+            'status' => UserStatus::ACTIVE,
             'is_super' => 0,
             'name' => 'bülent',
             'email' => 'user@user.com',
@@ -27,7 +28,7 @@ class CreateUserSeeder extends Seeder
             'terms' => 1
         ]);
 
-        $role = Role::create(['status' => UserStatus::ACTIVE, 'name' => 'User', 'type' => UserType::USER, 'desc' => 'Kullanıcı rolü', 'guard_name' => 'web']);
+        $role = Role::create(['name' => 'User', 'type' => UserType::USER, 'desc' => 'Kullanıcı rolü', 'guard_name' => 'web']);
         $user->assignRole([$role->id]);
     }
 }
