@@ -15,13 +15,19 @@
                 <div class="card-body">
                     <div class="mb-3 border-bottom pb-3">
                         <div class="row">
+                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">Durum</label>
+                            <div class="col-md-7">{{$user->status}}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3 border-bottom pb-3">
+                        <div class="row">
                             <label class="form-label col-md-5 fw-semibold mb-0" for="user-name">Ad Soyad</label>
                             <div class="col-md-7">{{$user->name}}</div>
                         </div>
                     </div>
                     <div class="mb-3 border-bottom pb-3">
                         <div class="row">
-                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-name">E-posta Adresi</label>
+                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-email">E-posta Adresi</label>
                             <div class="col-md-7">{{$user->email}}</div>
                         </div>
                     </div>
@@ -60,21 +66,24 @@
                     </div>
                     <div class="mb-3 border-bottom pb-3">
                         <div class="row">
-                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-membership">Son Oturum Tarihi</label>
+                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-lastloginat">Son Oturum Tarihi</label>
                             <div class="col-md-7">{{$user->last_login_at}}</div>
                         </div>
                     </div>
                     <div class="mb-3 border-bottom pb-3">
                         <div class="row">
-                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-membership">Son Oturum IP</label>
+                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-lastloginip">Son Oturum IP</label>
                             <div class="col-md-7">{{$user->last_login_ip}}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3 border-bottom pb-3">
+                        <div class="row">
+                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-createdbyname">Kayıt Eden</label>
+                            <div class="col-md-7">{{$user->created_by_name}}</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-7">
-
         </div>
     </div>
 </div>

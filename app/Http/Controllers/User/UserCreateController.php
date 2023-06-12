@@ -39,6 +39,8 @@ class UserCreateController extends Controller
                 'email' => $request['email'],
                 'email_verified_at' => $email_verified_time,
                 'password' => Hash::make($rand),
+                'created_by' => auth()->user()->id,
+                'created_by_name' => auth()->user()->name,
                 'terms' => $terms
             ]);
 
