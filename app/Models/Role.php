@@ -20,4 +20,5 @@ class Role extends Model
     protected $casts = [
         'type' => UserType::class
     ];
+
 }

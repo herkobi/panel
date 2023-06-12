@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UserPermissionCreateRequest;
 use App\Models\User;
 use App\Http\Requests\Users\UserCreateRequest;
 use Carbon\Carbon;
@@ -51,5 +52,29 @@ class UserCreateController extends Controller
         }
 
         return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
+    }
+
+
+    /**
+     * Validate and create a newly registered user.
+     *
+     * @param  array<string, string>  $input
+     */
+    public function permissions(UserPermissionCreateRequest $request, User $user): RedirectResponse
+    {
+        if($request->validated())
+        {
+            foreach($request->permission as $permission)
+            {
+                $user->givePermissionTo([$permission]);
+            }
+
+            notyf()->addSuccess('Özel izinler başarılı bir şekilde oluşturuldu');
+            return Redirect::route('panel.admins');
+
+        }
+
+        return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
+
     }
 }

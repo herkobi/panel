@@ -35,10 +35,12 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/users', 'index')->name('users');
         Route::get('/admins', 'admins')->name('admins');
         Route::get('/admin/create', 'createAdmin')->name('create.admin');
+        Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
     });
 
     Route::controller(UserCreateController::class)->group(function(){
         Route::post('admin/create/store', 'admin')->name('store.admin');
+        Route::post('admin/create/permissions/{user}', 'permissions')->name('store.admin.permissions');
     });
 
     Route::controller(SettingController::class)->group(function(){

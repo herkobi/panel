@@ -27,13 +27,30 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
-                                        <ul class="list-unstyled list-inline">
+                                        <ul class="list-unstyled list-inline mb-2 border-bottom">
                                         @foreach ($user->getRoleNames() as $role)
                                         <li>{{$role}}</li>
                                         @endforeach
                                         </ul>
+                                        <ul class="list-unstyled list-inline">
+                                            @foreach ($user->getAllPermissions() as $permission)
+                                            <li>{{$permission->text}}</li>
+                                            @endforeach
+                                        </ul>
                                     </td>
-                                    <td></td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <a class="btn btn-text dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ri-menu-3-fill"></i>
+                                            </a>
+
+                                            <ul class="dropdown-menu">
+                                              <li><a class="dropdown-item" href="#">Bilgiler</a></li>
+                                              <li><a class="dropdown-item" href="#">Düzenle</a></li>
+                                              <li><a class="dropdown-item" href="{{ route('panel.admin.permissions', $user->id) }}">Özel Yetkiler</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

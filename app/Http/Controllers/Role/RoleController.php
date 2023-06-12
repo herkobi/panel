@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Role;
 
-use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Roles\RoleCreateRequest;
 use App\Http\Requests\Roles\RolePermissionCreateRequest;
@@ -14,7 +13,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\Permission;
 use App\Models\Permissiongroup;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -39,8 +37,7 @@ class RoleController extends Controller
      */
     public function index(Request $request): View
     {
-        $super_id = Role::where('name', 'Super Admin')->first()->id;
-        $roles = Role::all()->except($super_id);
+        $roles = Role::all()->except(Role::where('name', 'Super Admin')->first()->id);
         $baseRoutes = array();
 
         foreach($roles as $key => $role){

@@ -3,7 +3,7 @@
 @include('layouts.partials.page-title', ['title' => 'Yeni Kullanıcı Oluştur'])
 <div class="page-content position-relative mb-4">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card rounded-0 shadow-sm border-0 mb-3">
                 <div class="card-header border-0 bg-white pt-3 pb-0">
                     <div class="d-flex align-items-center justify-content-between w-100 mb-2">
@@ -15,8 +15,8 @@
                         @csrf
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
-                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-name">Kullanıcı Ad Soyad</label>
-                                <div class="col-md-8">
+                                <label class="form-label col-md-2 fw-semibold mb-0" for="user-name">Ad Soyad</label>
+                                <div class="col-md-10">
                                     <div class="input-group">
                                         <span class="input-group-text rounded-0 shadow-none bg-white">
                                             <i class="ri-user-line"></i>
@@ -33,13 +33,13 @@
                         </div>
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
-                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-email">E-posta Adresi</label>
-                                <div class="col-md-8">
+                                <label class="form-label col-md-2 fw-semibold mb-0" for="user-email">E-posta Adresi</label>
+                                <div class="col-md-10">
                                     <div class="input-group">
                                         <span class="input-group-text rounded-0 shadow-none bg-white">
                                             <i class="ri-mail-check-line"></i>
                                         </span>
-                                        <input type="email" id="user-email" placeholder="E-posta Adresiniz" class="form-control border-start-0 rounded-0 shadow-none @error('email') is-invalid @enderror" name="email" required autocomplete="off">
+                                        <input type="email" id="user-email" placeholder="E-posta Adresi" class="form-control border-start-0 rounded-0 shadow-none @error('email') is-invalid @enderror" name="email" required autocomplete="off">
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -51,8 +51,8 @@
                         </div>
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
-                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-roles">Kullanıcı Rolleri</label>
-                                <div id="user-roles" class="col-md-8">
+                                <label class="form-label col-md-2 fw-semibold mb-0" for="user-roles">Yetkiler</label>
+                                <div id="user-roles" class="col-md-10">
                                     @foreach ($roles as $role)
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input rounded-0 shadow-none" type="checkbox" name="role[]" id="user-role" value="{{ $role->id }}">
@@ -63,8 +63,8 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <div class="offset-md-4 col-md-8">
-                                <button type="submit" class="btn btn-lg btn-primary w-100 rounded-0 shadow-none text-white">
+                            <div class="offset-md-2 col-md-4">
+                                <button type="submit" class="btn btn-primary w-100 rounded-0 shadow-none text-white">
                                     <i class="ri-check-double-line"></i>
                                     <span>Üyeyi Kaydet</span>
                                 </button>
@@ -76,4 +76,18 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script>
+function setAllCheckboxes(divId, divClass, sourceCheckbox) {
+    divElement = document.getElementById(divId);
+    inputElements = divElement.getElementsByClassName(divClass);
+    for (i = 0; i < inputElements.length; i++) {
+        if (inputElements[i].type != 'checkbox')
+            continue;
+        inputElements[i].checked = sourceCheckbox.checked;
+    }
+}
+</script>
 @endsection
