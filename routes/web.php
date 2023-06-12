@@ -34,6 +34,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
     Route::controller(UserController::class)->group(function(){
         Route::get('/users', 'index')->name('users');
         Route::get('/admins', 'admins')->name('admins');
+        Route::get('/user/detail/{user}', 'show')->name('user.detail');
         Route::get('/admin/create', 'createAdmin')->name('create.admin');
         Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
     });

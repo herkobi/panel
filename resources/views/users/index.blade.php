@@ -12,22 +12,50 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive table-responsive-lg">
-                        <table class="table table-striped">
+                        <table class="table table-striped bg-white">
                             <thead>
                                 <tr>
-                                    <th scope="col" class="w-30">Ad Soyad</th>
-                                    <th scope="col" class="w-30">E-posta Adresi</th>
-                                    <th scope="col" class="w-20">İzinler</th>
-                                    <th scope="col" class="w-20 text-center">İşlemler</th>
+                                    <th scope="col" class="w-25">Ad Soyad</th>
+                                    <th scope="col" class="w-25">E-posta Adresi</th>
+                                    <th scope="col" class="w-20">Yetkiler</th>
+                                    <th scope="col" class="w-20">Özel İzinler</th>
+                                    <th scope="col" class="w-10 text-center">İşlemler</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
                                 <tr>
-                                    <td>{{ $user->name }}</td>
+                                    <th scope="row">{{ $user->name }}</th>
                                     <td>{{ $user->email }}</td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        <ul class="list-unstyled list-inline">
+                                        @foreach ($user->getRoleNames() as $role)
+                                        <li>{{$role}}</li>
+                                        @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled list-inline">
+                                            @foreach ($user->permissions as $permission)
+                                            <li>
+                                                <span class="d-block fw-semibold">{{$permission->group->name}}</span>
+                                                {{$permission->text}}
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <a class="btn btn-text dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">
+                                                <i class="ri-menu-3-fill"></i>
+                                            </a>
+                                            <ul class="dropdown-menu rounded-0 shadow-none bg-white">
+                                                <li><a class="dropdown-item" href="{{ route('panel.user.detail', $user->id) }}">Bilgiler</a></li>
+                                                <li><a class="dropdown-item" href="#">Düzenle</a></li>
+                                                <li><a class="dropdown-item" href="{{ route('panel.admin.permissions', $user->id) }}">Özel Yetkiler</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

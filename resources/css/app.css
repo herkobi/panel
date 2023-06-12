@@ -326,6 +326,10 @@ table a {
     background-color: #fff !important;
     --bs-table-bg: #fff !important;
 }
+.btn-check:checked + .btn, :not(.btn-check) + .btn:active, .btn:first-child:active, .btn.active, .btn.show {
+    background-color: transparent;
+    border: 0 none;
+}
 
 /*
  * Form Elements
@@ -465,5 +469,15 @@ table a {
     }
     .sidebar.toggled {
         margin-left: 0;
+    }
+}
+@media (max-width: 767px) {
+    .table-responsive .dropdown-menu {
+        position: static !important;
+    }
+}
+@media (min-width: 768px) {
+    .table-responsive {
+        overflow: inherit;
     }
 }

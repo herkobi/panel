@@ -24,6 +24,11 @@ class UserController extends Controller
         return view('users.admins', compact('users'));
     }
 
+    public function show(User $user): View
+    {
+        return view('users.detail', compact('user'));
+    }
+
     public function createAdmin(): View
     {
         $roles = Role::where('type', UserType::ADMIN)->where('name', '!=', 'Super Admin')->get();
