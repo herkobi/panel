@@ -24,9 +24,9 @@ class RoleController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
-        $this->middleware('permission:role-create', ['only' => ['create','store']]);
-        $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:role-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
     }
 
@@ -40,9 +40,9 @@ class RoleController extends Controller
         $roles = Role::all()->except(Role::where('name', 'Super Admin')->first()->id);
         $baseRoutes = array();
 
-        foreach($roles as $key => $role){
-            if($role->permissions->count() > 0){
-                foreach($role->permissions as $permission){
+        foreach ($roles as $key => $role) {
+            if ($role->permissions->count() > 0) {
+                foreach ($role->permissions as $permission) {
                     $baseRoutes[$role->name]["roleId"] = $role->id;
                     $baseRoutes[$role->name]["roleType"] = $role->type;
                     $baseRoutes[$role->name]["permissions"][$permission->group->name][] = $permission->text;
@@ -73,12 +73,13 @@ class RoleController extends Controller
      */
     public function permissions(RoleCreateRequest $request): RedirectResponse
     {
-        if($request->validated()) {
+        if ($request->validated()) {
             $role = Role::create(['name' => $request->name, 'type' => $request->type, 'desc' => $request->desc]);
             return Redirect::route('panel.role.permissions.store', $role);
+        } else {
+            notyf()->addError('Hata; Lütfen tüm gerekli alanları doldurunuz');
+            return Redirect::back();
         }
-
-        return Redirect::back()->with('Hata; Lütfen tüm gerekli alanları doldurunuz');
     }
 
     public function permissionsstore(Role $role): View
@@ -98,7 +99,7 @@ class RoleController extends Controller
     public function store(RolePermissionCreateRequest $request, Role $role): RedirectResponse
     {
 
-        if($request->validated()) {
+        if ($request->validated()) {
             $role->syncPermissions($request->permission);
             notyf()->addSuccess('Yetki başarılı bir şekilde kayıt edildi');
             return Redirect::route('panel.roles');
@@ -116,11 +117,11 @@ class RoleController extends Controller
     public function show(Role $role): View
     {
         $role = Role::find($role->id);
-        $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
-            ->where("role_has_permissions.role_id",$role->id)
+        $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
+            ->where("role_has_permissions.role_id", $role->id)
             ->get();
 
-        return view('roles.show', compact('role','rolePermissions'));
+        return view('roles.show', compact('role', 'rolePermissions'));
     }
 
     /**
@@ -132,24 +133,21 @@ class RoleController extends Controller
     public function edit(Role $role): View
     {
         $role = Role::find($role->id);
-        if($role->name != 'Super Admin')
-        {
+        if ($role->name != 'Super Admin') {
             $basePermissions = array();
             $permissions = array();
-            $permissions = Permission::withWhereHas('group', fn($query) =>$query->where('type', $role->type))->get();
+            $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
 
-            foreach($permissions as $permission){
+            foreach ($permissions as $permission) {
                 $basePermissions[$permission->group->name][$permission->id] = $permission->text;
             }
 
             $rolePermissions = $role->permissions->pluck('id')->toArray();
 
-            return view('roles.edit',compact('role','basePermissions','rolePermissions'));
-        }
-        else {
+            return view('roles.edit', compact('role', 'basePermissions', 'rolePermissions'));
+        } else {
             return Redirect::back();
         }
-
     }
 
     /**
@@ -179,9 +177,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        if ( auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin' || auth()->user->is_super == '1' )
-        {
-            DB::table("roles")->where('id',$role->id)->delete();
+        if (auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin' || auth()->user->is_super == '1') {
+            DB::table("roles")->where('id', $role->id)->delete();
 
             notyf()->addSuccess('Yetki başarılı bir şekilde silindi');
             return Redirect::route('panel.roles');
