@@ -92,6 +92,21 @@
                     </div>
                 </div>
             </div>
+            <div class="card rounded-0 shadow-sm border-0 mb-3">
+                <div class="card-header border-0 bg-white pt-3 pb-0">
+                    <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+                        <h4 class="card-title mb-0">Kullanıcı İşlemleri</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 border-bottom pb-3">
+                        <div class="row">
+                            <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">Durum</label>
+                            <div class="col-md-7">Şifre Yenileme Linki Gönder</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
