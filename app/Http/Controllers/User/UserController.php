@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Permissiongroup;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -41,5 +43,24 @@ class UserController extends Controller
         $user = User::find($user->id);
         $groups = Permissiongroup::where('type', UserType::ADMIN)->with('permission')->get();
         return view('users.adminpermissions', compact('user', 'groups'));
+    }
+
+    public function passwordReset(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if($status === Password::RESET_LINK_SENT)
+        {
+            notyf()->addSuccess($status);
+            return redirect()->back();
+        }
+        else {
+            notyf()->addError($status);
+            return redirect()->back();
+        }
     }
 }

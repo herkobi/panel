@@ -37,6 +37,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/user/detail/{user}', 'show')->name('user.detail');
         Route::get('/admin/create', 'createAdmin')->name('create.admin');
         Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
+        Route::post('/user/password/reset', 'passwordReset')->name('user.password.reset');
     });
 
     Route::controller(UserCreateController::class)->group(function(){
