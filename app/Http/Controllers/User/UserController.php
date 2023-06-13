@@ -4,11 +4,10 @@ namespace App\Http\Controllers\User;
 
 use App\Enums\UserStatus;
 use App\Enums\UserType;
-use App\Http\Controllers\Controller;
-
 use App\Models\Permissiongroup;
 use App\Models\Role;
 use App\Models\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
@@ -55,7 +54,7 @@ class UserController extends Controller
 
         if($status === Password::RESET_LINK_SENT)
         {
-            notyf()->addSuccess($status);
+            notyf()->addSuccess('Şifre yenilime linki e-posta adresine gönderildi');
             return redirect()->back();
         }
         else {
