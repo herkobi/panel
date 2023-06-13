@@ -193,7 +193,7 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('panel.user.password.reset', $user->id) }}" method="POST" id="password-reset-form">
+    <form action="{{ route('panel.user.password.reset') }}" method="POST" id="password-reset-form">
         @csrf
         <input type="hidden" name="token" value="{{ csrf_token() }}">
         <input type="hidden" name="email" value="{{ $user->email }}">
