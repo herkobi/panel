@@ -29,6 +29,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
 
     Route::controller(Dashboard::class)->group(function(){
         Route::get('/', 'index')->name('home');
+        Route::get('/passive', 'passive')->name('passive');
     });
 
     Route::controller(UserController::class)->group(function(){
