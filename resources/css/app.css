@@ -366,9 +366,9 @@ table a {
     content: '';
     position: absolute;
     top: 0;
-    left: 125px;
+    left: 127px;
     height: 100%;
-    width: 4px;
+    width: 2px;
     background: #e9ecef;
     border-radius: .25rem;
 }
@@ -383,14 +383,14 @@ table a {
 .vertical-timeline-element-icon {
     position: absolute;
     top: 0;
-    left: 118px;
+    left: 120px;
 }
 .vertical-timeline-element-icon .badge-dot-xl {
     box-shadow: 0 0 0 5px #fff;
 }
 .badge-dot-xl {
-    width: 18px;
-    height: 18px;
+    width: 15px;
+    height: 15px;
     position: relative;
 }
 .badge-dot-xl::before {

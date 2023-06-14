@@ -28,7 +28,7 @@
                                                 <i class="badge badge-dot badge-dot-xl bg-success"> </i>
                                             </span>
                                             <div class="vertical-timeline-element-content border-bottom bounce-in">
-                                                <h4 class="timeline-title">Başarılı Ödeme</h4>
+                                                <h5 class="timeline-title">Başarılı Ödeme</h5>
                                                 <p>Paket ödemesi başarılı bir şekilde gerçekleşti</p>
                                                 <span class="vertical-timeline-element-date">12 Ağustos
                                                     2022<br>15:30:45</span>
@@ -41,7 +41,7 @@
                                                 <i class="badge badge-dot badge-dot-xl bg-warning"> </i>
                                             </span>
                                             <div class="vertical-timeline-element-content border-bottom bounce-in">
-                                                <h4 class="timeline-title">Başarısız Ödeme</h4>
+                                                <h5 class="timeline-title">Başarısız Ödeme</h5>
                                                 <p>Paket ödemesi gerçekleşmedi</p>
                                                 <span class="vertical-timeline-element-date">07 Temmuz
                                                     2023<br>15:30:45</span>
@@ -54,7 +54,7 @@
                                                 <i class="badge badge-dot badge-dot-xl bg-danger"> </i>
                                             </span>
                                             <div class="vertical-timeline-element-content border-bottom bounce-in">
-                                                <h4 class="timeline-title">Paket Değişimi</h4>
+                                                <h5 class="timeline-title">Paket Değişimi</h5>
                                                 <p>Standart aylık paketten standart yıllık pakete geçiş gerçekleşti.</p>
                                                 <span class="vertical-timeline-element-date">27 Aralık
                                                     2023<br>15:30:45</span>

@@ -6,6 +6,8 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Enums\UserStatus;
+use App\Enums\UserType;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -75,7 +77,8 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::authenticateUsing (function (Request $request) {
-            $user = User::where('email', $request->email)->first();
+
+            $user = User::where('email', $request->email)->where('status', '!=', UserStatus::DELETED )->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
 
@@ -84,7 +87,11 @@ class FortifyServiceProvider extends ServiceProvider
                     'last_login_ip' => $request->getClientIp()
                 ]);
 
-                return $user;
+                if ($user->status == UserStatus::ACTIVE) {  // it will return if status == 1
+                    return $user;
+               }
+
+                //return $user;
             }
         });
     }
