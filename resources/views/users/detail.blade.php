@@ -140,7 +140,7 @@
                                 <label class="form-label col-md-4 fw-semibold mb-0" for="user-status">Şifre</label>
                                 <div class="col-md-8">
                                     <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
-                                        onclick="event.preventDefault(); document.getElementById('password-reset-form').submit();">Şifre
+                                        onclick="event.preventDefault(); document.getElementById('password-reset-form').submit()">Şifre
                                         Yenileme Linki Gönder</button>
                                 </div>
                             </div>
