@@ -19,7 +19,6 @@ class CreateSuperAdminUserSeeder extends Seeder
         $user = User::create([
             'type' => 1,
             'status' => UserStatus::ACTIVE, 
-            'is_super' => 1,
             'name' => 'bülent',
             'email' => 'super@super.com',
             'password' => bcrypt('password'),

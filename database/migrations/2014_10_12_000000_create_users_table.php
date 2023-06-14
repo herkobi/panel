@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->integer('type')->default(2);
             $table->integer('status')->default(1);
-            $table->integer('is_super')->default(0);
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

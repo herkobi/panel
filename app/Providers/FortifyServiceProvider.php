@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
+use App\Http\Responses\LoginResponse;
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use Laravel\Fortify\Contracts\TwoFactorLoginResponse as TwoFactorLoginResponseContract;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -68,16 +71,19 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
 
-            return Limit::perMinute(5)->by($email . $request->ip());
+            return Limit::perMinute(5)->by($email.$request->ip());
         });
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-        Fortify::authenticateUsing(function (Request $request) {
+        //active-draft-passive route
+        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
+        $this->app->singleton(TwoFactorLoginResponseContract::class, LoginResponse::class);
 
-            $user = User::where('email', $request->email)->where('status', '!=', UserStatus::DELETED)->first();
+        Fortify::authenticateUsing (function (Request $request) {
+            $user = User::where('email', $request->email)->where('status', '!=', UserStatus::DELETED )->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
 

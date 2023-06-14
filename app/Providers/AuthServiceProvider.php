@@ -28,7 +28,6 @@ class AuthServiceProvider extends ServiceProvider
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
-            return auth()->user->is_super == '1' ? true : null;
         });
     }
 }
