@@ -16,7 +16,7 @@ class UserController extends Controller
 {
     public function index(): View
     {
-        $users = User::where('status', UserStatus::ACTIVE)->where('type', UserType::USER)->get();
+        $users = User::where([['status', UserStatus::ACTIVE],['type', UserType::USER]])->get();
         return view('users.index', compact('users'));
     }
 
@@ -33,7 +33,7 @@ class UserController extends Controller
 
     public function createAdmin(): View
     {
-        $roles = Role::where('type', UserType::ADMIN)->where('name', '!=', 'Super Admin')->get();
+        $roles = Role::where([['type', UserType::ADMIN],['name', '!=', 'Super Admin']])->get();
         return view('users.create', compact('roles'));
     }
 

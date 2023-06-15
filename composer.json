@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "php-flasher/flasher-notyf-laravel": "^1.13",
+        "spatie/laravel-activitylog": "^4.7",
         "spatie/laravel-permission": "^5.10"
     },
     "require-dev": {
