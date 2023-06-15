@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Spatie\Activitylog\Contracts\Activity
+use Spatie\Activitylog\Models\Activity;
+
 class Dashboard extends Controller
 {
     public function index(): View
     {
-        return view('index');
+        $activities = Activity::limit('1');
+        return view('index', compact('activities'));
     }
 
     public function passive(User $user): View

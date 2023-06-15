@@ -10,7 +10,7 @@
                             <h4 class="card-title mb-0">Son İşlemler</h4>
                         </div>
                         <div class="card-body">
-                            {{\Spatie\Activitylog\Contracts\Activity::all()}}
+                            {{dd($activities)}}
                         </div>
                     </div>
                 </div>

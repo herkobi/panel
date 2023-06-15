@@ -111,7 +111,13 @@
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
                                 <label class="form-label col-md-4 fw-semibold mb-0" for="user-status">Durum</label>
-                                <div class="col-md-8">{{ $user->status->title() }}</div>
+                                <div class="col-md-8">
+                                    @if(!$user->hasVerifiedEmail())
+                                    E-posta Onay Bekliyor
+                                    @else
+                                    {{ $user->status->title() }}
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         <div class="mb-3 border-bottom pb-3">
@@ -145,6 +151,17 @@
                                 </div>
                             </div>
                         </div>
+                        @if(!$user->hasVerifiedEmail())
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-status">Şifre</label>
+                                <div class="col-md-8">
+                                    <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
+                                        onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta Onay Linki Gönder</button>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
                                 <label class="form-label col-md-4 fw-semibold mb-0" for="user-status">Durum</label>
@@ -193,9 +210,10 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('panel.user.password.reset') }}" method="POST" id="password-reset-form">
+    <form action="{{ route('panel.user.password.reset', $user->id) }}" method="POST" id="password-reset-form">
         @csrf
-        <input type="hidden" name="token" value="{{ csrf_token() }}">
-        <input type="hidden" name="email" value="{{ $user->email }}">
+    </form>
+    <form action="{{ route('panel.user.email.verify', $user->id) }}" method="POST" id="email-verify-form">
+        @csrf
     </form>
 @endsection

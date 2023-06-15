@@ -8,15 +8,27 @@ use App\Models\Permissiongroup;
 use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 
 class UserController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('throttle:6,1')->only('verifyEmail');
+    }
+
     public function index(): View
     {
-        $users = User::where([['status', UserStatus::ACTIVE],['type', UserType::USER]])->get();
+        $users = User::where([['status', UserStatus::ACTIVE], ['type', UserType::USER]])->get();
         return view('users.index', compact('users'));
     }
 
@@ -33,7 +45,7 @@ class UserController extends Controller
 
     public function createAdmin(): View
     {
-        $roles = Role::where([['type', UserType::ADMIN],['name', '!=', 'Super Admin']])->get();
+        $roles = Role::where([['type', UserType::ADMIN], ['name', '!=', 'Super Admin']])->get();
         return view('users.create', compact('roles'));
     }
 
@@ -44,22 +56,23 @@ class UserController extends Controller
         return view('users.adminpermissions', compact('user', 'groups'));
     }
 
-    public function passwordReset(Request $request)
+    public function passwordReset(User $user)
     {
-        $request->validate(['email' => 'required|email']);
+        $status = Password::sendResetLink($user->only('email'));
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
-
-        if($status === Password::RESET_LINK_SENT)
-        {
+        if ($status === Password::RESET_LINK_SENT) {
             notyf()->addSuccess('Şifre yenilime linki e-posta adresine gönderildi');
             return redirect()->back();
-        }
-        else {
+        } else {
             notyf()->addError($status);
             return redirect()->back();
         }
+    }
+
+    public function verifyEmail(User $user)
+    {
+        $user->sendEmailVerificationNotification();
+        notyf()->addSuccess('E-posta onay linki tekrar gönderildi');
+        return redirect()->back();
     }
 }

@@ -21,7 +21,6 @@ class CreateUserSeeder extends Seeder
             'name' => 'bülent',
             'email' => 'user@user.com',
             'password' => bcrypt('password'),
-            'email_verified_at' => now(),
             'created_by' => 1,
             'created_by_name' => 'Super Admin',
             'terms' => 1
