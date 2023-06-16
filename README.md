@@ -50,6 +50,7 @@ Kullanıcı Adı: user@user.com
 - Blade dosyalarında izinler için gerekli kontroller yapılacak. Navigasyon kullanıcı türüne göre elden geçirilecek.
 - Ana sayfa kullanıcılar, yöneticiler ve super admin için güncellenecek
 - Kullanıcı detay sayfasında kullanıcıya not ekleme alanı eklenecek
+- Yönetici tarafı admin guard'ına taşınacak
 
 ### Ekran Görüntüleri
 ![Üye Girişi](https://i.hizliresim.com/ga12pxb.png)
