@@ -34,6 +34,23 @@ Kullanıcı Adı: admin@admin.com
 Kullanıcı Adı: user@user.com
 Şifre: password
 
+### Yol Haritası
+- Genel ayarlar sayfası yapılacak. Kullanıcı bazlı tari formatı, saat dilimi ve para birimi tanımlama, dil tanımlama ayarları yapılacak. Yöneticiler için ek olarak UserType=USER ve UserType=ADMIN için varsayılan yetki seçimleri yapılacak.
+- Dil yönetim sistemi oluşturulacak.
+- Kurulan loglama sistemi tüm modüllere eklenecek ve yapılan işleme göre açıklamaları özelleştirilecek
+- Oturum bilgileri için detaylı loglama yapılacak
+- Kullanıcı detay sayfasında ki yetkiler ve izinler sayfası düzenlenecek. Bu bölümden ek yetki ve özel izinler tanımalanacak
+- Yönetici eklenirken izin alannı seçiminde seçilmiş olan yetkiye ait değerler otomatik seçili getirilecek
+- Kullanıcı kategorileri sistemi yapılacak
+- Kullanıcı/Yönetici listeleme sayfasında kullanıcı durumları işlenecek. Sayfa düzenlenecek.
+- Kullanıcı detay sayfasında kullanıcının kendisine ait loglar gösterilecek
+- Laravel logları super admin için görüntülenecek
+- Profil sayfalarında Super Admin dışındaki tüm kullanıcılar için hesabı askıya alma ve dondurma işlemi yapılacak
+- Kullanıcı detay sayfasında UserStatus değeri güncellenecek
+- Blade dosyalarında izinler için gerekli kontroller yapılacak. Navigasyon kullanıcı türüne göre elden geçirilecek.
+- Ana sayfa kullanıcılar, yöneticiler ve super admin için güncellenecek
+- Kullanıcı detay sayfasında kullanıcıya not ekleme alanı eklenecek
+
 ### Ekran Görüntüleri
 ![Üye Girişi](https://i.hizliresim.com/ga12pxb.png)
 

@@ -10,7 +10,6 @@
                             <h4 class="card-title mb-0">Son İşlemler</h4>
                         </div>
                         <div class="card-body">
-                            {{dd($activities)}}
                         </div>
                     </div>
                 </div>
