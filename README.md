@@ -11,6 +11,7 @@ Tamamen açık kaynak olarak dağıttığımız sistemi rahatlıkla kullanabilir
 - [Laravel Fortify UI](https://github.com/bulentsakarya/laravel-10-fortify-ui)
 - [Laravel Fortify](https://laravel.com/docs/10.x/fortify)
 - [Spatie Permission](https://github.com/spatie/laravel-permission)
+- [Spatie Laravel Activitylog](https://github.com/spatie/laravel-activitylog)
 - [Php Flasher Notfy](https://github.com/php-flasher/flasher-notyf-laravel)
 - [Laravel 10 Türkçe Dil Dosyaları](https://github.com/laravel-tr/Laravel10-lang)
 - [jQuery 3.7.0](https://jquery.com/)
