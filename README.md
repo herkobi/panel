@@ -40,7 +40,7 @@ Kullanıcı Adı: user@user.com
 - Kurulan loglama sistemi tüm modüllere eklenecek ve yapılan işleme göre açıklamaları özelleştirilecek
 - Oturum bilgileri için detaylı loglama yapılacak
 - Kullanıcı detay sayfasında ki yetkiler ve izinler sayfası düzenlenecek. Bu bölümden ek yetki ve özel izinler tanımalanacak
-- Yönetici eklenirken izin alannı seçiminde seçilmiş olan yetkiye ait değerler otomatik seçili getirilecek
+- Yönetici eklenirken izin alanı seçiminde seçilmiş olan yetkiye ait değerler otomatik seçili getirilecek
 - Kullanıcı kategorileri sistemi yapılacak
 - Kullanıcı/Yönetici listeleme sayfasında kullanıcı durumları işlenecek. Sayfa düzenlenecek.
 - Kullanıcı detay sayfasında kullanıcının kendisine ait loglar gösterilecek
