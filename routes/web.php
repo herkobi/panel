@@ -25,14 +25,14 @@ use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
 
 Route::redirect('/', 'login');
 
-Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('panel.')->group(function(){
+Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('panel.')->group(function () {
 
-    Route::controller(Dashboard::class)->group(function(){
+    Route::controller(Dashboard::class)->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/passive', 'passive')->name('passive');
     });
 
-    Route::controller(UserController::class)->group(function(){
+    Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index')->name('users');
         Route::get('/admins', 'admins')->name('admins');
         Route::get('/user/detail/{user}', 'show')->name('user.detail');
@@ -44,16 +44,16 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/admin/edit/{user}', 'editAdmin')->name('admin.edit');
     });
 
-    Route::controller(UserCreateController::class)->group(function(){
+    Route::controller(UserCreateController::class)->group(function () {
         Route::post('admin/create/store', 'admin')->name('store.admin');
         Route::post('admin/create/permissions/{user}', 'permissions')->name('store.admin.permissions');
     });
 
-    Route::controller(SettingController::class)->group(function(){
+    Route::controller(SettingController::class)->group(function () {
         Route::get('/settings', 'index')->name('settings');
     });
 
-    Route::controller(RoleController::class)->group(function(){
+    Route::controller(RoleController::class)->group(function () {
         Route::get('/roles', 'index')->name('roles');
         Route::get('/role/detail/{role}', 'show')->name('role.show');
         Route::get('/role/create', 'create')->name('role.create');
@@ -65,7 +65,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::post('/role/destroy/{role}', 'destroy')->name('role.destroy');
     });
 
-    Route::controller(PermissionController::class)->group(function(){
+    Route::controller(PermissionController::class)->group(function () {
         Route::get('/permissions', 'index')->name('permissions');
         Route::post('/permission/store', 'store')->name('permission.store');
         Route::get('/permission/{permission}', 'edit')->name('permission.edit');
@@ -74,7 +74,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/autocomplete', 'autocomplete')->name('permission.autocomplete');
     });
 
-    Route::controller(PermissiongroupController::class)->group(function(){
+    Route::controller(PermissiongroupController::class)->group(function () {
         Route::get('/permission-groups', 'index')->name('permission.groups');
         Route::post('/permission-group/store', 'store')->name('permission.group.store');
         Route::get('/permission-group/{permissiongroup}', 'edit')->name('permission.group.edit');
@@ -82,11 +82,13 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::post('/permission-group/destroy/{permissiongroup}', 'destroy')->name('permission.group.destroy');
     });
 
-    Route::controller(ProfileController::class)->group(function(){
+    Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile');
     });
 
-    Route::controller(TwoFactorAuthenticationController::class)->group(function(){
+    Route::controller(TwoFactorAuthenticationController::class)->group(function () {
         Route::get('/two-factor-authentication', 'index')->name('twofactor');
     });
+
+    Route::redirect('/panel/log-viewer', '/panel/log-viewer')->name('system-logs');
 });

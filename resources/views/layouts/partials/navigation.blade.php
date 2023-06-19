@@ -51,16 +51,31 @@
                     <li class="menu-item"><a class="menu-link" href="{{ route('panel.permissions') }}">İzinler</a></li>
                 @endcan
                 @can('permissiongroup-list')
-                    <li class="menu-item"><a class="menu-link" href="{{ route('panel.permission.groups') }}">İzin Grupları</a></li>
+                    <li class="menu-item"><a class="menu-link" href="{{ route('panel.permission.groups') }}">İzin Grupları</a>
+                    </li>
                 @endcan
             </ul>
         </li>
     @endhasrole
-    <li class="menu-item">
-        <a href="" class="d-flex align-items-center justify-content-start">
-            <i class="ri-bubble-chart-line"></i> <span class="align-middle">Sistem Kayıtları</span>
-        </a>
-    </li>
+    @hasrole('Super Admin')
+        <li class="menu-item">
+            <a href="{{ route('panel.system-logs') }}" class="d-flex align-items-center justify-content-start">
+                <i class="ri-bubble-chart-line"></i> <span class="align-middle">Sistem Kayıtları</span>
+            </a>
+        </li>
+    @endhasrole
+    @hasrole(['Super Admin', 'Admin'])
+        <li class="menu-item">
+            <a href="" class="d-flex align-items-center justify-content-start">
+                <i class="ri-archive-2-line"></i> <span class="align-middle">Uygulama Kayıtları</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="" class="d-flex align-items-center justify-content-start">
+                <i class="ri-git-repository-private-line"></i> <span class="align-middle">Oturum Kayıtları</span>
+            </a>
+        </li>
+    @endhasrole
     @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
         <li class="menu-item {{ request()->routeIs('panel.twofactor') ? 'active' : '' }}">
             <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.twofactor') }}"
