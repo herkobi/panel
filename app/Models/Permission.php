@@ -26,7 +26,7 @@ class Permission extends PermissionModel
     {
         return LogOptions::defaults()
             ->logOnly(['name', 'text', 'group.name'])
-            ->setDescriptionForEvent(fn (string $eventName) => "This model has been {$eventName}");;
+            ->setDescriptionForEvent(fn (string $eventName) => "This model has been {$eventName}");
     }
 
     public function group()

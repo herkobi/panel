@@ -14,7 +14,6 @@ class LoginResponse implements LoginResponseContract
     public function toResponse($request)
     {
         $home = auth()->user()->status == UserStatus::PASSIVE ? '/panel/passive' : '/panel';
-
         return redirect()->intended($home);
     }
 }
