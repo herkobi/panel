@@ -40,6 +40,8 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
         Route::post('/user/password/reset/{user}', 'passwordReset')->name('user.password.reset');
         Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
+        Route::get('/user/edit/{user}', 'editUser')->name('user.edit');
+        Route::get('/admin/edit/{user}', 'editAdmin')->name('admin.edit');
     });
 
     Route::controller(UserCreateController::class)->group(function(){

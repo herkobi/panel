@@ -56,6 +56,16 @@ class UserController extends Controller
         return view('users.adminpermissions', compact('user', 'groups'));
     }
 
+    public function editUser(User $user): View
+    {
+        return view('users.user-edit', compact('user'));
+    }
+
+    public function editAdmin(User $user): View
+    {
+        return view('user.admins-edit', compact('user'));
+    }
+
     public function passwordReset(User $user)
     {
         $status = Password::sendResetLink($user->only('email'));

@@ -38,30 +38,29 @@
                 </a>
             </li>
         @endcan
-        @can('role-list')
-            <li class="menu-item {{ request()->routeIs('panel.roles') ? 'active' : '' }}">
-                <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.roles') }}" title="Yetkiler">
-                    <i class="ri-secure-payment-line"></i> <span class="align-middle">Yetkiler</span>
-                </a>
-            </li>
-        @endcan
-        @can('permission-list')
-            <li class="menu-item {{ request()->routeIs('panel.permissions') ? 'active' : '' }}">
-                <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.permissions') }}"
-                    title="İzinler">
-                    <i class="ri-fingerprint-line"></i> <span class="align-middle">İzinler</span>
-                </a>
-            </li>
-        @endcan
-        @can('permissiongroup-list')
-            <li class="menu-item {{ request()->routeIs('panel.permission.groups') ? 'active' : '' }}">
-                <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.permission.groups') }}"
-                    title="İzin Grupları">
-                    <i class="ri-file-shield-2-line"></i> <span class="align-middle">İzin Grupları</span>
-                </a>
-            </li>
-        @endcan
+        <li class="menu-item">
+            <a data-bs-target="#roles" data-bs-toggle="collapse"
+                class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">
+                <i class="ri-secure-payment-line"></i> <span class="align-middle">Yetki ve İzinler</span>
+            </a>
+            <ul id="roles" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+                @can('role-list')
+                    <li class="menu-item"><a class="menu-link" href="{{ route('panel.roles') }}">Yetkiler</a></li>
+                @endcan
+                @can('permission-list')
+                    <li class="menu-item"><a class="menu-link" href="{{ route('panel.permissions') }}">İzinler</a></li>
+                @endcan
+                @can('permissiongroup-list')
+                    <li class="menu-item"><a class="menu-link" href="{{ route('panel.permission.groups') }}">İzin Grupları</a></li>
+                @endcan
+            </ul>
+        </li>
     @endhasrole
+    <li class="menu-item">
+        <a href="" class="d-flex align-items-center justify-content-start">
+            <i class="ri-bubble-chart-line"></i> <span class="align-middle">Sistem Kayıtları</span>
+        </a>
+    </li>
     @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
         <li class="menu-item {{ request()->routeIs('panel.twofactor') ? 'active' : '' }}">
             <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.twofactor') }}"
