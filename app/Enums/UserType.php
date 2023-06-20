@@ -27,5 +27,4 @@ enum UserType: int
                 throw new \Exception('Invalid type');
         }
     }
-
 }

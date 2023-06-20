@@ -8,6 +8,7 @@ use App\Models\Permissiongroup;
 use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Models\Permission;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,7 +42,19 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
-        return view('users.detail', compact('user'));
+
+        $role = Role::find($user->role->id);
+        $basePermissions = array();
+        $permissions = array();
+        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
+
+        foreach ($permissions as $permission) {
+            $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+        }
+
+        $rolePermissions = $role->permissions->pluck('id')->toArray();
+
+        return view('users.detail', compact('user', 'role', 'basePermissions', 'rolePermissions'));
     }
 
     public function createAdmin(): View
@@ -52,9 +65,21 @@ class UserController extends Controller
 
     public function permissionAdmin(User $user): View
     {
-        $user = User::find($user->id);
-        $groups = Permissiongroup::where('type', UserType::ADMIN)->with('permission')->get();
-        return view('users.adminpermissions', compact('user', 'groups'));
+        // $user = User::find($user->id);
+        // $groups = Permissiongroup::where('type', UserType::ADMIN)->with('permission')->get();
+
+        $role = Role::find($user->role->id);
+        $basePermissions = array();
+        $permissions = array();
+        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
+
+        foreach ($permissions as $permission) {
+            $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+        }
+
+        $rolePermissions = $role->permissions->pluck('id')->toArray();
+
+        return view('users.adminpermissions', compact('user', 'groups', 'role', 'basePermissions', 'rolePermissions'));
     }
 
     public function editUser(User $user): View
