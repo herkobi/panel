@@ -112,10 +112,10 @@
                             <div class="row">
                                 <label class="form-label col-md-4 fw-semibold mb-0" for="user-status">Durum</label>
                                 <div class="col-md-8">
-                                    @if(!$user->hasVerifiedEmail())
-                                    E-posta Onay Bekliyor
+                                    @if (!$user->hasVerifiedEmail())
+                                        E-posta Onay Bekliyor
                                     @else
-                                    {{ $user->status->title() }}
+                                        {{ $user->status->title() }}
                                     @endif
                                 </div>
                             </div>
@@ -143,31 +143,41 @@
                     <div class="card-body">
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
-                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-status">Şifre</label>
-                                <div class="col-md-8">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">Şifre Yenileme</label>
+                                <div class="col-md-7">
                                     <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
                                         onclick="event.preventDefault(); document.getElementById('password-reset-form').submit()">Şifre
                                         Yenileme Linki Gönder</button>
                                 </div>
                             </div>
                         </div>
-                        @if(!$user->hasVerifiedEmail())
-                        <div class="mb-3 border-bottom pb-3">
-                            <div class="row">
-                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-status">Şifre</label>
-                                <div class="col-md-8">
-                                    <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
-                                        onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta Onay Linki Gönder</button>
+                        @if (!$user->hasVerifiedEmail())
+                            <div class="mb-3 border-bottom pb-3">
+                                <div class="row">
+                                    <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">E-posta Onayı</label>
+                                    <div class="col-md-7">
+                                        <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
+                                            onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta
+                                            Onay Linki Gönder</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         @endif
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
-                                <label class="form-label col-md-4 fw-semibold mb-0" for="user-status">Durum</label>
-                                <div class="col-md-8">Kullanıcı Durumunu Değiştir</div>
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="change-email">E-posta Değişimi</label>
+                                <div class="col-md-7"><button class="btn text p-0" data-bs-toggle="modal"
+                                        data-bs-target="#changeEmail">E-posta Adresini Değiştir</button></div>
                             </div>
                         </div>
+                        @if ($user->hasVerifiedEmail())
+                            <div class="mb-3 border-bottom pb-3">
+                                <div class="row">
+                                    <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">Durum</label>
+                                    <div class="col-md-7">Kullanıcı Durumunu Değiştir</div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
@@ -207,6 +217,45 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="changeEmail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="changeEmailLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0 shadow-none bg-white">
+                <form action="{{ route('panel.user.change.email', $user->id) }}" method="POST" id="change-email">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changeEmailLabel">E-posta Adresini Güncelle</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-email">Güncel
+                                    E-posta Adresi</label>
+                                <div class="col-md-7">{{ $user->email }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-new-email">Yeni E-posta
+                                    Adresi</label>
+                                <div class="col-md-7">
+                                    <input type="email" class="form-control form-control-sm rounded-0 shadow-none"
+                                        name="email" value="{{ $user->email ? old('email') : $user->email }}" required
+                                        autofocus>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm rounded-0 shadow-none"
+                            data-bs-dismiss="modal">Kapat</button>
+                        <button type="submit" class="btn btn-primary btn-sm rounded-0 shadow-none">Değiştir</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

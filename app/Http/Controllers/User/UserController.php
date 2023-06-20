@@ -8,6 +8,7 @@ use App\Models\Permissiongroup;
 use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -64,25 +65,5 @@ class UserController extends Controller
     public function editAdmin(User $user): View
     {
         return view('user.admins-edit', compact('user'));
-    }
-
-    public function passwordReset(User $user)
-    {
-        $status = Password::sendResetLink($user->only('email'));
-
-        if ($status === Password::RESET_LINK_SENT) {
-            notyf()->addSuccess('Şifre yenilime linki e-posta adresine gönderildi');
-            return redirect()->back();
-        } else {
-            notyf()->addError($status);
-            return redirect()->back();
-        }
-    }
-
-    public function verifyEmail(User $user)
-    {
-        $user->sendEmailVerificationNotification();
-        notyf()->addSuccess('E-posta onay linki tekrar gönderildi');
-        return redirect()->back();
     }
 }
