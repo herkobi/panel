@@ -7,9 +7,9 @@ enum UserType: int
     case ADMIN = 1;
     case USER = 2;
 
-    public function title(): string
+    public static function title($title): string
     {
-        return match($this)
+        return match($title)
         {
             self::ADMIN => 'Yönetici',
             self::USER => 'Kullanıcı',

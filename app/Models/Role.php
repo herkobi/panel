@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Enums\UserType;
+use Spatie\Permission\Models\Role as RoleModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class Role extends RoleModel
 {
     use HasFactory;
 
@@ -20,5 +21,4 @@ class Role extends Model
     protected $casts = [
         'type' => UserType::class
     ];
-
 }

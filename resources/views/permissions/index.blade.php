@@ -20,7 +20,7 @@
                                     <select class="form-select form-select-sm rounded-0 shadow-none permission_group_list" name="group_id" id="permission-group" required>
                                         <option selected>Grup Seçiniz</option>
                                         @foreach ($groups as $group)
-                                        <option class="option" value="{{$group->id}}">{{ $group->name .' - '. $group->type->title() }}</option>
+                                        <option class="option" value="{{$group->id}}">{{ $group->name .' - '. \App\Enums\UserType::title($group->type) }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -67,7 +67,7 @@
                                 @foreach ($permissions as $permission)
                                 <tr>
                                     <td>{{ $permission->group->name }}</td>
-                                    <td>{{ $permission->group->type->title() }}</td>
+                                    <td>{{ \App\Enums\UserType::title($permission->group->type) }}</td>
                                     <td>{{ $permission->text }}</td>
                                     <td>{{ $permission->name }}</td>
                                     <td class="text-center">

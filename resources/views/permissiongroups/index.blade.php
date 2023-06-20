@@ -78,7 +78,7 @@
                                 @foreach ($groups as $group)
                                 <tr>
                                     <td>{{ $group->name }}</td>
-                                    <td>{{ $group->type->title() }}</td>
+                                    <td>{{ \App\Enums\UserType::title($group->type) }}</td>
                                     <td>{{ $group->desc }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('panel.permission.group.edit', $group->id) }}" title="Grubu Düzenle" class="text-decoration-none"><i class="ri-menu-3-fill"></i></a>

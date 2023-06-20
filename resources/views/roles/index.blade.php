@@ -28,7 +28,7 @@
                                 @foreach ($baseRoutes as $key => $roles)
                                 <tr>
                                     <td class="fw-semibold">{{ $key }}</td>
-                                    <td>{{ \App\Enums\UserType::getTitle($roles["roleType"]) }}</td>
+                                    <td>{{ \App\Enums\UserType::title($roles["roleType"]) }}</td>
                                     <td>
                                         @if(isset($roles["permissions"]))
                                             @foreach($roles["permissions"] as $roleName => $permissions)

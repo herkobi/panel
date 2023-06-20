@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Role;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Roles\RoleCreateRequest;
 use App\Http\Requests\Roles\RolePermissionCreateRequest;
@@ -11,10 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Role;
 use App\Models\Permission;
 use App\Models\Permissiongroup;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
@@ -43,6 +44,7 @@ class RoleController extends Controller
 
         foreach ($roles as $key => $role) {
             if ($role->permissions->count() > 0) {
+
                 foreach ($role->permissions as $permission) {
                     $baseRoutes[$role->name]["roleId"] = $role->id;
                     $baseRoutes[$role->name]["roleType"] = $role->type;
@@ -53,8 +55,6 @@ class RoleController extends Controller
                 $baseRoutes[$role->name]["roleType"] = $role->type;
             }
         }
-
-        activity()->log(Auth::user()->name . ' yetkileri görüntüledi');
 
         return view('roles.index', compact('baseRoutes'));
     }
