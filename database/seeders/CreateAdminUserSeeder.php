@@ -6,7 +6,7 @@ use App\Enums\UserStatus;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class CreateAdminUserSeeder extends Seeder
 {

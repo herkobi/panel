@@ -6,8 +6,7 @@ use App\Enums\UserStatus;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use App\Models\Role;
 
 class CreateSuperAdminUserSeeder extends Seeder
 {
@@ -18,7 +17,7 @@ class CreateSuperAdminUserSeeder extends Seeder
     {
         $user = User::create([
             'type' => 1,
-            'status' => UserStatus::ACTIVE, 
+            'status' => UserStatus::ACTIVE,
             'name' => 'bülent',
             'email' => 'super@super.com',
             'password' => bcrypt('password'),
