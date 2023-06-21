@@ -12,6 +12,12 @@
                 <i class="ri-user-line"></i> <span class="align-middle">Kullanıcılar</span>
             </a>
         </li>
+        <li class="menu-item {{ request()->routeIs('panel.user.tags') ? 'active' : '' }}">
+            <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.user.tags') }}"
+                title="Etiketler">
+                <i class="ri-price-tag-line"></i> <span class="align-middle">Etiketler</span>
+            </a>
+        </li>
     @endhasallroles
     @hasrole('Super Admin')
         <li class="menu-header">Yöneticiler</li>

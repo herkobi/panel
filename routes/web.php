@@ -10,6 +10,7 @@ use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\User\UserCreateController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserDetailController;
+use App\Http\Controllers\User\UsertagController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
 
@@ -52,6 +53,10 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::post('/user/password/reset/{user}', 'passwordReset')->name('user.password.reset');
         Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
         Route::post('/user/email/change/{user}', 'changeEmail')->name('user.change.email');
+    });
+
+    Route::controller(UsertagController::class)->group(function(){
+        Route::get('/users/tags', 'index')->name('user.tags');
     });
 
     Route::controller(SettingController::class)->group(function () {
