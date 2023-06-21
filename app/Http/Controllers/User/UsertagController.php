@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UsertagCreateRequest;
+use App\Http\Requests\UsertagUpdateRequest;
 use App\Models\Usertag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 class UsertagController extends Controller
 {
@@ -18,10 +20,11 @@ class UsertagController extends Controller
 
     public function edit(Usertag $usertag): View
     {
+
         return view('users.categories.index', compact('usertag'));
     }
 
-    public function update(UsertagEditRequest $request, Usertag $usertag): RedirectResponse
+    public function update(UsertagUpdateRequest $request, Usertag $usertag): RedirectResponse
     {
         if ($request->validated()) {
             $usertag->forceFill([

@@ -56,4 +56,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'status' => UserStatus::class,
         'type' => UserType::class,
     ];
+
+    public function usertags()
+    {
+        return $this->belongsToMany(Usertag::class);
+    }
 }

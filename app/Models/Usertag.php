@@ -17,6 +17,6 @@ class Usertag extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class, 'group_id', 'id');
+        return $this->belongsToMany(User::class);
     }
 }
