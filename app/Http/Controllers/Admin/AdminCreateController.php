@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserPermissionCreateRequest;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class UserCreateController extends Controller
+class AdminCreateController extends Controller
 {
 
     /**
@@ -28,8 +28,7 @@ class UserCreateController extends Controller
         $email_verified_time = Carbon::now()->toDateTimeString();
         $rand = Str::random(36);
 
-        if($request->validated())
-        {
+        if ($request->validated()) {
             $user = User::create([
                 'type' => $type,
                 'name' => $request['name'],
@@ -41,8 +40,7 @@ class UserCreateController extends Controller
                 'terms' => $terms
             ]);
 
-            foreach($request->role as $role)
-            {
+            foreach ($request->role as $role) {
                 $user->assignRole([$role]);
             }
 
@@ -61,19 +59,15 @@ class UserCreateController extends Controller
      */
     public function permissions(UserPermissionCreateRequest $request, User $user): RedirectResponse
     {
-        if($request->validated())
-        {
-            foreach($request->permission as $permission)
-            {
+        if ($request->validated()) {
+            foreach ($request->permission as $permission) {
                 $user->givePermissionTo([$permission]);
             }
 
             notyf()->addSuccess('Özel izinler başarılı bir şekilde oluşturuldu');
             return Redirect::route('panel.admins');
-
         }
 
         return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
-
     }
 }
