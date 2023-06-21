@@ -32,12 +32,10 @@ class CreateNewUser implements CreatesNewUsers
         ])->validate();
 
         $type = 2;
-        $is_super = 0;
         $terms = 1;
 
         return User::create([
             'type' => $type,
-            'is_super' => $is_super,
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),

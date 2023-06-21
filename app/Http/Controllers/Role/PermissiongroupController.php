@@ -74,7 +74,7 @@ class PermissiongroupController extends Controller
     public function destroy(Permissiongroup $permissiongroup): RedirectResponse
     {
 
-        if ( auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin' || auth()->user->is_super === '1' )
+        if ( auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin' )
         {
             if(count($permissiongroup->permission) > 0)
             {
