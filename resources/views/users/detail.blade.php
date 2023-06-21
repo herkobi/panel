@@ -83,15 +83,25 @@
                                         <label class="form-label col-md-4 fw-semibold mb-0" for="user-permissions">Özel
                                             İzinler</label>
                                         <div id="user-permissions" class="col-md-7">
-                                            <ul class="list-unstyled list-inline mb-0">
-                                                @foreach ($user->permissions as $permission)
-                                                    <li>
-                                                        <span
-                                                            class="d-block fw-semibold">{{ $permission->group->name }}</span>
-                                                        {{ $permission->text }}
-                                                    </li>
-                                                @endforeach
-                                            </ul>
+                                            @foreach ($basePermissions as $key => $permissions)
+                                            <div class="row mb-5">
+                                                <div class="col-md-12 mb-2">
+                                                    <div class="d-flex align-items-center justify-content-between border-bottom">
+                                                        <h4>{{ $key }}</h4>
+                                                    </div>
+                                                </div>
+                                                <div id="{{'group-'. Str::slug('-', $key) }}" class="row">
+                                                    @foreach ($permissions as $permissionId => $permission)
+                                                    <div class="col-md-3">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input rounded-0 shadow-none group-{{ Str::slug('-', $key) }}-permissions" type="checkbox" id="role-permission-{{ $permissionId }}" name="permission[]" value="{{ $permissionId }}" {{ in_array($permissionId, $rolePermissions) ? "checked" : ""}}>
+                                                            <label class="form-check-label" for="role-permission-{{ $permissionId }}">{{ $permission }}</label>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +153,8 @@
                     <div class="card-body">
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
-                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">Şifre Yenileme</label>
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">Şifre
+                                    Yenileme</label>
                                 <div class="col-md-7">
                                     <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
                                         onclick="event.preventDefault(); document.getElementById('password-reset-form').submit()">Şifre
@@ -154,7 +165,8 @@
                         @if (!$user->hasVerifiedEmail())
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
-                                    <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">E-posta Onayı</label>
+                                    <label class="form-label col-md-5 fw-semibold mb-0" for="user-status">E-posta
+                                        Onayı</label>
                                     <div class="col-md-7">
                                         <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
                                             onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta
@@ -165,7 +177,8 @@
                         @endif
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
-                                <label class="form-label col-md-5 fw-semibold mb-0" for="change-email">E-posta Değişimi</label>
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="change-email">E-posta
+                                    Değişimi</label>
                                 <div class="col-md-7"><button class="btn text p-0" data-bs-toggle="modal"
                                         data-bs-target="#changeEmail">E-posta Adresini Değiştir</button></div>
                             </div>

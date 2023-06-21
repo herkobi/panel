@@ -42,19 +42,22 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
+        //$permissiongroups = Permissiongroup::with('permission')->get();
+        //$permissions = Permissiongroup::withWhereHas('permission', fn ($query) => $query->where('type', UserType::ADMIN))->get();
 
-        $role = Role::find($user->role->id);
         $basePermissions = array();
         $permissions = array();
-        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
 
-        foreach ($permissions as $permission) {
-            $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+        foreach ($user->roles as $key => $role) {
+            $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
+            foreach ($permissions as $permission) {
+                $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+            }
+
+            $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        $rolePermissions = $role->permissions->pluck('id')->toArray();
-
-        return view('users.detail', compact('user', 'role', 'basePermissions', 'rolePermissions'));
+        return view('users.detail', compact('user', 'basePermissions', 'rolePermissions'));
     }
 
     public function createAdmin(): View
@@ -68,18 +71,22 @@ class UserController extends Controller
         // $user = User::find($user->id);
         // $groups = Permissiongroup::where('type', UserType::ADMIN)->with('permission')->get();
 
-        $role = Role::find($user->role->id);
+        $userRoles = array();
         $basePermissions = array();
         $permissions = array();
-        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
+        $rolePermissions = array();
+
+        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', UserType::ADMIN))->get();
 
         foreach ($permissions as $permission) {
             $basePermissions[$permission->group->name][$permission->id] = $permission->text;
         }
 
-        $rolePermissions = $role->permissions->pluck('id')->toArray();
+        foreach ($user->roles as $role) {
+            $rolePermissions = $role->permissions->pluck('id')->toArray();
+        }
 
-        return view('users.adminpermissions', compact('user', 'groups', 'role', 'basePermissions', 'rolePermissions'));
+        return view('users.adminpermissions', compact('user', 'basePermissions', 'rolePermissions'));
     }
 
     public function editUser(User $user): View

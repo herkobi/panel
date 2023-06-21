@@ -25,8 +25,6 @@ class UserCreateController extends Controller
 
         $type = 1;
         $terms = 1;
-        //$is_super = $request['is_super'];
-        $is_super = 0;
         $email_verified_time = Carbon::now()->toDateTimeString();
         $rand = Str::random(36);
 
@@ -34,7 +32,6 @@ class UserCreateController extends Controller
         {
             $user = User::create([
                 'type' => $type,
-                'is_super' => $is_super,
                 'name' => $request['name'],
                 'email' => $request['email'],
                 'email_verified_at' => $email_verified_time,

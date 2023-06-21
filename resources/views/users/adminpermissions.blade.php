@@ -44,23 +44,23 @@
                                     <span class="d-block small text-danger">Özel izin tanımlarken tanımlı yetkiler dışında kalan izinlerden seçiniz</span>
                                 </div>
                                 <div id="role-permissions" class="col-md-10">
-                                    @foreach ($groups as $group)
+                                    @foreach ($basePermissions as $key => $permissions)
                                     <div class="row mb-5">
                                         <div class="col-md-12 mb-2">
                                             <div class="d-flex align-items-center justify-content-between border-bottom">
-                                                <h4>{{ $group->name}}</h4>
+                                                <h4>{{ $key }}</h4>
                                                 <div class="form-check form-switch">
-                                                    <input class="form-check-input shadow-none" type="checkbox" role="switch" id="select-all-{{$group->id}}"  onClick="setAllCheckboxes('{{'group-'.$group->id}}', '{{'group-'.$group->id.'-permissions'}}', this);">
-                                                    <label class="form-check-label" for="select-all-{{$group->id}}">Tümünü Seç</label>
+                                                    <input class="form-check-input shadow-none" type="checkbox" role="switch" id="select-all-{{ Str::slug('-', $key) }}"  onClick="setAllCheckboxes('{{'group-'. Str::slug('-', $key) }}', '{{'group-'. Str::slug('-', $key) .'-permissions'}}', this);">
+                                                    <label class="form-check-label" for="select-all-{{ Str::slug('-', $key) }}">Tümünü Seç</label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="{{'group-'.$group->id}}" class="row">
-                                            @foreach ($group->permission as $permission)
+                                        <div id="{{'group-'. Str::slug('-', $key) }}" class="row">
+                                            @foreach ($permissions as $permissionId => $permission)
                                             <div class="col-md-3">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input rounded-0 shadow-none group-{{ $group->id }}-permissions" type="checkbox" id="role-permission-{{$permission->id}}" name="permission[]" value="{{$permission->id}}">
-                                                    <label class="form-check-label" for="role-permission-{{$permission->id}}">{{ $permission->text }}</label>
+                                                    <input class="form-check-input rounded-0 shadow-none group-{{ Str::slug('-', $key) }}-permissions" type="checkbox" id="role-permission-{{ $permissionId }}" name="permission[]" value="{{ $permissionId }}" {{ in_array($permissionId, $rolePermissions) ? "checked" : ""}}>
+                                                    <label class="form-check-label" for="role-permission-{{ $permissionId }}">{{ $permission }}</label>
                                                 </div>
                                             </div>
                                             @endforeach
