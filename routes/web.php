@@ -7,10 +7,11 @@ use App\Http\Controllers\Role\PermissionController;
 use App\Http\Controllers\Role\PermissiongroupController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Setting\SettingController;
-use App\Http\Controllers\User\UserCreateController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserDetailController;
 use App\Http\Controllers\User\UsertagController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminCreateController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
 
@@ -36,27 +37,35 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
 
     Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index')->name('users');
-        Route::get('/admins', 'admins')->name('admins');
         Route::get('/user/detail/{user}', 'show')->name('user.detail');
+        Route::get('/user/edit/{user}', 'editUser')->name('user.edit');
+    });
+
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/admins', 'admins')->name('admins');
+        Route::get('/admin/detail/{user}', 'show')->name('admin.detail');
         Route::get('/admin/create', 'createAdmin')->name('create.admin');
         Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
-        Route::get('/user/edit/{user}', 'editUser')->name('user.edit');
         Route::get('/admin/edit/{user}', 'editAdmin')->name('admin.edit');
     });
 
-    Route::controller(UserCreateController::class)->group(function () {
+    Route::controller(AdminCreateController::class)->group(function () {
         Route::post('admin/create/store', 'admin')->name('store.admin');
         Route::post('admin/create/permissions/{user}', 'permissions')->name('store.admin.permissions');
     });
 
-    Route::controller(UserDetailController::class)->group(function() {
+    Route::controller(UserDetailController::class)->group(function () {
         Route::post('/user/password/reset/{user}', 'passwordReset')->name('user.password.reset');
         Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
         Route::post('/user/email/change/{user}', 'changeEmail')->name('user.change.email');
     });
 
-    Route::controller(UsertagController::class)->group(function(){
-        Route::get('/users/tags', 'index')->name('user.tags');
+    Route::controller(UsertagController::class)->group(function () {
+        Route::get('/user/tags', 'index')->name('user.tags');
+        Route::get('/user/tag/{usertag}', 'edit')->name('user.tag.edit');
+        Route::post('/user/tag/edit/{usertag}', 'update')->name('user.tag.update');
+        Route::post('/user/tag/store', 'store')->name('user.tag.store');
+        Route::post('/user/tag/destroy/{usertag}', 'destroy')->name('user.tag.destroy');
     });
 
     Route::controller(SettingController::class)->group(function () {

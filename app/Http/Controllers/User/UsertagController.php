@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UsertagCreateRequest;
-use App\Http\Requests\UsertagUpdateRequest;
+use App\Http\Requests\Usertags\UsertagCreateRequest;
+use App\Http\Requests\Usertags\UsertagUpdateRequest;
 use App\Models\Usertag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -14,14 +14,13 @@ class UsertagController extends Controller
 {
     public function index(): View
     {
-        $tags = Usertag::all();
-        return view('users.categories.index', compact('tags'));
+        $usertags = Usertag::all();
+        return view('usercategories.index', compact('usertags'));
     }
 
     public function edit(Usertag $usertag): View
     {
-
-        return view('users.categories.index', compact('usertag'));
+        return view('usercategories.edit', compact('usertag'));
     }
 
     public function update(UsertagUpdateRequest $request, Usertag $usertag): RedirectResponse
