@@ -62,9 +62,6 @@ class AdminController extends Controller
 
     public function permissionAdmin(User $user): View
     {
-        // $user = User::find($user->id);
-        // $groups = Permissiongroup::where('type', UserType::ADMIN)->with('permission')->get();
-
         $userRoles = array();
         $basePermissions = array();
         $permissions = array();
