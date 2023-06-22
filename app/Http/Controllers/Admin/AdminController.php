@@ -77,7 +77,7 @@ class AdminController extends Controller
         return view('admin.permissions', compact('user', 'basePermissions', 'rolePermissions'));
     }
 
-    public function editAdmin(User $user): View
+    public function edit(User $user): View
     {
         return view('admin.edit', compact('user'));
     }

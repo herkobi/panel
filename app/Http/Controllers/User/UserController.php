@@ -54,13 +54,8 @@ class UserController extends Controller
         return view('users.detail', compact('user', 'basePermissions', 'rolePermissions'));
     }
 
-    public function editUser(User $user): View
+    public function edit(User $user): View
     {
         return view('users.edit', compact('user'));
-    }
-
-    public function editAdmin(User $user): View
-    {
-        return view('user.admins-edit', compact('user'));
     }
 }
