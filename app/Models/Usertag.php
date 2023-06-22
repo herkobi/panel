@@ -10,6 +10,7 @@ class Usertag extends Model
     use HasFactory;
 
     protected $fillable = [
+        'status',
         'name',
         'color',
         'desc'

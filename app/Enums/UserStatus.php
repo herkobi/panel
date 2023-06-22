@@ -9,14 +9,23 @@ enum UserStatus: int
     case PASSIVE = 3;
     case DELETED = 4;
 
-    public function title(): string
+    public static function title($title): string
     {
-        return match($this)
-        {
+        return match ($title) {
             self::ACTIVE => 'Aktif',
             self::DRAFT => 'Duraklatılmış',
             self::PASSIVE => 'Dondurulmuş',
             self::DELETED => 'Silinmiş',
+        };
+    }
+
+    public static function color($title): string
+    {
+        return match ($title) {
+            self::ACTIVE => 'text-bg-success',
+            self::DRAFT => 'text-bg-secondary',
+            self::PASSIVE => 'text-bg-warning',
+            self::DELETED => 'text-bg-danger',
         };
     }
 

@@ -185,6 +185,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'Helper' => App\Support\Helper::class,
+        'UserStatus' => App\Enums\UserStatus::class,
+        'UserType' => App\Enums\UserType::class,
     ])->toArray(),
 
 ];

@@ -13,6 +13,23 @@
                             @csrf
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
+                                    <label for="ser-tag-status" class="col-md-3 fw-bold align-self-center">Durum</label>
+                                    <div class="col-md-9">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input shadow-none" type="radio" name="status"
+                                                id="user-tag-status-active" value="1" checked>
+                                            <label class="form-check-label" for="user-tag-status-active">Aktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input shadow-none" type="radio" name="status"
+                                                id="user-tag-status-passive" value="0">
+                                            <label class="form-check-label" for="user-tag-status-passive">Pasif</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 border-bottom pb-3">
+                                <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-center"
                                         for="tag">Etiket</label>
                                     <div class="col-md-9">
@@ -80,7 +97,7 @@
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
                     <div class="card-header border-0 bg-white pt-3 pb-0">
                         <div class="d-flex align-items-center justify-content-between w-100 mb-2">
-                            <h4 class="card-title mb-0">Kayıtlı Kategoriler</h4>
+                            <h4 class="card-title mb-0">Kayıtlı Etiketler</h4>
                         </div>
                     </div>
                     <div class="card-body">
@@ -88,7 +105,7 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col" class="w-30">Kategori Adı</th>
+                                        <th scope="col" class="w-30">Etiket Adı</th>
                                         <th scope="col" class="w-20">Renk</th>
                                         <th scope="col" class="w-40">Açıklama</th>
                                         <th scope="col" class="w-10 text-center">İşlemler</th>

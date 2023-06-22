@@ -9,8 +9,7 @@ enum UserType: int
 
     public static function title($title): string
     {
-        return match($title)
-        {
+        return match ($title) {
             self::ADMIN => 'Yönetici',
             self::USER => 'Kullanıcı',
         };

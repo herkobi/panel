@@ -23,6 +23,7 @@ class UsertagUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'status' => ['required', 'integer', 'between:0,1'],
             'name' => ['required', 'string', Rule::unique('usertags', 'name')->ignore($this->usertag->id, 'id')],
             'color' => 'string',
             'desc' => 'string',
@@ -37,6 +38,9 @@ class UsertagUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'status.required' => 'Lütfen durum seçiniz',
+            'status.integer' => 'Durum değeri rakam olmalıdır',
+            'status.between' => 'Durum değeri 0 ya da 1 olabilir',
             'name.required' => 'Lütfen etiket adını giriniz',
             'name.unique' => 'Bu isimde girilmiş etiket bulunmaktadır',
             'color.string' => 'Lütfen geçerli bir rek kodu giriniz',

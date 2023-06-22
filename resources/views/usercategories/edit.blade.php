@@ -13,6 +13,25 @@
                             @csrf
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
+                                    <label for="ser-tag-status" class="col-md-3 fw-bold align-self-center">Durum</label>
+                                    <div class="col-md-9">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input shadow-none" type="radio" name="status"
+                                                id="user-tag-status-active" value="1"
+                                                {{ $usertag->status == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="user-tag-status-active">Aktif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input shadow-none" type="radio" name="status"
+                                                id="user-tag-status-passive" value="0"
+                                                {{ $usertag->status == 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="user-tag-status-passive">Pasif</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 border-bottom pb-3">
+                                <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-center"
                                         for="tag">Etiket</label>
                                     <div class="col-md-9">
@@ -75,7 +94,8 @@
                                                     class="ri-add-line"></i> Güncelle</button>
                                             @hasrole('Super Admin')
                                                 <button type="button" id="user-tag-destroy-button"
-                                                    class="btn btn-danger btn-sm rounded-0 shadow-none text-white" onclick="event.preventDefault(); document.getElementById('user-tag-destroy').submit()"><i
+                                                    class="btn btn-danger btn-sm rounded-0 shadow-none text-white"
+                                                    onclick="event.preventDefault(); document.getElementById('user-tag-destroy').submit()"><i
                                                         class="ri-delete-bin-3-line"></i> Etiketi Sil</button>
                                             @endhasrole
                                         </div>
