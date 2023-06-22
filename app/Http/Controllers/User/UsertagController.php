@@ -33,7 +33,7 @@ class UsertagController extends Controller
             ])->save();
 
             notyf()->addSuccess('Kullanıcı kategorisi başarılı bir şekilde güncellendi');
-            return Redirect::back();
+            return Redirect::route('panel.user.tags');
         }
     }
 
@@ -48,13 +48,13 @@ class UsertagController extends Controller
 
     public function destroy(Usertag $usertag)
     {
-        if (count($usertag->users->count()) > 0) {
+        if ($usertag->users->count() > 0) {
             notyf()->addError('Hata; Kategoriye ait kullanıcılar bulunmaktadır. Lütfen öncelikle kullanıcıları farklı kategorilere aktarınız');
-            return Redirect::back();
+            return Redirect::route('panel.user.tags');
         } else {
             $usertag->delete();
             notyf()->addSuccess('Kategori başarılı bir şekilde silindi');
-            return Redirect::route('panel.users.tags');
+            return Redirect::route('panel.user.tags');
         }
     }
 }
