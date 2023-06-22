@@ -31,14 +31,11 @@ class AdminController extends Controller
     public function index(): View
     {
         $users = User::where('type', UserType::ADMIN)->get()->except(User::role('Super Admin')->first()->id);
-        return view('users.admins', compact('users'));
+        return view('admin.index', compact('users'));
     }
 
     public function show(User $user): View
     {
-        //$permissiongroups = Permissiongroup::with('permission')->get();
-        //$permissions = Permissiongroup::withWhereHas('permission', fn ($query) => $query->where('type', UserType::ADMIN))->get();
-
         $basePermissions = array();
         $permissions = array();
 
@@ -51,13 +48,13 @@ class AdminController extends Controller
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        return view('users.detail', compact('user', 'basePermissions', 'rolePermissions'));
+        return view('admin.detail', compact('user', 'basePermissions', 'rolePermissions'));
     }
 
     public function createAdmin(): View
     {
         $roles = Role::where([['type', UserType::ADMIN], ['name', '!=', 'Super Admin']])->get();
-        return view('users.create', compact('roles'));
+        return view('admin.create', compact('roles'));
     }
 
     public function permissionAdmin(User $user): View
@@ -77,16 +74,11 @@ class AdminController extends Controller
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        return view('users.adminpermissions', compact('user', 'basePermissions', 'rolePermissions'));
-    }
-
-    public function editUser(User $user): View
-    {
-        return view('users.user-edit', compact('user'));
+        return view('admin.permissions', compact('user', 'basePermissions', 'rolePermissions'));
     }
 
     public function editAdmin(User $user): View
     {
-        return view('user.admins-edit', compact('user'));
+        return view('admin.edit', compact('user'));
     }
 }
