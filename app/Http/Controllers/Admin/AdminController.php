@@ -30,12 +30,6 @@ class AdminController extends Controller
 
     public function index(): View
     {
-        $users = User::where([['status', UserStatus::ACTIVE], ['type', UserType::USER]])->get();
-        return view('users.index', compact('users'));
-    }
-
-    public function admins(): View
-    {
         $users = User::where('type', UserType::ADMIN)->get()->except(User::role('Super Admin')->first()->id);
         return view('users.admins', compact('users'));
     }
