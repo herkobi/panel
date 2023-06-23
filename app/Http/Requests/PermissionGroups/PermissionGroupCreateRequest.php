@@ -28,7 +28,7 @@ class PermissionGroupCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', Rule::unique('permissiongroups', 'name')],
-            'type' => ['required', new Enum(UserType::class) ],
+            'type' => ['required', 'integer', new Enum(UserType::class)],
             'desc' => 'string',
         ];
     }
@@ -43,8 +43,8 @@ class PermissionGroupCreateRequest extends FormRequest
         return [
             'name.required' => 'Lütfen başlık giriniz',
             'name.unique' => 'Bu isimde girilmiş grup adı bulunmaktadır',
-            'type.unique' => 'Lütfen kullanıcı türünü seçiniz'
+            'type.required' => 'Lütfen kullanıcı türünü seçiniz',
+            'type.integer' => 'Seçmiş olduğunuz kullanıcı türü değeri rakam olmalıdır'
         ];
     }
-
 }

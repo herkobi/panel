@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Usertags\UsertagCreateRequest;
 use App\Http\Requests\Usertags\UsertagUpdateRequest;
@@ -27,6 +28,7 @@ class UsertagController extends Controller
     {
         if ($request->validated()) {
             $usertag->forceFill([
+                'status' => $request->status,
                 'name' => $request->name,
                 'color' => $request->color,
                 'desc' => $request->desc
@@ -39,6 +41,8 @@ class UsertagController extends Controller
 
     public function store(UsertagCreateRequest $request, Usertag $usertag): RedirectResponse
     {
+
+        dd($request);
         if ($request->validated()) {
             Usertag::create($request->all());
             notyf()->addSuccess('Kullanıcı kategorisi başarılı bir şekilde oluşturuldu');

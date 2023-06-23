@@ -16,6 +16,15 @@ class Usertag extends Model
         'desc'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'status' => Status::class,
+    ];
+
     public function users()
     {
         return $this->belongsToMany(User::class);

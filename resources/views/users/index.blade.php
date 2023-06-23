@@ -43,7 +43,8 @@
                                                         aria-haspopup="true" aria-expanded="false">
                                                         <i class="ri-menu-3-fill"></i>
                                                     </a>
-                                                    <ul class="dropdown-menu rounded-0 shadow-none bg-white">
+                                                    <ul
+                                                        class="dropdown-menu dropdown-menu-end rounded-0 shadow-none bg-white">
                                                         <li><a class="dropdown-item small"
                                                                 href="{{ route('panel.user.detail', $user->id) }}">Bilgiler</a>
                                                         </li>
@@ -90,21 +91,15 @@
                             <h4 class="card-title mb-0">Durum</h4>
                         </div>
                         <div class="card-body">
-                            <div class="form-check">
-                                <input class="form-check-input rounded-0 shadow-none" type="checkbox" name="status[]"
-                                    value="active" id="statusActive">
-                                <label class="form-check-label" for="statusActive">Aktif Hesaplar</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input rounded-0 shadow-none" type="checkbox" name="status[]"
-                                    value="passive" id="statusPassive">
-                                <label class="form-check-label" for="statusPassive">Pasif Hesaplar</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input rounded-0 shadow-none" type="checkbox" name="status[]"
-                                    value="closed" id="statusClosed">
-                                <label class="form-check-label" for="statusClosed">Kapalı Hesaplar</label>
-                            </div>
+                            @foreach (UserStatus::cases() as $searhStatus)
+                                <div class="form-check">
+                                    <input class="form-check-input rounded-0 shadow-none" type="checkbox" name="status[]"
+                                        value="{{ $searhStatus->value }}" id="user-status-select">
+                                    <label class="form-check-label"
+                                        for="user-status-select">{{ UserStatus::getTitle($searhStatus->value) }}
+                                        Hesaplar</label>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                     <div class="card rounded-0 shadow-sm border-0 mb-3">

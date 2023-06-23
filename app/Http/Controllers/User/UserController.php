@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Enums\Status;
 use App\Enums\UserStatus;
 use App\Enums\UserType;
 use App\Models\Permissiongroup;
@@ -9,9 +10,11 @@ use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
+use App\Models\Usertag;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 
@@ -30,15 +33,13 @@ class UserController extends Controller
 
     public function index(): View
     {
-        $users = User::where([['status', UserStatus::ACTIVE], ['type', UserType::USER]])->get();
-        return view('users.index', compact('users'));
+        $tags = Usertag::where('status', Status::ACTIVE);
+        $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
+        return view('users.index', compact('users', 'tags'));
     }
 
     public function show(User $user): View
     {
-        //$permissiongroups = Permissiongroup::with('permission')->get();
-        //$permissions = Permissiongroup::withWhereHas('permission', fn ($query) => $query->where('type', UserType::ADMIN))->get();
-
         $basePermissions = array();
         $permissions = array();
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Usertags;
 
+use App\Enums\Status;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class UsertagCreateRequest extends FormRequest
 {
@@ -23,7 +25,7 @@ class UsertagCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', 'integer', 'between:0,1'],
+            'status' => ['required', 'integer', 'between:0,1', new Enum(Status::class)],
             'name' => ['required', 'string', Rule::unique('usertags', 'name')],
             'color' => 'string',
             'desc' => 'string',

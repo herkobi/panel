@@ -13,18 +13,17 @@
                             @csrf
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
-                                    <label for="ser-tag-status" class="col-md-3 fw-bold align-self-center">Durum</label>
-                                    <div class="col-md-9">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input shadow-none" type="radio" name="status"
-                                                id="user-tag-status-active" value="1" checked>
-                                            <label class="form-check-label" for="user-tag-status-active">Aktif</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input shadow-none" type="radio" name="status"
-                                                id="user-tag-status-passive" value="0">
-                                            <label class="form-check-label" for="user-tag-status-passive">Pasif</label>
-                                        </div>
+                                    <label for="user-tag-status" class="col-md-3 fw-bold align-self-center">Durum</label>
+                                    <div id="user-tag-status" class="col-md-9">
+                                        @foreach (Status::cases() as $status)
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input shadow-none" type="radio" name="status[]"
+                                                    id="user-tag-status-title-{{ $status->value }}"
+                                                    value="{{ $status->value }}">
+                                                <label class="form-check-label"
+                                                    for="user-tag-status-title-{{ $status->value }}">{{ $status->title() }}</label>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
