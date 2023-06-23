@@ -91,15 +91,20 @@
                             <h4 class="card-title mb-0">Durum</h4>
                         </div>
                         <div class="card-body">
-                            @foreach (UserStatus::cases() as $searhStatus)
-                                <div class="form-check">
-                                    <input class="form-check-input rounded-0 shadow-none" type="checkbox" name="status[]"
-                                        value="{{ $searhStatus->value }}" id="user-status-select">
-                                    <label class="form-check-label"
-                                        for="user-status-select">{{ UserStatus::getTitle($searhStatus->value) }}
-                                        Hesaplar</label>
-                                </div>
-                            @endforeach
+                            <ul class="list-group list-group-flush">
+                                @foreach (UserStatus::cases() as $userStatus)
+                                    <li class="list-group-item bg-white">
+                                        <div class="form-check">
+                                            <input class="form-check-input rounded-0 shadow-none" type="checkbox"
+                                                name="status[]" value="{{ $userStatus->value }}"
+                                                id="user-status-select-{{ $userStatus->value }}">
+                                            <label class="form-check-label"
+                                                for="user-status-select-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
+                                                Hesaplar</label>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
                     <div class="card rounded-0 shadow-sm border-0 mb-3">
@@ -108,13 +113,17 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item bg-white">
-                                    <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="checkbox"
-                                            name="category[]" value="kategori-adi" id="categoryField">
-                                        <label class="form-check-label" for="categoryField">Kategori Adı</label>
-                                    </div>
-                                </li>
+                                @foreach ($tags as $tag)
+                                    <li class="list-group-item bg-white">
+                                        <div class="form-check">
+                                            <input class="form-check-input rounded-0 shadow-none" type="checkbox"
+                                                name="tag[]" value="{{ $tag->id }}"
+                                                id="user-tag-select-{{ $tag->id }}">
+                                            <label class="form-check-label"
+                                                for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
+                                        </div>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>

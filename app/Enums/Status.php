@@ -14,4 +14,16 @@ enum Status: int
             self::PASSIVE => 'Pasif',
         };
     }
+
+    public static function getTitle($type)
+    {
+        switch ($type) {
+            case self::ACTIVE->value:
+                return 'Aktif';
+            case self::PASSIVE->value:
+                return 'Pasif';
+            default:
+                throw new \Exception('Invalid type');
+        }
+    }
 }

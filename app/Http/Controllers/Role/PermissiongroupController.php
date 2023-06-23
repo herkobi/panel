@@ -20,10 +20,10 @@ class PermissiongroupController extends Controller
      */
     function __construct()
     {
-         $this->middleware('permission:permissiongroup-list|permissiongroup-create|permissiongroup-edit|permissiongroup-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:permissiongroup-create', ['only' => ['create','store']]);
-         $this->middleware('permission:permissiongroup-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:permissiongroup-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:permissiongroup-list|permissiongroup-create|permissiongroup-edit|permissiongroup-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:permissiongroup-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:permissiongroup-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:permissiongroup-delete', ['only' => ['destroy']]);
     }
 
     public function index(): View
@@ -34,9 +34,7 @@ class PermissiongroupController extends Controller
 
     public function store(PermissionGroupCreateRequest $request): RedirectResponse
     {
-
-        if($request->validated())
-        {
+        if ($request->validated()) {
             $request = Permissiongroup::create($request->all());
 
             notyf()->addSuccess('Grup başarılı bir şekilde kayıt edildi');
@@ -45,7 +43,6 @@ class PermissiongroupController extends Controller
 
         notyf()->addError('Hata; Bir sorun oluştu lütfen tekrar deneyiniz');
         return Redirect::route('panel.permission.groups');
-
     }
 
     public function edit(Permissiongroup $permissiongroup): View
@@ -56,7 +53,7 @@ class PermissiongroupController extends Controller
     public function update(Permissiongroup $permissiongroup, PermissionGroupUpdateRequest $request): RedirectResponse
     {
 
-        if($request->validated()) {
+        if ($request->validated()) {
             $permissiongroup->forceFill([
                 'name' => $request->name,
                 'desc' => $request->desc
@@ -68,16 +65,13 @@ class PermissiongroupController extends Controller
 
         notyf()->addError('Hata; Bir sorun oluştu şütfen tekrar deneyiniz');
         return Redirect::back();
-
     }
 
     public function destroy(Permissiongroup $permissiongroup): RedirectResponse
     {
 
-        if ( auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin' )
-        {
-            if(count($permissiongroup->permission) > 0)
-            {
+        if (auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin') {
+            if (count($permissiongroup->permission) > 0) {
                 notyf()->addError('Hata; Gruba ait izinler bulunmaktadır. Lütfen öncelikle izinleri farklı gruplara aktarınız');
                 return Redirect::back();
             } else {

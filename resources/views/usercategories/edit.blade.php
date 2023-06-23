@@ -15,18 +15,16 @@
                                 <div class="row">
                                     <label for="ser-tag-status" class="col-md-3 fw-bold align-self-center">Durum</label>
                                     <div class="col-md-9">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input shadow-none" type="radio" name="status"
-                                                id="user-tag-status-active" value="1"
-                                                {{ $usertag->status == 1 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="user-tag-status-active">Aktif</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input shadow-none" type="radio" name="status"
-                                                id="user-tag-status-passive" value="0"
-                                                {{ $usertag->status == 0 ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="user-tag-status-passive">Pasif</label>
-                                        </div>
+                                        @foreach (Status::cases() as $type)
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input rounded-0 shadow-none" type="radio"
+                                                    id="permission-group-type-user" name="status"
+                                                    value="{{ $type->value }}"
+                                                    {{ $usertag->status->value == $type->value ? 'checked' : '' }}>
+                                                <label class="form-check-label rounded-0 shadow-none"
+                                                    for="permission-group-type-user">{{ Status::getTitle($type->value) }}</label>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>

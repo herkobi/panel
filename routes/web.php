@@ -12,6 +12,7 @@ use App\Http\Controllers\User\UserDetailController;
 use App\Http\Controllers\User\UsertagController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminCreateController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
 
@@ -62,10 +63,11 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
 
     Route::controller(UsertagController::class)->group(function () {
         Route::get('/user/tags', 'index')->name('user.tags');
-        Route::post('/user/tag-create/store', 'store')->name('user.tag.store');
+        Route::post('/user/tag/store', 'store')->name('user.tag.store');
         Route::get('/user/tag/{usertag}', 'edit')->name('user.tag.edit');
         Route::post('/user/tag/edit/{usertag}', 'update')->name('user.tag.update');
         Route::post('/user/tag/destroy/{usertag}', 'destroy')->name('user.tag.destroy');
+        Route::post('user/tag/store', 'store')->name('user.tag.store');
     });
 
     Route::controller(SettingController::class)->group(function () {

@@ -33,9 +33,9 @@ class UserController extends Controller
 
     public function index(): View
     {
-        $tags = Usertag::where('status', Status::ACTIVE);
+        $tags = Usertag::where('status', [Status::ACTIVE])->get();
         $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
-        return view('users.index', compact('users', 'tags'));
+        return view('users.index', ['users' => $users, 'tags' => $tags]);
     }
 
     public function show(User $user): View

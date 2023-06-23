@@ -41,7 +41,6 @@ class UsertagController extends Controller
 
     public function store(UsertagCreateRequest $request): RedirectResponse
     {
-        dd($request);
         if ($request->validated()) {
             Usertag::create($request->all());
             notyf()->addSuccess('Kullanıcı kategorisi başarılı bir şekilde oluşturuldu');
