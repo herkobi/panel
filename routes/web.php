@@ -62,7 +62,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
 
     Route::controller(UsertagController::class)->group(function () {
         Route::get('/user/tags', 'index')->name('user.tags');
-        Route::post('/user/tag/store', 'store')->name('user.tag.store');
+        Route::post('/user/tag-create/store', 'store')->name('user.tag.store');
         Route::get('/user/tag/{usertag}', 'edit')->name('user.tag.edit');
         Route::post('/user/tag/edit/{usertag}', 'update')->name('user.tag.update');
         Route::post('/user/tag/destroy/{usertag}', 'destroy')->name('user.tag.destroy');

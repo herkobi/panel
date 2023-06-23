@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('usertags', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('status')->default(1);
             $table->string('name')->unique();
+            $table->tinyInteger('status')->default(1);
             $table->string('color');
             $table->string('desc')->nullable();
             $table->timestamps();

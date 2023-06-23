@@ -17,7 +17,7 @@
                                     <div id="user-tag-status" class="col-md-9">
                                         @foreach (Status::cases() as $status)
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input shadow-none" type="radio" name="status[]"
+                                                <input class="form-check-input shadow-none" type="radio" name="status"
                                                     id="user-tag-status-title-{{ $status->value }}"
                                                     value="{{ $status->value }}">
                                                 <label class="form-check-label"
