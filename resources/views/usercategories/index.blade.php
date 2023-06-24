@@ -9,7 +9,7 @@
                         <h4 class="card-title mb-0">Etiket Ekle</h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('panel.user.tag.store') }}" method="post">
+                        <form id="user-tag-form" action="" method="post">
                             @csrf
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
@@ -30,13 +30,13 @@
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-center"
-                                        for="tag">Etiket</label>
+                                        for="user-tag-name">Etiket</label>
                                     <div class="col-md-9">
                                         <div class="input-group">
                                             <span class="input-group-text rounded-0 shadow-none bg-white">
                                                 <i class="ri-text"></i>
                                             </span>
-                                            <input type="text" id="tag" placeholder="Etiket"
+                                            <input type="text" id="user-tag-name" placeholder="Etiket"
                                                 class="form-control border-start-0  rounded-0 shadow-none ps-0 @error('name') is-invalid @enderror"
                                                 name="name" value="{{ old('name') }}" required autocomplete="off">
                                             @error('name')
@@ -57,7 +57,7 @@
                                             <span class="input-group-text rounded-0 shadow-none bg-white py-0">
                                                 <i class="ri-palette-line"></i>
                                             </span>
-                                            <input type="color" id="color"
+                                            <input type="color" id="user-tag-color"
                                                 class="form-control border-start-0 rounded-0 shadow-none" name="color">
                                             @error('color')
                                                 <span class="invalid-feedback" role="alert">
@@ -73,16 +73,16 @@
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-start"
                                         for="user-tag-desc">Açıklama</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control rounded-0 shadow-none form-control-sm"
-                                            id="user-tag-desc" name="desc" value="{{ old('desc') }}"
-                                            placeholder="Etiketle İlgili Kısa Açıklama">
+                                        <input type="text" id="user-tag-desc"
+                                            class="form-control rounded-0 shadow-none form-control-sm" name="desc"
+                                            value="{{ old('desc') }}" placeholder="Etiketle İlgili Kısa Açıklama">
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="offset-md-3 col-md-5">
-                                        <button type="submit"
+                                        <button type="button" id="save-btn"
                                             class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
                                                 class="ri-add-line"></i> Kaydet</button>
                                     </div>
@@ -101,7 +101,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped">
+                            <table id="user-tag-table" class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="w-30">Etiket Adı</th>
@@ -139,6 +139,9 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    {{ $usertags->links() }}
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -146,4 +149,50 @@
             </div>
         </div>
     </div>
+@endsection
+
+
+@section('js')
+    <script type="module">
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('#save-btn').click(function(e) {
+                e.preventDefault();
+                let status = $("[name='status']:checked").val();
+                let name = $("#user-tag-name").val();
+                let colorInput = document.getElementById('user-tag-color');
+                let colorValue = colorInput.value;
+                let desc = $("#user-tag-desc").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('panel.user.tag.store') }}",
+                    dataType: 'json',
+                    data: {
+                        status: status,
+                        name: name,
+                        color: colorValue,
+                        desc: desc
+                    },
+                    success: function(data) {
+                        if(data.status == 'success')
+                        {
+                            $('#user-tag-form').trigger("reset");
+                            $("#user-tag-table").load(window.location + " #user-tag-table");
+                            flasher.notyf.success("Oldu sanki");
+                        }
+                        //table.draw();
+                    },
+                    error: function(data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

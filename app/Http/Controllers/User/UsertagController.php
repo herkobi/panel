@@ -15,7 +15,7 @@ class UsertagController extends Controller
 {
     public function index(): View
     {
-        $usertags = Usertag::all();
+        $usertags = Usertag::paginate('15');
         return view('usercategories.index', compact('usertags'));
     }
 
@@ -39,13 +39,24 @@ class UsertagController extends Controller
         }
     }
 
-    public function store(UsertagCreateRequest $request): RedirectResponse
+    // public function store(UsertagCreateRequest $request): RedirectResponse
+    // {
+    //     if ($request->validated()) {
+    //         Usertag::create($request->all());
+    //         notyf()->addSuccess('Kullanıcı kategorisi başarılı bir şekilde oluşturuldu');
+    //         return Redirect::route('panel.user.tags');
+    //     }
+    // }
+
+    public function store(UsertagCreateRequest $request)
     {
-        if ($request->validated()) {
-            Usertag::create($request->all());
-            notyf()->addSuccess('Kullanıcı kategorisi başarılı bir şekilde oluşturuldu');
-            return Redirect::route('panel.user.tags');
+        if ($request->ajax()) {
+            if ($request->validated()) {
+                Usertag::create($request->all());
+            }
         }
+
+        return response()->json(['status' => "success"]);
     }
 
     public function destroy(Usertag $usertag)

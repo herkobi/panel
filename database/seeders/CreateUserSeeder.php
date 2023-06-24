@@ -28,6 +28,8 @@ class CreateUserSeeder extends Seeder
             'terms' => 1
         ]);
 
+        $role = Role::create(['name' => 'User', 'type' => UserType::USER, 'desc' => 'Kullanıcı rolü', 'guard_name' => 'web']);
+
         for ($i = 0; $i <= 100; $i++) {
             $user = User::create([
                 'type' => 2,
@@ -40,9 +42,7 @@ class CreateUserSeeder extends Seeder
                 'created_by_name' => 'Super Admin',
                 'terms' => 1
             ]);
+            $user->assignRole([$role->id]);
         }
-
-        $role = Role::create(['name' => 'User', 'type' => UserType::USER, 'desc' => 'Kullanıcı rolü', 'guard_name' => 'web']);
-        $user->assignRole([$role->id]);
     }
 }
