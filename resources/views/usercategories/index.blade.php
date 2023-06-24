@@ -184,9 +184,7 @@
                         {
                             $('#user-tag-form').trigger("reset");
                             $("#user-tag-table").load(window.location + " #user-tag-table");
-                            flasher.notyf.success("Oldu sanki");
                         }
-                        //table.draw();
                     },
                     error: function(data) {
                         console.log('Error:', data);
