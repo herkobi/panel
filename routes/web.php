@@ -39,7 +39,8 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
     Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index')->name('users');
         Route::get('/user/detail/{user}', 'show')->name('user.detail');
-        Route::get('/user/edit/{user}', 'editUser')->name('user.edit');
+        Route::get('/user/edit/{user}', 'edit')->name('user.edit');
+        Route::get('/user/filter', 'filter')->name('user.filter');
     });
 
     Route::controller(AdminController::class)->group(function () {

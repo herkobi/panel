@@ -15,16 +15,32 @@ class CreateUserSeeder extends Seeder
      */
     public function run(): void
     {
+
         $user = User::create([
             'type' => 2,
             'status' => UserStatus::ACTIVE,
             'name' => 'bülent',
             'email' => 'user@user.com',
             'password' => bcrypt('password'),
+            'email_verified_at' => now(),
             'created_by' => 1,
             'created_by_name' => 'Super Admin',
             'terms' => 1
         ]);
+
+        for ($i = 0; $i <= 100; $i++) {
+            $user = User::create([
+                'type' => 2,
+                'status' => UserStatus::ACTIVE,
+                'name' => 'bülent' . $i,
+                'email' => 'user' . $i . '@user.com',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+                'created_by' => 1,
+                'created_by_name' => 'Super Admin',
+                'terms' => 1
+            ]);
+        }
 
         $role = Role::create(['name' => 'User', 'type' => UserType::USER, 'desc' => 'Kullanıcı rolü', 'guard_name' => 'web']);
         $user->assignRole([$role->id]);

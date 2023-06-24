@@ -10,7 +10,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive table-responsive-lg">
-                            <table class="table table-striped">
+                            <table id="user-table" class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th scope="col">Durum</th>
@@ -95,9 +95,10 @@
                                 @foreach (UserStatus::cases() as $userStatus)
                                     <li class="list-group-item bg-white">
                                         <div class="form-check">
-                                            <input class="form-check-input rounded-0 shadow-none" type="checkbox"
+                                            <input class="form-check-input rounded-0 shadow-none status" type="checkbox"
                                                 name="status[]" value="{{ $userStatus->value }}"
-                                                id="user-status-select-{{ $userStatus->value }}">
+                                                id="user-status-select-{{ $userStatus->value }}"
+                                                onclick="checkStatus(this)">
                                             <label class="form-check-label"
                                                 for="user-status-select-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
                                                 Hesaplar</label>
@@ -116,9 +117,9 @@
                                 @foreach ($tags as $tag)
                                     <li class="list-group-item bg-white">
                                         <div class="form-check">
-                                            <input class="form-check-input rounded-0 shadow-none" type="checkbox"
+                                            <input class="form-check-input rounded-0 shadow-none tag" type="checkbox"
                                                 name="tag[]" value="{{ $tag->id }}"
-                                                id="user-tag-select-{{ $tag->id }}">
+                                                id="user-tag-select-{{ $tag->id }}" onclick="checkTag(this)">
                                             <label class="form-check-label"
                                                 for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
                                         </div>
@@ -127,16 +128,78 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card rounded-0 shadow-sm border-0 mb-3">
-                        <div class="card-body">
-                            <div class="d-grid gap-2">
-                                <button type="submit" name="s" id="searchField"
-                                    class="btn btn-primary rounded-0 shadow-none">Ara</button>
-                            </div>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script>
+        var statusIds = [];
+        var tagIds = [];
+
+        function checkStatus(element) {
+            const value = element.value;
+            const isChecked = element.checked;
+            if (isChecked) {
+                statusIds.push(value)
+            } else {
+                statusIds = statusIds.filter(item => item !== value)
+            }
+            filter();
+        }
+
+        function checkTag(element) {
+            const value = element.value;
+            const isChecked = element.checked;
+            if (isChecked) {
+                tagIds.push(value)
+            } else {
+                tagIds = tagIds.filter(item => item !== value)
+            }
+            filter();
+        }
+
+        function filter() {
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('panel.user.filter') }}',
+                data: {
+                    tagIds,
+                    statusIds
+                },
+                success: function(response) {
+                    deleteRows();
+                    refreshRows(response);
+                },
+            });
+        }
+
+        function deleteRows() {
+            var tableHeaderRowCount = 1;
+            var table = document.getElementById('user-table');
+            var rowCount = table.rows.length;
+            for (var i = tableHeaderRowCount; i < rowCount; i++) {
+                table.deleteRow(tableHeaderRowCount);
+            }
+        }
+
+        function refreshRows(data) {
+            const table = document.getElementById('user-table');
+            for (const [key, value] of Object.entries(data.users)) {
+                const tr = table.insertRow();
+                const cell1 = tr.insertCell(0);
+                cell1.innerHTML = "1";
+                const cell2 = tr.insertCell(1);
+                cell2.innerHTML = "1";
+                const cell3 = tr.insertCell(2);
+                cell3.innerHTML = "1";
+                const cell4 = tr.insertCell(3);
+                cell4.innerHTML = "1";
+                const cell5 = tr.insertCell(4);
+                cell5.innerHTML = "1";
+            }
+        }
+    </script>
 @endsection

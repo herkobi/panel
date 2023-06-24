@@ -59,4 +59,16 @@ class UserController extends Controller
     {
         return view('users.edit', compact('user'));
     }
+
+    public function filter(Request $request)
+    {
+
+        if($request->has('statusIds'))
+        {
+            return response()->json([
+                'users' => User::take(5)->get(),
+            ]);
+        }
+        $users = User::where('type', [UserType::USER])->with('usertags')->get();
+    }
 }
