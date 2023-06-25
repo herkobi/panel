@@ -39,15 +39,6 @@ class UsertagController extends Controller
         }
     }
 
-    // public function store(UsertagCreateRequest $request): RedirectResponse
-    // {
-    //     if ($request->validated()) {
-    //         Usertag::create($request->all());
-    //         notyf()->addSuccess('Kullanıcı kategorisi başarılı bir şekilde oluşturuldu');
-    //         return Redirect::route('panel.user.tags');
-    //     }
-    // }
-
     public function store(UsertagCreateRequest $request)
     {
         if ($request->ajax()) {

@@ -9,7 +9,7 @@
                         <h4 class="card-title mb-0">Grup Ekle</h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('panel.permission.group.store') }}" method="post">
+                        <form id="permission-group-form" action="" method="post">
                             @csrf
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
@@ -33,10 +33,10 @@
                                                 <div class="col-md-6 mb-2">
                                                     <div class="form-check">
                                                         <input class="form-check-input rounded-0 shadow-none" type="radio"
-                                                            name="type" id="permission-group-type-user"
+                                                            name="type" id="permission-group-user-type"
                                                             value="{{ $type->value }}">
                                                         <label class="form-check-label rounded-0 shadow-none"
-                                                            for="permission-group-type-user">{{ UserType::getTitle($type->value) }}</label>
+                                                            for="permission-group-user-type">{{ UserType::getTitle($type->value) }}</label>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -48,11 +48,11 @@
                             </div>
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
-                                    <label class="form-label col-md-4 fw-semibold mb-0" for="permission-group-name">Grup
+                                    <label class="form-label col-md-4 fw-semibold mb-0" for="permission-group-desc">Grup
                                         Açıklaması</label>
                                     <div class="col-md-8">
                                         <input type="text" class="form-control rounded-0 shadow-none form-control-sm"
-                                            id="permission-group-name" name="desc" value="{{ old('desc') }}"
+                                            id="permission-group-desc" name="desc" value="{{ old('desc') }}"
                                             placeholder="Grup İle İlgili Kısa Açıklama" required>
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="offset-md-4 col-md-5">
-                                        <button type="submit"
+                                        <button type="button" id="save-btn"
                                             class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
                                                 class="ri-add-line"></i> Kaydet</button>
                                     </div>
@@ -79,7 +79,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive table-responsive-lg">
-                            <table class="table table-striped">
+                            <table id="permission-group-table" class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th scope="col" class="w-30">Grup Adı</th>
@@ -102,6 +102,9 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    {{ $groups->links() }}
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -109,4 +112,45 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script type="module">
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('#save-btn').click(function(e) {
+                e.preventDefault();
+                let name = $("#permission-group-name").val();
+                let typeInput = document.getElementById('permission-group-user-type');
+                let usertype = typeInput.value;
+                let desc = $("#permission-group-desc").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('panel.permission.group.store') }}",
+                    dataType: 'json',
+                    data: {
+                        name: name,
+                        type: usertype,
+                        desc: desc
+                    },
+                    success: function(data) {
+                        if(data.status == 'success')
+                        {
+                            $('#permission-group-form').trigger("reset");
+                            $("#permission-group-table").load(window.location + " #permission-group-table");
+                        }
+                    },
+                    error: function(data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

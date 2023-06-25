@@ -29,6 +29,7 @@ class CreateUserSeeder extends Seeder
         ]);
 
         $role = Role::create(['name' => 'User', 'type' => UserType::USER, 'desc' => 'Kullanıcı rolü', 'guard_name' => 'web']);
+        $user->assignRole([$role->id]);
 
         for ($i = 0; $i <= 100; $i++) {
             $user = User::create([

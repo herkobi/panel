@@ -28,21 +28,18 @@ class PermissiongroupController extends Controller
 
     public function index(): View
     {
-        $groups = Permissiongroup::get();
+        $groups = Permissiongroup::paginate('15');
         return view('permissiongroups.index', compact('groups'));
     }
 
-    public function store(PermissionGroupCreateRequest $request): RedirectResponse
+    public function store(PermissionGroupCreateRequest $request)
     {
-        if ($request->validated()) {
-            $request = Permissiongroup::create($request->all());
-
-            notyf()->addSuccess('Grup başarılı bir şekilde kayıt edildi');
-            return Redirect::route('panel.permission.groups');
+        if ($request->ajax()) {
+            if ($request->validated()) {
+                $request = Permissiongroup::create($request->all());
+                return response()->json(['status' => "success"]);
+            }
         }
-
-        notyf()->addError('Hata; Bir sorun oluştu lütfen tekrar deneyiniz');
-        return Redirect::route('panel.permission.groups');
     }
 
     public function edit(Permissiongroup $permissiongroup): View
