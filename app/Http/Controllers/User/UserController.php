@@ -40,6 +40,7 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
+        $tags = Usertag::all();
         $basePermissions = array();
         $permissions = array();
 
@@ -52,7 +53,7 @@ class UserController extends Controller
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        return view('users.detail', compact('user', 'basePermissions', 'rolePermissions'));
+        return view('users.detail', compact('user', 'tags', 'basePermissions', 'rolePermissions'));
     }
 
     public function edit(User $user): View
@@ -63,8 +64,7 @@ class UserController extends Controller
     public function filter(Request $request)
     {
 
-        if($request->has('statusIds'))
-        {
+        if ($request->has('statusIds')) {
             return response()->json([
                 'users' => User::take(5)->get(),
             ]);

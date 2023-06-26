@@ -2,7 +2,7 @@
 @section('content')
     @include('layouts.partials.page-title', [
         'title' => $user->name,
-        'status' => UserStatus::title($user->status),
+        'status' => !$user->hasVerifiedEmail() ? 'E-posta Onayı Bekliyor' : UserStatus::title($user->status),
     ])
     <div class="page-content position-relative mb-4">
         <div class="row">
@@ -13,23 +13,29 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-5 mb-3">
                                 <dl class="row">
-                                    <dt class="col-sm-4">Ad Soyad</dt>
-                                    <dd class="col-sm-8">Bülent Sakarya</dd>
-                                    <dt class="col-sm-4">E-posta Adresi</dt>
-                                    <dd class="col-sm-8">sakarya.bulent@gmail.com</dd>
-                                    <dt class="col-sm-4">Kullanılan Paket</dt>
-                                    <dd class="col-sm-8">Profesyonel - <small>Aylık</small></dd>
-                                    <dt class="col-sm-4">Üyelik Tarihi</dt>
-                                    <dd class="col-sm-8">15.02.2022 14:25:45</dd>
-                                    <dt class="col-sm-4">Ödeme Tutarı</dt>
-                                    <dd class="col-sm-8">₺ 1.255,00</dd>
-                                    <dt class="col-sm-4">Sonraki Ödeme</dt>
-                                    <dd class="col-sm-8">25.05.2023</dd>
+                                    <dt class="col-sm-5 mb-2">Yetki</dt>
+                                    <dd class="col-sm-7">
+                                        @foreach ($user->roles as $role)
+                                            <span class="me-2 mb-2">{{ $role->name }}</span>
+                                        @endforeach
+                                    </dd>
+                                    <dt class="col-sm-5 mb-2">Ad Soyad</dt>
+                                    <dd class="col-sm-7">{{ $user->name }}</dd>
+                                    <dt class="col-sm-5 mb-2">E-posta Adresi</dt>
+                                    <dd class="col-sm-7">{{ $user->email }}</dd>
+                                    <dt class="col-sm-5 mb-2">Üyelik Tarihi</dt>
+                                    <dd class="col-sm-7">{{ $user->created_at }}</dd>
+                                    <dt class="col-sm-5 mb-2">Son Oturum Tarihi</dt>
+                                    <dd class="col-sm-7">{{ $user->last_login_at }}</dd>
+                                    <dt class="col-sm-5 mb-2">Son Oturum IP Adresi</dt>
+                                    <dd class="col-sm-7">{{ $user->last_login_ip }}</dd>
+                                    <dt class="col-sm-5 mb-2">Kayıt Eden</dt>
+                                    <dd class="col-sm-7">{{ $user->created_by_name }}</dd>
                                 </dl>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-7 mb-3">
                                 <dl class="row">
                                     <dt class="col-sm-4">Fatura Adı</dt>
                                     <dd class="col-sm-8">Herkobi Dijital Çözümler Yazılım San. ve Tic. A.Ş.</dd>
@@ -97,83 +103,144 @@
             </div>
             <div class="col-md-3">
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
+                    <div class="card-header border-0 bg-white pt-3 pb-0">
+                        <h4 class="card-title mb-0">Durum</h4>
+                    </div>
+                    @if (!$user->hasVerifiedEmail())
+                        <div class="card-body">
+                            <div class="text-center">
+                                <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
+                                    onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta
+                                    Onay Linkini Tekrar Gönder</button>
+                            </div>
+                        </div>
+                    @else
+                        <form action="" method="post">
+                            @csrf
+                            <div class="card-body">
+                                @foreach (UserStatus::cases() as $userStatus)
+                                    <div class="form-check">
+                                        <input class="form-check-input rounded-0 shadow-none" type="radio" name="status[]"
+                                            value="{{ $userStatus->value }}" id="user-status-{{ $userStatus->value }}"
+                                            {{ $user->status->value == $userStatus->value ? 'checked' : '' }}>
+                                        <label class="form-check-label"
+                                            for="user-status-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
+                                            Hesap</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" id="update-user-status"
+                                    class="btn btn-primary btn-sm rounded-0 shadow-none">Durum
+                                    Değiştir</button>
+                            </div>
+                        </form>
+                    @endif
+                </div>
+                <div class="card rounded-0 shadow-sm border-0 mb-3">
                     <form action="" method="post">
+                        @csrf
                         <div class="card-header border-0 bg-white pt-3 pb-0">
-                            <h4 class="card-title mb-0">Durum</h4>
+                            <h4 class="card-title mb-0">Etiketler</h4>
                         </div>
                         <div class="card-body">
-                            <div class="form-check">
-                                <input class="form-check-input rounded-0 shadow-none" type="radio" name="status[]"
-                                    value="active" id="statusActive" disabled checked>
-                                <label class="form-check-label" for="statusActive">Aktif Hesaplar</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input rounded-0 shadow-none" type="radio" name="status[]"
-                                    value="passive" id="statusPassive">
-                                <label class="form-check-label" for="statusPassive">Pasif Hesaplar</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input rounded-0 shadow-none" type="radio" name="status[]"
-                                    value="closed" id="statusClosed">
-                                <label class="form-check-label" for="statusClosed">Kapalı Hesaplar</label>
-                            </div>
+                            <ul class="list-group list-group-flush">
+                                @foreach ($tags as $tag)
+                                    <li class="list-group-item bg-white">
+                                        <div class="form-check">
+                                            <input id="user-tag-select-{{ $tag->id }}"
+                                                class="form-check-input rounded-0 shadow-none tag" type="checkbox"
+                                                name="tag[]" value="{{ $tag->id }}">
+                                            <label class="form-check-label"
+                                                for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary btn-sm rounded-0 shadow-none">Durum
-                                Değiştir</button>
+                            <button type="button" id="update-user-tag"
+                                class="btn btn-primary btn-sm rounded-0 shadow-none">Güncelle</button>
                         </div>
                     </form>
                 </div>
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
-                    <form action="" method="post">
-                        <div class="card-header border-0 bg-white pt-3 pb-0">
-                            <h4 class="card-title mb-0">Kategoriler</h4>
+                    <div class="card-header border-0 bg-white pt-3 pb-0">
+                        <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+                            <h4 class="card-title mb-0">Kullanıcı İşlemleri</h4>
                         </div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="checkbox"
-                                            name="category[]" value="kategori-adi" id="categoryField">
-                                        <label class="form-check-label" for="categoryField">Kategori Adı</label>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="checkbox"
-                                            name="category[]" value="kategori-adi" id="categoryField">
-                                        <label class="form-check-label" for="categoryField">Kategori Adı</label>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="checkbox"
-                                            name="category[]" value="kategori-adi" id="categoryField">
-                                        <label class="form-check-label" for="categoryField">Kategori Adı</label>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="checkbox"
-                                            name="category[]" value="kategori-adi" id="categoryField">
-                                        <label class="form-check-label" for="categoryField">Kategori Adı</label>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="checkbox"
-                                            name="category[]" value="kategori-adi" id="categoryField" checked>
-                                        <label class="form-check-label" for="categoryField">Kategori Adı</label>
-                                    </div>
-                                </li>
-                            </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2 border-bottom pb-2">
+                            <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
+                                onclick="event.preventDefault(); document.getElementById('password-reset-form').submit()">Şifre
+                                Yenileme Linki Gönder</button>
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary btn-sm rounded-0 shadow-none">Güncelle</button>
+                        @if (!$user->hasVerifiedEmail())
+                            <div class="mb-2 border-bottom pb-2">
+                                <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
+                                    onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta
+                                    Onay Linki Gönder</button>
+                            </div>
+                        @endif
+                        <div class="mb-2 border-bottom pb-2">
+                            <button class="btn text p-0" data-bs-toggle="modal" data-bs-target="#changeEmail">E-posta
+                                Adresini Değiştir</button>
                         </div>
-                    </form>
+                        @if ($user->hasVerifiedEmail())
+                            <div class="mb-2">
+                                Kullanıcı Durumunu Değiştir
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="changeEmail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="changeEmailLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0 shadow-none bg-white">
+                <form action="{{ route('panel.user.change.email', $user->id) }}" method="POST" id="change-email">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changeEmailLabel">E-posta Adresini Güncelle</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-email">Güncel
+                                    E-posta Adresi</label>
+                                <div class="col-md-7">{{ $user->email }}</div>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-new-email">Yeni E-posta
+                                    Adresi</label>
+                                <div class="col-md-7">
+                                    <input type="email" class="form-control form-control-sm rounded-0 shadow-none"
+                                        name="email" value="{{ $user->email ? old('email') : $user->email }}" required
+                                        autofocus>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm rounded-0 shadow-none"
+                            data-bs-dismiss="modal">Kapat</button>
+                        <button type="submit" class="btn btn-primary btn-sm rounded-0 shadow-none">Değiştir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <form action="{{ route('panel.user.password.reset', $user->id) }}" method="POST" id="password-reset-form">
+        @csrf
+    </form>
+    <form action="{{ route('panel.user.email.verify', $user->id) }}" method="POST" id="email-verify-form">
+        @csrf
+    </form>
 @endsection
