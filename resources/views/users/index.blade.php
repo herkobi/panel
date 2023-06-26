@@ -108,26 +108,28 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="card rounded-0 shadow-sm border-0 mb-3">
-                        <div class="card-header border-0 bg-white pt-3 pb-0">
-                            <h4 class="card-title mb-0">Kategoriler</h4>
+                    @if ($tags->count() > 0)
+                        <div class="card rounded-0 shadow-sm border-0 mb-3">
+                            <div class="card-header border-0 bg-white pt-3 pb-0">
+                                <h4 class="card-title mb-0">Etiketler</h4>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    @foreach ($tags as $tag)
+                                        <li class="list-group-item bg-white">
+                                            <div class="form-check">
+                                                <input class="form-check-input rounded-0 shadow-none tag" type="checkbox"
+                                                    name="tag[]" value="{{ $tag->id }}"
+                                                    id="user-tag-select-{{ $tag->id }}" onclick="checkTag(this)">
+                                                <label class="form-check-label"
+                                                    for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                @foreach ($tags as $tag)
-                                    <li class="list-group-item bg-white">
-                                        <div class="form-check">
-                                            <input class="form-check-input rounded-0 shadow-none tag" type="checkbox"
-                                                name="tag[]" value="{{ $tag->id }}"
-                                                id="user-tag-select-{{ $tag->id }}" onclick="checkTag(this)">
-                                            <label class="form-check-label"
-                                                for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
+                    @endif
                 </form>
             </div>
         </div>

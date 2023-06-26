@@ -137,33 +137,36 @@
                         </form>
                     @endif
                 </div>
-                <div class="card rounded-0 shadow-sm border-0 mb-3">
-                    <form action="" method="post">
-                        @csrf
-                        <div class="card-header border-0 bg-white pt-3 pb-0">
-                            <h4 class="card-title mb-0">Etiketler</h4>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                @foreach ($tags as $tag)
-                                    <li class="list-group-item bg-white">
-                                        <div class="form-check">
-                                            <input id="user-tag-select-{{ $tag->id }}"
-                                                class="form-check-input rounded-0 shadow-none tag" type="checkbox"
-                                                name="tag[]" value="{{ $tag->id }}">
-                                            <label class="form-check-label"
-                                                for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        <div class="card-footer">
-                            <button type="button" id="update-user-tag"
-                                class="btn btn-primary btn-sm rounded-0 shadow-none">Güncelle</button>
-                        </div>
-                    </form>
-                </div>
+                @if ($tags->count() > 0)
+                    <div class="card rounded-0 shadow-sm border-0 mb-3">
+                        <form action="" method="post">
+                            @csrf
+                            <div class="card-header border-0 bg-white pt-3 pb-0">
+                                <h4 class="card-title mb-0">Etiketler</h4>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    @foreach ($tags as $tag)
+                                        <li class="list-group-item bg-white">
+                                            <div class="form-check">
+                                                <input id="user-tag-select-{{ $tag->id }}"
+                                                    class="form-check-input rounded-0 shadow-none tag" type="checkbox"
+                                                    onclick="checkTag(this)" name="tag[]" value="{{ $tag->id }}"
+                                                    {{ in_array($tag->id, $selectedTag) ? 'checked' : '' }}>
+                                                <label class="form-check-label"
+                                                    for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" id="update-user-tag" onclick="tagAjax()"
+                                    class="btn btn-primary btn-sm rounded-0 shadow-none">Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+                @endif
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
                     <div class="card-header border-0 bg-white pt-3 pb-0">
                         <div class="d-flex align-items-center justify-content-between w-100 mb-2">
@@ -197,7 +200,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="changeEmail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="changeEmailLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -243,4 +245,44 @@
     <form action="{{ route('panel.user.email.verify', $user->id) }}" method="POST" id="email-verify-form">
         @csrf
     </form>
+@endsection
+
+@section('js')
+    <script>
+        var tagIds = [];
+
+        function checkTag(element) {
+            const value = element.value;
+            const isChecked = element.checked;
+            if (isChecked) {
+                tagIds.push(value)
+            } else {
+                tagIds = tagIds.filter(item => item !== value)
+            }
+        }
+
+        function sendAjaxRequest(urlToSend, datas) {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: urlToSend,
+                data: {
+                    user_id: {{ $user->id }},
+                    tagIds: datas
+                },
+                success: function(result) {
+                    alert('ok');
+                },
+                error: function(result) {
+                    alert('error');
+                }
+            });
+        }
+
+        function tagAjax() {
+            sendAjaxRequest('{{ route('panel.user.synctags') }}', tagIds);
+        }
+    </script>
 @endsection

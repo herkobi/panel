@@ -41,8 +41,14 @@ class UserController extends Controller
     public function show(User $user): View
     {
         $tags = Usertag::all();
+        $usertags = $user->usertags;
         $basePermissions = array();
         $permissions = array();
+        $selectedTag = $user->usertags->pluck('id')->toArray();
+
+        // foreach ($usertags as $tag) {
+        //     $selectedTag = $tag->id;
+        // }
 
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
@@ -53,7 +59,7 @@ class UserController extends Controller
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        return view('users.detail', compact('user', 'tags', 'basePermissions', 'rolePermissions'));
+        return view('users.detail', compact('user', 'tags', 'selectedTag', 'basePermissions', 'rolePermissions'));
     }
 
     public function edit(User $user): View
@@ -69,6 +75,20 @@ class UserController extends Controller
                 'users' => User::take(5)->get(),
             ]);
         }
-        $users = User::where('type', [UserType::USER])->with('usertags')->get();
+        //$users = User::where('type', [UserType::USER])->with('usertags')->get();
+    }
+
+    public function tags(Request $request)
+    {
+        if ($request->ajax()) {
+            if ($request->has('tagIds')) {
+                $user = User::find($request->user_id);
+                if ($user->usertags->count() > 0) {
+                    $user->usertags()->syncWithoutDetaching($request->tagIds);
+                } else {
+                    $user->usertags()->sync($request->tagIds, false);
+                }
+            }
+        }
     }
 }

@@ -59,6 +59,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function usertags()
     {
-        return $this->belongsToMany(Usertag::class);
+        return $this->belongsToMany(Usertag::class)->withTimestamps();
     }
 }
