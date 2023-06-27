@@ -44,7 +44,6 @@ class AdminCreateController extends Controller
                 $user->assignRole([$role]);
             }
 
-            notyf()->addSuccess('Yeni yönetici başarılı bir şekilde oluşturuldu');
             return Redirect::route('panel.admins');
         }
 
@@ -64,7 +63,6 @@ class AdminCreateController extends Controller
                 $user->givePermissionTo([$permission]);
             }
 
-            notyf()->addSuccess('Özel izinler başarılı bir şekilde oluşturuldu');
             return Redirect::route('panel.admins');
         }
 

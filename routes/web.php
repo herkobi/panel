@@ -42,6 +42,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/user/edit/{user}', 'edit')->name('user.edit');
         Route::get('/user/filter', 'filter')->name('user.filter');
         Route::post('/user/synctags', 'tags')->name('user.synctags');
+        Route::post('/user/update/status', 'status')->name('user.update.status');
     });
 
     Route::controller(AdminController::class)->group(function () {

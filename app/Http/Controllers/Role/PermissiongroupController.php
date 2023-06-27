@@ -56,11 +56,9 @@ class PermissiongroupController extends Controller
                 'desc' => $request->desc
             ])->save();
 
-            notyf()->addSuccess('Grup başarılı bir şekilde güncellendi');
             return Redirect::route('panel.permission.groups');
         }
 
-        notyf()->addError('Hata; Bir sorun oluştu şütfen tekrar deneyiniz');
         return Redirect::back();
     }
 
@@ -69,12 +67,9 @@ class PermissiongroupController extends Controller
 
         if (auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin') {
             if (count($permissiongroup->permission) > 0) {
-                notyf()->addError('Hata; Gruba ait izinler bulunmaktadır. Lütfen öncelikle izinleri farklı gruplara aktarınız');
-                return Redirect::back();
+                return Redirect::back()->with('Hata. Bu grup silinemez');
             } else {
                 $permissiongroup->delete();
-
-                notyf()->addSuccess('Grup başarılı bir şekilde silindi');
                 return Redirect::route('panel.permission.groups');
             }
         }

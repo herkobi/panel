@@ -9,6 +9,7 @@ use App\Models\Permissiongroup;
 use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\StatusUpdateRequest;
 use App\Models\Permission;
 use App\Models\Usertag;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -34,21 +35,16 @@ class UserController extends Controller
     public function index(): View
     {
         $tags = Usertag::where('status', [Status::ACTIVE])->get();
-        $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
+        $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->paginate('25');
         return view('users.index', ['users' => $users, 'tags' => $tags]);
     }
 
     public function show(User $user): View
     {
         $tags = Usertag::all();
-        $usertags = $user->usertags;
         $basePermissions = array();
         $permissions = array();
         $selectedTag = $user->usertags->pluck('id')->toArray();
-
-        // foreach ($usertags as $tag) {
-        //     $selectedTag = $tag->id;
-        // }
 
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
@@ -72,18 +68,36 @@ class UserController extends Controller
 
         if ($request->has('statusIds')) {
             return response()->json([
-                'users' => User::take(5)->get(),
+                'users' => User::paginate('25'),
             ]);
         }
         //$users = User::where('type', [UserType::USER])->with('usertags')->get();
     }
 
+    public function status(Request $request)
+    {
+        if ($request->ajax()) {
+            if ($request->has('ids')) {
+                $user = User::find($request->user_id);
+                foreach (UserStatus::cases() as $userStatus) {
+                    if ($userStatus->value == $request->ids) {
+                        $status = $userStatus->value;
+                    }
+                }
+
+                $user->forceFill([
+                    'status' => $status
+                ])->save();
+            }
+        }
+    }
+
     public function tags(Request $request)
     {
         if ($request->ajax()) {
-            if ($request->has('tagIds')) {
+            if ($request->has('ids')) {
                 $user = User::find($request->user_id);
-                $user->usertags()->sync($request->tagIds);
+                $user->usertags()->sync($request->ids);
             }
         }
     }

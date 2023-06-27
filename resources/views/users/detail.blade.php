@@ -120,8 +120,9 @@
                             <div class="card-body">
                                 @foreach (UserStatus::cases() as $userStatus)
                                     <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="radio" name="status[]"
+                                        <input class="form-check-input rounded-0 shadow-none" type="radio" name="status"
                                             value="{{ $userStatus->value }}" id="user-status-{{ $userStatus->value }}"
+                                            onclick="checkStatus(this)"
                                             {{ $user->status->value == $userStatus->value ? 'checked' : '' }}>
                                         <label class="form-check-label"
                                             for="user-status-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
@@ -130,7 +131,7 @@
                                 @endforeach
                             </div>
                             <div class="card-footer">
-                                <button type="button" id="update-user-status"
+                                <button type="button" id="update-user-status" onclick="statusAjax()"
                                     class="btn btn-primary btn-sm rounded-0 shadow-none">Durum
                                     Değiştir</button>
                             </div>
@@ -190,11 +191,6 @@
                             <button class="btn text p-0" data-bs-toggle="modal" data-bs-target="#changeEmail">E-posta
                                 Adresini Değiştir</button>
                         </div>
-                        @if ($user->hasVerifiedEmail())
-                            <div class="mb-2">
-                                Kullanıcı Durumunu Değiştir
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -250,6 +246,7 @@
 @section('js')
     <script>
         var tagIds = [];
+        var status;
 
         function checkTag(element) {
             const value = element.value;
@@ -258,6 +255,14 @@
                 tagIds.push(value)
             } else {
                 tagIds = tagIds.filter(item => item !== value)
+            }
+        }
+
+        function checkStatus(element) {
+            const value = element.value;
+            const isChecked = element.checked;
+            if (isChecked) {
+                status = value
             }
         }
 
@@ -270,15 +275,19 @@
                 url: urlToSend,
                 data: {
                     user_id: {{ $user->id }},
-                    tagIds: datas
+                    ids: datas
                 },
                 success: function(result) {
-                    alert('ok');
+                    window.location.reload();
                 },
                 error: function(result) {
                     alert('error');
                 }
             });
+        }
+
+        function statusAjax() {
+            sendAjaxRequest('{{ route('panel.user.update.status') }}', status);
         }
 
         function tagAjax() {

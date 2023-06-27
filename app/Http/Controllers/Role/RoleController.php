@@ -84,8 +84,7 @@ class RoleController extends Controller
             $role = Role::create(['name' => $request->name, 'type' => $request->type, 'desc' => $request->desc]);
             return Redirect::route('panel.role.permissions.store', $role);
         } else {
-            notyf()->addError('Hata; Lütfen tüm gerekli alanları doldurunuz');
-            return Redirect::back();
+            return Redirect::back()->with('Hata');
         }
     }
 
@@ -110,7 +109,6 @@ class RoleController extends Controller
         if ($request->validated()) {
             $role->syncPermissions($request->permission);
             activity()->log(Auth::user()->name . ' oluşturduğu yetki için izinleri ayarladı');
-            notyf()->addSuccess('Yetki başarılı bir şekilde kayıt edildi');
             return Redirect::route('panel.roles');
         }
 
@@ -175,7 +173,6 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->input('permission'));
 
-        notyf()->addSuccess('Yetki başarılı bir şekilde güncellendi');
         return Redirect::route('panel.roles');
     }
 
@@ -187,10 +184,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        if (auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin' || auth()->user->is_super == '1') {
+        if (auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin') {
             DB::table("roles")->where('id', $role->id)->delete();
-
-            notyf()->addSuccess('Yetki başarılı bir şekilde silindi');
             return Redirect::route('panel.roles');
         }
     }

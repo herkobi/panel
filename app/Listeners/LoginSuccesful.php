@@ -27,6 +27,6 @@ class LoginSuccesful
         activity()
             ->log($event->user->email . ' ' . $ip . ' adresi üzerinden başarılı bir şekilde oturum açtı');
         Log::info("{$event->user->email} {$ip} adresi üzerinden başarılı bir şekilde oturum açtı", ['id' => $event->user->id]);
-        notyf()->addSuccess('Merhaba ' . $event->user->name);
+        //notyf()->addSuccess('Merhaba ' . $event->user->name);
     }
 }

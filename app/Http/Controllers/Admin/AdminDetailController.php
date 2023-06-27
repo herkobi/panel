@@ -26,10 +26,8 @@ class AdminDetailController extends Controller
         $status = Password::sendResetLink($user->only('email'));
 
         if ($status === Password::RESET_LINK_SENT) {
-            notyf()->addSuccess('Şifre yenilime linki e-posta adresine gönderildi');
             return redirect()->back();
         } else {
-            notyf()->addError($status);
             return redirect()->back();
         }
     }
@@ -43,10 +41,8 @@ class AdminDetailController extends Controller
             ])->save();
 
             $user->sendEmailVerificationNotification();
-            notyf()->addSuccess('E-posta adresi değiştirildi, onay linki tekrar gönderildi');
             return redirect()->back();
         } else {
-            notyf()->addError('Hata; Lütfen daha sonra tekrar deneyiniz');
             return redirect()->back();
         }
     }
