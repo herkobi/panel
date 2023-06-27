@@ -83,11 +83,7 @@ class UserController extends Controller
         if ($request->ajax()) {
             if ($request->has('tagIds')) {
                 $user = User::find($request->user_id);
-                if ($user->usertags->count() > 0) {
-                    $user->usertags()->syncWithoutDetaching($request->tagIds);
-                } else {
-                    $user->usertags()->sync($request->tagIds, false);
-                }
+                $user->usertags()->sync($request->tagIds);
             }
         }
     }
