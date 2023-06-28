@@ -76,28 +76,28 @@ class UserController extends Controller
 
     public function status(Request $request)
     {
-        if ($request->ajax()) {
-            if ($request->has('ids')) {
-                $user = User::find($request->user_id);
-                foreach (UserStatus::cases() as $userStatus) {
-                    if ($userStatus->value == $request->ids) {
-                        $status = $userStatus->value;
-                    }
+        if ($request->ajax() && $request->has('ids')) {
+            $user = User::findOrFail($request->user_id);
+            foreach (UserStatus::cases() as $userStatus) {
+                if ($userStatus->value == $request->ids) {
+                    $status = $userStatus->value;
                 }
-
-                $user->forceFill([
-                    'status' => $status
-                ])->save();
             }
+
+            $user->forceFill([
+                'status' => $status
+            ])->save();
         }
     }
 
     public function tags(Request $request)
     {
-        if ($request->ajax()) {
-            if ($request->has('ids')) {
-                $user = User::find($request->user_id);
-                $user->usertags()->sync($request->ids);
+        if ($request->ajax() && $request->has('ids')) {
+            $user = User::findOrFail($request->user_id);
+
+            $user->usertags()->detach();
+            foreach ($request->ids as $tagId) {
+                $user->usertags()->attach($tagId);
             }
         }
     }

@@ -6,6 +6,10 @@
         <span class="d-block d-md-none close"><i class="ri-close-circle-line"></i></span>
     </div>
     <div class="sidebar-content" data-simplebar>
-        @include('layouts.partials.navigation')
+        @if (auth()->user()->type == UserType::USER)
+            @include('layouts.partials.navigation-user')
+        @else
+            @include('layouts.partials.navigation-admin')
+        @endif
     </div>
 </aside>

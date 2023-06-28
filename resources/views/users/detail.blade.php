@@ -9,92 +9,221 @@
             <div class="col-md-9">
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
                     <div class="card-header border-0 bg-white pt-3 pb-0">
-                        <h4 class="card-title mb-0">Hesap Bilgileri</h4>
+                        <h4 class="card-title mb-0">Kullanıcı Bilgileri</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-5 mb-3">
-                                <dl class="row">
-                                    <dt class="col-sm-5 mb-2">Yetki</dt>
-                                    <dd class="col-sm-7">
-                                        @foreach ($user->roles as $role)
-                                            <span class="me-2 mb-2">{{ $role->name }}</span>
-                                        @endforeach
-                                    </dd>
-                                    <dt class="col-sm-5 mb-2">Ad Soyad</dt>
-                                    <dd class="col-sm-7">{{ $user->name }}</dd>
-                                    <dt class="col-sm-5 mb-2">E-posta Adresi</dt>
-                                    <dd class="col-sm-7">{{ $user->email }}</dd>
-                                    <dt class="col-sm-5 mb-2">Üyelik Tarihi</dt>
-                                    <dd class="col-sm-7">{{ $user->created_at }}</dd>
-                                    <dt class="col-sm-5 mb-2">Son Oturum Tarihi</dt>
-                                    <dd class="col-sm-7">{{ $user->last_login_at }}</dd>
-                                    <dt class="col-sm-5 mb-2">Son Oturum IP Adresi</dt>
-                                    <dd class="col-sm-7">{{ $user->last_login_ip }}</dd>
-                                    <dt class="col-sm-5 mb-2">Kayıt Eden</dt>
-                                    <dd class="col-sm-7">{{ $user->created_by_name }}</dd>
-                                </dl>
-                            </div>
-                            <div class="col-md-7 mb-3">
-                                <dl class="row">
-                                    <dt class="col-sm-4">Fatura Adı</dt>
-                                    <dd class="col-sm-8">Herkobi Dijital Çözümler Yazılım San. ve Tic. A.Ş.</dd>
-                                    <dt class="col-sm-4">Fatura Adresi</dt>
-                                    <dd class="col-sm-8">Alacamescit Mah. Bayathane Cd. Çamoğlu İşhanı K:3/301 Osmangazi /
-                                        Bursa</dd>
-                                    <dt class="col-sm-4">TC/Vergi No/Daire</dt>
-                                    <dd class="col-sm-8">62908416512 - Osmangazi</dd>
-                                    <dt class="col-sm-4">Ticari Sicil No</dt>
-                                    <dd class="col-sm-8">1625024</dd>
-                                    <dt class="col-sm-4">Mersis No</dt>
-                                    <dd class="col-sm-8">1625024546548791321</dd>
-                                    <dt class="col-sm-4">Kep E-posta</dt>
-                                    <dd class="col-sm-8">iletisim@herkobi.com</dd>
-                                </dl>
-                            </div>
-                        </div>
+                        <dl class="row">
+                            <dt class="col-sm-3 mb-2">Yetki</dt>
+                            <dd class="col-sm-9">
+                                @foreach ($user->roles as $role)
+                                    <span class="me-2 mb-2">{{ $role->name }}</span>
+                                @endforeach
+                            </dd>
+                            <dt class="col-sm-3 mb-2">Ad Soyad</dt>
+                            <dd class="col-sm-9">{{ $user->name }}</dd>
+                            <dt class="col-sm-3 mb-2">E-posta Adresi</dt>
+                            <dd class="col-sm-9">{{ $user->email }}</dd>
+                            <dt class="col-sm-3 mb-2">Üyelik Tarihi</dt>
+                            <dd class="col-sm-9">{{ $user->created_at }}</dd>
+                            <dt class="col-sm-3 mb-2">Son Oturum Tarihi</dt>
+                            <dd class="col-sm-9">{{ $user->last_login_at }}</dd>
+                            <dt class="col-sm-3 mb-2">Son Oturum IP Adresi</dt>
+                            <dd class="col-sm-9">{{ $user->last_login_ip }}</dd>
+                            <dt class="col-sm-3 mb-2">Kayıt Eden</dt>
+                            <dd class="col-sm-9">{{ $user->created_by_name }}</dd>
+                        </dl>
                     </div>
                 </div>
-                <div class="card rounded-0 shadow-sm border-0 mb-3">
-                    <div class="card-header border-0 bg-white pt-3 pb-0">
-                        <h4 class="card-title mb-0">Müşteri Aktiviteleri</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
-                            <div class="vertical-timeline-item vertical-timeline-element">
-                                <div>
-                                    <span class="vertical-timeline-element-icon bounce-in">
-                                        <i class="badge badge-dot badge-dot-xl bg-success"> </i>
-                                    </span>
-                                    <div class="vertical-timeline-element-content border-bottom bounce-in">
-                                        <h4 class="timeline-title">Başarılı Ödeme</h4>
-                                        <p>Paket ödemesi başarılı bir şekilde gerçekleşti</p>
-                                        <span class="vertical-timeline-element-date">12 Ağustos 2022<br>15:30:45</span>
+                <div class="user-content-tab-menus">
+                    <ul class="nav nav-tabs rounded-0 bg-white border-0" id="userTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-0 border-0 text-black active" id="activity-tab"
+                                data-bs-toggle="tab" data-bs-target="#activity-tab-pane" type="button" role="tab"
+                                aria-controls="activity-tab-pane" aria-selected="true"><i class="ri-history-line"></i> Hesap
+                                Hareketleri</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-0 border-0 text-black" id="auth-tab" data-bs-toggle="tab"
+                                data-bs-target="#auth-tab-pane" type="button" role="tab" aria-controls="auth-tab-pane"
+                                aria-selected="false"><i class="ri-user-follow-line"></i> Oturum Kayıtları</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-0 border-0 text-black" id="account-tab" data-bs-toggle="tab"
+                                data-bs-target="#account-tab-pane" type="button" role="tab"
+                                aria-controls="account-tab-pane" aria-selected="false"><i
+                                    class="ri-account-pin-box-line"></i> Hesap Bilgileri</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-0 border-0 text-black" id="permissions-tab" data-bs-toggle="tab"
+                                data-bs-target="#permissions-tab-pane" type="button" role="tab"
+                                aria-controls="permissions-tab-pane" aria-selected="false"><i
+                                    class="ri-fingerprint-line"></i>
+                                Özel İzinler</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="user-content-tab-contents">
+                    <div class="tab-content" id="userTabContent">
+                        <div class="tab-pane fade show active" id="activity-tab-pane" role="tabpanel"
+                            aria-labelledby="activity-tab" tabindex="0">
+                            <div class="card rounded-0 shadow-sm border-0 mb-3">
+                                <div class="card-header border-0 bg-white pt-3 pb-0">
+                                    <h4 class="card-title">Hesap Hareketleri</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+                                        <div class="vertical-timeline-item vertical-timeline-element">
+                                            <div>
+                                                <span class="vertical-timeline-element-icon bounce-in">
+                                                    <i class="badge badge-dot badge-dot-xl bg-success"> </i>
+                                                </span>
+                                                <div class="vertical-timeline-element-content border-bottom bounce-in">
+                                                    <h4 class="timeline-title">Başarılı Ödeme</h4>
+                                                    <p>Paket ödemesi başarılı bir şekilde gerçekleşti</p>
+                                                    <span class="vertical-timeline-element-date">12 Ağustos
+                                                        2022<br>15:30:45</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-item vertical-timeline-element">
+                                            <div>
+                                                <span class="vertical-timeline-element-icon bounce-in">
+                                                    <i class="badge badge-dot badge-dot-xl bg-warning"> </i>
+                                                </span>
+                                                <div class="vertical-timeline-element-content border-bottom bounce-in">
+                                                    <h4 class="timeline-title">Başarısız Ödeme</h4>
+                                                    <p>Paket ödemesi gerçekleşmedi</p>
+                                                    <span class="vertical-timeline-element-date">07 Temmuz
+                                                        2023<br>15:30:45</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-item vertical-timeline-element">
+                                            <div>
+                                                <span class="vertical-timeline-element-icon bounce-in">
+                                                    <i class="badge badge-dot badge-dot-xl bg-danger"> </i>
+                                                </span>
+                                                <div class="vertical-timeline-element-content border-bottom bounce-in">
+                                                    <h4 class="timeline-title">Paket Değişimi</h4>
+                                                    <p>Standart aylık paketten standart yıllık pakete geçiş gerçekleşti.</p>
+                                                    <span class="vertical-timeline-element-date">27 Aralık
+                                                        2023<br>15:30:45</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="vertical-timeline-item vertical-timeline-element">
-                                <div>
-                                    <span class="vertical-timeline-element-icon bounce-in">
-                                        <i class="badge badge-dot badge-dot-xl bg-warning"> </i>
-                                    </span>
-                                    <div class="vertical-timeline-element-content border-bottom bounce-in">
-                                        <h4 class="timeline-title">Başarısız Ödeme</h4>
-                                        <p>Paket ödemesi gerçekleşmedi</p>
-                                        <span class="vertical-timeline-element-date">07 Temmuz 2023<br>15:30:45</span>
+                        </div>
+                        <div class="tab-pane fade" id="auth-tab-pane" role="tabpanel" aria-labelledby="auth-tab"
+                            tabindex="0">
+                            <div class="card rounded-0 shadow-sm border-0 mb-3">
+                                <div class="card-header border-0 bg-white pt-3 pb-0">
+                                    <h4 class="card-title">Oturum Kayıtları</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div
+                                        class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+                                        <div class="vertical-timeline-item vertical-timeline-element">
+                                            <div>
+                                                <span class="vertical-timeline-element-icon bounce-in">
+                                                    <i class="badge badge-dot badge-dot-xl bg-success"> </i>
+                                                </span>
+                                                <div class="vertical-timeline-element-content border-bottom bounce-in">
+                                                    <h4 class="timeline-title">Başarılı Ödeme</h4>
+                                                    <p>Paket ödemesi başarılı bir şekilde gerçekleşti</p>
+                                                    <span class="vertical-timeline-element-date">12 Ağustos
+                                                        2022<br>15:30:45</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-item vertical-timeline-element">
+                                            <div>
+                                                <span class="vertical-timeline-element-icon bounce-in">
+                                                    <i class="badge badge-dot badge-dot-xl bg-warning"> </i>
+                                                </span>
+                                                <div class="vertical-timeline-element-content border-bottom bounce-in">
+                                                    <h4 class="timeline-title">Başarısız Ödeme</h4>
+                                                    <p>Paket ödemesi gerçekleşmedi</p>
+                                                    <span class="vertical-timeline-element-date">07 Temmuz
+                                                        2023<br>15:30:45</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="vertical-timeline-item vertical-timeline-element">
+                                            <div>
+                                                <span class="vertical-timeline-element-icon bounce-in">
+                                                    <i class="badge badge-dot badge-dot-xl bg-danger"> </i>
+                                                </span>
+                                                <div class="vertical-timeline-element-content border-bottom bounce-in">
+                                                    <h4 class="timeline-title">Paket Değişimi</h4>
+                                                    <p>Standart aylık paketten standart yıllık pakete geçiş gerçekleşti.</p>
+                                                    <span class="vertical-timeline-element-date">27 Aralık
+                                                        2023<br>15:30:45</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="vertical-timeline-item vertical-timeline-element">
-                                <div>
-                                    <span class="vertical-timeline-element-icon bounce-in">
-                                        <i class="badge badge-dot badge-dot-xl bg-danger"> </i>
-                                    </span>
-                                    <div class="vertical-timeline-element-content border-bottom bounce-in">
-                                        <h4 class="timeline-title">Paket Değişimi</h4>
-                                        <p>Standart aylık paketten standart yıllık pakete geçiş gerçekleşti.</p>
-                                        <span class="vertical-timeline-element-date">27 Aralık 2023<br>15:30:45</span>
-                                    </div>
+                        </div>
+                        <div class="tab-pane fade" id="account-tab-pane" role="tabpanel" aria-labelledby="account-tab"
+                            tabindex="0">
+                            <div class="card rounded-0 shadow-sm border-0 mb-3">
+                                <div class="card-header border-0 bg-white pt-3 pb-0">
+                                    <h4 class="card-title">Hesap Bilgileri</h4>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">Fatura Adı</dt>
+                                        <dd class="col-sm-8">Herkobi Dijital Çözümler Yazılım San. ve Tic. A.Ş.</dd>
+                                        <dt class="col-sm-4">Fatura Adresi</dt>
+                                        <dd class="col-sm-8">Alacamescit Mah. Bayathane Cd. Çamoğlu İşhanı K:3/301
+                                            Osmangazi / Bursa</dd>
+                                        <dt class="col-sm-4">TC/Vergi No/Daire</dt>
+                                        <dd class="col-sm-8">62908416512 - Osmangazi</dd>
+                                        <dt class="col-sm-4">Ticari Sicil No</dt>
+                                        <dd class="col-sm-8">1625024</dd>
+                                        <dt class="col-sm-4">Mersis No</dt>
+                                        <dd class="col-sm-8">1625024546548791321</dd>
+                                        <dt class="col-sm-4">Kep E-posta</dt>
+                                        <dd class="col-sm-8">iletisim@herkobi.com</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="permissions-tab-pane" role="tabpanel"
+                            aria-labelledby="permissions-tab" tabindex="0">
+                            <div class="card rounded-0 shadow-sm border-0 mb-3">
+                                <div class="card-header border-0 bg-white pt-3 pb-0">
+                                    <h4 class="card-title">Özel İzinler</h4>
+                                </div>
+                                <div class="card-body">
+                                    @foreach ($basePermissions as $key => $permissions)
+                                        <div class="row mb-5">
+                                            <div class="col-md-12 mb-2">
+                                                <div
+                                                    class="d-flex align-items-center justify-content-between border-bottom">
+                                                    <h4>{{ $key }}</h4>
+                                                </div>
+                                            </div>
+                                            <div id="{{ 'group-' . Str::slug('-', $key) }}" class="row">
+                                                @foreach ($permissions as $permissionId => $permission)
+                                                    <div class="col-md-3">
+                                                        <div class="form-check form-check-inline">
+                                                            <input
+                                                                class="form-check-input rounded-0 shadow-none group-{{ Str::slug('-', $key) }}-permissions"
+                                                                type="checkbox" id="role-permission-{{ $permissionId }}"
+                                                                name="permission[]" value="{{ $permissionId }}"
+                                                                {{ in_array($permissionId, $rolePermissions) ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="role-permission-{{ $permissionId }}">{{ $permission }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -120,9 +249,9 @@
                             <div class="card-body">
                                 @foreach (UserStatus::cases() as $userStatus)
                                     <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="radio" name="status"
-                                            value="{{ $userStatus->value }}" id="user-status-{{ $userStatus->value }}"
-                                            onclick="checkStatus(this)"
+                                        <input class="form-check-input rounded-0 shadow-none" type="radio"
+                                            name="status" value="{{ $userStatus->value }}"
+                                            id="user-status-{{ $userStatus->value }}" onclick="checkStatus(this)"
                                             {{ $user->status->value == $userStatus->value ? 'checked' : '' }}>
                                         <label class="form-check-label"
                                             for="user-status-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
@@ -258,6 +387,29 @@
             }
         }
 
+        // window.addEventListener('load', function() {
+        //     var checkboxes = document.querySelectorAll('.tag[type="checkbox"]');
+        //     checkboxes.forEach(function(checkbox) {
+        //         if (checkbox.checked) {
+        //             tagIds.push(checkbox.value);
+        //         }
+        //         checkbox.addEventListener('change', function() {
+        //             if (this.checked) {
+        //                 tagIds.push(this.value);
+        //             } else {
+        //                 var index = tagIds.indexOf(this.value);
+        //                 if (index !== -1) {
+        //                     tagIds.splice(index, 1);
+        //                 }
+        //             }
+        //         });
+        //         console.log(tagIds);
+        //     });
+        // });
+
+
+        // TODO: Sayfa yüklendiğinde seçili gelenler de tagIds içine alınacak
+
         function checkStatus(element) {
             const value = element.value;
             const isChecked = element.checked;
@@ -285,6 +437,10 @@
                 }
             });
         }
+
+        // TODO: data değeri dışardan tüm alanları ile birlikte gönderilecek
+        // TODO: success ve error değerleri için dinamik içerikler gelecek
+        // TODO: Bu ajax fonksiyonu globale taşınacak. her yerden kullanılacak.
 
         function statusAjax() {
             sendAjaxRequest('{{ route('panel.user.update.status') }}', status);

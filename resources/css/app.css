@@ -377,6 +377,7 @@ table a {
     transform: rotate(-45deg);
     transition: all .2s ease-out;
 }
+
 .menu-item [aria-expanded=true]:before,
 .menu-item [data-bs-toggle=collapse]:not(.collapsed):before {
     transform: rotate(45deg);
@@ -423,6 +424,10 @@ table a {
 .activity-page a.nav-link,
 .activity-page a.nav-link:hover {
     color: var(--bs-gray-700) !important;
+}
+
+.user-content-tab-menus .nav-link {
+    font-size: .90rem;
 }
 
 /*
