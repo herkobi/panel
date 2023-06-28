@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\TwoFactorAuthenticationController;
@@ -34,6 +35,11 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
     Route::controller(Dashboard::class)->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/passive', 'passive')->name('passive');
+    });
+
+    Route::controller(Admin::class)->group(function () {
+        Route::get('/admin', 'index')->name('admin.home');
+        Route::get('/admin/passive', 'passive')->name('admin.passive');
     });
 
     Route::controller(UserController::class)->group(function () {

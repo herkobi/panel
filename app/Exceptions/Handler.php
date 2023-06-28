@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use App\Enums\UserType;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +30,26 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    // Panel Tarafının Hata Sayfalarını Özelleştirme
+    protected function renderHttpException(HttpExceptionInterface $e): Response
+    {
+        $this->registerErrorViewPaths();
+
+        $view = "errors::{$e->getStatusCode()}";
+
+        if (request()->is('panel/*')) {
+            $view = "errors::panel.{$e->getStatusCode()}";
+        }
+
+        if (view()->exists($view)) {
+            return response()->view($view, [
+                'errors' => new \Illuminate\Support\ViewErrorBag,
+                'exception' => $e,
+            ], $e->getStatusCode(), $e->getHeaders());
+        }
+
+        return $this->convertExceptionToResponse($e);
     }
 }

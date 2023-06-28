@@ -19,6 +19,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/panel';
 
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */

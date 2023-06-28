@@ -1,1 +1,1 @@
-asda
+kullanıcı hatası bu

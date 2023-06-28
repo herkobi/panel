@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\UserType;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
@@ -18,6 +19,19 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
         $guards = empty($guards) ? [null] : $guards;
+
+        // foreach ($guards as $guard) {
+        //     if (Auth::guard($guard)->check()) {
+        //         $user = Auth::user();
+        //         if ($user->type === UserType::ADMIN) {
+        //             return redirect('panel.admin');
+        //         } else {
+        //             return redirect(RouteServiceProvider::HOME);
+        //         }
+        //     }
+        // }
+
+        // TODO: Kullanıcıları ayrı panel yöneticileri ayrı panel yönlendirmesi kontrol edilecek
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
