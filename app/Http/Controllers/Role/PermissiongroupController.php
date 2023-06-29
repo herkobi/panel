@@ -28,17 +28,15 @@ class PermissiongroupController extends Controller
 
     public function index(): View
     {
-        $groups = Permissiongroup::paginate('15');
+        $groups = Permissiongroup::paginate('25');
         return view('permissiongroups.index', compact('groups'));
     }
 
     public function store(PermissionGroupCreateRequest $request)
     {
-        if ($request->ajax()) {
-            if ($request->validated()) {
-                $request = Permissiongroup::create($request->all());
-                return response()->json(['status' => "success"]);
-            }
+        if ($request->ajax() && $request->validated()) {
+            $request = Permissiongroup::create($request->all());
+            return response()->json(['status' => "success"]);
         }
     }
 

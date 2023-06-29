@@ -17,7 +17,7 @@
                                         Adı</label>
                                     <div class="col-md-8">
                                         <input type="text" class="form-control rounded-0 shadow-none form-control-sm"
-                                            id="permission-group-name" name="name" value="{{ old('name') }}"
+                                            id="permission-group-name" name="name"
                                             placeholder="Grup Adı Örnek Rol Yönetimi, Kullanıcı Yönetimi" required
                                             autofocus>
                                     </div>
@@ -34,7 +34,7 @@
                                                     <div class="form-check">
                                                         <input class="form-check-input rounded-0 shadow-none" type="radio"
                                                             name="type" id="permission-group-user-type"
-                                                            value="{{ $type->value }}">
+                                                            value="{{ $type->value }}" onclick="checkType(this)">
                                                         <label class="form-check-label rounded-0 shadow-none"
                                                             for="permission-group-user-type">{{ UserType::getTitle($type->value) }}</label>
                                                     </div>
@@ -52,7 +52,7 @@
                                         Açıklaması</label>
                                     <div class="col-md-8">
                                         <input type="text" class="form-control rounded-0 shadow-none form-control-sm"
-                                            id="permission-group-desc" name="desc" value="{{ old('desc') }}"
+                                            id="permission-group-desc" name="desc"
                                             placeholder="Grup İle İlgili Kısa Açıklama" required>
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="offset-md-4 col-md-5">
-                                        <button type="button" id="save-btn"
+                                        <button type="button" id="save-btn" onclick="addPermissionGroup()"
                                             class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
                                                 class="ri-add-line"></i> Kaydet</button>
                                     </div>
@@ -115,42 +115,42 @@
 @endsection
 
 @section('js')
-    <script type="module">
-        $(function() {
-            $.ajaxSetup({
+    <script>
+        var userType, groupName, groupDesc;
+
+        function checkType(element) {
+            const value = element.value;
+            const isChecked = element.checked;
+            if (isChecked) {
+                userType = value
+            }
+        }
+
+        function sendAjaxRequest(urlToSend, name, type, desc) {
+            $.ajax({
+                type: "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: urlToSend,
+                data: {
+                    name: name,
+                    type: type,
+                    desc: desc
+                },
+                success: function(result) {
+                    window.location.reload();
+                },
+                error: function(result) {
+                    alert('error');
                 }
             });
+        }
 
-            $('#save-btn').click(function(e) {
-                e.preventDefault();
-                let name = $("#permission-group-name").val();
-                let typeInput = document.getElementById('permission-group-user-type');
-                let usertype = typeInput.value;
-                let desc = $("#permission-group-desc").val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('panel.permission.group.store') }}",
-                    dataType: 'json',
-                    data: {
-                        name: name,
-                        type: usertype,
-                        desc: desc
-                    },
-                    success: function(data) {
-                        if(data.status == 'success')
-                        {
-                            $('#permission-group-form').trigger("reset");
-                            $("#permission-group-table").load(window.location + " #permission-group-table");
-                        }
-                    },
-                    error: function(data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
-        });
+        function addPermissionGroup() {
+            var groupName = document.getElementById("permission-group-name").value;
+            var groupDesc = document.getElementById("permission-group-desc").value;
+            sendAjaxRequest('{{ route('panel.permission.group.store') }}', groupName, userType, groupDesc);
+        }
     </script>
 @endsection

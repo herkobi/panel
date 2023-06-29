@@ -28,8 +28,8 @@ class PermissionGroupCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', Rule::unique('permissiongroups', 'name')],
-            'type' => ['required', 'integer', new Enum(UserType::class)],
-            'desc' => 'string',
+            'type' => ['required', new Enum(UserType::class)],
+            'desc' => 'max:255',
         ];
     }
 
