@@ -50,7 +50,6 @@ class AdminDetailController extends Controller
     public function verifyEmail(User $user)
     {
         $user->sendEmailVerificationNotification();
-        notyf()->addSuccess('E-posta onay linki tekrar gönderildi');
         return redirect()->back();
     }
 }

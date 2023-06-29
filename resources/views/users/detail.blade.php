@@ -29,8 +29,6 @@
                             <dd class="col-sm-9">{{ $user->last_login_at }}</dd>
                             <dt class="col-sm-3 mb-2">Son Oturum IP Adresi</dt>
                             <dd class="col-sm-9">{{ $user->last_login_ip }}</dd>
-                            <dt class="col-sm-3 mb-2">Kayıt Eden</dt>
-                            <dd class="col-sm-9">{{ $user->created_by_name }}</dd>
                         </dl>
                     </div>
                 </div>

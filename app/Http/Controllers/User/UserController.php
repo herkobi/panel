@@ -5,32 +5,15 @@ namespace App\Http\Controllers\User;
 use App\Enums\Status;
 use App\Enums\UserStatus;
 use App\Enums\UserType;
-use App\Models\Permissiongroup;
-use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Users\StatusUpdateRequest;
 use App\Models\Permission;
 use App\Models\Usertag;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
 
 class UserController extends Controller
 {
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('throttle:6,1')->only('verifyEmail');
-    }
 
     public function index(): View
     {

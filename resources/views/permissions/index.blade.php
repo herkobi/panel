@@ -141,9 +141,10 @@
         }
 
         function addPermission() {
-            var groupName = document.getElementById("permission-group-name").value;
-            var groupDesc = document.getElementById("permission-group-desc").value;
             sendAjaxRequest('{{ route('panel.permission.store') }}', groupName, userType, groupDesc);
         }
+
+        // TODO: İzin eklemeleri ajaxa taşınacak. repeater https://github.com/DubFriend/jquery.repeater bununla değiştirilebilir.
+        // TODO: data içine girilen değerler dışardan tek bir değişkenle atılabilir mi? data = name + text + desc gibi..
     </script>
 @endsection

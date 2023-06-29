@@ -13,6 +13,7 @@ use App\Http\Controllers\User\UserDetailController;
 use App\Http\Controllers\User\UsertagController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminCreateController;
+use App\Http\Controllers\Admin\AdminDetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
@@ -37,10 +38,12 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/passive', 'passive')->name('passive');
     });
 
-    Route::controller(Admin::class)->group(function () {
-        Route::get('/admin', 'index')->name('admin.home');
-        Route::get('/admin/passive', 'passive')->name('admin.passive');
-    });
+    // Route::controller(Admin::class)->group(function () {
+    //     Route::get('/admin', 'index')->name('admin.home');
+    //     Route::get('/admin/passive', 'passive')->name('admin.passive');
+    // });
+
+    // TODO: Yöneticileri farklı bir görünüme aktarma işlemi
 
     Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index')->name('users');
@@ -49,19 +52,6 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/user/filter', 'filter')->name('user.filter');
         Route::post('/user/synctags', 'tags')->name('user.synctags');
         Route::post('/user/update/status', 'status')->name('user.update.status');
-    });
-
-    Route::controller(AdminController::class)->group(function () {
-        Route::get('/admins', 'admins')->name('admins');
-        Route::get('/admin/detail/{user}', 'show')->name('admin.detail');
-        Route::get('/admin/create', 'createAdmin')->name('create.admin');
-        Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
-        Route::get('/admin/edit/{user}', 'editAdmin')->name('admin.edit');
-    });
-
-    Route::controller(AdminCreateController::class)->group(function () {
-        Route::post('admin/create/store', 'admin')->name('store.admin');
-        Route::post('admin/create/permissions/{user}', 'permissions')->name('store.admin.permissions');
     });
 
     Route::controller(UserDetailController::class)->group(function () {
@@ -77,6 +67,26 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::post('/user/tag/edit/{usertag}', 'update')->name('user.tag.update');
         Route::post('/user/tag/destroy/{usertag}', 'destroy')->name('user.tag.destroy');
         Route::post('user/tag/store', 'store')->name('user.tag.store');
+    });
+
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/admins', 'index')->name('admins');
+        Route::get('/admin/detail/{user}', 'show')->name('admin.detail');
+        Route::get('/admin/create', 'createAdmin')->name('create.admin');
+        Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
+        Route::get('/admin/edit/{user}', 'editAdmin')->name('admin.edit');
+        Route::post('/admin/update/status', 'status')->name('admin.update.status');
+    });
+
+    Route::controller(AdminDetailController::class)->group(function () {
+        Route::post('/admin/password/reset/{user}', 'passwordReset')->name('admin.password.reset');
+        Route::post('/admin/email/verify/{user}', 'verifyEmail')->name('admin.email.verify');
+        Route::post('/admin/email/change/{user}', 'changeEmail')->name('admin.change.email');
+    });
+
+    Route::controller(AdminCreateController::class)->group(function () {
+        Route::post('admin/create/store', 'admin')->name('store.admin');
+        Route::post('admin/create/permissions/{user}', 'permissions')->name('store.admin.permissions');
     });
 
     Route::controller(SettingController::class)->group(function () {
