@@ -38,12 +38,10 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/passive', 'passive')->name('passive');
     });
 
-    // Route::controller(Admin::class)->group(function () {
-    //     Route::get('/admin', 'index')->name('admin.home');
-    //     Route::get('/admin/passive', 'passive')->name('admin.passive');
-    // });
-
-    // TODO: Yöneticileri farklı bir görünüme aktarma işlemi
+    Route::controller(Admin::class)->group(function () {
+        Route::get('/admin', 'index')->name('admin');
+        Route::get('/admin/passive', 'passive')->name('admin.passive');
+    });
 
     Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index')->name('users');
@@ -74,6 +72,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
         Route::get('/admin/detail/{user}', 'show')->name('admin.detail');
         Route::get('/admin/create', 'createAdmin')->name('create.admin');
         Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
+        Route::get('/admin/filter', 'filter')->name('admin.filter');
         Route::get('/admin/edit/{user}', 'editAdmin')->name('admin.edit');
         Route::post('/admin/update/status', 'status')->name('admin.update.status');
     });
