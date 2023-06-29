@@ -59,6 +59,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'type' => UserType::class,
     ];
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'email_verified_at',
+        'last_login_at'
+    ];
+
     public function usertags()
     {
         return $this->belongsToMany(Usertag::class)->withTimestamps();
