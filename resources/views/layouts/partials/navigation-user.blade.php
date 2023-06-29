@@ -13,11 +13,6 @@
     </li>
     <li class="menu-item">
         <a href="" class="d-flex align-items-center justify-content-start">
-            <i class="ri-archive-2-line"></i> <span class="align-middle">Hesap Bilgileri</span>
-        </a>
-    </li>
-    <li class="menu-item">
-        <a href="" class="d-flex align-items-center justify-content-start">
             <i class="ri-archive-2-line"></i> <span class="align-middle">Uygulama Kayıtları</span>
         </a>
     </li>

@@ -88,12 +88,4 @@ class PermissionController extends Controller
             }
         }
     }
-
-    public function autocomplete(Request $request)
-    {
-        $data = Permissiongroup::select("title")
-            ->where("title", "LIKE", "%{$request->str}%")
-            ->get('query');
-        return response()->json($data);
-    }
 }

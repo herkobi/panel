@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\UserStatus;
 use App\Enums\UserType;
+use App\Models\Usertag;
+use App\Models\Settings;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -60,5 +62,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function usertags()
     {
         return $this->belongsToMany(Usertag::class)->withTimestamps();
+    }
+
+    public function settings()
+    {
+        return $this->belongsToMany(Settings::class)->withTimestamps();
     }
 }

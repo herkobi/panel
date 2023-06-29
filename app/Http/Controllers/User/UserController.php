@@ -15,6 +15,11 @@ use Illuminate\View\View;
 class UserController extends Controller
 {
 
+    /**
+     * Kullanıcıları listeleme sayfası
+     * Durumu silinmiş olmayanlar dışında kalanlar
+     * ve türü User olanlar
+     */
     public function index(): View
     {
         $tags = Usertag::where('status', [Status::ACTIVE])->get();
@@ -22,6 +27,9 @@ class UserController extends Controller
         return view('users.index', ['users' => $users, 'tags' => $tags]);
     }
 
+    /**
+     * Kullanıcı Detay Sayfası
+     */
     public function show(User $user): View
     {
         $tags = Usertag::all();
@@ -41,11 +49,12 @@ class UserController extends Controller
         return view('users.detail', compact('user', 'tags', 'selectedTag', 'basePermissions', 'rolePermissions'));
     }
 
-    public function edit(User $user): View
-    {
-        return view('users.edit', compact('user'));
-    }
-
+    /**
+     * Kullanıcıları filtreleme
+     *
+     * Kullanıcılar sayfasındaki ajax filtreleme
+     * sonucunun döndüğü kısım
+     */
     public function filter(Request $request)
     {
 
@@ -57,6 +66,9 @@ class UserController extends Controller
         //$users = User::where('type', [UserType::USER])->with('usertags')->get();
     }
 
+    /**
+     * Kullanıcı durumunu güncelleme
+     */
     public function status(Request $request)
     {
         if ($request->ajax() && $request->has('ids')) {
@@ -70,9 +82,15 @@ class UserController extends Controller
             $user->forceFill([
                 'status' => $status
             ])->save();
+
+            return response()->json(['status' => 'success']);
         }
     }
 
+
+    /**
+     * Kullanıcılara etiket atama
+     */
     public function tags(Request $request)
     {
         if ($request->ajax() && $request->has('ids')) {
@@ -83,5 +101,17 @@ class UserController extends Controller
                 $user->usertags()->attach($tagId);
             }
         }
+    }
+
+    /**
+     * Kullanıcılar sayfasındaki arama formu
+     */
+    public function search(Request $request)
+    {
+        $data = User::select('name', 'email')
+            ->where("name", "LIKE", "%{$request->str}%")
+            ->oRwhere("email", "LIKE", "%{$request->str}%")
+            ->get('query');
+        return response()->json($data);
     }
 }

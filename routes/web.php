@@ -84,12 +84,13 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
     });
 
     Route::controller(AdminCreateController::class)->group(function () {
-        Route::post('admin/create/store', 'admin')->name('store.admin');
-        Route::post('admin/create/permissions/{user}', 'permissions')->name('store.admin.permissions');
+        Route::post('/admin/create/store', 'admin')->name('store.admin');
+        Route::post('/admin/create/permissions/{user}', 'permissions')->name('store.admin.permissions');
     });
 
     Route::controller(SettingController::class)->group(function () {
         Route::get('/settings', 'index')->name('settings');
+        Route::post('/settings/update', 'update')->name('settings.update');
     });
 
     Route::controller(RoleController::class)->group(function () {

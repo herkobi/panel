@@ -46,12 +46,6 @@
                                 aria-selected="false"><i class="ri-user-follow-line"></i> Oturum Kayıtları</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-0 border-0 text-black" id="account-tab" data-bs-toggle="tab"
-                                data-bs-target="#account-tab-pane" type="button" role="tab"
-                                aria-controls="account-tab-pane" aria-selected="false"><i
-                                    class="ri-account-pin-box-line"></i> Hesap Bilgileri</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
                             <button class="nav-link rounded-0 border-0 text-black" id="permissions-tab" data-bs-toggle="tab"
                                 data-bs-target="#permissions-tab-pane" type="button" role="tab"
                                 aria-controls="permissions-tab-pane" aria-selected="false"><i
@@ -120,8 +114,7 @@
                                     <h4 class="card-title">Oturum Kayıtları</h4>
                                 </div>
                                 <div class="card-body">
-                                    <div
-                                        class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+                                    <div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
                                         <div class="vertical-timeline-item vertical-timeline-element">
                                             <div>
                                                 <span class="vertical-timeline-element-icon bounce-in">
@@ -162,31 +155,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="account-tab-pane" role="tabpanel" aria-labelledby="account-tab"
-                            tabindex="0">
-                            <div class="card rounded-0 shadow-sm border-0 mb-3">
-                                <div class="card-header border-0 bg-white pt-3 pb-0">
-                                    <h4 class="card-title">Hesap Bilgileri</h4>
-                                </div>
-                                <div class="card-body">
-                                    <dl class="row">
-                                        <dt class="col-sm-4">Fatura Adı</dt>
-                                        <dd class="col-sm-8">Herkobi Dijital Çözümler Yazılım San. ve Tic. A.Ş.</dd>
-                                        <dt class="col-sm-4">Fatura Adresi</dt>
-                                        <dd class="col-sm-8">Alacamescit Mah. Bayathane Cd. Çamoğlu İşhanı K:3/301
-                                            Osmangazi / Bursa</dd>
-                                        <dt class="col-sm-4">TC/Vergi No/Daire</dt>
-                                        <dd class="col-sm-8">62908416512 - Osmangazi</dd>
-                                        <dt class="col-sm-4">Ticari Sicil No</dt>
-                                        <dd class="col-sm-8">1625024</dd>
-                                        <dt class="col-sm-4">Mersis No</dt>
-                                        <dd class="col-sm-8">1625024546548791321</dd>
-                                        <dt class="col-sm-4">Kep E-posta</dt>
-                                        <dd class="col-sm-8">iletisim@herkobi.com</dd>
-                                    </dl>
                                 </div>
                             </div>
                         </div>

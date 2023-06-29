@@ -87,12 +87,23 @@ class AdminController extends Controller
 
     public function filter(Request $request)
     {
-
         if ($request->has('statusIds')) {
             return response()->json([
                 'users' => User::paginate('25'),
             ]);
         }
         //$users = User::where('type', [UserType::USER])->with('usertags')->get();
+    }
+
+    /**
+     * Yöneticiler sayfasındaki arama formu
+     */
+    public function search(Request $request)
+    {
+        $data = User::select('name', 'email')
+            ->where("name", "LIKE", "%{$request->str}%")
+            ->oRwhere("email", "LIKE", "%{$request->str}%")
+            ->get('query');
+        return response()->json($data);
     }
 }
