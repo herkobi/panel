@@ -204,6 +204,7 @@ return [
         'Status' => App\Enums\Status::class,
         'UserStatus' => App\Enums\UserStatus::class,
         'UserType' => App\Enums\UserType::class,
+        'Carbon' => Carbon\Carbon::class
     ])->toArray(),
 
 ];

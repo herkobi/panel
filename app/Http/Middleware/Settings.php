@@ -19,10 +19,15 @@ class Settings
             return $next($request);
         }
 
-        $language = $request->user()->settings()->language;
+        $language = auth()->user()->settings->language;
+        $timezone = auth()->user()->settings->timezone;
 
-        if (isset($language)) {
+        if (!empty($language)) {
             app()->setLocale($language);
+        }
+
+        if (!empty($timezone)) {
+            date_default_timezone_set($timezone);
         }
 
         return $next($request);
