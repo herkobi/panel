@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('content')
-    @include('layouts.partials.page-title', ['title' => 'Yöeticiler'])
+    @include('layouts.partials.page-title', ['title' => 'Yöneticiler'])
     <div class="page-content position-relative mb-4">
         <div class="row">
             <div class="col-md-9">
                 <div class="card rounded-0 shadow-sm border-0">
                     <div class="card-header border-0 bg-white pt-3 pb-0">
-                        <h4 class="card-title mb-0">Kayıtlı Yöeticiler</h4>
+                        <h4 class="card-title mb-0">Kayıtlı Yöneticiler</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive table-responsive-lg">
