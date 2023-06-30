@@ -34,6 +34,8 @@ class CreateNewUser implements CreatesNewUsers
         $type = 2;
         $terms = 1;
 
+        
+
         return User::create([
             'type' => $type,
             'name' => $input['name'],

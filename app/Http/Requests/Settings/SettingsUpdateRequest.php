@@ -23,9 +23,8 @@ class SettingsUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'language' => ['required', 'string'],
-            'timezone' => ['required', 'string'],
-            'datetime' => ['required', 'string']
+            'key' => ['required', 'string'],
+            'value' => ['required', 'string']
         ];
     }
 
@@ -37,12 +36,10 @@ class SettingsUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'language.required' => 'Lütfen dil giriniz',
-            'language.string' => 'Dil değeri metin olmalıdır',
-            'timezone.required' => 'Lütfen zaman dilimi giriniz',
-            'timezone.string' => 'Zaman dilimi değeri metin olmalıdır',
-            'datetime.required' => 'Lütfen tarih/saat formatı giriniz',
-            'datetime.string' => 'Tarih/saat formatı metin olmalıdır',
+            'key.required' => 'Lütfen seçim yapınız',
+            'key.string' => 'Seçin metinsel ifade olmalıdır',
+            'value.required' => 'Lütfen seçim yapınız',
+            'value.string' => 'Seçin metinsel ifade olmalıdır',
         ];
     }
 }

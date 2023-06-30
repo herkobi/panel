@@ -57,6 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'status' => UserStatus::class,
         'type' => UserType::class,
+        'settings' => 'array',
     ];
 
     protected $dates = [

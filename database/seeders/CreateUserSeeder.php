@@ -7,6 +7,7 @@ use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
+use App\Models\Settings;
 
 class CreateUserSeeder extends Seeder
 {
@@ -16,6 +17,9 @@ class CreateUserSeeder extends Seeder
     public function run(): void
     {
 
+        $settings_data = Settings::pluck('value', 'key');
+        $default_settings = json_encode($settings_data);
+
         $user = User::create([
             'type' => 2,
             'status' => UserStatus::ACTIVE,
@@ -23,6 +27,7 @@ class CreateUserSeeder extends Seeder
             'email' => 'user@user.com',
             'password' => bcrypt('password'),
             'email_verified_at' => now(),
+            'settings' => $default_settings,
             'created_by' => 1,
             'created_by_name' => 'Super Admin',
             'terms' => 1
@@ -31,7 +36,7 @@ class CreateUserSeeder extends Seeder
         $role = Role::create(['name' => 'User', 'type' => UserType::USER, 'desc' => 'Kullanıcı rolü', 'guard_name' => 'web']);
         $user->assignRole([$role->id]);
 
-        for ($i = 0; $i <= 100; $i++) {
+        for ($i = 0; $i <= 10; $i++) {
             $user = User::create([
                 'type' => 2,
                 'status' => UserStatus::ACTIVE,
@@ -39,6 +44,7 @@ class CreateUserSeeder extends Seeder
                 'email' => 'user' . $i . '@user.com',
                 'password' => bcrypt('password'),
                 'email_verified_at' => now(),
+                'settings' => $default_settings,
                 'created_by' => 1,
                 'created_by_name' => 'Super Admin',
                 'terms' => 1

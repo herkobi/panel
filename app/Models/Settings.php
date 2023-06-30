@@ -16,8 +16,8 @@ class Settings extends Model
         'value'
     ];
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class)->withTimestamps();
-    }
+    protected $dates = [
+        'created_at',
+        'updated_at'
+    ];
 }

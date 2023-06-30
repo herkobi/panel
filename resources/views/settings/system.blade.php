@@ -12,7 +12,7 @@
                                 ayarlar geçerli olur.</small>
                         </div>
                         <div class="card-body">
-                            <form id="app-settings-form" method="post">
+                            <form id="app-settings-form" action="{{ route('panel.system.settings.update') }}" method="post">
                                 @csrf
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
@@ -21,9 +21,11 @@
                                         <div id="app-user-role-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none" name="userrole"
                                                 id="app-user-role">
-                                                <option selected>Seçiniz</option>
+                                                <option>Seçiniz</option>
                                                 @foreach ($user_roles as $role)
-                                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                    <option value="{{ $role->id }}"
+                                                        {{ $role->id == $default_settings['userrole'] ? 'selected' : '' }}>
+                                                        {{ $role->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -36,9 +38,11 @@
                                         <div id="app-admin-role-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none"
                                                 name="adminrole" id="app-admin-role">
-                                                <option selected>Seçiniz</option>
+                                                <option>Seçiniz</option>
                                                 @foreach ($admin_roles as $role)
-                                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                    <option value="{{ $role->id }}"
+                                                        {{ $role->id == $default_settings['adminrole'] ? 'selected' : '' }}>
+                                                        {{ $role->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -51,9 +55,11 @@
                                         <div id="app-language-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none" name="language"
                                                 id="app-language">
-                                                <option selected>Seçiniz</option>
+                                                <option>Seçiniz</option>
                                                 @foreach (config('app.available_locales') as $key => $locale)
-                                                    <option value="{{ $locale }}">{{ $key }}</option>
+                                                    <option value="{{ $locale }}"
+                                                        {{ $locale == $default_settings['language'] ? 'selected' : '' }}>
+                                                        {{ $key }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -66,12 +72,14 @@
                                         <div id="app-timezone-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none" name="timezone"
                                                 id="app-timezone">
-                                                <option selected>Seçiniz</option>
+                                                <option>Seçiniz</option>
                                                 @foreach (Helper::timezones() as $key => $timezones)
-                                                <optgroup label="{{ $key }}">
-                                                    @foreach ($timezones as $value => $timezone)
-                                                    <option value="{{ $value }}">{{ $timezone }}</option>
-                                                    @endforeach
+                                                    <optgroup label="{{ $key }}">
+                                                        @foreach ($timezones as $value => $timezone)
+                                                            <option value="{{ $value }}"
+                                                                {{ $value == $default_settings['timezone'] ? 'selected' : '' }}>
+                                                                {{ $timezone }}</option>
+                                                        @endforeach
                                                 @endforeach
                                             </select>
                                             <small>Kendi zaman diliminizde yer alan bir şehir ya da bir UTC zaman dilimi
@@ -91,7 +99,8 @@
                                                             <div>
                                                                 <input name="date"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
-                                                                    type="radio" value="{{ $format }}">
+                                                                    type="radio" value="{{ $format }}"
+                                                                    {{ $format == $default_settings['date'] ? 'checked' : '' }}>
                                                                 {{ Carbon::now()->format($format) }}
                                                             </div>
                                                             <code>{{ $format }}</code>
@@ -114,7 +123,8 @@
                                                             <div>
                                                                 <input name="time"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
-                                                                    type="checkbox" value="{{ $format }}">
+                                                                    type="checkbox" value="{{ $format }}"
+                                                                    {{ $format == $default_settings['time'] ? 'checked' : '' }}>
                                                                 {{ Carbon::now()->format($format) }}
                                                             </div>
                                                             <code>{{ $format }}</code>
@@ -128,7 +138,7 @@
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="offset-md-4 col-md-5">
-                                            <button id="app-settings-save" type="button"
+                                            <button id="app-settings-save" type="submit"
                                                 class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
                                                     class="ri-add-line"></i> Kaydet</button>
                                         </div>

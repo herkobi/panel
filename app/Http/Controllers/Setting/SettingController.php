@@ -6,6 +6,7 @@ use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\SettingsUpdateRequest;
 use App\Models\Role;
+use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -23,19 +24,19 @@ class SettingController extends Controller
         ]);
     }
 
-    public function update(SettingsUpdateRequest $request, User $user)
-    {
-        if ($request->ajax() && $request->validated()) {
-        }
-    }
-
     public function system(): View
     {
+        $default_settings = Settings::pluck('value', 'key');
+
+        $default_settings = json_encode($default_settings);
+        dd($default_settings);
+
         $user_roles = Role::where('type', UserType::USER)->get();
         $admin_roles = Role::where('type', UserType::ADMIN)->get()->except(Role::where('name', 'Super Admin')->first()->id);
         $date_formats = ['F j, Y', 'Y-m-d', 'm/d/Y', 'd/m/Y'];
         $time_formats = ['g:i a', 'g:i A', 'H:i'];
         return view('settings.system', [
+            'default_settings' => $default_settings,
             'user_roles' => $user_roles,
             'admin_roles' => $admin_roles,
             'date_formats' => $date_formats,
@@ -43,9 +44,16 @@ class SettingController extends Controller
         ]);
     }
 
-    public function updated(SettingsUpdateRequest $request, User $user)
+    public function update(SettingsUpdateRequest $request, Settings $settings)
     {
-        if ($request->ajax() && $request->validated()) {
+
+        foreach ($request->except('_token') as $key => $value) {
+            $settings->forceFill([
+                'key' => $key,
+                'value' => $value,
+            ])->save();
         }
+
+        return redirect()->back()->with('Sistem kayıtları başarılı bir şekilde güncellendi');
     }
 }
