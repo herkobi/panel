@@ -37,13 +37,21 @@
     @hasrole(['Super Admin', 'Admin'])
         <li class="menu-header">Ayarlar</li>
         @can('settings-list')
-            <li class="menu-item {{ request()->routeIs('panel.settings') ? 'active' : '' }}">
-                <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.settings') }}"
+            <li class="menu-item {{ request()->routeIs('panel.app.settings') ? 'active' : '' }}">
+                <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.app.settings') }}"
                     title="Genel Ayarlar">
                     <i class="ri-settings-line"></i> <span class="align-middle">Genel Ayarlar</span>
                 </a>
             </li>
         @endcan
+        @hasrole('Super Admin')
+            <li class="menu-item {{ request()->routeIs('panel.system.settings') ? 'active' : '' }}">
+                <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.system.settings') }}"
+                    title="Sistem Ayarları">
+                    <i class="ri-settings-2-line"></i> <span class="align-middle">Sistem Ayarları</span>
+                </a>
+            </li>
+        @endhasrole
         <li class="menu-item">
             <a data-bs-target="#roles" data-bs-toggle="collapse"
                 class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">

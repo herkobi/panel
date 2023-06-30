@@ -8,17 +8,19 @@
                     <div class="card rounded-0 shadow-sm border-0 mb-3">
                         <div class="card-header border-0 bg-white pt-3 pb-3">
                             <h4 class="card-title mb-0">Genel Ayarlar</h4>
+                            <small>Kullanıcı bazlı genel ayarlar. Her kullanıcı kendine özgü ayarlarla sistemi
+                                kullanabilir.</small>
                         </div>
                         <div class="card-body">
-                            <form id="user-settings-form" method="post">
+                            <form id="app-settings-form" method="post">
                                 @csrf
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
-                                        <label for="user-language-settings"
-                                            class="col-md-4 fw-bold align-self-center">Sistem Dili</label>
-                                        <div id="user-language-settings" class="col-md-8">
+                                        <label for="app-language-settings" class="col-md-4 fw-bold align-self-center">Sistem
+                                            Dili</label>
+                                        <div id="app-language-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none" name="language"
-                                                id="user-language">
+                                                id="app-language">
                                                 <option selected>Seçiniz</option>
                                                 @foreach (config('app.available_locales') as $key => $locale)
                                                     <option value="{{ $locale }}">{{ $key }}</option>
@@ -29,11 +31,11 @@
                                 </div>
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
-                                        <label for="user-timezone-settings" class="col-md-4 fw-bold align-self-start">Zaman
+                                        <label for="app-timezone-settings" class="col-md-4 fw-bold align-self-start">Zaman
                                             Dilimi</label>
-                                        <div id="user-timezone-settings" class="col-md-8">
+                                        <div id="app-timezone-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none" name="timezone"
-                                                id="user-timezone">
+                                                id="app-timezone">
                                                 <option selected>Seçiniz</option>
                                                 <optgroup label="Afrika">
                                                     <option value="Africa/Abidjan">Abidjan</option>
@@ -593,6 +595,15 @@
                                                     </label>
                                                 @endforeach
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="offset-md-4 col-md-5">
+                                            <button id="app-settings-save" type="button"
+                                                class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
+                                                    class="ri-add-line"></i> Kaydet</button>
                                         </div>
                                     </div>
                                 </div>

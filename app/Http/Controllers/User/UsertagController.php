@@ -16,12 +16,12 @@ class UsertagController extends Controller
     public function index(): View
     {
         $usertags = Usertag::paginate('15');
-        return view('usercategories.index', compact('usertags'));
+        return view('usertags.index', compact('usertags'));
     }
 
     public function edit(Usertag $usertag): View
     {
-        return view('usercategories.edit', compact('usertag'));
+        return view('usercatags.edit', compact('usertag'));
     }
 
     public function update(UsertagUpdateRequest $request, Usertag $usertag): RedirectResponse
