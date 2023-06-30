@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Enums\UserStatus;
 use App\Enums\UserType;
 use App\Models\Usertag;
-use App\Models\Settings;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,13 +67,21 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_login_at'
     ];
 
+    /**
+     * Get the user's first name.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function settings(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => json_decode($value, true),
+            set: fn ($value) => json_encode($value),
+        );
+    }
+
     public function usertags()
     {
         return $this->belongsToMany(Usertag::class)->withTimestamps();
-    }
-
-    public function settings()
-    {
-        return $this->belongsToMany(Settings::class)->withTimestamps();
     }
 }

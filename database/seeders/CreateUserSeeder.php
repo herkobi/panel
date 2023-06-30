@@ -17,8 +17,8 @@ class CreateUserSeeder extends Seeder
     public function run(): void
     {
 
-        $settings_data = Settings::pluck('value', 'key');
-        $default_settings = json_encode($settings_data);
+        $default_settings = Settings::pluck('value', 'key')->toArray();
+        //$default_settings = json_encode($default_settings, JSON_UNESCAPED_SLASHES);
 
         $user = User::create([
             'type' => 2,

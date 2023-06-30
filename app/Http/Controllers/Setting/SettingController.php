@@ -26,9 +26,8 @@ class SettingController extends Controller
 
     public function system(): View
     {
-        $default_settings = Settings::pluck('value', 'key');
-
-        $default_settings = json_encode($default_settings);
+        $default_settings = Settings::pluck('value', 'key')->toArray();
+        $default_settings = json_encode($default_settings, JSON_UNESCAPED_SLASHES);
         dd($default_settings);
 
         $user_roles = Role::where('type', UserType::USER)->get();

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->datetime('last_login_at')->nullable();
             $table->string('last_login_ip')->nullable();
-            $table->json('settings')->nullable();
+            $table->text('settings')->nullable();
             $table->integer('created_by');
             $table->string('created_by_name');
             $table->integer('terms')->default(1);
