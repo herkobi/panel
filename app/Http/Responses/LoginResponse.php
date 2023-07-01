@@ -4,6 +4,7 @@ namespace App\Http\Responses;
 
 use App\Enums\UserStatus;
 use App\Enums\UserType;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 
 class LoginResponse implements LoginResponseContract
@@ -21,10 +22,10 @@ class LoginResponse implements LoginResponseContract
      */
     public function toResponse($request)
     {
-        if (auth()->user()->type == UserType::ADMIN) {
-            $home = auth()->user()->status == UserStatus::PASSIVE ? '/panel/admin/passive' : '/panel/admin';
+        if (Auth::check() && Auth::user()->type == UserType::ADMIN) {
+            $home = Auth::user()->status == UserStatus::PASSIVE ? '/panel/admin/passive' : '/panel/admin';
         } else {
-            $home = auth()->user()->status == UserStatus::PASSIVE ? '/panel/passive' : '/panel';
+            $home = Auth::user()->status == UserStatus::PASSIVE ? '/panel/passive' : '/panel';
         }
 
         return redirect()->intended($home);

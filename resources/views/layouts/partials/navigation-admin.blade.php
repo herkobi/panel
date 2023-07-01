@@ -1,6 +1,6 @@
 <ul class="sidebar-menu">
-    <li class="menu-item {{ request()->routeIs('panel.home') ? 'active' : '' }}">
-        <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.home') }}" title="Başlangıç">
+    <li class="menu-item {{ request()->routeIs('panel.admin') ? 'active' : '' }}">
+        <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.admin') }}" title="Başlangıç">
             <i class="ri-home-smile-2-line"></i> <span class="align-middle">Başlangıç</span>
         </a>
     </li>

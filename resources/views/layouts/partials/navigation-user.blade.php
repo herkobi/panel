@@ -6,7 +6,7 @@
     </li>
     <li class="menu-header">Ayarlar</li>
     <li class="menu-item {{ request()->routeIs('panel.settings') ? 'active' : '' }}">
-        <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.settings') }}"
+        <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.app.settings') }}"
             title="Genel Ayarlar">
             <i class="ri-settings-line"></i> <span class="align-middle">Genel Ayarlar</span>
         </a>
