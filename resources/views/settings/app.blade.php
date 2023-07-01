@@ -23,7 +23,9 @@
                                                 id="app-language">
                                                 <option selected>Seçiniz</option>
                                                 @foreach (config('app.available_locales') as $key => $locale)
-                                                    <option value="{{ $locale }}">{{ $key }}</option>
+                                                    <option value="{{ $locale }}"
+                                                        {{ $locale == $user_settings['language'] ? 'selected' : '' }}>
+                                                        {{ $key }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -40,7 +42,9 @@
                                                 @foreach (Helper::timezones() as $key => $timezones)
                                                     <optgroup label="{{ $key }}">
                                                         @foreach ($timezones as $value => $timezone)
-                                                            <option value="{{ $value }}">{{ $timezone }}</option>
+                                                            <option value="{{ $value }}"
+                                                                {{ $value == $user_settings['timezone'] ? 'selected' : '' }}>
+                                                                {{ $timezone }}</option>
                                                         @endforeach
                                                 @endforeach
                                             </select>
@@ -55,13 +59,14 @@
                                             Formatı</label>
                                         <div id="user-date-settings" class="col-md-8">
                                             <div class="list-group list-group-flush">
-                                                @foreach ($date_formats as $format)
+                                                @foreach (Helper::dateformats() as $format)
                                                     <label class="list-group-item bg-white rounded-0 w-75">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <div>
                                                                 <input name="date"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
-                                                                    type="radio" value="{{ $format }}">
+                                                                    type="radio" value="{{ $format }}"
+                                                                    {{ $format == $user_settings['date'] ? 'checked' : '' }}>
                                                                 {{ Carbon::now()->format($format) }}
                                                             </div>
                                                             <code>{{ $format }}</code>
@@ -78,13 +83,14 @@
                                             Formatı</label>
                                         <div id="user-time-settings" class="col-md-8">
                                             <div class="list-group list-group-flush">
-                                                @foreach ($time_formats as $format)
+                                                @foreach (Helper::timeformats() as $format)
                                                     <label class="list-group-item bg-white rounded-0 w-75">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <div>
                                                                 <input name="time"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
-                                                                    type="checkbox" value="{{ $format }}">
+                                                                    type="checkbox" value="{{ $format }}"
+                                                                    {{ $format == $user_settings['time'] ? 'checked' : '' }}>
                                                                 {{ Carbon::now()->format($format) }}
                                                             </div>
                                                             <code>{{ $format }}</code>

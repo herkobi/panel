@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Settings;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CreateSystemSettingsSeeder extends Seeder
@@ -21,11 +22,21 @@ class CreateSystemSettingsSeeder extends Seeder
             'time' => 'H:i'
         ];
 
+        $user_settings = json_encode($default_values, JSON_UNESCAPED_SLASHES);
+        $users = User::all();
+
         foreach ($default_values as $key => $value) {
             $settings = Settings::create([
                 'key' => $key,
                 'value' => $value
             ]);
+        }
+
+        foreach($users as $user)
+        {
+            $user->forceFill([
+                'settings' => $user_settings
+            ])->save();
         }
     }
 }

@@ -16,10 +16,6 @@ class CreateUserSeeder extends Seeder
      */
     public function run(): void
     {
-
-        $default_settings = Settings::pluck('value', 'key')->toArray();
-        //$default_settings = json_encode($default_settings, JSON_UNESCAPED_SLASHES);
-
         $user = User::create([
             'type' => 2,
             'status' => UserStatus::ACTIVE,
@@ -27,7 +23,6 @@ class CreateUserSeeder extends Seeder
             'email' => 'user@user.com',
             'password' => bcrypt('password'),
             'email_verified_at' => now(),
-            'settings' => $default_settings,
             'created_by' => 1,
             'created_by_name' => 'Super Admin',
             'terms' => 1
@@ -44,7 +39,6 @@ class CreateUserSeeder extends Seeder
                 'email' => 'user' . $i . '@user.com',
                 'password' => bcrypt('password'),
                 'email_verified_at' => now(),
-                'settings' => $default_settings,
                 'created_by' => 1,
                 'created_by_name' => 'Super Admin',
                 'terms' => 1

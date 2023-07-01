@@ -24,11 +24,11 @@ class Helper
      * @param int $start
      * @param int $end
      * @return string
-     * Örnek Kullanım: Helper::shortString($post->body,0,40)
+     * Örnek Kullanım: Helper::short_it($post->body,0,40)
      * Girilen içeriğin başlangıçtan kırkıncı karaktere kadar olan bölümünü alır
      * Kaynak: https://blog.corelux.com.tr/laravelde-kendi-helper-sinifimizi-olusturmak
      */
-    public static function shortString(string $string, int $start = 0, int $end = 35): string
+    public static function short_it(string $string, int $start = 0, int $end = 35): string
     {
         return mb_substr($string, $start, $end, 'UTF-8') . '...';
     }
@@ -38,7 +38,7 @@ class Helper
      *
      * List of timezones
      */
-    public static function timezones()
+    public static function timezones(): array
     {
         return $timezones = [
             'Afrika' => [
@@ -540,6 +540,35 @@ class Helper
                 'UTC+13.75' => 'UTC+13:45',
                 'UTC+14' => 'UTC+14'
             ]
+        ];
+    }
+
+    /**
+     * Date Formats
+     *
+     * List of date formats
+     */
+    public static function dateformats(): array
+    {
+        return $dateformats = [
+            'F j, Y',
+            'Y-m-d',
+            'm/d/Y',
+            'd/m/Y'
+        ];
+    }
+
+    /**
+     * Time Formats
+     *
+     * List of time formats
+     */
+    public static function timeformats(): array
+    {
+        return $timeformats = [
+            'g:i a',
+            'g:i A',
+            'H:i'
         ];
     }
 }

@@ -8,48 +8,39 @@ use App\Http\Requests\Settings\SettingsUpdateRequest;
 use App\Models\Role;
 use App\Models\Settings;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class SettingController extends Controller
 {
-    public function index(Request $request): View
+    public function index(): View
     {
-        $date_formats = ['F j, Y', 'Y-m-d', 'm/d/Y', 'd/m/Y'];
-        $time_formats = ['g:i a', 'g:i A', 'H:i'];
+        $user_settings = json_decode(Auth::user()->settings, true);
         return view('settings.app', [
-            'user' => $request->user(),
-            'date_formats' => $date_formats,
-            'time_formats' => $time_formats
+            'user_settings' => $user_settings
         ]);
     }
 
     public function system(): View
     {
         $default_settings = Settings::pluck('value', 'key')->toArray();
-        $default_settings = json_encode($default_settings, JSON_UNESCAPED_SLASHES);
-        dd($default_settings);
-
         $user_roles = Role::where('type', UserType::USER)->get();
         $admin_roles = Role::where('type', UserType::ADMIN)->get()->except(Role::where('name', 'Super Admin')->first()->id);
-        $date_formats = ['F j, Y', 'Y-m-d', 'm/d/Y', 'd/m/Y'];
-        $time_formats = ['g:i a', 'g:i A', 'H:i'];
         return view('settings.system', [
             'default_settings' => $default_settings,
             'user_roles' => $user_roles,
-            'admin_roles' => $admin_roles,
-            'date_formats' => $date_formats,
-            'time_formats' => $time_formats
+            'admin_roles' => $admin_roles
         ]);
     }
 
-    public function update(SettingsUpdateRequest $request, Settings $settings)
+    public function update(SettingsUpdateRequest $request, Settings $settings): RedirectResponse
     {
 
         foreach ($request->except('_token') as $key => $value) {
             $settings->forceFill([
-                'key' => $key,
-                'value' => $value,
+                $key => $value,
             ])->save();
         }
 

@@ -93,7 +93,7 @@
                                             Formatı</label>
                                         <div id="user-date-settings" class="col-md-8">
                                             <div class="list-group list-group-flush">
-                                                @foreach ($date_formats as $format)
+                                                @foreach (Helper::dateformats() as $format)
                                                     <label class="list-group-item bg-white rounded-0 w-75">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <div>
@@ -117,13 +117,13 @@
                                             Formatı</label>
                                         <div id="user-time-settings" class="col-md-8">
                                             <div class="list-group list-group-flush">
-                                                @foreach ($time_formats as $format)
+                                                @foreach (Helper::timeformats() as $format)
                                                     <label class="list-group-item bg-white rounded-0 w-75">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <div>
                                                                 <input name="time"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
-                                                                    type="checkbox" value="{{ $format }}"
+                                                                    type="radio" value="{{ $format }}"
                                                                     {{ $format == $default_settings['time'] ? 'checked' : '' }}>
                                                                 {{ Carbon::now()->format($format) }}
                                                             </div>
