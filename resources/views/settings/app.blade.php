@@ -39,13 +39,11 @@
                                             <select class="form-select form-select-sm rounded-0 shadow-none" name="timezone"
                                                 id="app-timezone">
                                                 <option selected>Seçiniz</option>
-                                                @foreach (Helper::timezones() as $key => $timezones)
-                                                    <optgroup label="{{ $key }}">
-                                                        @foreach ($timezones as $value => $timezone)
-                                                            <option value="{{ $value }}"
-                                                                {{ $value == $user_settings['timezone'] ? 'selected' : '' }}>
-                                                                {{ $timezone }}</option>
-                                                        @endforeach
+                                                @foreach (Helper::getTimeZoneList() as $timezone => $timezone_gmt_diff)
+                                                    <option value="{{ $timezone }}"
+                                                        {{ $timezone === old('timezone', $user_settings['timezone']) ? 'selected' : '' }}>
+                                                        {{ $timezone_gmt_diff }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             <small>Kendi zaman diliminizde yer alan bir şehir ya da bir UTC zaman dilimi

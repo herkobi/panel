@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'email_verified_at',
         'password',
+        'settings',
         'created_by',
         'created_by_name',
         'terms',
@@ -55,29 +56,36 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
         'status' => UserStatus::class,
         'type' => UserType::class,
         'settings' => 'array',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'email_verified_at',
-        'last_login_at'
-    ];
+    // /**
+    //  * Get the user's first name.
+    //  *
+    //  * @return \Illuminate\Database\Eloquent\Casts\Attribute
+    //  */
+    // protected function settings(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => json_decode($value, true),
+    //         set: fn ($value) => json_encode($value),
+    //     );
+    // }
 
-    /**
-     * Get the user's first name.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function settings(): Attribute
+    public function getTimeZoneAttribute($value): string
     {
-        return Attribute::make(
-            get: fn ($value) => json_decode($value, true),
-            set: fn ($value) => json_encode($value),
-        );
+        return $value == config('app.timezone') || empty($value) ? config('app.timezone') : $value;
+    }
+
+    public function setTimeZoneAttribute($value)
+    {
+        $this->attributes['timezone'] = $value == config('app.timezone') || is_null($value) ? null : $value;
     }
 
     public function usertags()

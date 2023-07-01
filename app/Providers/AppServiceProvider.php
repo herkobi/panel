@@ -23,11 +23,11 @@ class AppServiceProvider extends ServiceProvider
     {
         /**
          * Settings tablosundaki değerlere direk erişmeyi sağlıyor.
-         * Kullanımı config('settings.userrole')
+         * Kullanımı config('panel.userrole')
          * Kaynak: https://darkghosthunter.medium.com/laravel-loading-the-settings-from-the-database-or-file-9b4a3df5db75
          */
         config([
-            'global' => Settings::all(['key', 'value'])
+            'panel' => Settings::all(['key', 'value'])
                 ->keyBy('key') // key every setting by its name
                 ->transform(function ($setting) {
                     return $setting->value; // return only the value

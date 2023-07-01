@@ -47,7 +47,7 @@ class CreateNewUser implements CreatesNewUsers
             'settings' => $user_settings,
         ]);
 
-        $user->assignRole([config('settings.userrole')]);
+        $user->assignRole([config('panel.userrole')]);
 
         return $user;
     }
