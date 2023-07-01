@@ -80,14 +80,26 @@
     @endhasrole
     @hasrole(['Super Admin', 'Admin'])
         <li class="menu-item">
-            <a href="" class="d-flex align-items-center justify-content-start">
-                <i class="ri-archive-2-line"></i> <span class="align-middle">Uygulama Kayıtları</span>
+            <a data-bs-target="#user-logs" data-bs-toggle="collapse"
+                class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">
+                <i class="ri-profile-line"></i> <span class="align-middle">Kullanıcı Kayıtları</span>
             </a>
+            <ul id="user-logs" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+                <li class="menu-item"><a href="" class="menu-link">Uygulama Kayıtları</a></li>
+                <li class="menu-item"><a href="" class="menu-link">Oturum Kayıtları</a></li>
+            </ul>
         </li>
+    @endhasrole
+    @hasrole('Super Admin')
         <li class="menu-item">
-            <a href="" class="d-flex align-items-center justify-content-start">
-                <i class="ri-git-repository-private-line"></i> <span class="align-middle">Oturum Kayıtları</span>
+            <a data-bs-target="#admin-logs" data-bs-toggle="collapse"
+                class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">
+                <i class="ri-folder-user-line"></i> <span class="align-middle">Yönetici Kayıtları</span>
             </a>
+            <ul id="admin-logs" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+                <li class="menu-item"><a href="" class="menu-link">Uygulama Kayıtları</a></li>
+                <li class="menu-item"><a href="" class="menu-link">Oturum Kayıtları</a></li>
+            </ul>
         </li>
     @endhasrole
     @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))

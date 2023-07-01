@@ -35,8 +35,8 @@ class CreateNewUser implements CreatesNewUsers
         $type = 2;
         $terms = 1;
 
-        $default_values = Settings::pluck('value', 'key')->toArray();
-        $user_settings = json_encode($default_values, JSON_UNESCAPED_SLASHES);
+        $user_settings = Settings::whereNotIn('key', ['userrole', 'adminrole'])->pluck('value', 'key');
+        $user_settings = json_encode($user_settings, JSON_UNESCAPED_SLASHES);
 
         $user = User::create([
             'type' => $type,

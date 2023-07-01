@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserPermissionCreateRequest;
 use App\Models\User;
@@ -24,7 +25,7 @@ class AdminCreateController extends Controller
     public function admin(UserCreateRequest $request): RedirectResponse
     {
 
-        $type = 1;
+        $type = UserType::ADMIN;
         $terms = 1;
         $email_verified_time = Carbon::now()->toDateTimeString();
         $rand = Str::random(36);
