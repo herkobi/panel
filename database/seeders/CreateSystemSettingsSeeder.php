@@ -22,7 +22,14 @@ class CreateSystemSettingsSeeder extends Seeder
             'time' => 'H:i'
         ];
 
-        $user_settings = json_encode($default_values, JSON_UNESCAPED_SLASHES);
+        $default_user_values = [
+            'language' => 'tr',
+            'timezone' => 'Europe/Istanbul',
+            'date' => 'd/m/Y',
+            'time' => 'H:i'
+        ];
+
+        $user_settings = json_encode($default_user_values);
         $users = User::all();
 
         foreach ($default_values as $key => $value) {
@@ -32,8 +39,7 @@ class CreateSystemSettingsSeeder extends Seeder
             ]);
         }
 
-        foreach($users as $user)
-        {
+        foreach ($users as $user) {
             $user->forceFill([
                 'settings' => $user_settings
             ])->save();

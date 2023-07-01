@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserPermissionCreateRequest;
 use App\Models\User;
 use App\Http\Requests\Users\UserCreateRequest;
+use App\Models\Settings;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -27,6 +28,8 @@ class AdminCreateController extends Controller
         $terms = 1;
         $email_verified_time = Carbon::now()->toDateTimeString();
         $rand = Str::random(36);
+        $user_settings = Settings::whereNotIn('key', ['userrole', 'adminrole'])->pluck('value', 'key');
+        $user_settings = json_encode($user_settings, JSON_UNESCAPED_SLASHES);
 
         if ($request->validated()) {
             $user = User::create([
@@ -35,6 +38,7 @@ class AdminCreateController extends Controller
                 'email' => $request['email'],
                 'email_verified_at' => $email_verified_time,
                 'password' => Hash::make($rand),
+                'settings' => $user_settings,
                 'created_by' => auth()->user()->id,
                 'created_by_name' => auth()->user()->name,
                 'terms' => $terms

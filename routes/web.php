@@ -31,7 +31,7 @@ use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
 
 Route::redirect('/', 'login');
 
-Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('panel.')->group(function () {
+Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefix('panel')->name('panel.')->group(function () {
 
     Route::controller(Dashboard::class)->group(function () {
         Route::get('/', 'index')->name('home');

@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -34,14 +35,20 @@ class CreateNewUser implements CreatesNewUsers
         $type = 2;
         $terms = 1;
 
-        
+        $default_values = Settings::pluck('value', 'key')->toArray();
+        $user_settings = json_encode($default_values, JSON_UNESCAPED_SLASHES);
 
-        return User::create([
+        $user = User::create([
             'type' => $type,
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'terms' => $terms,
+            'settings' => $user_settings,
         ]);
+
+        $user->assignRole([config('settings.userrole')]);
+
+        return $user;
     }
 }

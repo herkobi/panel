@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'view_logs' => \App\Http\Middleware\SystemLogs::class,
+        'panel_settings' => \App\Http\Middleware\Settings::class,
     ];
 }

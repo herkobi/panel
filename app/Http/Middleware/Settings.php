@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Settings as Panel;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class Settings
@@ -19,8 +21,11 @@ class Settings
             return $next($request);
         }
 
-        $language = auth()->user()->settings->language;
-        $timezone = auth()->user()->settings->timezone;
+        $default_settings = Panel::pluck('value', 'key')->toArray();
+        $user_settings = json_decode(Auth::user()->settings, true);
+
+        $language = $user_settings['language'] ? $user_settings['language'] : $default_settings['language'];
+        $timezone = $user_settings['timezone'] ? $user_settings['timezone'] : $default_settings['timezone'];
 
         if (!empty($language)) {
             app()->setLocale($language);

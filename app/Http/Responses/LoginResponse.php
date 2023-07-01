@@ -9,6 +9,13 @@ use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 class LoginResponse implements LoginResponseContract
 {
     /**
+     * Kullanıcı türü ve durumuna göre yönlendirme
+     *
+     * Kullanıcı türü admin ise /panel/admin
+     * Kullanıcı türü user ise /panel url değerine yönlendirir.
+     *
+     * Kullanıcı aktifse normal ekranı pasifse /passive urlsine yönlendirir
+     *
      * @param  $request
      * @return mixed
      */
