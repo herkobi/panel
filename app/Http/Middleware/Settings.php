@@ -25,14 +25,9 @@ class Settings
         $user_settings = json_decode(Auth::user()->settings, true);
 
         $language = $user_settings['language'] ? $user_settings['language'] : $default_settings['language'];
-        $timezone = $user_settings['timezone'] ? $user_settings['timezone'] : $default_settings['timezone'];
 
         if (!empty($language)) {
             app()->setLocale($language);
-        }
-
-        if (!empty($timezone)) {
-            date_default_timezone_set($timezone);
         }
 
         return $next($request);
