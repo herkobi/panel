@@ -35,15 +35,13 @@ class SettingController extends Controller
         ]);
     }
 
-    public function update(SettingsUpdateRequest $request, Settings $settings): RedirectResponse
+    public function update(SettingsUpdateRequest $request): RedirectResponse
     {
-
         foreach ($request->except('_token') as $key => $value) {
-            $settings->forceFill([
-                $key => $value,
-            ])->save();
+            Settings::firstWhere('key', $key)->update([
+                'value' => $value
+            ]);
         }
-
         return redirect()->back()->with('Sistem kayıtları başarılı bir şekilde güncellendi');
     }
 }

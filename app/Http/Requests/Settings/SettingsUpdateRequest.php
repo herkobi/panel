@@ -23,8 +23,8 @@ class SettingsUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'key' => ['required', 'string'],
-            'value' => ['required', 'string']
+            'key' => 'required',
+            'value' => 'required'
         ];
     }
 
@@ -37,9 +37,7 @@ class SettingsUpdateRequest extends FormRequest
     {
         return [
             'key.required' => 'Lütfen seçim yapınız',
-            'key.string' => 'Seçin metinsel ifade olmalıdır',
             'value.required' => 'Lütfen seçim yapınız',
-            'value.string' => 'Seçin metinsel ifade olmalıdır',
         ];
     }
 }

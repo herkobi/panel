@@ -91,7 +91,7 @@ Route::middleware(['auth', 'auth.session', 'verified'])->prefix('panel')->name('
     Route::controller(SettingController::class)->group(function () {
         Route::get('/settings/general', 'index')->name('app.settings');
         Route::get('/settings/system', 'system')->name('system.settings');
-        Route::post('/settings/system/update', 'update')->name('system.settings.update');
+        Route::post('/settings/update', 'update')->name('system.settings.update');
     });
 
     Route::controller(RoleController::class)->group(function () {
