@@ -1,71 +1,80 @@
 <ul class="sidebar-menu">
     <li class="menu-item {{ request()->routeIs('panel.admin') ? 'active' : '' }}">
-        <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.admin') }}" title="Başlangıç">
-            <i class="ri-home-smile-2-line"></i> <span class="align-middle">Başlangıç</span>
+        <a href="{{ route('panel.admin') }}" title="{{ __('admin-navigation.dashboard') }}"
+            class="d-flex align-items-center justify-content-start">
+            <i class="ri-home-smile-2-line"></i> <span class="align-middle">{{ __('admin-navigation.dashboard') }}</span>
         </a>
     </li>
     @hasrole(['Super Admin', 'Admin'])
-        <li class="menu-header">Kullanıcılar</li>
+        <li class="menu-header">{{ __('admin-navigation.users') }}</li>
         <li class="menu-item {{ request()->routeIs('panel.users') ? 'active' : '' }}">
-            <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.users') }}"
-                title="Kullanıcılar">
-                <i class="ri-user-line"></i> <span class="align-middle">Kullanıcılar</span>
+            <a href="{{ route('panel.users') }}" title="{{ __('admin-navigation.users') }}"
+                class="d-flex align-items-center justify-content-start">
+                <i class="ri-user-line"></i> <span class="align-middle">{{ __('admin-navigation.users') }}</span>
             </a>
         </li>
         <li class="menu-item {{ request()->routeIs('panel.user.tags') ? 'active' : '' }}">
-            <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.user.tags') }}"
-                title="Etiketler">
-                <i class="ri-hashtag"></i> <span class="align-middle">Etiketler</span>
+            <a href="{{ route('panel.user.tags') }}" title="{{ __('admin-navigation.tags') }}"
+                class="d-flex align-items-center justify-content-start">
+                <i class="ri-hashtag"></i> <span class="align-middle">{{ __('admin-navigation.tags') }}</span>
             </a>
         </li>
     @endhasallroles
     @hasrole('Super Admin')
-        <li class="menu-header">Yöneticiler</li>
+        <li class="menu-header">{{ __('admin-navigation.admins') }}</li>
         <li class="menu-item {{ request()->routeIs('panel.admins') ? 'active' : '' }}">
-            <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.admins') }}"
-                title="Yöneticiler">
-                <i class="ri-user-line"></i> <span class="align-middle">Yöneticiler</span>
+            <a href="{{ route('panel.admins') }}" title="{{ __('admin-navigation.admins') }}"
+                class="d-flex align-items-center justify-content-start">
+                <i class="ri-user-line"></i> <span class="align-middle">{{ __('admin-navigation.admins') }}</span>
             </a>
         </li>
         <li class="menu-item {{ request()->routeIs('panel.create.admin') ? 'active' : '' }}">
-            <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.create.admin') }}"
-                title="Yeni Yönetici">
-                <i class="ri-user-add-line"></i> <span class="align-middle">Yeni Yönetici</span>
+            <a href="{{ route('panel.create.admin') }}" title="{{ __('admin-navigation.add-admin') }}"
+                class="d-flex align-items-center justify-content-start">
+                <i class="ri-user-add-line"></i> <span class="align-middle">{{ __('admin-navigation.add-admin') }}</span>
             </a>
         </li>
     @endhasrole
     @hasrole(['Super Admin', 'Admin'])
-        <li class="menu-header">Ayarlar</li>
+        <li class="menu-header">{{ __('admin-navigation.settings') }}</li>
         @can('settings-list')
             <li class="menu-item {{ request()->routeIs('panel.app.settings') ? 'active' : '' }}">
-                <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.app.settings') }}"
-                    title="Genel Ayarlar">
-                    <i class="ri-settings-line"></i> <span class="align-middle">Genel Ayarlar</span>
+                <a href="{{ route('panel.app.settings') }}" title="{{ __('admin-navigation.general-settings') }}"
+                    class="d-flex align-items-center justify-content-start">
+                    <i class="ri-settings-line"></i> <span
+                        class="align-middle">{{ __('admin-navigation.general-settings') }}</span>
                 </a>
             </li>
         @endcan
         @hasrole('Super Admin')
             <li class="menu-item {{ request()->routeIs('panel.system.settings') ? 'active' : '' }}">
-                <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.system.settings') }}"
-                    title="Sistem Ayarları">
-                    <i class="ri-settings-2-line"></i> <span class="align-middle">Sistem Ayarları</span>
+                <a href="{{ route('panel.system.settings') }}" title="{{ __('admin-navigation.system-settings') }}"
+                    class="d-flex align-items-center justify-content-start">
+                    <i class="ri-settings-2-line"></i> <span
+                        class="align-middle">{{ __('admin-navigation.system-settings') }}</span>
                 </a>
             </li>
         @endhasrole
         <li class="menu-item">
-            <a data-bs-target="#roles" data-bs-toggle="collapse"
+            <a data-bs-target="#roles" data-bs-toggle="collapse" title="{{ __('admin-navigation.role-and-permissions') }}"
                 class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">
-                <i class="ri-secure-payment-line"></i> <span class="align-middle">Yetki ve İzinler</span>
+                <i class="ri-secure-payment-line"></i> <span
+                    class="align-middle">{{ __('admin-navigation.role-and-permissions') }}</span>
             </a>
-            <ul id="roles" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+            <ul id="roles" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                 @can('role-list')
-                    <li class="menu-item"><a class="menu-link" href="{{ route('panel.roles') }}">Yetkiler</a></li>
+                    <li class="menu-item"><a href="{{ route('panel.roles') }}" title="{{ __('admin-navigation.roles') }}""
+                            class="menu-link">{{ __('admin-navigation.roles') }}</a></li>
                 @endcan
                 @can('permission-list')
-                    <li class="menu-item"><a class="menu-link" href="{{ route('panel.permissions') }}">İzinler</a></li>
+                    <li class="menu-item"><a href="{{ route('panel.permissions') }}"
+                            title="{{ __('admin-navigation.permissions') }}"
+                            class="menu-link">{{ __('admin-navigation.permissions') }}</a></li>
                 @endcan
                 @can('permissiongroup-list')
-                    <li class="menu-item"><a class="menu-link" href="{{ route('panel.permission.groups') }}">İzin Grupları</a>
+                    <li class="menu-item"><a href="{{ route('panel.permission.groups') }}"
+                            title="{{ __('admin-navigation.permission-groups') }}"
+                            class="menu-link">{{ __('admin-navigation.permission-groups') }}</a>
                     </li>
                 @endcan
             </ul>
@@ -73,40 +82,49 @@
     @endhasrole
     @hasrole('Super Admin')
         <li class="menu-item">
-            <a href="{{ route('panel.system-logs') }}" class="d-flex align-items-center justify-content-start">
-                <i class="ri-bubble-chart-line"></i> <span class="align-middle">Sistem Kayıtları</span>
+            <a href="{{ route('panel.system-logs') }}" title="{{ __('admin-navigation.system-logs') }}"
+                class="d-flex align-items-center justify-content-start">
+                <i class="ri-bubble-chart-line"></i> <span
+                    class="align-middle">{{ __('admin-navigation.system-logs') }}</span>
             </a>
         </li>
     @endhasrole
     @hasrole(['Super Admin', 'Admin'])
         <li class="menu-item">
-            <a data-bs-target="#user-logs" data-bs-toggle="collapse"
+            <a data-bs-target="#user-logs" data-bs-toggle="collapse" title="{{ __('admin-navigation.user-logs') }}"
                 class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">
-                <i class="ri-profile-line"></i> <span class="align-middle">Kullanıcı Kayıtları</span>
+                <i class="ri-profile-line"></i> <span class="align-middle">{{ __('admin-navigation.user-logs') }}</span>
             </a>
             <ul id="user-logs" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                <li class="menu-item"><a href="" class="menu-link">Uygulama Kayıtları</a></li>
-                <li class="menu-item"><a href="" class="menu-link">Oturum Kayıtları</a></li>
+                <li class="menu-item"><a href="" title="{{ __('admin-navigation.user-app-logs') }}"
+                        class="menu-link">{{ __('admin-navigation.user-app-logs') }}</a>
+                </li>
+                <li class="menu-item"><a href="" title="{{ __('admin-navigation.user-auth-logs') }}"
+                        class="menu-link">{{ __('admin-navigation.user-auth-logs') }}</a>
+                </li>
             </ul>
         </li>
     @endhasrole
     @hasrole('Super Admin')
         <li class="menu-item">
-            <a data-bs-target="#admin-logs" data-bs-toggle="collapse"
+            <a data-bs-target="#admin-logs" data-bs-toggle="collapse" title="{{ __('admin-navigation.admin-logs') }}"
                 class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">
-                <i class="ri-folder-user-line"></i> <span class="align-middle">Yönetici Kayıtları</span>
+                <i class="ri-folder-user-line"></i> <span
+                    class="align-middle">{{ __('admin-navigation.admin-logs') }}</span>
             </a>
             <ul id="admin-logs" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                <li class="menu-item"><a href="" class="menu-link">Uygulama Kayıtları</a></li>
-                <li class="menu-item"><a href="" class="menu-link">Oturum Kayıtları</a></li>
+                <li class="menu-item"><a href="" title="{{ __('admin-navigation.admin-app-logs') }}"
+                        class="menu-link">{{ __('admin-navigation.admin-app-logs') }}</a></li>
+                <li class="menu-item"><a href="" title="{{ __('admin-navigation.admin-auth-logs') }}"
+                        class="menu-link">{{ __('admin-navigation.admin-auth-logs') }}</a></li>
             </ul>
         </li>
     @endhasrole
     @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
         <li class="menu-item {{ request()->routeIs('panel.twofactor') ? 'active' : '' }}">
             <a class="d-flex align-items-center justify-content-start" href="{{ route('panel.twofactor') }}"
-                title="2 Faktörlü Doğrulama">
-                <i class="ri-phone-lock-line"></i> <span class="align-middle">2 Faktörlü Doğrulama</span>
+                title="{{ __('admin-navigation.2fa') }}">
+                <i class="ri-phone-lock-line"></i> <span class="align-middle">{{ __('admin-navigation.2fa') }}</span>
             </a>
         </li>
     @endif

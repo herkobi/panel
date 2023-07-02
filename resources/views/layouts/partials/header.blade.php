@@ -8,17 +8,19 @@
                 <a href="{{ route('panel.profile') }}" title="Profil" class="text-decoration-none text-white">
                     <div class="d-flex align-item-center justify-content-between">
                         <i class="ri-user-follow-line"></i>
-                        <span class="align-middle ms-1">Bilgilerim</span>
+                        <span class="align-middle ms-1">{{ __('dashboard.profile') }}</span>
                     </div>
                 </a>
             </li>
             <li class="list-inline-item">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="btn btn-link text-decoration-none text-white p-0 rounded-0 shadow-none" onclick="event.preventDefault(); this.closest('form').submit();">
+                    <button type="submit"
+                        class="btn btn-link text-decoration-none text-white p-0 rounded-0 shadow-none"
+                        onclick="event.preventDefault(); this.closest('form').submit();">
                         <div class="d-flex align-items-center justify-content-between">
                             <i class="ri-logout-circle-r-line"></i>
-                            <span class="align-middle ms-1">Oturumu Kapat</span>
+                            <span class="align-middle ms-1">{{ __('dashboard.signout') }}</span>
                         </div>
                     </button>
                 </form>

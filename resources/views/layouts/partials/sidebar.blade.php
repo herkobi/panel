@@ -6,7 +6,7 @@
         <span class="d-block d-md-none close"><i class="ri-close-circle-line"></i></span>
     </div>
     <div class="sidebar-content" data-simplebar>
-        @if (auth()->user()->type == UserType::USER)
+        @if (Auth::user()->type == UserType::USER)
             @include('layouts.partials.navigation-user')
         @else
             @include('layouts.partials.navigation-admin')
