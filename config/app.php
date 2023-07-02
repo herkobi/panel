@@ -123,8 +123,6 @@ return [
     'available_locales' => [
         'Türkçe' => 'tr',
         'English' => 'en',
-        'Russian' => 'ru',
-        'French' => 'fr',
     ],
 
     /*
