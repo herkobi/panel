@@ -10,11 +10,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Usertag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class UserController extends Controller
 {
-
     /**
      * Kullanıcıları listeleme sayfası
      * Durumu silinmiş olmayanlar dışında kalanlar

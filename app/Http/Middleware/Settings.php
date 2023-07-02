@@ -21,6 +21,13 @@ class Settings
             return $next($request);
         }
 
+        /**
+         * Oturum açan kullanıcının dil yapısı sisteme tanımlanır ve bu sayede
+         * tüm yapı kullanıcının seçmiş olduğu dile göre gösterilir.
+         *
+         * Dil değeri kullanıcı tarafından sağlanmışsa yüklenir yoksa sistem ayarlarındaki
+         * dil değeri yüklenir.
+         */
         $default_settings = Panel::pluck('value', 'key');
         $user_settings = json_decode(Auth::user()->settings, true);
 

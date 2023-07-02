@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Enums\UserType;
 use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -32,14 +33,25 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        $type = 2;
+        /**
+         * Sözleşmenin kabul edildiğini belirtir. Lazım olabilir diye kayıt altına alınıyor.
+         */
         $terms = 1;
 
+        /**
+         * Genel sistem ayarları, userrole ve adminrole değerleri çıkarılarak kullanıcıya aktarılması için
+         * user_settings değişkenine atanıyor ve değer json formatına dönüştürülüyor.
+         */
         $user_settings = Settings::whereNotIn('key', ['userrole', 'adminrole'])->pluck('value', 'key');
         $user_settings = json_encode($user_settings, JSON_UNESCAPED_SLASHES);
 
+        /**
+         * Kullanıcı kaydı gerçekleştiriliyor.
+         * type değeri UserType Enum dosyasından USER olarak belirtiliyor.
+         * settings değeri yukarıda tanımlanan user_settings değişkeni ile dolduruluyor.
+         */
         $user = User::create([
-            'type' => $type,
+            'type' => UserType::USER,
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
@@ -47,6 +59,10 @@ class CreateNewUser implements CreatesNewUsers
             'settings' => $user_settings,
         ]);
 
+        /**
+         * Sistem ayarlarındaki kullanıcılara atanacak rol kayıt edilen kullanıcıya aktarılıyor.
+         * Bu yapı AppServiceProviders içinde tanımlanmıştır.
+         */
         $user->assignRole([config('panel.userrole')]);
 
         return $user;

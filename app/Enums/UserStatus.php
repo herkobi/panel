@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Genel kullanıcı durumlarını tanımlamak için kullanılacak
+ * ENUM yapısı.
+ * ACTIVE: Kullanıcılar sistemi kullanabilir.
+ * DRAFT: Kullanıcılar sisteme erişir ancak yeni kayıt/güncelleme yapamaz.
+ * PASSIVE: Kullanıcılar sisteme erişir ancak kendileri için ayrılmış özel sayfaya erişir. Bu sayfadan hesaplarını tekrar aktifleştirmesi gerekir.
+ * DELETED: Kullanıcılar sisteme erişemez. Yöneticiler kullanıcıları görür. Bu kullanıcıların kayıtları belirli bir süre sonra silinir.
+ */
+
 namespace App\Enums;
 
 enum UserStatus: int
@@ -19,6 +28,9 @@ enum UserStatus: int
         };
     }
 
+    /**
+     * İlgili alanlarda kullanılması için değerlere atanan başlık
+     */
     public static function color($title): string
     {
         return match ($title) {
@@ -29,6 +41,9 @@ enum UserStatus: int
         };
     }
 
+    /**
+     * Başlığa üstteki yapının dışında erişilmesini sağlar
+     */
     public static function getTitle($type)
     {
         switch ($type) {

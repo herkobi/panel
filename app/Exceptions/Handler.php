@@ -32,7 +32,12 @@ class Handler extends ExceptionHandler
         });
     }
 
-    // Panel Tarafının Hata Sayfalarını Özelleştirme
+    /**
+     * Panel kullanıcıları için gösterilecek hata sayfalarını özelleştirme
+     *
+     * Panele erişimi olan tüm kullanıcılar için hata sayfaları errors
+     * klasörü altındaki panel klasöründe bulunmaktadır.
+     */
     protected function renderHttpException(HttpExceptionInterface $e): Response
     {
         $this->registerErrorViewPaths();

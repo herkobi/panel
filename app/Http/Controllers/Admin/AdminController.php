@@ -10,17 +10,26 @@ use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-
+    /**
+     * Yöneticileri listeleme sayfası
+     */
     public function index(): View
     {
+        /**
+         * Super Admin rolü dışında yöneticiler için tanımlanmış roller çekiliyor.
+         */
         $users = User::where('type', UserType::ADMIN)->get()->except(User::role('Super Admin')->first()->id);
-        return view('admins.index', compact('users'));
+        return view('admins.index', ['users' => $users]);
     }
 
+    /**
+     * Yönetici detay sayfası
+     */
     public function show(User $user): View
     {
         $basePermissions = array();
@@ -35,7 +44,11 @@ class AdminController extends Controller
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        return view('admins.detail', compact('user', 'basePermissions', 'rolePermissions'));
+        return view('admins.detail', [
+            'user' => $user,
+            'basePermissions' => $basePermissions,
+            'rolePermissions' => $rolePermissions
+        ]);
     }
 
     public function createAdmin(): View

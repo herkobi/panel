@@ -10,6 +10,14 @@ class SystemLogs
 {
     public function handle(Request $request, Closure $next)
     {
+
+        /**
+         * Super Admin rolüne sahip süper admin kullanıcısı için
+         * tüm yapılara erişim sağlandı.
+         *
+         * Super Admin dışındaki erişimler için 401 Yetkisiz Erişim hatası gösteriliyor
+         */
+
         if (Auth::check() && Auth::user()->hasRole('Super Admin')) {
             return $next($request);
         }
