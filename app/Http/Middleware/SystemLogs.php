@@ -18,7 +18,7 @@ class SystemLogs
          * Super Admin dışındaki erişimler için 401 Yetkisiz Erişim hatası gösteriliyor
          */
 
-        if (Auth::check() && Auth::user()->hasRole('Super Admin')) {
+        if (Auth::check() && Auth::user()->roles->pluck('name')[0] ?? '' === 'Super Admin') {
             return $next($request);
         }
 

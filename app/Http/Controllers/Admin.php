@@ -14,11 +14,11 @@ class Admin extends Controller
     public function index(): View
     {
         $activities = Activity::limit('1');
-        return view('admin', compact('activities'));
+        return view('admin', ['activities' => $activities]);
     }
 
     public function passive(User $user): View
     {
-        return view('passive', compact('user'));
+        return view('passive', ['user' => $user]);
     }
 }

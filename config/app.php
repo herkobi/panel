@@ -117,7 +117,7 @@ return [
     | Available locales
     |--------------------------------------------------------------------------
     |
-    | List all locales that your application works with
+    | Kullanıcıların tanımlı dillere göre sistemi kullanması için düzenlenmiştir
     |
     */
     'available_locales' => [
