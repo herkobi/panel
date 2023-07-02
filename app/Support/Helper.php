@@ -78,7 +78,7 @@ class Helper
             'F j, Y',
             'Y-m-d',
             'm/d/Y',
-            'd/m/Y'
+            'd/m/Y',
         ];
     }
 
@@ -92,7 +92,7 @@ class Helper
         return [
             'g:i a',
             'g:i A',
-            'H:i'
+            'H:i',
         ];
     }
 }

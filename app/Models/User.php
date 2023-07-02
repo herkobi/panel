@@ -65,18 +65,18 @@ class User extends Authenticatable implements MustVerifyEmail
         'settings' => 'array',
     ];
 
-    // /**
-    //  * Get the user's first name.
-    //  *
-    //  * @return \Illuminate\Database\Eloquent\Casts\Attribute
-    //  */
-    // protected function settings(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn ($value) => json_decode($value, true),
-    //         set: fn ($value) => json_encode($value),
-    //     );
-    // }
+    /**
+     * Get the user's settigns.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function settings(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => json_decode($value, true),
+            set: fn ($value) => json_encode($value),
+        );
+    }
 
     public function getTimeZoneAttribute($value): string
     {

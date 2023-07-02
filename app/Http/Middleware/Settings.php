@@ -21,7 +21,7 @@ class Settings
             return $next($request);
         }
 
-        $default_settings = Panel::pluck('value', 'key')->toArray();
+        $default_settings = Panel::pluck('value', 'key');
         $user_settings = json_decode(Auth::user()->settings, true);
 
         $language = $user_settings['language'] ? $user_settings['language'] : $default_settings['language'];
