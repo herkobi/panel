@@ -8,6 +8,7 @@ use App\Http\Requests\Settings\SettingsUpdateRequest;
 use App\Models\Role;
 use App\Models\Settings;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,5 +44,23 @@ class SettingController extends Controller
             ]);
         }
         return redirect()->back()->with('Sistem kayıtları başarılı bir şekilde güncellendi');
+    }
+
+    /**
+     * Kullanıcı ayarlarını güncelleme
+     */
+    public function user(Request $request): JsonResponse
+    {
+        if ($request->ajax() && $request->has('data')) {
+            $user = User::findOrFail(Auth::user()->id);
+            $settings = $request->data;
+            $user->forceFill([
+                'settings' => $settings
+            ])->save();
+
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['error' => 'olmadı']);
     }
 }

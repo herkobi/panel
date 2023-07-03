@@ -12,7 +12,7 @@
                                 kullanabilir.</small>
                         </div>
                         <div class="card-body">
-                            <form id="app-settings-form" method="post">
+                            <form id="app-settings-form" action="" method="post">
                                 @csrf
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
@@ -61,7 +61,7 @@
                                                     <label class="list-group-item bg-white rounded-0 w-75">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <div>
-                                                                <input name="date"
+                                                                <input id="user-date-{{ $format }}" name="date[]"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
                                                                     type="radio" value="{{ $format }}"
                                                                     {{ $format == $user_settings['date'] ? 'checked' : '' }}>
@@ -82,12 +82,13 @@
                                         <div id="user-time-settings" class="col-md-8">
                                             <div class="list-group list-group-flush">
                                                 @foreach (Helper::timeformats() as $format)
-                                                    <label class="list-group-item bg-white rounded-0 w-75">
+                                                    <label for="user-time-{{ $format }}"
+                                                        class="list-group-item bg-white rounded-0 w-75">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <div>
-                                                                <input name="time"
+                                                                <input id="user-time-{{ $format }}" name="time[]"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
-                                                                    type="checkbox" value="{{ $format }}"
+                                                                    type="radio" value="{{ $format }}"
                                                                     {{ $format == $user_settings['time'] ? 'checked' : '' }}>
                                                                 {{ Carbon::now()->format($format) }}
                                                             </div>
@@ -115,4 +116,44 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script>
+        function sendAjaxRequest(urlToSend, datas) {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: urlToSend,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    data: JSON.stringify(datas)
+                },
+                success: function(result) {
+                    //window.location.reload();
+                    alert('eferim');
+                },
+                error: function(result) {
+                    alert('error');
+                }
+            });
+        }
+
+        const btn = document.querySelector("#app-settings-save");
+        btn.addEventListener("click", function() {
+
+            var settings = {
+                language: document.getElementsByName("language")[0].value,
+                timezone: document.getElementsByName("timezone")[0].value,
+                date: document.getElementsByName("date")[0].value,
+                time: document.getElementsByName("time")[0].value
+            }
+            console.log(settings);
+
+            sendAjaxRequest('{{ route('panel.system.update.user.settings') }}', settings);
+        });
+    </script>
 @endsection
