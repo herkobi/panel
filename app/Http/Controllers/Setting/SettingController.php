@@ -53,11 +53,9 @@ class SettingController extends Controller
     {
         if ($request->ajax() && $request->has('data')) {
             $user = User::findOrFail(Auth::user()->id);
-            $settings = $request->data;
-            $user->forceFill([
-                'settings' => $settings
-            ])->save();
-
+            $settings = json_encode($request->data, JSON_UNESCAPED_SLASHES);
+            $user->settings = $settings;
+            $user->save();
             return response()->json(['status' => 'success']);
         }
 

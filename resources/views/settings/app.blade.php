@@ -61,7 +61,7 @@
                                                     <label class="list-group-item bg-white rounded-0 w-75">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <div>
-                                                                <input id="user-date-{{ $format }}" name="date[]"
+                                                                <input id="user-date-{{ $format }}" name="date"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
                                                                     type="radio" value="{{ $format }}"
                                                                     {{ $format == $user_settings['date'] ? 'checked' : '' }}>
@@ -86,7 +86,7 @@
                                                         class="list-group-item bg-white rounded-0 w-75">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <div>
-                                                                <input id="user-time-{{ $format }}" name="time[]"
+                                                                <input id="user-time-{{ $format }}" name="time"
                                                                     class="form-check-input me-1 rounded-0 shadow-none"
                                                                     type="radio" value="{{ $format }}"
                                                                     {{ $format == $user_settings['time'] ? 'checked' : '' }}>
@@ -127,14 +127,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 url: urlToSend,
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                data: {
-                    data: JSON.stringify(datas)
-                },
+                data: {data: datas},
                 success: function(result) {
-                    //window.location.reload();
-                    alert('eferim');
+                    window.location.reload();
                 },
                 error: function(result) {
                     alert('error');
@@ -142,17 +137,32 @@
             });
         }
 
+
         const btn = document.querySelector("#app-settings-save");
         btn.addEventListener("click", function() {
+
+            var date, time;
+            var dateRadio = document.getElementsByName('date');
+            var timeRadio = document.getElementsByName('time');
+
+            for (i = 0; i < dateRadio.length; i++) {
+                if (dateRadio[i].checked) {
+                    date = dateRadio[i].value;
+                }
+            }
+
+            for (i = 0; i < timeRadio.length; i++) {
+                if (timeRadio[i].checked) {
+                    time = timeRadio[i].value;
+                }
+            }
 
             var settings = {
                 language: document.getElementsByName("language")[0].value,
                 timezone: document.getElementsByName("timezone")[0].value,
-                date: document.getElementsByName("date")[0].value,
-                time: document.getElementsByName("time")[0].value
+                date: date,
+                time: time
             }
-            console.log(settings);
-
             sendAjaxRequest('{{ route('panel.system.update.user.settings') }}', settings);
         });
     </script>
