@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionGroups\PermissionGroupCreateRequest;
 use App\Http\Requests\PermissionGroups\PermissionGroupUpdateRequest;
 use App\Models\Permissiongroup;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -32,7 +33,7 @@ class PermissiongroupController extends Controller
         return view('permissiongroups.index', compact('groups'));
     }
 
-    public function store(PermissionGroupCreateRequest $request)
+    public function store(PermissionGroupCreateRequest $request): JsonResponse
     {
         if ($request->ajax() && $request->validated()) {
             $request = Permissiongroup::create($request->all());
@@ -47,7 +48,6 @@ class PermissiongroupController extends Controller
 
     public function update(Permissiongroup $permissiongroup, PermissionGroupUpdateRequest $request): RedirectResponse
     {
-
         if ($request->validated()) {
             $permissiongroup->forceFill([
                 'name' => $request->name,
@@ -62,7 +62,6 @@ class PermissiongroupController extends Controller
 
     public function destroy(Permissiongroup $permissiongroup): RedirectResponse
     {
-
         if (auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin') {
             if (count($permissiongroup->permission) > 0) {
                 return Redirect::back()->with('Hata. Bu grup silinemez');
