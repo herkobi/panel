@@ -16,12 +16,12 @@ class UsertagController extends Controller
     public function index(): View
     {
         $usertags = Usertag::paginate('15');
-        return view('usertags.index', compact('usertags'));
+        return view('usertags.index', ['usertags' => $usertags]);
     }
 
     public function edit(Usertag $usertag): View
     {
-        return view('usercatags.edit', compact('usertag'));
+        return view('usertags.edit', ['usertag' => $usertag]);
     }
 
     public function update(UsertagUpdateRequest $request, Usertag $usertag): RedirectResponse
@@ -39,12 +39,12 @@ class UsertagController extends Controller
 
     public function store(UsertagCreateRequest $request)
     {
-        if ($request->ajax()) {
-            if ($request->validated()) {
-                Usertag::create($request->all());
-            }
+        if ($request->ajax() && $request->validated()) {
+            Usertag::create($request->all());
+            return response()->json(['status' => "success"]);
         }
-        return response()->json(['status' => "success"]);
+
+        return response()->json(['status' => "error"]);
     }
 
     public function destroy(Usertag $usertag)

@@ -17,11 +17,11 @@
                                     <div id="user-tag-status" class="col-md-9">
                                         @foreach (Status::cases() as $status)
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input shadow-none" type="radio" name="status"
-                                                    id="user-tag-status-title-{{ $status->value }}"
+                                                <input class="form-check-input rounded-0 shadow-none" type="radio"
+                                                    name="status" id="user-tag-status-title-{{ $status->value }}"
                                                     value="{{ $status->value }}">
                                                 <label class="form-check-label"
-                                                    for="user-tag-status-title-{{ $status->value }}">{{ $status->title() }}</label>
+                                                    for="user-tag-status-title-{{ $status->value }}">{{ $status->name }}</label>
                                             </div>
                                         @endforeach
                                     </div>
@@ -82,7 +82,7 @@
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="offset-md-3 col-md-5">
-                                        <button type="button" id="save-btn"
+                                        <button id="save-user-tag-form" type="button"
                                             class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
                                                 class="ri-add-line"></i> Kaydet</button>
                                     </div>
@@ -104,7 +104,8 @@
                             <table id="user-tag-table" class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col" class="w-30">Etiket Adı</th>
+                                        <th scope="col" class="w-10">Durum</th>
+                                        <th scope="col" class="w-20">Etiket Adı</th>
                                         <th scope="col" class="w-20">Renk</th>
                                         <th scope="col" class="w-40">Açıklama</th>
                                         <th scope="col" class="w-10 text-center">İşlemler</th>
@@ -113,7 +114,10 @@
                                 <tbody>
                                     @foreach ($usertags as $tag)
                                         <tr>
-                                            <td scope="row">{{ $tag->name }}</td>
+                                            <td scope="row"><span
+                                                    class="badge fw-normal {{ Status::color($tag->status) }}">{{ Status::title($tag->status) }}</span>
+                                            </td>
+                                            <td>{{ $tag->name }}</td>
                                             <td>
                                                 <div class="badge w-100 text-start"
                                                     style="background-color: {{ $tag->color }};font-weight: normal;color: {{ Helper::isDark($tag->color) ? '#fff' : '#000' }}">
@@ -153,44 +157,48 @@
 
 
 @section('js')
-    <script type="module">
-        $(function() {
-            $.ajaxSetup({
+    <script>
+        function sendAjaxRequest(urlToSend, status, name, color, desc) {
+            $.ajax({
+                type: "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: urlToSend,
+                data: {
+                    status: status,
+                    name: name,
+                    color: color,
+                    desc: desc
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        $('#user-tag-form').trigger("reset");
+                        $("#user-tag-table").load(window.location + " #user-tag-table");
+                    }
+                },
+                error: function(data) {
+                    console.log('Error:', data);
                 }
             });
+        }
 
-            $('#save-btn').click(function(e) {
-                e.preventDefault();
-                let status = $("[name='status']:checked").val();
-                let name = $("#user-tag-name").val();
-                let colorInput = document.getElementById('user-tag-color');
-                let colorValue = colorInput.value;
-                let desc = $("#user-tag-desc").val();
+        const btn = document.querySelector("#save-user-tag-form");
+        btn.addEventListener('click', (e) => {
 
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('panel.user.tag.store') }}",
-                    dataType: 'json',
-                    data: {
-                        status: status,
-                        name: name,
-                        color: colorValue,
-                        desc: desc
-                    },
-                    success: function(data) {
-                        if(data.status == 'success')
-                        {
-                            $('#user-tag-form').trigger("reset");
-                            $("#user-tag-table").load(window.location + " #user-tag-table");
-                        }
-                    },
-                    error: function(data) {
-                        console.log('Error:', data);
-                    }
-                });
-            });
+            const name = document.getElementsByName('name')[0].value;
+            const desc = document.getElementsByName('desc')[0].value;
+            const statusRadio = document.getElementsByName('status');
+            const colorInput = document.getElementById('user-tag-color');
+            const color = colorInput.value;
+
+            for (i = 0; i < statusRadio.length; i++) {
+                if (statusRadio[i].checked) {
+                    status = statusRadio[i].value;
+                }
+            }
+
+            sendAjaxRequest('{{ route('panel.user.tag.store') }}', status, name, color, desc);
         });
     </script>
 @endsection

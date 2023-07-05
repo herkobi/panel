@@ -12,14 +12,22 @@ enum Status: int
     case ACTIVE = 1;
     case PASSIVE = 2;
 
+    public static function title($title): string
+    {
+        return match ($title) {
+            self::ACTIVE => 'Aktif',
+            self::PASSIVE => 'Pasif',
+        };
+    }
+
     /**
      * İlgili alanlarda kullanılması için değerlere atanan başlık
      */
-    public function title(): string
+    public static function color($title): string
     {
-        return match ($this) {
-            self::ACTIVE => 'Aktif',
-            self::PASSIVE => 'Pasif',
+        return match ($title) {
+            self::ACTIVE => 'text-bg-success',
+            self::PASSIVE => 'text-bg-warning',
         };
     }
 

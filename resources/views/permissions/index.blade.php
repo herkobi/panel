@@ -143,7 +143,6 @@
 
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-
             const formData = new FormData(form);
             const permissionsData = [...formData.entries()];
             sendAjaxRequest('{{ route('panel.permission.store') }}', permissionsData);

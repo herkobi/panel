@@ -103,7 +103,7 @@
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="offset-md-4 col-md-5">
-                                            <button id="app-settings-save" type="button"
+                                            <button id="save-app-settings-form" type="button"
                                                 class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
                                                     class="ri-add-line"></i> Kaydet</button>
                                         </div>
@@ -141,11 +141,11 @@
             });
         }
 
-        const btn = document.querySelector("#app-settings-save");
-        btn.addEventListener("click", function() {
+        const btn = document.querySelector("#save-app-settings-form");
+        btn.addEventListener('click', (e) => {
 
-            var dateRadio = document.getElementsByName('date');
-            var timeRadio = document.getElementsByName('time');
+            const dateRadio = document.getElementsByName('date');
+            const timeRadio = document.getElementsByName('time');
 
             for (i = 0; i < dateRadio.length; i++) {
                 if (dateRadio[i].checked) {
@@ -159,7 +159,7 @@
                 }
             }
 
-            var settings = {
+            const settings = {
                 language: document.getElementsByName("language")[0].value,
                 timezone: document.getElementsByName("timezone")[0].value,
                 date: date,
