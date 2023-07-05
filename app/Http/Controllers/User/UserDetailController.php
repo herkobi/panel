@@ -68,7 +68,7 @@ class UserDetailController extends Controller
                 $user->givePermissionTo([$permission]);
             }
 
-            return Redirect::route('panel.admins');
+            return Redirect::route('panel.users');
         }
 
         return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
