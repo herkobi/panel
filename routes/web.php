@@ -14,6 +14,7 @@ use App\Http\Controllers\User\UsertagController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminCreateController;
 use App\Http\Controllers\Admin\AdminDetailController;
+use App\Http\Middleware\CheckUserType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
@@ -36,7 +37,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
     Route::controller(Dashboard::class)->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/passive', 'passive')->name('passive');
-    });
+    })->middleware(CheckUserType::class);
 
     Route::controller(Admin::class)->group(function () {
         Route::get('/admin', 'index')->name('admin');
