@@ -120,6 +120,8 @@
 
 @section('js')
     <script>
+        var date, time;
+
         function sendAjaxRequest(urlToSend, datas) {
             $.ajax({
                 type: "POST",
@@ -127,7 +129,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 url: urlToSend,
-                data: {data: datas},
+                data: {
+                    data: datas
+                },
                 success: function(result) {
                     window.location.reload();
                 },
@@ -137,11 +141,9 @@
             });
         }
 
-
         const btn = document.querySelector("#app-settings-save");
         btn.addEventListener("click", function() {
 
-            var date, time;
             var dateRadio = document.getElementsByName('date');
             var timeRadio = document.getElementsByName('time');
 

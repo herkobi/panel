@@ -11,7 +11,8 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="" method="post" autocomplete="off">
+                        <form id="permission-form" action="" method="post" enctype="multipart/form-data"
+                            autocomplete="off">
                             @csrf
                             <div id="repeater" class="mb-3 border-bottom pb-3">
                                 <div class="row gx-1">
@@ -21,7 +22,7 @@
                                         <select
                                             class="form-select form-select-sm rounded-0 shadow-none permission_group_list"
                                             name="group_id" id="permission-group" required>
-                                            <option selected>Grup Seçiniz</option>
+                                            <option value="0" selected>Grup Seçiniz</option>
                                             @foreach ($groups as $group)
                                                 <option class="option" value="{{ $group->id }}">
                                                     {{ $group->name . ' - ' . \App\Enums\UserType::title($group->type) }}
@@ -43,7 +44,7 @@
                                     <div class="offset-md-2 col-md-10">
                                         <div id="containerElement"></div>
                                         <div class="mt-2">
-                                            <button type="button" onclick="addPermission()"
+                                            <button id="save-permission-form" type="button"
                                                 class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
                                                     class="ri-add-line"></i> Kaydet</button>
                                         </div>
@@ -117,9 +118,7 @@
     });
     </script>
     <script>
-        var groupId, arrayText, arrayName;
-
-        function sendAjaxRequest(urlToSend, group_id, text, name) {
+        function sendAjaxRequest(urlToSend, datas) {
             $.ajax({
                 type: "POST",
                 headers: {
@@ -127,12 +126,11 @@
                 },
                 url: urlToSend,
                 data: {
-                    group_id: group_id,
-                    text: text,
-                    name: name
+                    data: datas
                 },
                 success: function(result) {
-                    window.location.reload();
+                    //window.location.reload();
+                    alert("eferim");
                 },
                 error: function(result) {
                     alert('error');
@@ -140,9 +138,16 @@
             });
         }
 
-        function addPermission() {
-            sendAjaxRequest('{{ route('panel.permission.store') }}', groupName, userType, groupDesc);
-        }
+        const btn = document.querySelector('#save-permission-form');
+        const form = document.querySelector('#permission-form');
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const permissionsData = [...formData.entries()];
+            sendAjaxRequest('{{ route('panel.permission.store') }}', permissionsData);
+        });
 
         // TODO: İzin eklemeleri ajaxa taşınacak. repeater https://github.com/DubFriend/jquery.repeater bununla değiştirilebilir.
         // TODO: data içine girilen değerler dışardan tek bir değişkenle atılabilir mi? data = name + text + desc gibi..

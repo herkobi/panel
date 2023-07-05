@@ -7,6 +7,7 @@ use App\Http\Requests\Permissions\PermissionCreateRequest;
 use App\Http\Requests\Permissions\PermissionUpdateRequest;
 use App\Models\Permission;
 use App\Models\Permissiongroup;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,22 +37,22 @@ class PermissionController extends Controller
         return view('permissions.index', compact(['permissions', 'groups']));
     }
 
-    public function store(PermissionCreateRequest $request): RedirectResponse
+    public function store(PermissionCreateRequest $request): JsonResponse
     {
+        if ($request->ajax() && $request->validated()) {
 
-        if ($request->validated()) {
-            $group_id = $request->group_id;
-            $attr = array_combine($request->name, $request->text);
-            $guard = 'web';
+            Permission::create($request->all());
 
-            foreach ($attr as $key => $req) {
-                Permission::create(['name' => $key, 'group_id' => $group_id, 'text' => $req, 'guard_name' => $guard]);
-            }
+            // $group_id = $request->group_id;
+            // $attr = array_combine($request->name, $request->text);
+            // $guard = 'web';
 
-            return Redirect::route('panel.permissions');
+            // foreach ($attr as $key => $req) {
+            //    Permission::create(['name' => $key, 'group_id' => $group_id, 'text' => $req, 'guard_name' => $guard]);
+            // }
+
+            return response()->json(['status' => "success"]);
         }
-
-        return Redirect::back();
     }
 
     public function edit(Permission $permission): View
