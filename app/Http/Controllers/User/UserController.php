@@ -49,6 +49,26 @@ class UserController extends Controller
         return view('users.detail', compact('user', 'tags', 'selectedTag', 'basePermissions', 'rolePermissions'));
     }
 
+    public function permissions(User $user): View
+    {
+        $userRoles = array();
+        $basePermissions = array();
+        $permissions = array();
+        $rolePermissions = array();
+
+        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', UserType::USER))->get();
+
+        foreach ($permissions as $permission) {
+            $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+        }
+
+        foreach ($user->roles as $role) {
+            $rolePermissions = $role->permissions->pluck('id')->toArray();
+        }
+
+        return view('users.permissions', compact('user', 'basePermissions', 'rolePermissions'));
+    }
+
     /**
      * Kullanıcıları filtreleme
      *

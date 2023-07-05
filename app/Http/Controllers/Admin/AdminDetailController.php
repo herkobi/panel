@@ -35,7 +35,7 @@ class AdminDetailController extends Controller
     public function changeEmail(Request $request, User $user)
     {
         if ($request->email !== $user->email && $user instanceof MustVerifyEmail) {
-            $user->forceFill([
+            $user->forceFill([ //forceFill'ler $user->email gibi değiştirelecek.
                 'email' => $request->email,
                 'email_verified_at' => null,
             ])->save();
@@ -49,6 +49,9 @@ class AdminDetailController extends Controller
 
     public function verifyEmail(User $user)
     {
+        /**
+         * Burası direk işlem yapıyor. Bir kontrol yazılabilir.
+         */
         $user->sendEmailVerificationNotification();
         return redirect()->back();
     }

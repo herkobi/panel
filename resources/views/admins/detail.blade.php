@@ -248,13 +248,6 @@
                                 onclick="event.preventDefault(); document.getElementById('password-reset-form').submit()">Şifre
                                 Yenileme Linki Gönder</button>
                         </div>
-                        @if (!$user->hasVerifiedEmail())
-                            <div class="mb-2 border-bottom pb-2">
-                                <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
-                                    onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta
-                                    Onay Linki Gönder</button>
-                            </div>
-                        @endif
                         <div class="mb-2 border-bottom pb-2">
                             <button class="btn text p-0" data-bs-toggle="modal" data-bs-target="#changeEmail">E-posta
                                 Adresini Değiştir</button>

@@ -51,13 +51,13 @@ class AdminController extends Controller
         ]);
     }
 
-    public function createAdmin(): View
+    public function create(): View
     {
         $roles = Role::where([['type', UserType::ADMIN], ['name', '!=', 'Super Admin']])->get();
         return view('admins.create', compact('roles'));
     }
 
-    public function permissionAdmin(User $user): View
+    public function permissions(User $user): View
     {
         $userRoles = array();
         $basePermissions = array();
@@ -75,11 +75,6 @@ class AdminController extends Controller
         }
 
         return view('admins.permissions', compact('user', 'basePermissions', 'rolePermissions'));
-    }
-
-    public function edit(User $user): View
-    {
-        return view('admins.edit', compact('user'));
     }
 
     public function status(Request $request)

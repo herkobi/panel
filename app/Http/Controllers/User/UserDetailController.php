@@ -4,9 +4,12 @@ namespace App\Http\Controllers\User;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UserPermissionCreateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Redirect;
 
 class UserDetailController extends Controller
 {
@@ -51,5 +54,23 @@ class UserDetailController extends Controller
     {
         $user->sendEmailVerificationNotification();
         return redirect()->back();
+    }
+
+    /**
+     * Validate and create a newly registered user.
+     *
+     * @param  array<string, string>  $input
+     */
+    public function permissions(UserPermissionCreateRequest $request, User $user): RedirectResponse
+    {
+        if ($request->validated()) {
+            foreach ($request->permission as $permission) {
+                $user->givePermissionTo([$permission]);
+            }
+
+            return Redirect::route('panel.admins');
+        }
+
+        return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
     }
 }

@@ -48,9 +48,6 @@
                                                         <li><a class="dropdown-item small"
                                                                 href="{{ route('panel.admin.detail', $user->id) }}">Bilgiler</a>
                                                         </li>
-                                                        <li><a class="dropdown-item admin"
-                                                                href="{{ route('panel.user.edit', $user->id) }}">Düzenle</a>
-                                                        </li>
                                                         <li class="dropdown-divider"></li>
                                                         <li><a class="dropdown-item small" href="#">Rol Tanımla</a>
                                                         </li>

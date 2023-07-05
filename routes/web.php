@@ -47,7 +47,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
     Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index')->name('users');
         Route::get('/user/detail/{user}', 'show')->name('user.detail');
-        Route::get('/user/edit/{user}', 'edit')->name('user.edit');
+        Route::get('/user/permissions/{user}', 'permissions')->name('user.permissions');
         Route::get('/user/filter', 'filter')->name('user.filter');
         Route::post('/user/synctags', 'tags')->name('user.synctags');
         Route::post('/user/update/status', 'status')->name('user.update.status');
@@ -57,6 +57,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
         Route::post('/user/password/reset/{user}', 'passwordReset')->name('user.password.reset');
         Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
         Route::post('/user/email/change/{user}', 'changeEmail')->name('user.change.email');
+        Route::post('/user/create/permissions/{user}', 'permissions')->name('store.user.permissions');
     });
 
     Route::controller(UsertagController::class)->group(function () {
@@ -71,10 +72,9 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
     Route::controller(AdminController::class)->group(function () {
         Route::get('/admins', 'index')->name('admins');
         Route::get('/admin/detail/{user}', 'show')->name('admin.detail');
-        Route::get('/admin/create', 'createAdmin')->name('create.admin');
-        Route::get('/admin/permissions/{user}', 'permissionAdmin')->name('admin.permissions');
+        Route::get('/admin/create', 'create')->name('create.admin');
+        Route::get('/admin/permissions/{user}', 'permissions')->name('admin.permissions');
         Route::get('/admin/filter', 'filter')->name('admin.filter');
-        Route::get('/admin/edit/{user}', 'editAdmin')->name('admin.edit');
         Route::post('/admin/update/status', 'status')->name('admin.update.status');
     });
 
