@@ -32,7 +32,7 @@ class UserController extends Controller
      */
     public function show(User $user): View
     {
-        $tags = Usertag::all();
+        $tags = Usertag::where('status', Status::ACTIVE)->get();
         $basePermissions = array();
         $permissions = array();
         $selectedTag = $user->usertags->pluck('id')->toArray();
