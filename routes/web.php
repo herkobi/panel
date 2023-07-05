@@ -92,7 +92,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
     Route::controller(SettingController::class)->group(function () {
         Route::get('/settings/general', 'index')->name('app.settings');
         Route::get('/settings/system', 'system')->name('system.settings');
-        Route::post('/settings/update', 'update')->name('system.settings.update');
+        Route::post('/settings/update', 'update')->name('system.update.settings');
         Route::post('/settings/user', 'user')->name('system.update.user.settings');
     });
 

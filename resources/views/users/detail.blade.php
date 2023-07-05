@@ -388,11 +388,13 @@
                     user_id: {{ $user->id }},
                     ids: datas
                 },
-                success: function(result) {
-                    window.location.reload();
+                success: function(data) {
+                    if (data.status == 'success') {
+                        console.log('Eferim');
+                    }
                 },
-                error: function(result) {
-                    alert('error');
+                error: function(data) {
+                    console.log('Error:', data);
                 }
             });
         }

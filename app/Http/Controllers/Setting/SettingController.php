@@ -36,14 +36,18 @@ class SettingController extends Controller
         ]);
     }
 
-    public function update(SettingsUpdateRequest $request): RedirectResponse
+    public function update(Request $request): JsonResponse
     {
-        foreach ($request->except('_token') as $key => $value) {
-            Settings::firstWhere('key', $key)->update([
-                'value' => $value
-            ]);
+        if ($request->ajax() && $request->has('data')) {
+            foreach ($request->all() as $key => $value) {
+                Settings::firstWhere('key', $key)->update([
+                    'value' => $value
+                ]);
+            }
+            return response()->json(['status' => 'success']);
         }
-        return redirect()->back()->with('Sistem kayıtları başarılı bir şekilde güncellendi');
+
+        return response()->json(['status' => 'error']);
     }
 
     /**
