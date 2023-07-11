@@ -23,8 +23,7 @@
                                 <tbody>
                                     @foreach ($users as $user)
                                         <tr>
-                                            <td><span
-                                                    class="badge fw-normal {{ UserStatus::color($user->status) }}">{{ UserStatus::title($user->status) }}</span>
+                                            <td><span class="badge fw-normal {{ UserStatus::color($user->status) }}">{{ UserStatus::title($user->status) }}</span>
                                             </td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
@@ -38,21 +37,17 @@
                                             </td>
                                             <td class="text-center">
                                                 <div class="dropdown">
-                                                    <a class="btn btn-text dropdown-toggle p-0" href="#"
-                                                        role="button" data-bs-toggle="dropdown" data-boundary="window"
-                                                        aria-haspopup="true" aria-expanded="false">
+                                                    <a class="btn btn-text dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                                        aria-expanded="false">
                                                         <i class="ri-menu-3-fill"></i>
                                                     </a>
-                                                    <ul
-                                                        class="dropdown-menu dropdown-menu-end rounded-0 shadow-none bg-white">
-                                                        <li><a class="dropdown-item small"
-                                                                href="{{ route('panel.user.detail', $user->id) }}">Bilgiler</a>
+                                                    <ul class="dropdown-menu dropdown-menu-end rounded-0 shadow-none bg-white">
+                                                        <li><a class="dropdown-item small" href="{{ route('panel.user.detail', $user->id) }}">Bilgiler</a>
                                                         </li>
                                                         <li class="dropdown-divider"></li>
                                                         <li><a class="dropdown-item small" href="#">Rol Tanımla</a>
                                                         </li>
-                                                        <li><a class="dropdown-item small"
-                                                                href="{{ route('panel.user.permissions', $user->id) }}">Özel
+                                                        <li><a class="dropdown-item small" href="{{ route('panel.user.permissions', $user->id) }}">Özel
                                                                 Yetkiler</a>
                                                         </li>
                                                     </ul>
@@ -75,14 +70,10 @@
                         <h4 class="card-title mb-0">Hesap Ara</h4>
                     </div>
                     <div class="card-body">
-                        <form action="" method="post">
-                            <div class="input-group custom-input-group">
-                                <input type="text" class="form-control rounded-0 shadow-none" placeholder="Hesap Adı"
-                                    aria-label="Hesap Ara" aria-describedby="button-search">
-                                <button class="btn btn-outline-secondary rounded-0 shadow-none border-left-0" type="button"
-                                    id="button-search"><i class="ri-search-2-line"></i></button>
-                            </div>
-                        </form>
+                        <div class="input-group custom-input-group">
+                            <input type="text" class="form-control rounded-0 shadow-none" placeholder="Hesap Adı" aria-label="Hesap Ara" aria-describedby="button-search" id="searchText">
+                            <button class="btn btn-outline-secondary rounded-0 shadow-none border-left-0" type="button" id="button-search"><i class="ri-search-2-line"></i></button>
+                        </div>
                     </div>
                 </div>
                 <form action="" method="post">
@@ -95,12 +86,9 @@
                                 @foreach (UserStatus::cases() as $userStatus)
                                     <li class="list-group-item bg-white">
                                         <div class="form-check">
-                                            <input class="form-check-input rounded-0 shadow-none status" type="checkbox"
-                                                name="status[]" value="{{ $userStatus->value }}"
-                                                id="user-status-select-{{ $userStatus->value }}"
-                                                onclick="checkStatus(this)">
-                                            <label class="form-check-label"
-                                                for="user-status-select-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
+                                            <input class="form-check-input rounded-0 shadow-none status" type="checkbox" name="status[]" value="{{ $userStatus->value }}"
+                                                id="user-status-select-{{ $userStatus->value }}" onclick="checkStatus(this)">
+                                            <label class="form-check-label" for="user-status-select-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
                                                 Hesaplar</label>
                                         </div>
                                     </li>
@@ -118,11 +106,9 @@
                                     @foreach ($tags as $tag)
                                         <li class="list-group-item bg-white">
                                             <div class="form-check">
-                                                <input class="form-check-input rounded-0 shadow-none tag" type="checkbox"
-                                                    name="tag[]" value="{{ $tag->id }}"
+                                                <input class="form-check-input rounded-0 shadow-none tag" type="checkbox" name="tag[]" value="{{ $tag->id }}"
                                                     id="user-tag-select-{{ $tag->id }}" onclick="checkTag(this)">
-                                                <label class="form-check-label"
-                                                    for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
+                                                <label class="form-check-label" for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
                                             </div>
                                         </li>
                                     @endforeach
@@ -136,45 +122,76 @@
     </div>
 @endsection
 
+@php
+    $userStatusCases = [];
+    foreach (UserStatus::cases() as $key => $case) {
+        $userStatusCases[$key]['value'] = $case->value;
+        $userStatusCases[$key]['title'] = UserStatus::getTitle($case->value);
+        $userStatusCases[$key]['color'] = UserStatus::color($case);
+    }
+@endphp
+
 @section('js')
     <script>
-        var statusIds = [];
-        var tagIds = [];
+        const userStatusCases = @json($userStatusCases);
+        let statusIds = [];
+        let tagIds = [];
 
         function checkStatus(element) {
             const value = element.value;
+
             const isChecked = element.checked;
+
             if (isChecked) {
                 statusIds.push(value)
             } else {
-                statusIds = statusIds.filter(item => item !== value)
+                if (statusIds.length > 0) {
+                    statusIds = statusIds.filter(item => item !== value)
+                }
             }
+
+
+
             filter();
         }
 
         function checkTag(element) {
             const value = element.value;
+
             const isChecked = element.checked;
+
             if (isChecked) {
                 tagIds.push(value)
             } else {
-                tagIds = tagIds.filter(item => item !== value)
+                if (tagIds.length > 0) {
+                    tagIds = tagIds.filter(item => item !== value)
+                }
             }
+
+
+
             filter();
         }
 
         function filter() {
+            console.log("tagIds", tagIds)
+            console.log("statusIds", statusIds)
             $.ajax({
                 type: 'GET',
+                // url: '{{ route('panel.user.filter') }}' + '?tagIds=' + tagIds + '&statusIds=' + statusIds,
                 url: '{{ route('panel.user.filter') }}',
                 data: {
-                    tagIds,
-                    statusIds
+                    tagIds: tagIds,
+                    statusIds: statusIds,
+                    page: {{ $users->currentPage() }}
                 },
                 success: function(response) {
                     deleteRows();
                     refreshRows(response);
                 },
+                error: function(response) {
+                    console.log(response);
+                }
             });
         }
 
@@ -188,20 +205,75 @@
         }
 
         function refreshRows(data) {
-            const table = document.getElementById('user-table');
-            for (const [key, value] of Object.entries(data.users)) {
-                const tr = table.insertRow();
-                const cell1 = tr.insertCell(0);
-                cell1.innerHTML = "1";
-                const cell2 = tr.insertCell(1);
-                cell2.innerHTML = "1";
-                const cell3 = tr.insertCell(2);
-                cell3.innerHTML = "1";
-                const cell4 = tr.insertCell(3);
-                cell4.innerHTML = "1";
-                const cell5 = tr.insertCell(4);
-                cell5.innerHTML = "1";
+
+            console.log("data", data)
+
+            if (!Array.isArray(data) && data.length === 0) {
+                return;
             }
+
+            if (Object.keys(data).length === 0) {
+                return;
+            }
+
+            data.forEach(item => {
+                const table = document.getElementById('user-table');
+                const row = table.insertRow();
+                const statusCell = row.insertCell(0);
+                const nameCell = row.insertCell(1);
+                const emailCell = row.insertCell(2);
+                const roleCell = row.insertCell(3);
+                const actionCell = row.insertCell(4);
+
+                const status = userStatusCases.find(i => i.value === parseInt(item.status));
+
+                statusCell.innerHTML = `<span class="badge fw-normal ${status.color}">${status.title}</span>`;
+                nameCell.innerHTML = item.name;
+                emailCell.innerHTML = item.email;
+                roleCell.innerHTML = item.roleName;
+                actionCell.innerHTML = `<div class="dropdown">
+                                            <a class="btn btn-text dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i class="ri-menu-3-fill"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end rounded-0 shadow-none bg-white">
+                                                <li><a class="dropdown-item small" href="/panel/user/detail/${item.id}">Bilgiler</a>
+                                                </li>
+                                                <li class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item small" href="#">Rol Tanımla</a>
+                                                </li>
+                                                <li><a class="dropdown-item small" href="/panel/user/permissions/${item.id}">Özel Yetkiler</a>
+                                                </li>
+                                            </ul>
+                                        </div>`;
+
+            })
         }
+
+        document.getElementById('button-search').addEventListener('click', function() {
+            const searchText = document.getElementById('searchText').value;
+
+            if (searchText.length === 0) {
+                return;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('panel.user.filter') }}',
+                data: {
+                    searchText: searchText,
+                    page: {{ $users->currentPage() }},
+                    tagIds: tagIds,
+                    statusIds: statusIds,
+                },
+                success: function(response) {
+                    deleteRows();
+                    refreshRows(response);
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        })
     </script>
 @endsection

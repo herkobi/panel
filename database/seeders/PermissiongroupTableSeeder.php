@@ -46,8 +46,8 @@ class PermissiongroupTableSeeder extends Seeder
             ]
         ];
 
-         foreach ($groups as $group) {
+        foreach ($groups as $group) {
             Permissiongroup::create(['name' => $group[0], 'type' => $group[1], 'desc' => $group[2]]);
-         }
+        }
     }
 }

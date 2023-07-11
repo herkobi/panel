@@ -11,6 +11,7 @@ use App\Models\Permission;
 use App\Models\Usertag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -22,9 +23,10 @@ class UserController extends Controller
      */
     public function index(): View
     {
-        $tags = Usertag::where('status', [Status::ACTIVE])->get();
-        $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->paginate('25');
-        return view('users.index', ['users' => $users, 'tags' => $tags]);
+        return view('users.index', [
+            'users' => User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->paginate('25'),
+            'tags' => Usertag::where('status', [Status::ACTIVE])->get(),
+        ]);
     }
 
     /**
@@ -77,13 +79,34 @@ class UserController extends Controller
      */
     public function filter(Request $request)
     {
+        $users = User::query()->where('type', [UserType::USER]);
 
-        if ($request->has('statusIds')) {
-            return response()->json([
-                'users' => User::paginate('25'),
-            ]);
+        if ($request->has('searchText') && $request->searchText != null) {
+            $users->where('name', 'LIKE', "%{$request->searchText}%");
         }
-        //$users = User::where('type', [UserType::USER])->with('usertags')->get();
+
+        if ($request->has('statusIds') && $request->statusIds != null) {
+            $users->whereIn('status', $request->statusIds);
+        }
+
+        if ($request->has('tagIds') && $request->tagIds != null) {
+            $users->whereHas('usertags', function ($query) use ($request) {
+                $query->whereIn('usertag_id', $request->tagIds);
+            });
+        }
+
+        if (!$request->has('statusIds') && !$request->has('tagIds') && !$request->has('searchText') && $request->has('page')) {
+            $users->paginate('25', ['*'], 'page', $request->page);
+            $users = $users->getCollection();
+        } else {
+            $users = $users->get();
+        }
+
+        $users->each(function ($user) {
+            $user->roleName = $user->roles->pluck('name')->first();
+        });
+
+        return \response()->json($users);
     }
 
     /**

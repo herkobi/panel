@@ -13,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // if local
+        if (app()->isLocal()) {
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        }
     }
 
     /**
@@ -26,13 +29,18 @@ class AppServiceProvider extends ServiceProvider
          * Kullanımı config('panel.userrole')
          * Kaynak: https://darkghosthunter.medium.com/laravel-loading-the-settings-from-the-database-or-file-9b4a3df5db75
          */
-        config([
-            'panel' => Settings::all(['key', 'value'])
-                ->keyBy('key') // key every setting by its name
-                ->transform(function ($setting) {
-                    return $setting->value; // return only the value
-                })->toArray() // make it an array
-        ]);
+
+        // if not cli
+        if (php_sapi_name() !== 'cli') {
+            config([
+                'panel' => Settings::all(['key', 'value'])
+                    ->keyBy('key') // key every setting by its name
+                    ->transform(function ($setting) {
+                        return $setting->value; // return only the value
+                    })->toArray() // make it an array
+            ]);
+        }
+
 
         /**
          * Bootstrap 5 Stilinde Sayfalama
