@@ -21,7 +21,7 @@
                                                     name="status" id="user-tag-status-title-{{ $status->value }}"
                                                     value="{{ $status->value }}">
                                                 <label class="form-check-label"
-                                                    for="user-tag-status-title-{{ $status->value }}">{{ $status->name }}</label>
+                                                    for="user-tag-status-title-{{ $status->value }}">{{ Status::getTitle($status->value) }}</label>
                                             </div>
                                         @endforeach
                                     </div>
