@@ -52,7 +52,7 @@
                                 data-bs-target="#permissions-tab-pane" type="button" role="tab"
                                 aria-controls="permissions-tab-pane" aria-selected="false"><i
                                     class="ri-fingerprint-line"></i>
-                                Özel İzinler</button>
+                                Tanımlı İzinler</button>
                         </li>
                     </ul>
                 </div>
@@ -165,7 +165,7 @@
                             aria-labelledby="permissions-tab" tabindex="0">
                             <div class="card rounded-0 shadow-sm border-0 mb-3">
                                 <div class="card-header border-0 bg-white pt-3 pb-0">
-                                    <h4 class="card-title">Özel İzinler</h4>
+                                    <h4 class="card-title">Tanımlı İzinler</h4>
                                 </div>
                                 <div class="card-body">
                                     @foreach ($basePermissions as $key => $permissions)
@@ -180,11 +180,14 @@
                                                 @foreach ($permissions as $permissionId => $permission)
                                                     <div class="col-md-3">
                                                         <div class="form-check form-check-inline">
-                                                            <input
-                                                                class="form-check-input rounded-0 shadow-none group-{{ Str::slug('-', $key) }}-permissions"
-                                                                type="checkbox" id="role-permission-{{ $permissionId }}"
-                                                                name="permission[]" value="{{ $permissionId }}"
-                                                                {{ in_array($permissionId, $rolePermissions) ? 'checked' : '' }}>
+                                                            @if (in_array($permissionId, $rolePermissions))
+                                                                <input
+                                                                    class="form-check-input rounded-0 shadow-none group-{{ Str::slug('-', $key) }}-permissions"
+                                                                    type="checkbox"
+                                                                    id="role-permission-{{ $permissionId }}"
+                                                                    name="permission[]" value="{{ $permissionId }}"
+                                                                    checked readonly>
+                                                            @endif
                                                             <label class="form-check-label"
                                                                 for="role-permission-{{ $permissionId }}">{{ $permission }}</label>
                                                         </div>
@@ -200,42 +203,44 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card rounded-0 shadow-sm border-0 mb-3">
-                    <div class="card-header border-0 bg-white pt-3 pb-0">
-                        <h4 class="card-title mb-0">Durum</h4>
-                    </div>
-                    @if (!$user->hasVerifiedEmail())
-                        <div class="card-body">
-                            <div class="text-center">
-                                <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
-                                    onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta
-                                    Onay Linkini Tekrar Gönder</button>
-                            </div>
+                @hasrole('Super Admin')
+                    <div class="card rounded-0 shadow-sm border-0 mb-3">
+                        <div class="card-header border-0 bg-white pt-3 pb-0">
+                            <h4 class="card-title mb-0">Durum</h4>
                         </div>
-                    @else
-                        <form action="" method="post">
-                            @csrf
+                        @if (!$user->hasVerifiedEmail())
                             <div class="card-body">
-                                @foreach (UserStatus::cases() as $userStatus)
-                                    <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="radio"
-                                            name="status" value="{{ $userStatus->value }}"
-                                            id="user-status-{{ $userStatus->value }}" onclick="checkStatus(this)"
-                                            {{ $user->status->value == $userStatus->value ? 'checked' : '' }}>
-                                        <label class="form-check-label"
-                                            for="user-status-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
-                                            Hesap</label>
-                                    </div>
-                                @endforeach
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
+                                        onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta
+                                        Onay Linkini Tekrar Gönder</button>
+                                </div>
                             </div>
-                            <div class="card-footer">
-                                <button type="button" id="update-user-status" onclick="statusAjax()"
-                                    class="btn btn-primary btn-sm rounded-0 shadow-none">Durum
-                                    Değiştir</button>
-                            </div>
-                        </form>
-                    @endif
-                </div>
+                        @else
+                            <form action="" method="post">
+                                @csrf
+                                <div class="card-body">
+                                    @foreach (UserStatus::cases() as $userStatus)
+                                        <div class="form-check">
+                                            <input class="form-check-input rounded-0 shadow-none" type="radio"
+                                                name="status" value="{{ $userStatus->value }}"
+                                                id="user-status-{{ $userStatus->value }}" onclick="checkStatus(this)"
+                                                {{ $user->status->value == $userStatus->value ? 'checked' : '' }}>
+                                            <label class="form-check-label"
+                                                for="user-status-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
+                                                Hesap</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="card-footer">
+                                    <button type="button" id="update-user-status" onclick="statusAjax()"
+                                        class="btn btn-primary btn-sm rounded-0 shadow-none">Durum
+                                        Değiştir</button>
+                                </div>
+                            </form>
+                        @endif
+                    </div>
+                @endhasrole
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
                     <div class="card-header border-0 bg-white pt-3 pb-0">
                         <div class="d-flex align-items-center justify-content-between w-100 mb-2">

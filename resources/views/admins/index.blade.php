@@ -49,7 +49,9 @@
                                                                 href="{{ route('panel.admin.detail', $user->id) }}">Bilgiler</a>
                                                         </li>
                                                         <li class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item small" href="#">Rol Tanımla</a>
+                                                        <li><a class="dropdown-item small" href="#"
+                                                                data-bs-toggle="modal" data-bs-target="#changeRole">Rol
+                                                                Tanımla</a>
                                                         </li>
                                                         <li><a class="dropdown-item small"
                                                                 href="{{ route('panel.admin.permissions', $user->id) }}">Özel
@@ -103,6 +105,65 @@
                                     </li>
                                 @endforeach
                             </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeRole" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="changeRoleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0 shadow-none bg-white">
+                <form action="" method="POST" id="change-role">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changeRoleLabel">Kullanıcı Rol Ekle/Değiştir</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-role">Tanımlı
+                                    Rol</label>
+                                <div class="col-md-7">
+                                    <ul class="list-unstyled list-inline m-0 p-0">
+                                        @foreach ($user->getRoleNames() as $role)
+                                            <li><span class="fw-semibold mr-2 mb-2">{{ $role }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="add-user-role">Rol
+                                    Tanımla/Değiştir</label>
+                                <div class="col-md-7">
+                                    @foreach ($roles as $key => $role)
+                                        <div class="form-check form-check-inline">
+                                            @foreach ($user->roles as $userrole)
+                                                <input class="form-check-input rounded-0 shadow-none" type="checkbox"
+                                                    id="role-permission-{{ $key }}" name="role[]"
+                                                    value="{{ $role->id }}"
+                                                    {{ $role->id == $userrole->id ? 'checked' : '' }}>
+                                            @endforeach
+                                            <label class="form-check-label"
+                                                for="role-permission-{{ $key }}">{{ $role->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <button type="button" class="btn btn-secondary btn-sm rounded-0 shadow-none"
+                                data-bs-dismiss="modal">Kapat</button>
+                            <button type="submit" class="btn btn-primary btn-sm rounded-0 shadow-none">Rol
+                                Tanımla</button>
                         </div>
                     </div>
                 </form>

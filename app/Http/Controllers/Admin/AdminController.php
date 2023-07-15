@@ -21,10 +21,11 @@ class AdminController extends Controller
     public function index(): View
     {
         /**
-         * Super Admin rolü dışında yöneticiler için tanımlanmış roller çekiliyor.
+         * Super Admin rolü dışında yöneticiler için tanımlanmış rollere ait kullanıcılar çekiliyor.
          */
         $users = User::where('type', UserType::ADMIN)->get()->except(User::role('Super Admin')->first()->id);
-        return view('admins.index', ['users' => $users]);
+        $roles = Role::where('type', UserType::ADMIN)->get()->except(Role::where('name', 'Super Admin')->first()->id);
+        return view('admins.index', ['users' => $users, 'roles' => $roles]);
     }
 
     /**
