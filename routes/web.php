@@ -58,6 +58,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
         Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
         Route::post('/user/email/change/{user}', 'changeEmail')->name('user.change.email');
         Route::post('/user/create/permissions/{user}', 'permissions')->name('store.user.permissions');
+        Route::post('/user/update/role/{user}', 'updateRole')->name('user.update.role');
     });
 
     Route::controller(UsertagController::class)->group(function () {
@@ -82,6 +83,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
         Route::post('/admin/password/reset/{user}', 'passwordReset')->name('admin.password.reset');
         Route::post('/admin/email/verify/{user}', 'verifyEmail')->name('admin.email.verify');
         Route::post('/admin/email/change/{user}', 'changeEmail')->name('admin.change.email');
+        Route::post('/admin/update/role/{user}', 'updateRole')->name('admin.update.role');
     });
 
     Route::controller(AdminCreateController::class)->group(function () {

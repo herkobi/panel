@@ -116,7 +116,7 @@
         aria-labelledby="changeRoleLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-0 shadow-none bg-white">
-                <form action="" method="POST" id="change-role">
+                <form action="{{ route('panel.admin.update.role', $user->id) }}" method="POST" id="change-role">
                     @csrf
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="changeRoleLabel">Kullanıcı Rol Ekle/Değiştir</h1>

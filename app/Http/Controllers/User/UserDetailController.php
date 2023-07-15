@@ -24,6 +24,15 @@ class UserDetailController extends Controller
         $this->middleware('throttle:6,1')->only('verifyEmail');
     }
 
+    public function updateRole(Request $request, User $user): RedirectResponse
+    {
+        foreach ($request->role as $role) {
+            $user->assignRole([$role]);
+        }
+
+        return Redirect::route('panel.users');
+    }
+
     public function passwordReset(User $user)
     {
         $status = Password::sendResetLink($user->only('email'));

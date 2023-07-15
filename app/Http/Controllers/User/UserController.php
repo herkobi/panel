@@ -8,6 +8,7 @@ use App\Enums\UserType;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Usertag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,11 @@ class UserController extends Controller
      */
     public function index(): View
     {
-        return view('users.index', [
-            'users' => User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->paginate('25'),
-            'tags' => Usertag::where('status', [Status::ACTIVE])->get(),
-        ]);
+        $roles = Role::where('type', UserType::USER)->get();
+        $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->paginate('25');
+        $tags = Usertag::where('status', [Status::ACTIVE])->get();
+
+        return view('users.index', ['users' => $users, 'roles' => $roles, 'tags' => $tags]);
     }
 
     /**

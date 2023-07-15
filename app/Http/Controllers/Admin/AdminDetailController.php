@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Redirect;
 
 class AdminDetailController extends Controller
 {
@@ -19,6 +21,15 @@ class AdminDetailController extends Controller
     public function __construct()
     {
         $this->middleware('throttle:6,1')->only('verifyEmail');
+    }
+
+    public function updateRole(Request $request, User $user): RedirectResponse
+    {
+        foreach ($request->role as $role) {
+            $user->assignRole([$role]);
+        }
+
+        return Redirect::route('panel.admins');
     }
 
     public function passwordReset(User $user)

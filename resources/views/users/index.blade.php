@@ -23,7 +23,8 @@
                                 <tbody>
                                     @foreach ($users as $user)
                                         <tr>
-                                            <td><span class="badge fw-normal {{ UserStatus::color($user->status) }}">{{ UserStatus::title($user->status) }}</span>
+                                            <td><span
+                                                    class="badge fw-normal {{ UserStatus::color($user->status) }}">{{ UserStatus::title($user->status) }}</span>
                                             </td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
@@ -37,17 +38,23 @@
                                             </td>
                                             <td class="text-center">
                                                 <div class="dropdown">
-                                                    <a class="btn btn-text dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                        aria-expanded="false">
+                                                    <a class="btn btn-text dropdown-toggle p-0" href="#"
+                                                        role="button" data-bs-toggle="dropdown" data-boundary="window"
+                                                        aria-haspopup="true" aria-expanded="false">
                                                         <i class="ri-menu-3-fill"></i>
                                                     </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end rounded-0 shadow-none bg-white">
-                                                        <li><a class="dropdown-item small" href="{{ route('panel.user.detail', $user->id) }}">Bilgiler</a>
+                                                    <ul
+                                                        class="dropdown-menu dropdown-menu-end rounded-0 shadow-none bg-white">
+                                                        <li><a class="dropdown-item small"
+                                                                href="{{ route('panel.user.detail', $user->id) }}">Bilgiler</a>
                                                         </li>
                                                         <li class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item small" href="#">Rol Tanımla</a>
+                                                        <li><a class="dropdown-item small" href="#"
+                                                                data-bs-toggle="modal" data-bs-target="#changeRole">Rol
+                                                                Tanımla</a>
                                                         </li>
-                                                        <li><a class="dropdown-item small" href="{{ route('panel.user.permissions', $user->id) }}">Özel
+                                                        <li><a class="dropdown-item small"
+                                                                href="{{ route('panel.user.permissions', $user->id) }}">Özel
                                                                 Yetkiler</a>
                                                         </li>
                                                     </ul>
@@ -71,8 +78,10 @@
                     </div>
                     <div class="card-body">
                         <div class="input-group custom-input-group">
-                            <input type="text" class="form-control rounded-0 shadow-none" placeholder="Hesap Adı" aria-label="Hesap Ara" aria-describedby="button-search" id="searchText">
-                            <button class="btn btn-outline-secondary rounded-0 shadow-none border-left-0" type="button" id="button-search"><i class="ri-search-2-line"></i></button>
+                            <input type="text" class="form-control rounded-0 shadow-none" placeholder="Hesap Adı"
+                                aria-label="Hesap Ara" aria-describedby="button-search" id="searchText">
+                            <button class="btn btn-outline-secondary rounded-0 shadow-none border-left-0" type="button"
+                                id="button-search"><i class="ri-search-2-line"></i></button>
                         </div>
                     </div>
                 </div>
@@ -86,9 +95,12 @@
                                 @foreach (UserStatus::cases() as $userStatus)
                                     <li class="list-group-item bg-white">
                                         <div class="form-check">
-                                            <input class="form-check-input rounded-0 shadow-none status" type="checkbox" name="status[]" value="{{ $userStatus->value }}"
-                                                id="user-status-select-{{ $userStatus->value }}" onclick="checkStatus(this)">
-                                            <label class="form-check-label" for="user-status-select-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
+                                            <input class="form-check-input rounded-0 shadow-none status" type="checkbox"
+                                                name="status[]" value="{{ $userStatus->value }}"
+                                                id="user-status-select-{{ $userStatus->value }}"
+                                                onclick="checkStatus(this)">
+                                            <label class="form-check-label"
+                                                for="user-status-select-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
                                                 Hesaplar</label>
                                         </div>
                                     </li>
@@ -106,9 +118,11 @@
                                     @foreach ($tags as $tag)
                                         <li class="list-group-item bg-white">
                                             <div class="form-check">
-                                                <input class="form-check-input rounded-0 shadow-none tag" type="checkbox" name="tag[]" value="{{ $tag->id }}"
+                                                <input class="form-check-input rounded-0 shadow-none tag" type="checkbox"
+                                                    name="tag[]" value="{{ $tag->id }}"
                                                     id="user-tag-select-{{ $tag->id }}" onclick="checkTag(this)">
-                                                <label class="form-check-label" for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
+                                                <label class="form-check-label"
+                                                    for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
                                             </div>
                                         </li>
                                     @endforeach
@@ -116,6 +130,65 @@
                             </div>
                         </div>
                     @endif
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeRole" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="changeRoleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0 shadow-none bg-white">
+                <form action="{{ route('panel.user.update.role', $user->id) }}" method="POST" id="change-role">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changeRoleLabel">Kullanıcı Rol Ekle/Değiştir</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-role">Tanımlı
+                                    Rol</label>
+                                <div class="col-md-7">
+                                    <ul class="list-unstyled list-inline m-0 p-0">
+                                        @foreach ($user->getRoleNames() as $role)
+                                            <li><span class="fw-semibold mr-2 mb-2">{{ $role }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="add-user-role">Rol
+                                    Tanımla/Değiştir</label>
+                                <div class="col-md-7">
+                                    @foreach ($roles as $key => $role)
+                                        <div class="form-check form-check-inline">
+                                            @foreach ($user->roles as $userrole)
+                                                <input class="form-check-input rounded-0 shadow-none" type="checkbox"
+                                                    id="role-permission-{{ $key }}" name="role[]"
+                                                    value="{{ $role->id }}"
+                                                    {{ $role->id == $userrole->id ? 'checked' : '' }}>
+                                            @endforeach
+                                            <label class="form-check-label"
+                                                for="role-permission-{{ $key }}">{{ $role->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <button type="button" class="btn btn-secondary btn-sm rounded-0 shadow-none"
+                                data-bs-dismiss="modal">Kapat</button>
+                            <button type="submit" class="btn btn-primary btn-sm rounded-0 shadow-none">Rol
+                                Tanımla</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
