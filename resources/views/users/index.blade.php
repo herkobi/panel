@@ -49,9 +49,12 @@
                                                                 href="{{ route('panel.user.detail', $user->id) }}">Bilgiler</a>
                                                         </li>
                                                         <li class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item small" href="#"
-                                                                data-bs-toggle="modal" data-bs-target="#changeRole">Rol
-                                                                Tanımla</a>
+                                                        <li>
+                                                            <button id="addRole" type="button"
+                                                                class="btn btn-text btn-sm dropdown-item"
+                                                                value="{{ $user->id }}" data-bs-toggle="modal"
+                                                                data-bs-target="#changeRole">Rol
+                                                                Tanımla</button>
                                                         </li>
                                                         <li><a class="dropdown-item small"
                                                                 href="{{ route('panel.user.permissions', $user->id) }}">Özel
@@ -139,11 +142,13 @@
         aria-labelledby="changeRoleLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-0 shadow-none bg-white">
-                <form action="{{ route('panel.user.update.role', $user->id) }}" method="POST" id="change-role">
+                <form action="{{ route('panel.user.role.update') }}" method="POST" id="user-role-form">
                     @csrf
+                    <input type="hidden" name="user" id="user_id">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="changeRoleLabel">Kullanıcı Rol Ekle/Değiştir</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3 border-bottom pb-3">
@@ -151,12 +156,7 @@
                                 <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-role">Tanımlı
                                     Rol</label>
                                 <div class="col-md-7">
-                                    <ul class="list-unstyled list-inline m-0 p-0">
-                                        @foreach ($user->getRoleNames() as $role)
-                                            <li><span class="fw-semibold mr-2 mb-2">{{ $role }}</span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                    <div id="userroles"></div>
                                 </div>
                             </div>
                         </div>
@@ -167,12 +167,9 @@
                                 <div class="col-md-7">
                                     @foreach ($roles as $key => $role)
                                         <div class="form-check form-check-inline">
-                                            @foreach ($user->roles as $userrole)
-                                                <input class="form-check-input rounded-0 shadow-none" type="checkbox"
-                                                    id="role-permission-{{ $key }}" name="role[]"
-                                                    value="{{ $role->id }}"
-                                                    {{ $role->id == $userrole->id ? 'checked' : '' }}>
-                                            @endforeach
+                                            <input class="form-check-input rounded-0 shadow-none userIn" type="checkbox"
+                                                id="role-permission-{{ $key }}" name="role[]"
+                                                value="{{ $role->id }}">
                                             <label class="form-check-label"
                                                 for="role-permission-{{ $key }}">{{ $role->name }}</label>
                                         </div>
@@ -185,7 +182,8 @@
                         <div class="d-flex align-items-center justify-content-between w-100">
                             <button type="button" class="btn btn-secondary btn-sm rounded-0 shadow-none"
                                 data-bs-dismiss="modal">Kapat</button>
-                            <button type="submit" class="btn btn-primary btn-sm rounded-0 shadow-none">Rol
+                            <button type="submit" id="update-user-role"
+                                class="btn btn-primary btn-sm rounded-0 shadow-none">Rol
                                 Tanımla</button>
                         </div>
                     </div>
@@ -206,6 +204,85 @@
 
 @section('js')
     <script>
+        /**
+         * Modal İşlemleri
+         */
+        document.addEventListener("click", (event) => {
+            if (event.target.matches("#addRole")) {
+                const user_id = event.target.value;
+                sendAjaxRequest('{{ route('panel.user.modal.data') }}', user_id);
+            }
+        });
+
+        function sendAjaxRequest(urlToSend, datas) {
+            $.ajax({
+                type: "GET",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: urlToSend,
+                data: {
+                    ids: datas
+                },
+                success: function(data) {
+                    const user = data.user_data[0]; // Kullanıcı verisini al
+
+                    const userIdInput = document.querySelector('input[id="user_id"]');
+                    userIdInput.value = user.id; // Kullanıcı id değerini ata
+
+                    const roles = user.roles; // Kullanıcının rollerini al
+
+                    const roleNames = roles.map(role => role.name).join(', '); // Role isimlerini ata
+
+                    document.getElementById('userroles').textContent = roleNames; // userroles div'ini güncelle
+
+                    // Checkboxları kontrol et ve işaretleyin
+                    const checkboxes = document.getElementsByClassName('userIn');
+                    Array.from(checkboxes).forEach(checkbox => {
+                        const checkboxValue = parseInt(checkbox
+                            .value); // Checkbox değerini tamsayıya dönüştür
+
+                        // Roles içindeki id'leri kontrol et
+                        const isChecked = roles.some(role => role.id === checkboxValue);
+
+                        checkbox.checked = isChecked; // Checkbox'ı işaretle veya işareti kaldır
+                    });
+                },
+                error: function(data) {
+                    console.log('Error:', data);
+                }
+            });
+        }
+
+        // const btn = document.querySelector('#update-user-role');
+        // const form = document.querySelector('#user-role-form');
+
+        // btn.addEventListener('click', (e) => {
+        //     e.preventDefault();
+        //     const formData = new FormData(form);
+        //     const roleData = [...formData.entries()];
+        //     updateAjaxRequest('{{ route('panel.user.role.update') }}', roleData);
+        // });
+
+        // function updateAjaxRequest(urlToSend, datas) {
+        //     $.ajax({
+        //         type: "GET",
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         url: urlToSend,
+        //         data: {
+        //             roles: datas
+        //         },
+        //         success: function(data) {
+        //             location.reload();
+        //         },
+        //         error: function(data) {
+        //             console.log('Error:', data);
+        //         }
+        //     });
+        // }
+
         const userStatusCases = @json($userStatusCases);
         let statusIds = [];
         let tagIds = [];

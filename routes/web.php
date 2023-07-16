@@ -58,7 +58,8 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
         Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
         Route::post('/user/email/change/{user}', 'changeEmail')->name('user.change.email');
         Route::post('/user/create/permissions/{user}', 'permissions')->name('store.user.permissions');
-        Route::post('/user/update/role/{user}', 'updateRole')->name('user.update.role');
+        Route::get('/user/modal/data', 'userModelData')->name('user.modal.data');
+        Route::post('/role/update', 'updateRole')->name('user.role.update');
     });
 
     Route::controller(UsertagController::class)->group(function () {

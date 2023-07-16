@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserPermissionCreateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -24,8 +25,20 @@ class UserDetailController extends Controller
         $this->middleware('throttle:6,1')->only('verifyEmail');
     }
 
-    public function updateRole(Request $request, User $user): RedirectResponse
+
+    public function userModelData(Request $request): JsonResponse
     {
+        if ($request->ajax() && $request->has('ids')) {
+            $user = User::where('id', $request->ids)->with('roles')->get();
+            return response()->json([
+                'user_data' => $user
+            ]);
+        }
+    }
+
+    public function updateRole(Request $request): RedirectResponse
+    {
+        $user = User::findOrFail($request->user);
         foreach ($request->role as $role) {
             $user->assignRole([$role]);
         }
@@ -83,3 +96,5 @@ class UserDetailController extends Controller
         return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
     }
 }
+
+// TODO: Ek rol tanımlarken kullanıcı bilgisi kontrol edilecek
