@@ -160,7 +160,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3 border-bottom pb-3">
+                        <div class="mb-3">
                             <div class="row">
                                 <label class="form-label col-md-5 fw-semibold mb-0" for="add-user-role">Rol
                                     Tanımla/Değiştir</label>
@@ -300,8 +300,6 @@
                 }
             }
 
-
-
             filter();
         }
 
@@ -317,8 +315,6 @@
                     tagIds = tagIds.filter(item => item !== value)
                 }
             }
-
-
 
             filter();
         }

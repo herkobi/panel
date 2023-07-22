@@ -43,7 +43,6 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
             Route::get('/user/detail/{user}', 'show')->name('user.detail');
             Route::get('/user/permissions/{user}', 'permissions')->name('user.permissions');
             Route::get('/user/filter', 'filter')->name('user.filter');
-            Route::post('/user/synctags', 'tags')->name('user.synctags');
             Route::post('/user/update/status', 'status')->name('user.update.status');
         });
 
@@ -52,6 +51,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefi
             Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
             Route::post('/user/email/change/{user}', 'changeEmail')->name('user.change.email');
             Route::post('/user/create/permissions/{user}', 'permissions')->name('store.user.permissions');
+            Route::post('/user/synctags', 'tags')->name('user.synctags');
             Route::get('/user/modal/data', 'userModelData')->name('user.modal.data');
             Route::post('/role/update', 'updateRole')->name('user.role.update');
         });

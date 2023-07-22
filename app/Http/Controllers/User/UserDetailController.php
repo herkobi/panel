@@ -25,7 +25,11 @@ class UserDetailController extends Controller
         $this->middleware('throttle:6,1')->only('verifyEmail');
     }
 
-
+    /**
+     * Kullanıcı
+     *
+     * @param  array<string, string>  $input
+     */
     public function userModelData(Request $request): JsonResponse
     {
         if ($request->ajax() && $request->has('ids')) {
@@ -36,16 +40,27 @@ class UserDetailController extends Controller
         }
     }
 
+    /**
+     * Kullanıcı rolünü güncelleme
+     * Ek rol tanımlama
+     *
+     * @param  array<string, string>  $input
+     */
     public function updateRole(Request $request): RedirectResponse
     {
         $user = User::findOrFail($request->user);
         foreach ($request->role as $role) {
-            $user->syncRoles([$role]);
+            $user->assignRole([$role]);
         }
 
         return Redirect::route('panel.users');
     }
 
+    /**
+     * Kullanıcı şifresini değiştirmesi için e-posta gönderimi
+     *
+     * @param  array<string, string>  $input
+     */
     public function passwordReset(User $user)
     {
         $status = Password::sendResetLink($user->only('email'));
@@ -57,6 +72,11 @@ class UserDetailController extends Controller
         }
     }
 
+    /**
+     * Kullanıcıya e-posta adresini değiştirme
+     *
+     * @param  array<string, string>  $input
+     */
     public function changeEmail(Request $request, User $user)
     {
         if ($request->email !== $user->email && $user instanceof MustVerifyEmail) {
@@ -79,7 +99,7 @@ class UserDetailController extends Controller
     }
 
     /**
-     * Validate and create a newly registered user.
+     * Kullanıcıya özel izin atama
      *
      * @param  array<string, string>  $input
      */
@@ -87,13 +107,28 @@ class UserDetailController extends Controller
     {
         if ($request->validated()) {
             foreach ($request->permission as $permission) {
-                $user->givePermissionTo([$permission]);
+                $user->givePermissionTo($permission);
             }
 
             return Redirect::route('panel.users');
         }
 
         return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
+    }
+
+    /**
+     * Kullanıcılara etiket atama
+     */
+    public function tags(Request $request)
+    {
+        if ($request->ajax() && $request->has('ids')) {
+            $user = User::findOrFail($request->user_id);
+
+            //$user->usertags()->detach();
+            foreach ($request->ids as $tagId) {
+                $user->usertags()->toggle($tagId);
+            }
+        }
     }
 }
 

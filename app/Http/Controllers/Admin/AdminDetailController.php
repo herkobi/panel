@@ -23,8 +23,15 @@ class AdminDetailController extends Controller
         $this->middleware('throttle:6,1')->only('verifyEmail');
     }
 
-    public function updateRole(Request $request, User $user): RedirectResponse
+    /**
+     * Kullanıcı rolünü güncelleme
+     * Ek rol tanımlama
+     *
+     * @param  array<string, string>  $input
+     */
+    public function updateRole(Request $request): RedirectResponse
     {
+        $user = User::findOrFail($request->user);
         foreach ($request->role as $role) {
             $user->assignRole([$role]);
         }

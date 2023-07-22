@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Settings as Panel;
+use App\Models\Settings as ModelsSettings;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,15 +28,17 @@ class Settings
          *
          * Dil değeri kullanıcı tarafından sağlanmışsa yüklenir yoksa sistem ayarlarındaki
          * dil değeri yüklenir.
+         *
+         * Yine kullanıcının timezone değerine göre zaman dili yükleniyor
          */
         $default_settings = Panel::pluck('value', 'key');
         $user_settings = json_decode(Auth::user()->settings, true);
 
         $language = $user_settings['language'] ? $user_settings['language'] : $default_settings['language'];
+        $timezone = $user_settings['timezone'] ? $user_settings['timezone'] : $default_settings['timezone'];
 
-        if (!empty($language)) {
-            app()->setLocale($language);
-        }
+        app()->setLocale($language); //Dil tanımlama
+        date_default_timezone_set($timezone); //Zaman dilimi tanımlama
 
         return $next($request);
     }

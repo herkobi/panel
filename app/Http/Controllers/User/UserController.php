@@ -28,7 +28,7 @@ class UserController extends Controller
         $roles = Role::where('type', UserType::USER)->get();
         $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
         $users = PaginateCollection::paginate($users, 25);
-        $tags = Usertag::where('status', [Status::ACTIVE])->get();
+        $tags = Usertag::where('status', [Status::ACTIVE])->has('users')->get();
 
         return view('users.index', [
             'users' => $users,
@@ -42,10 +42,11 @@ class UserController extends Controller
      */
     public function show(User $user): View
     {
-        $tags = Usertag::where('status', Status::ACTIVE)->get();
         $basePermissions = array();
         $permissions = array();
+        $tags = Usertag::where('status', Status::ACTIVE)->get();
         $selectedTag = $user->usertags->pluck('id')->toArray();
+        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
 
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
@@ -55,6 +56,8 @@ class UserController extends Controller
 
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
+
+        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
 
         return view('users.detail', [
             'user' => $user,
@@ -67,7 +70,6 @@ class UserController extends Controller
 
     public function permissions(User $user): View
     {
-        $userRoles = array();
         $basePermissions = array();
         $permissions = array();
         $rolePermissions = array();
@@ -75,14 +77,25 @@ class UserController extends Controller
         $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', UserType::USER))->get();
 
         foreach ($permissions as $permission) {
-            $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+            $basePermissions[$permission->group->name][$permission->id] = [
+                'title' => $permission->text,
+                'name' => $permission->name
+            ];
         }
+
+        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
 
         foreach ($user->roles as $role) {
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        return view('users.permissions', compact('user', 'basePermissions', 'rolePermissions'));
+        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
+
+        return view('users.permissions', [
+            'user' => $user,
+            'basePermissions' => $basePermissions,
+            'rolePermissions' => $rolePermissions
+        ]);
     }
 
     /**
@@ -141,22 +154,6 @@ class UserController extends Controller
             ])->save();
 
             return response()->json(['status' => 'success']);
-        }
-    }
-
-
-    /**
-     * Kullanıcılara etiket atama
-     */
-    public function tags(Request $request)
-    {
-        if ($request->ajax() && $request->has('ids')) {
-            $user = User::findOrFail($request->user_id);
-
-            $user->usertags()->detach();
-            foreach ($request->ids as $tagId) {
-                $user->usertags()->attach($tagId);
-            }
         }
     }
 

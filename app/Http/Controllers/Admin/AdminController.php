@@ -36,6 +36,8 @@ class AdminController extends Controller
         $basePermissions = array();
         $permissions = array();
 
+        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
+
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
             foreach ($permissions as $permission) {
@@ -44,6 +46,8 @@ class AdminController extends Controller
 
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
+
+        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
 
         return view('admins.detail', [
             'user' => $user,
@@ -60,7 +64,6 @@ class AdminController extends Controller
 
     public function permissions(User $user): View
     {
-        $userRoles = array();
         $basePermissions = array();
         $permissions = array();
         $rolePermissions = array();
@@ -68,14 +71,25 @@ class AdminController extends Controller
         $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', UserType::ADMIN))->get();
 
         foreach ($permissions as $permission) {
-            $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+            $basePermissions[$permission->group->name][$permission->id] = [
+                'title' => $permission->text,
+                'name' => $permission->name
+            ];
         }
+
+        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
 
         foreach ($user->roles as $role) {
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        return view('admins.permissions', compact('user', 'basePermissions', 'rolePermissions'));
+        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
+
+        return view('admins.permissions', [
+            'user' => $user,
+            'basePermissions' => $basePermissions,
+            'rolePermissions' => $rolePermissions
+        ]);
     }
 
     public function status(Request $request)

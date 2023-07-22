@@ -65,7 +65,7 @@ class AdminCreateController extends Controller
     {
         if ($request->validated()) {
             foreach ($request->permission as $permission) {
-                $user->givePermissionTo([$permission]);
+                $user->givePermissionTo($permission);
             }
 
             return Redirect::route('panel.admins');
