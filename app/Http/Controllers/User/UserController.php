@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Usertag;
+use App\Utils\PaginateCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -25,10 +26,15 @@ class UserController extends Controller
     public function index(): View
     {
         $roles = Role::where('type', UserType::USER)->get();
-        $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->paginate('25');
+        $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
+        $users = PaginateCollection::paginate($users, 25);
         $tags = Usertag::where('status', [Status::ACTIVE])->get();
 
-        return view('users.index', ['users' => $users, 'roles' => $roles, 'tags' => $tags]);
+        return view('users.index', [
+            'users' => $users,
+            'roles' => $roles,
+            'tags' => $tags
+        ]);
     }
 
     /**
@@ -50,7 +56,13 @@ class UserController extends Controller
             $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
 
-        return view('users.detail', compact('user', 'tags', 'selectedTag', 'basePermissions', 'rolePermissions'));
+        return view('users.detail', [
+            'user' => $user,
+            'tags' => $tags,
+            'selectedTag' => $selectedTag,
+            'basePermissions' => $basePermissions,
+            'rolePermissions' => $rolePermissions
+        ]);
     }
 
     public function permissions(User $user): View

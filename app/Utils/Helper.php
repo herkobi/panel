@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace App\Utils;
 
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
