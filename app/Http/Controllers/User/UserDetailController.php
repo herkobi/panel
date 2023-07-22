@@ -40,7 +40,7 @@ class UserDetailController extends Controller
     {
         $user = User::findOrFail($request->user);
         foreach ($request->role as $role) {
-            $user->assignRole([$role]);
+            $user->syncRoles([$role]);
         }
 
         return Redirect::route('panel.users');

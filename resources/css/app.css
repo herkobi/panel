@@ -72,12 +72,54 @@ body {
     text-align: var(--bs-body-text-align);
 }
 
-/*
- * Tools
-*/
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1.5;
+}
+
 .h5,
 h5 {
     font-size: 1.05rem;
+}
+
+/*
+ * Tools
+*/
+#back-to-top {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 9999;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    line-height: 30px;
+    background: #ddd;
+    color: #444;
+    cursor: pointer;
+    border: 0;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: opacity 0.2s ease-out;
+    opacity: 0;
+}
+
+#back-to-top:hover {
+    background: #e9ebec;
+}
+
+#back-to-top.show {
+    opacity: 1;
 }
 
 table a {
@@ -167,36 +209,6 @@ table a {
 
 .w-95 {
     width: 95% !important;
-}
-
-/*
- * Back to Top
-*/
-#back-to-top {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    z-index: 9999;
-    width: 32px;
-    height: 32px;
-    text-align: center;
-    line-height: 30px;
-    background: #ddd;
-    color: #444;
-    cursor: pointer;
-    border: 0;
-    border-radius: 2px;
-    text-decoration: none;
-    transition: opacity 0.2s ease-out;
-    opacity: 0;
-}
-
-#back-to-top:hover {
-    background: #e9ebec;
-}
-
-#back-to-top.show {
-    opacity: 1;
 }
 
 /*
