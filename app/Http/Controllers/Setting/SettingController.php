@@ -36,7 +36,7 @@ class SettingController extends Controller
         ]);
     }
 
-    public function update(Request $request): JsonResponse
+    public function update(SettingsUpdateRequest $request): JsonResponse
     {
         if ($request->ajax() && $request->has('data')) {
             foreach ($request->all() as $key => $value) {
@@ -51,7 +51,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Kullanıcı ayarlarını güncelleme
+     * Kullanıcı kendi ayarlarını güncelliyor
      */
     public function user(Request $request): JsonResponse
     {

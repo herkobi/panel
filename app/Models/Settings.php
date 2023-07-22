@@ -16,8 +16,8 @@ class Settings extends Model
         'value'
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at'
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 }

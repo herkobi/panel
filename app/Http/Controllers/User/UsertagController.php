@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Usertags\UsertagCreateRequest;
 use App\Http\Requests\Usertags\UsertagUpdateRequest;
