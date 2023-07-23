@@ -175,7 +175,6 @@ return [
          */
         App\Providers\FortifyServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -204,7 +203,6 @@ return [
         'UserStatus' => App\Enums\UserStatus::class,
         'UserType' => App\Enums\UserType::class,
         'Carbon' => Carbon\Carbon::class,
-        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
     ])->toArray(),
 
 ];

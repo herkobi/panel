@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Alert;
+use App\Utils\PaginateCollection;
 
 class PermissionController extends Controller
 {
@@ -33,8 +35,13 @@ class PermissionController extends Controller
     public function index(): View
     {
         $permissions = Permission::get();
+        $permissions = PaginateCollection::paginate($permissions, 5);
+
         $groups = Permissiongroup::get();
-        return view('permissions.index', compact(['permissions', 'groups']));
+        return view('permissions.index', [
+            'permissions' => $permissions,
+            'groups' => $groups
+        ]);
     }
 
     public function store(PermissionCreateRequest $request): JsonResponse
@@ -42,17 +49,11 @@ class PermissionController extends Controller
         if ($request->ajax() && $request->validated()) {
 
             Permission::create($request->all());
-
-            // $group_id = $request->group_id;
-            // $attr = array_combine($request->name, $request->text);
-            // $guard = 'web';
-
-            // foreach ($attr as $key => $req) {
-            //    Permission::create(['name' => $key, 'group_id' => $group_id, 'text' => $req, 'guard_name' => $guard]);
-            // }
-
             return response()->json(['status' => "success"]);
         }
+
+        return response()->json(['status' => "error"]);
+
     }
 
     public function edit(Permission $permission): View
@@ -64,16 +65,15 @@ class PermissionController extends Controller
     public function update(PermissionUpdateRequest $request, Permission $permission): RedirectResponse
     {
         if ($request->validated()) {
-            $permission->forceFill([
-                'group_id' => $request->group_id,
-                'name' => $request->name,
-                'text' => $request->text
-            ])->save();
+            $permission->group_id = $request->group_id;
+            $permission->name = $request->name;
+            $permission->text = $request->text;
+            $permission->save();
 
-            return Redirect::route('panel.permissions');
+            return Redirect::route('panel.permissions')->with('Success', 'İzin başarılı bir şekilde güncellendi');
         }
 
-        return Redirect::back();
+        return Redirect::back()->with('Error', 'Güncelleme yapılırken bir sorun oluştu. Lütfen tekrar deneyiniz');
     }
 
     public function destroy(Permission $permission): RedirectResponse

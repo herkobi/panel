@@ -69,7 +69,6 @@
                                     <tr>
                                         <th scope="col" class="w-25">İzin Grubu</th>
                                         <th scope="col" class="w-20">Türü</th>
-                                        <th scope="col" class="w-25">Açıklama</th>
                                         <th scope="col" class="w-20">İzin Adı</th>
                                         <th scope="col" class="w-10 text-center">İşlemler</th>
                                     </tr>
@@ -78,8 +77,7 @@
                                     @foreach ($permissions as $permission)
                                         <tr>
                                             <td>{{ $permission->group->name }}</td>
-                                            <td>{{ \App\Enums\UserType::title($permission->group->type) }}</td>
-                                            <td>{{ $permission->text }}</td>
+                                            <td>{{ UserType::title($permission->group->type) }}</td>
                                             <td>{{ $permission->name }}</td>
                                             <td class="text-center">
                                                 @can('role-edit')
@@ -91,6 +89,9 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    {{ $permissions->links() }}
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -128,14 +129,8 @@
                 data: {
                     data: datas
                 },
-                success: function(data) {
-                    if (data.status == 'success') {
-                        console.log('Eferim');
-                    }
-                },
-                error: function(data) {
-                    console.log('Error:', data);
-                }
+                success: function(data) {},
+                error: function(data) {}
             });
         }
 
@@ -150,6 +145,5 @@
         });
 
         // TODO: İzin eklemeleri ajaxa taşınacak. repeater https://github.com/DubFriend/jquery.repeater bununla değiştirilebilir.
-        // TODO: data içine girilen değerler dışardan tek bir değişkenle atılabilir mi? data = name + text + desc gibi..
     </script>
 @endsection

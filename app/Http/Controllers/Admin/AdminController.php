@@ -8,10 +8,9 @@ use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminController extends Controller
 {
@@ -102,9 +101,10 @@ class AdminController extends Controller
                 }
             }
 
-            $user->forceFill([
-                'status' => $status
-            ])->save();
+            $user->status = $status;
+            $user->save();
+
+            return response()->json(['status' => "success"]);
         }
     }
 

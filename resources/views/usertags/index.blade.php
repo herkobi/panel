@@ -38,7 +38,7 @@
                                             </span>
                                             <input type="text" id="user-tag-name" placeholder="Etiket"
                                                 class="form-control border-start-0  rounded-0 shadow-none ps-0 @error('name') is-invalid @enderror"
-                                                name="name" value="{{ old('name') }}" required autocomplete="off">
+                                                name="name" value="{{ old('name') }}" autocomplete="off">
                                             @error('name')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -178,7 +178,7 @@
                     }
                 },
                 error: function(data) {
-                    console.log('Error:', data);
+                    console.log(data.message)
                 }
             });
         }
