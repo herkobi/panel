@@ -23,6 +23,7 @@
     </div>
     @include('layouts.partials.footer')
     @yield('js')
+    @include('sweetalert::alert', ['cdn' => 'https://cdn.jsdelivr.net/npm/sweetalert2@11'])
 </body>
 
 </html>

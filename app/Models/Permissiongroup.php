@@ -27,4 +27,5 @@ class Permissiongroup extends Model
     {
         return $this->hasMany(Permission::class, 'group_id', 'id');
     }
+
 }
