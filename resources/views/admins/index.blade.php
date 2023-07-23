@@ -77,7 +77,7 @@
                         <form action="" method="post">
                             <div class="input-group custom-input-group">
                                 <input type="text" class="form-control rounded-0 shadow-none" placeholder="Hesap Adı"
-                                    aria-label="Hesap Ara" aria-describedby="button-search">
+                                    aria-label="Hesap Ara" aria-describedby="button-search" id="searchText">
                                 <button class="btn btn-outline-secondary rounded-0 shadow-none border-left-0" type="button"
                                     id="button-search"><i class="ri-search-2-line"></i></button>
                             </div>
@@ -173,58 +173,28 @@
 @endsection
 
 @section('js')
-    <script>
-        var statusIds = [];
-
-        function checkStatus(element) {
-            const value = element.value;
-            const isChecked = element.checked;
-            if (isChecked) {
-                statusIds.push(value)
-            } else {
-                statusIds = statusIds.filter(item => item !== value)
-            }
-            filter();
-        }
-
-        function filter() {
+    <script type="module">
+    $(document).ready(function() {
+        function fetch_customer_data(query = '') {
             $.ajax({
-                type: 'GET',
-                url: '{{ route('panel.admin.filter') }}',
+                url: "{{ route('panel.admin.search') }}",
+                method: 'GET',
                 data: {
-                    statusIds
+                    query: query
                 },
-                success: function(response) {
-                    deleteRows();
-                    refreshRows(response);
-                },
-            });
+                dataType: 'json',
+                success: function(data) {
+                    $('tbody').html(data.table_data);
+                    $('#total_records').text(data.total_data);
+                }
+            })
         }
 
-        function deleteRows() {
-            var tableHeaderRowCount = 1;
-            var table = document.getElementById('user-table');
-            var rowCount = table.rows.length;
-            for (var i = tableHeaderRowCount; i < rowCount; i++) {
-                table.deleteRow(tableHeaderRowCount);
-            }
-        }
-
-        function refreshRows(data) {
-            const table = document.getElementById('user-table');
-            for (const [key, value] of Object.entries(data.users)) {
-                const tr = table.insertRow();
-                const cell1 = tr.insertCell(0);
-                cell1.innerHTML = "1";
-                const cell2 = tr.insertCell(1);
-                cell2.innerHTML = "1";
-                const cell3 = tr.insertCell(2);
-                cell3.innerHTML = "1";
-                const cell4 = tr.insertCell(3);
-                cell4.innerHTML = "1";
-                const cell5 = tr.insertCell(4);
-                cell5.innerHTML = "1";
-            }
-        }
-    </script>
+        $(document).on('keyup', '#searchText', function() {
+            var query = $(this).val();
+            if( query.length < 3 ) return;
+            fetch_customer_data(query);
+        });
+    });
+</script>
 @endsection

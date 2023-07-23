@@ -193,15 +193,6 @@
     </div>
 @endsection
 
-@php
-    $userStatusCases = [];
-    foreach (UserStatus::cases() as $key => $case) {
-        $userStatusCases[$key]['value'] = $case->value;
-        $userStatusCases[$key]['title'] = UserStatus::getTitle($case->value);
-        $userStatusCases[$key]['color'] = UserStatus::color($case);
-    }
-@endphp
-
 @section('js')
     <script>
         /**
@@ -253,173 +244,30 @@
                 }
             });
         }
+    </script>
 
-        // const btn = document.querySelector('#update-user-role');
-        // const form = document.querySelector('#user-role-form');
-
-        // btn.addEventListener('click', (e) => {
-        //     e.preventDefault();
-        //     const formData = new FormData(form);
-        //     const roleData = [...formData.entries()];
-        //     updateAjaxRequest('{{ route('panel.user.role.update') }}', roleData);
-        // });
-
-        // function updateAjaxRequest(urlToSend, datas) {
-        //     $.ajax({
-        //         type: "GET",
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         url: urlToSend,
-        //         data: {
-        //             roles: datas
-        //         },
-        //         success: function(data) {
-        //             location.reload();
-        //         },
-        //         error: function(data) {
-        //             console.log('Error:', data);
-        //         }
-        //     });
-        // }
-
-        const userStatusCases = @json($userStatusCases);
-        let statusIds = [];
-        let tagIds = [];
-
-        function checkStatus(element) {
-            const value = element.value;
-
-            const isChecked = element.checked;
-
-            if (isChecked) {
-                statusIds.push(value)
-            } else {
-                if (statusIds.length > 0) {
-                    statusIds = statusIds.filter(item => item !== value)
-                }
+    <script type="module">
+        $(document).ready(function() {
+            function fetch_customer_data(query = '') {
+                $.ajax({
+                    url: "{{ route('panel.user.search') }}",
+                    method: 'GET',
+                    data: {
+                        query: query
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('tbody').html(data.table_data);
+                        $('#total_records').text(data.total_data);
+                    }
+                })
             }
 
-            filter();
-        }
-
-        function checkTag(element) {
-            const value = element.value;
-
-            const isChecked = element.checked;
-
-            if (isChecked) {
-                tagIds.push(value)
-            } else {
-                if (tagIds.length > 0) {
-                    tagIds = tagIds.filter(item => item !== value)
-                }
-            }
-
-            filter();
-        }
-
-        function filter() {
-            console.log("tagIds", tagIds)
-            console.log("statusIds", statusIds)
-            $.ajax({
-                type: 'GET',
-                // url: '{{ route('panel.user.filter') }}' + '?tagIds=' + tagIds + '&statusIds=' + statusIds,
-                url: '{{ route('panel.user.filter') }}',
-                data: {
-                    tagIds: tagIds,
-                    statusIds: statusIds,
-                    page: {{ $users->currentPage() }}
-                },
-                success: function(response) {
-                    deleteRows();
-                    refreshRows(response);
-                },
-                error: function(response) {
-                    console.log(response);
-                }
+            $(document).on('keyup', '#searchText', function() {
+                var query = $(this).val();
+                if( query.length < 3 ) return;
+                fetch_customer_data(query);
             });
-        }
-
-        function deleteRows() {
-            var tableHeaderRowCount = 1;
-            var table = document.getElementById('user-table');
-            var rowCount = table.rows.length;
-            for (var i = tableHeaderRowCount; i < rowCount; i++) {
-                table.deleteRow(tableHeaderRowCount);
-            }
-        }
-
-        function refreshRows(data) {
-
-            console.log("data", data)
-
-            if (!Array.isArray(data) && data.length === 0) {
-                return;
-            }
-
-            if (Object.keys(data).length === 0) {
-                return;
-            }
-
-            data.forEach(item => {
-                const table = document.getElementById('user-table');
-                const row = table.insertRow();
-                const statusCell = row.insertCell(0);
-                const nameCell = row.insertCell(1);
-                const emailCell = row.insertCell(2);
-                const roleCell = row.insertCell(3);
-                const actionCell = row.insertCell(4);
-
-                const status = userStatusCases.find(i => i.value === parseInt(item.status));
-
-                statusCell.innerHTML = `<span class="badge fw-normal ${status.color}">${status.title}</span>`;
-                nameCell.innerHTML = item.name;
-                emailCell.innerHTML = item.email;
-                roleCell.innerHTML = item.roleName;
-                actionCell.innerHTML = `<div class="dropdown">
-                                            <a class="btn btn-text dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="ri-menu-3-fill"></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end rounded-0 shadow-none bg-white">
-                                                <li><a class="dropdown-item small" href="/panel/user/detail/${item.id}">Bilgiler</a>
-                                                </li>
-                                                <li class="dropdown-divider"></li>
-                                                <li><a class="dropdown-item small" href="#">Rol Tanımla</a>
-                                                </li>
-                                                <li><a class="dropdown-item small" href="/panel/user/permissions/${item.id}">Özel Yetkiler</a>
-                                                </li>
-                                            </ul>
-                                        </div>`;
-
-            })
-        }
-
-        document.getElementById('button-search').addEventListener('click', function() {
-            const searchText = document.getElementById('searchText').value;
-
-            if (searchText.length === 0) {
-                return;
-            }
-
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('panel.user.filter') }}',
-                data: {
-                    searchText: searchText,
-                    page: {{ $users->currentPage() }},
-                    tagIds: tagIds,
-                    statusIds: statusIds,
-                },
-                success: function(response) {
-                    deleteRows();
-                    refreshRows(response);
-                },
-                error: function(response) {
-                    console.log(response);
-                }
-            });
-        })
+        });
     </script>
 @endsection

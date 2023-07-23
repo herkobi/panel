@@ -34,10 +34,11 @@ Route::redirect('/', 'login');
 Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_settings'])->prefix('panel')->name('panel.')->group(function () {
 
     Route::middleware(['adminonly'])->group(function(){
-        
+
         Route::controller(Admin::class)->group(function () {
             Route::get('/admin', 'index')->name('admin');
             Route::get('/admin/passive', 'passive')->name('admin.passive');
+
         });
 
         Route::controller(UserController::class)->group(function () {
@@ -46,6 +47,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
             Route::get('/user/permissions/{user}', 'permissions')->name('user.permissions');
             Route::get('/user/filter', 'filter')->name('user.filter');
             Route::post('/user/update/status', 'status')->name('user.update.status');
+            Route::get('/user/search', 'search')->name('user.search');
         });
 
         Route::controller(UserDetailController::class)->group(function () {
@@ -74,6 +76,8 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
             Route::get('/admin/permissions/{user}', 'permissions')->name('admin.permissions');
             Route::get('/admin/filter', 'filter')->name('admin.filter');
             Route::post('/admin/update/status', 'status')->name('admin.update.status');
+            Route::get('/admin/search', 'search')->name('admin.search');
+
         });
 
         Route::controller(AdminDetailController::class)->group(function () {
