@@ -47,7 +47,6 @@ class PermissionController extends Controller
     public function store(PermissionCreateRequest $request): JsonResponse
     {
         if ($request->ajax() && $request->validated()) {
-
             Permission::create($request->all());
             return response()->json(['status' => "success"]);
         }

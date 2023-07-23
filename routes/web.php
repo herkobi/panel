@@ -23,9 +23,12 @@ Route::redirect('/', 'login');
 
 Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefix('panel')->name('panel.')->group(function () {
 
-    Route::controller(Dashboard::class)->group(function () {
-        Route::get('/', 'index')->name('home');
-        Route::get('/passive', 'passive')->name('passive');
+
+    Route::middleware(['useronly'])->group(function(){
+        Route::controller(Dashboard::class)->group(function () {
+            Route::get('/', 'index')->name('home');
+            Route::get('/passive', 'passive')->name('passive');
+        });
     });
 
     Route::controller(SettingController::class)->group(function () {

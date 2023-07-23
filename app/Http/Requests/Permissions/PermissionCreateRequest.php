@@ -26,9 +26,9 @@ class PermissionCreateRequest extends FormRequest
         return [
             'group_id' => ['required', 'not_in:0', 'integer'],
             'name' => ['required', Rule::unique('permissions', 'name')],
-            'name.*' => ['required', Rule::unique('permissions', 'name')],
+            //'name.*' => ['required', Rule::unique('permissions', 'name')],
             'text' => 'required:name',
-            'text.*' => 'required:name',
+            //'text.*' => 'required:name',
         ];
     }
 
