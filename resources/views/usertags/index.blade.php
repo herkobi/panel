@@ -175,10 +175,26 @@
                     if (data.status == 'success') {
                         $('#user-tag-form').trigger("reset");
                         $("#user-tag-table").load(window.location + " #user-tag-table");
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'I am not animated',
+                            showClass: {
+                                backdrop: 'swal2-noanimation', // disable backdrop animation
+                                popup: '', // disable popup animation
+                            },
+                            hideClass: {
+                                popup: '', // disable popup fade-out animation
+                            },
+                        })
                     }
                 },
                 error: function(data) {
-                    console.log(data.message)
+                    Swal.fire(
+                        'Hata',
+                        data.messages,
+                        'error'
+                    )
                 }
             });
         }
