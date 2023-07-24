@@ -15,7 +15,6 @@
         "@popperjs/core": "^2.11.8",
         "bootstrap": "^5.3.0",
         "remixicon": "^3.4.0",
-        "simplebar": "^6.2.5",
-        "sweetalert2": "^11.7.20"
+        "simplebar": "^6.2.5"
     }
 }

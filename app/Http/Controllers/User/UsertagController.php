@@ -6,15 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Usertags\UsertagCreateRequest;
 use App\Http\Requests\Usertags\UsertagUpdateRequest;
 use App\Models\Usertag;
+use App\Utils\PaginateCollection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class UsertagController extends Controller
 {
     public function index(): View
     {
-        $usertags = Usertag::paginate('15');
+        $usertags = PaginateCollection::paginate(Usertag::get(), 25);
         return view('usertags.index', ['usertags' => $usertags]);
     }
 
@@ -26,12 +28,13 @@ class UsertagController extends Controller
     public function update(UsertagUpdateRequest $request, Usertag $usertag): RedirectResponse
     {
         if ($request->validated()) {
-            $usertag->forceFill([
-                'status' => $request->status,
-                'name' => $request->name,
-                'color' => $request->color,
-                'desc' => $request->desc
-            ])->save();
+
+            $usertag->status = $request->status;
+            $usertag->name = $request->name;
+            $usertag->color = $request->color;
+            $usertag->desc = $request->desc;
+            $usertag->save();
+
             return Redirect::route('panel.user.tags');
         }
     }

@@ -28,7 +28,6 @@ class UsertagUpdateRequest extends FormRequest
             'status' => ['required', 'integer', new Enum(Status::class)],
             'name' => ['required', 'string', Rule::unique('usertags', 'name')->ignore($this->usertag->id, 'id')],
             'color' => 'string',
-            'desc' => 'string',
         ];
     }
 
@@ -46,7 +45,6 @@ class UsertagUpdateRequest extends FormRequest
             'name.required' => 'Lütfen etiket adını giriniz',
             'name.unique' => 'Bu isimde girilmiş etiket bulunmaktadır',
             'color.string' => 'Lütfen geçerli bir rek kodu giriniz',
-            'desc.string' => 'Lütfen geçerli bir açıklama giriniz'
         ];
     }
 }
