@@ -11,6 +11,7 @@ use App\Models\Permission;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -71,6 +72,13 @@ class AdminDetailController extends Controller
 
             $user->status = $status;
             $user->save();
+
+            $ip = request()->ip();
+            $authuser = auth()->user()->name;
+            $statusname = UserStatus::getTitle($status);
+
+            activity()->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi');
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
 
             return response()->json(['status' => 'success']);
         }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserType;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Users\UserPermissionCreateRequest;
 use App\Models\User;
 use App\Http\Requests\Users\UserCreateRequest;
 use App\Models\Role;
@@ -13,8 +12,10 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminCreateController extends Controller
 {
@@ -37,6 +38,7 @@ class AdminCreateController extends Controller
     public function admin(UserCreateRequest $request): RedirectResponse
     {
 
+        $ip = request()->ip();
         $type = UserType::ADMIN;
         $terms = 1;
         $email_verified_time = Carbon::now()->toDateTimeString();
@@ -57,14 +59,21 @@ class AdminCreateController extends Controller
                 'terms' => $terms
             ]);
 
+            $roles = '';
             foreach ($request->role as $role) {
                 $user->assignRole([$role]);
+                $roles .= $role.', ';
             }
 
-            return Redirect::route('panel.admins');
+            $authuser = auth()->user()->name;
+            $roles = Role::whereIn('id', [$roles])->get()->pluck('name');
+
+            activity()->log($authuser. ', '.$roles. ' rollerini tanımlayarak '. $request['name'] .' isimli yeni bir yönetici ekledi');
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$roles} rollerini tanımlayarak {$request['name']} isimli yeni bir yöneticiyi başarılı bir şekilde oluşturdu");
+
+            return Redirect::route('panel.admins')->withSuccess('Yönetici başarılı bir şekilde oluşturuldu');
         }
 
-        return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
+        return Redirect::back()->with('errors', $request->validated()->messages()->all()[0])->withInput();
     }
-
 }
