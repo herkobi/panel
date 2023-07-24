@@ -43,21 +43,22 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
 
         Route::controller(UserController::class)->group(function () {
             Route::get('/users', 'index')->name('users');
-            Route::get('/user/detail/{user}', 'show')->name('user.detail');
-            Route::get('/user/permissions/{user}', 'permissions')->name('user.permissions');
+            Route::get('/user/modal/data', 'userModelData')->name('user.modal.data');
+            Route::post('/role/update', 'updateRole')->name('user.role.update');
             Route::get('/user/filter', 'filter')->name('user.filter');
-            Route::post('/user/update/status', 'status')->name('user.update.status');
             Route::get('/user/search', 'search')->name('user.search');
         });
 
         Route::controller(UserDetailController::class)->group(function () {
+            Route::get('/user/detail/{user}', 'show')->name('user.detail');
+            Route::post('/user/update/status', 'status')->name('user.update.status');
             Route::post('/user/password/reset/{user}', 'passwordReset')->name('user.password.reset');
             Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
             Route::post('/user/email/change/{user}', 'changeEmail')->name('user.change.email');
-            Route::post('/user/create/permissions/{user}', 'permissions')->name('store.user.permissions');
+            Route::get('/user/permissions/{user}', 'permissions')->name('user.permissions');
+            Route::post('/user/create/permissions/{user}', 'givePermissions')->name('store.user.permissions');
             Route::post('/user/synctags', 'tags')->name('user.synctags');
-            Route::get('/user/modal/data', 'userModelData')->name('user.modal.data');
-            Route::post('/role/update', 'updateRole')->name('user.role.update');
+
         });
 
         Route::controller(UsertagController::class)->group(function () {
@@ -71,25 +72,25 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
 
         Route::controller(AdminController::class)->group(function () {
             Route::get('/admins', 'index')->name('admins');
-            Route::get('/admin/detail/{user}', 'show')->name('admin.detail');
-            Route::get('/admin/create', 'create')->name('create.admin');
-            Route::get('/admin/permissions/{user}', 'permissions')->name('admin.permissions');
+            Route::post('/admin/update/role/{user}', 'updateRole')->name('admin.update.role');
             Route::get('/admin/filter', 'filter')->name('admin.filter');
-            Route::post('/admin/update/status', 'status')->name('admin.update.status');
             Route::get('/admin/search', 'search')->name('admin.search');
 
         });
 
         Route::controller(AdminDetailController::class)->group(function () {
+            Route::get('/admin/detail/{user}', 'show')->name('admin.detail');
+            Route::post('/admin/update/status', 'status')->name('admin.update.status');
+            Route::get('/admin/permissions/{user}', 'permissions')->name('admin.permissions');
+            Route::post('/admin/create/permissions/{user}', 'givePermissions')->name('store.admin.permissions');
             Route::post('/admin/password/reset/{user}', 'passwordReset')->name('admin.password.reset');
             Route::post('/admin/email/verify/{user}', 'verifyEmail')->name('admin.email.verify');
             Route::post('/admin/email/change/{user}', 'changeEmail')->name('admin.change.email');
-            Route::post('/admin/update/role/{user}', 'updateRole')->name('admin.update.role');
         });
 
         Route::controller(AdminCreateController::class)->group(function () {
+            Route::get('/admin/create', 'create')->name('create.admin');
             Route::post('/admin/create/store', 'admin')->name('store.admin');
-            Route::post('/admin/create/permissions/{user}', 'permissions')->name('store.admin.permissions');
         });
 
         Route::controller(SettingController::class)->group(function () {

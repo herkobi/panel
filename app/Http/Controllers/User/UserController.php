@@ -7,13 +7,13 @@ use App\Enums\UserStatus;
 use App\Enums\UserType;
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Usertag;
 use App\Utils\PaginateCollection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -38,64 +38,34 @@ class UserController extends Controller
     }
 
     /**
-     * Kullanıcı Detay Sayfası
+     * Kullanıcı bilgilerini modala alma
+     *
+     * @param  array<string, string>  $input
      */
-    public function show(User $user): View
+    public function userModelData(Request $request): JsonResponse
     {
-        $basePermissions = array();
-        $permissions = array();
-        $tags = Usertag::where('status', Status::ACTIVE)->get();
-        $selectedTag = $user->usertags->pluck('id')->toArray();
-        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
-
-        foreach ($user->roles as $key => $role) {
-            $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
-            foreach ($permissions as $permission) {
-                $basePermissions[$permission->group->name][$permission->id] = $permission->text;
-            }
-
-            $rolePermissions = $role->permissions->pluck('id')->toArray();
+        if ($request->ajax() && $request->has('ids')) {
+            $user = User::where('id', $request->ids)->with('roles')->get();
+            return response()->json([
+                'user_data' => $user
+            ]);
         }
-
-        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
-
-        return view('users.detail', [
-            'user' => $user,
-            'tags' => $tags,
-            'selectedTag' => $selectedTag,
-            'basePermissions' => $basePermissions,
-            'rolePermissions' => $rolePermissions
-        ]);
     }
 
-    public function permissions(User $user): View
+    /**
+     * Kullanıcı rolünü güncelleme
+     * Ek rol tanımlama
+     *
+     * @param  array<string, string>  $input
+     */
+    public function updateRole(Request $request): RedirectResponse
     {
-        $basePermissions = array();
-        $permissions = array();
-        $rolePermissions = array();
-
-        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', UserType::USER))->get();
-
-        foreach ($permissions as $permission) {
-            $basePermissions[$permission->group->name][$permission->id] = [
-                'title' => $permission->text,
-                'name' => $permission->name
-            ];
+        $user = User::findOrFail($request->user);
+        foreach ($request->role as $role) {
+            $user->assignRole([$role]);
         }
 
-        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
-
-        foreach ($user->roles as $role) {
-            $rolePermissions = $role->permissions->pluck('id')->toArray();
-        }
-
-        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
-
-        return view('users.permissions', [
-            'user' => $user,
-            'basePermissions' => $basePermissions,
-            'rolePermissions' => $rolePermissions
-        ]);
+        return Redirect::route('panel.users');
     }
 
     /**
@@ -137,26 +107,6 @@ class UserController extends Controller
     }
 
     /**
-     * Kullanıcı durumunu güncelleme
-     */
-    public function status(Request $request)
-    {
-        if ($request->ajax() && $request->has('ids')) {
-            $user = User::findOrFail($request->user_id);
-            foreach (UserStatus::cases() as $userStatus) {
-                if ($userStatus->value == $request->ids) {
-                    $status = $userStatus->value;
-                }
-            }
-
-            $user->status = $status;
-            $user->save();
-
-            return response()->json(['status' => 'success']);
-        }
-    }
-
-    /**
      * Kullanıcılar sayfasındaki arama formu
      */
     public function search(Request $request)
@@ -168,7 +118,7 @@ class UserController extends Controller
             $query = $request->get('query');
             if($query != '')
             {
-                $data = User::select('id','status', 'name', 'email')
+                $data = User::select('id', 'type', 'status', 'name', 'email')
                     ->where('type', UserType::USER)
                     ->where("name", "LIKE", "%{$query}%")
                     ->oRwhere("email", "LIKE", "%{$query}%")

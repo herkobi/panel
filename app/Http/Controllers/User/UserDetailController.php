@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Enums\Status;
+use App\Enums\UserStatus;
+use App\Enums\UserType;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserPermissionCreateRequest;
+use App\Models\Permission;
+use App\Models\Usertag;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 class UserDetailController extends Controller
 {
@@ -26,34 +31,54 @@ class UserDetailController extends Controller
     }
 
     /**
-     * Kullanıcı
-     *
-     * @param  array<string, string>  $input
+     * Kullanıcı Detay Sayfası
      */
-    public function userModelData(Request $request): JsonResponse
+    public function show(User $user): View
     {
-        if ($request->ajax() && $request->has('ids')) {
-            $user = User::where('id', $request->ids)->with('roles')->get();
-            return response()->json([
-                'user_data' => $user
-            ]);
+        $basePermissions = array();
+        $permissions = array();
+        $tags = Usertag::where('status', Status::ACTIVE)->get();
+        $selectedTag = $user->usertags->pluck('id')->toArray();
+        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
+
+        foreach ($user->roles as $key => $role) {
+            $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
+            foreach ($permissions as $permission) {
+                $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+            }
+
+            $rolePermissions = $role->permissions->pluck('id')->toArray();
         }
+
+        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
+
+        return view('users.detail', [
+            'user' => $user,
+            'tags' => $tags,
+            'selectedTag' => $selectedTag,
+            'basePermissions' => $basePermissions,
+            'rolePermissions' => $rolePermissions
+        ]);
     }
 
     /**
-     * Kullanıcı rolünü güncelleme
-     * Ek rol tanımlama
-     *
-     * @param  array<string, string>  $input
+     * Kullanıcı durumunu güncelleme
      */
-    public function updateRole(Request $request): RedirectResponse
+    public function status(Request $request)
     {
-        $user = User::findOrFail($request->user);
-        foreach ($request->role as $role) {
-            $user->assignRole([$role]);
-        }
+        if ($request->ajax() && $request->has('ids')) {
+            $user = User::findOrFail($request->user_id);
+            foreach (UserStatus::cases() as $userStatus) {
+                if ($userStatus->value == $request->ids) {
+                    $status = $userStatus->value;
+                }
+            }
 
-        return Redirect::route('panel.users');
+            $user->status = $status;
+            $user->save();
+
+            return response()->json(['status' => 'success']);
+        }
     }
 
     /**
@@ -73,17 +98,17 @@ class UserDetailController extends Controller
     }
 
     /**
-     * Kullanıcıya e-posta adresini değiştirme
+     * Kullanıcıya e-posta adresini onaylaması
+     * için link gönderme
      *
      * @param  array<string, string>  $input
      */
     public function changeEmail(Request $request, User $user)
     {
         if ($request->email !== $user->email && $user instanceof MustVerifyEmail) {
-            $user->forceFill([
-                'email' => $request->email,
-                'email_verified_at' => null,
-            ])->save();
+            $user->email = $request->email;
+            $user->email_verified_at = null;
+            $user->save();
 
             $user->sendEmailVerificationNotification();
             return redirect()->back();
@@ -92,6 +117,11 @@ class UserDetailController extends Controller
         }
     }
 
+    /**
+     * Kullanıcıya e-posta adresini onaylama linki gönderme
+     *
+     * @param  array<string, string>  $input
+     */
     public function verifyEmail(User $user)
     {
         $user->sendEmailVerificationNotification();
@@ -99,11 +129,44 @@ class UserDetailController extends Controller
     }
 
     /**
+     * Kullanıcı özel izin tanımlama
+     */
+    public function permissions(User $user): View
+    {
+        $basePermissions = array();
+        $permissions = array();
+        $rolePermissions = array();
+
+        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', UserType::USER))->get();
+
+        foreach ($permissions as $permission) {
+            $basePermissions[$permission->group->name][$permission->id] = [
+                'title' => $permission->text,
+                'name' => $permission->name
+            ];
+        }
+
+        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
+
+        foreach ($user->roles as $role) {
+            $rolePermissions = $role->permissions->pluck('id')->toArray();
+        }
+
+        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
+
+        return view('users.permissions', [
+            'user' => $user,
+            'basePermissions' => $basePermissions,
+            'rolePermissions' => $rolePermissions
+        ]);
+    }
+
+    /**
      * Kullanıcıya özel izin atama
      *
      * @param  array<string, string>  $input
      */
-    public function permissions(UserPermissionCreateRequest $request, User $user): RedirectResponse
+    public function givePermissions(UserPermissionCreateRequest $request, User $user): RedirectResponse
     {
         if ($request->validated()) {
             foreach ($request->permission as $permission) {
@@ -131,5 +194,3 @@ class UserDetailController extends Controller
         }
     }
 }
-
-// TODO: Ek rol tanımlarken kullanıcı bilgisi kontrol edilecek

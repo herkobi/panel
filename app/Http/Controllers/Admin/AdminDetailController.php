@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserStatus;
+use App\Enums\UserType;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UserPermissionCreateRequest;
+use App\Models\Permission;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 class AdminDetailController extends Controller
 {
@@ -24,21 +29,58 @@ class AdminDetailController extends Controller
     }
 
     /**
-     * Kullanıcı rolünü güncelleme
-     * Ek rol tanımlama
+     * Yönetici detay sayfası
+     */
+    public function show(User $user): View
+    {
+        $basePermissions = array();
+        $permissions = array();
+
+        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
+
+        foreach ($user->roles as $key => $role) {
+            $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
+            foreach ($permissions as $permission) {
+                $basePermissions[$permission->group->name][$permission->id] = $permission->text;
+            }
+
+            $rolePermissions = $role->permissions->pluck('id')->toArray();
+        }
+
+        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
+
+        return view('admins.detail', [
+            'user' => $user,
+            'basePermissions' => $basePermissions,
+            'rolePermissions' => $rolePermissions
+        ]);
+    }
+
+    /**
+     * Kullanıcı durumunu güncelleme
+     */
+    public function status(Request $request)
+    {
+        if ($request->ajax() && $request->has('ids')) {
+            $user = User::findOrFail($request->user_id);
+            foreach (UserStatus::cases() as $userStatus) {
+                if ($userStatus->value == $request->ids) {
+                    $status = $userStatus->value;
+                }
+            }
+
+            $user->status = $status;
+            $user->save();
+
+            return response()->json(['status' => 'success']);
+        }
+    }
+
+    /**
+     * Kullanıcı şifresini değiştirmesi için e-posta gönderimi
      *
      * @param  array<string, string>  $input
      */
-    public function updateRole(Request $request): RedirectResponse
-    {
-        $user = User::findOrFail($request->user);
-        foreach ($request->role as $role) {
-            $user->assignRole([$role]);
-        }
-
-        return Redirect::route('panel.admins');
-    }
-
     public function passwordReset(User $user)
     {
         $status = Password::sendResetLink($user->only('email'));
@@ -50,13 +92,17 @@ class AdminDetailController extends Controller
         }
     }
 
+    /**
+     * Kullanıcıya e-posta adresini değiştirme
+     *
+     * @param  array<string, string>  $input
+     */
     public function changeEmail(Request $request, User $user)
     {
         if ($request->email !== $user->email && $user instanceof MustVerifyEmail) {
-            $user->forceFill([ //forceFill'ler $user->email gibi değiştirelecek.
-                'email' => $request->email,
-                'email_verified_at' => null,
-            ])->save();
+            $user->email = $request->email;
+            $user->email_verified_at = null;
+            $user->save();
 
             $user->sendEmailVerificationNotification();
             return redirect()->back();
@@ -65,6 +111,11 @@ class AdminDetailController extends Controller
         }
     }
 
+    /**
+     * Kullanıcıya e-posta adresini onaylama
+     *
+     * @param  array<string, string>  $input
+     */
     public function verifyEmail(User $user)
     {
         /**
@@ -72,5 +123,56 @@ class AdminDetailController extends Controller
          */
         $user->sendEmailVerificationNotification();
         return redirect()->back();
+    }
+
+    /**
+     * Yönetici Özel izinler sayfası
+     */
+    public function permissions(User $user): View
+    {
+        $basePermissions = array();
+        $permissions = array();
+        $rolePermissions = array();
+
+        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', UserType::ADMIN))->get();
+
+        foreach ($permissions as $permission) {
+            $basePermissions[$permission->group->name][$permission->id] = [
+                'title' => $permission->text,
+                'name' => $permission->name
+            ];
+        }
+
+        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
+
+        foreach ($user->roles as $role) {
+            $rolePermissions = $role->permissions->pluck('id')->toArray();
+        }
+
+        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
+
+        return view('admins.permissions', [
+            'user' => $user,
+            'basePermissions' => $basePermissions,
+            'rolePermissions' => $rolePermissions
+        ]);
+    }
+
+    /**
+     * Yöneticiye özel izinler atama.
+     *
+     * @param  array<string, string>  $input
+     */
+    public function givePermissions(UserPermissionCreateRequest $request, User $user): RedirectResponse
+    {
+        if ($request->validated()) {
+            foreach ($request->permission as $permission) {
+                $user->givePermissionTo($permission);
+            }
+
+            return Redirect::route('panel.admins');
+        }
+
+        return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
     }
 }

@@ -8,9 +8,10 @@ use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminController extends Controller
 {
@@ -28,67 +29,19 @@ class AdminController extends Controller
     }
 
     /**
-     * Yönetici detay sayfası
+     * Kullanıcı rolünü güncelleme
+     * Ek rol tanımlama
+     *
+     * @param  array<string, string>  $input
      */
-    public function show(User $user): View
+    public function updateRole(Request $request): RedirectResponse
     {
-        $basePermissions = array();
-        $permissions = array();
-
-        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
-
-        foreach ($user->roles as $key => $role) {
-            $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
-            foreach ($permissions as $permission) {
-                $basePermissions[$permission->group->name][$permission->id] = $permission->text;
-            }
-
-            $rolePermissions = $role->permissions->pluck('id')->toArray();
+        $user = User::findOrFail($request->user);
+        foreach ($request->role as $role) {
+            $user->assignRole([$role]);
         }
 
-        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
-
-        return view('admins.detail', [
-            'user' => $user,
-            'basePermissions' => $basePermissions,
-            'rolePermissions' => $rolePermissions
-        ]);
-    }
-
-    public function create(): View
-    {
-        $roles = Role::where([['type', UserType::ADMIN], ['name', '!=', 'Super Admin']])->get();
-        return view('admins.create', compact('roles'));
-    }
-
-    public function permissions(User $user): View
-    {
-        $basePermissions = array();
-        $permissions = array();
-        $rolePermissions = array();
-
-        $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', UserType::ADMIN))->get();
-
-        foreach ($permissions as $permission) {
-            $basePermissions[$permission->group->name][$permission->id] = [
-                'title' => $permission->text,
-                'name' => $permission->name
-            ];
-        }
-
-        $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
-
-        foreach ($user->roles as $role) {
-            $rolePermissions = $role->permissions->pluck('id')->toArray();
-        }
-
-        $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
-
-        return view('admins.permissions', [
-            'user' => $user,
-            'basePermissions' => $basePermissions,
-            'rolePermissions' => $rolePermissions
-        ]);
+        return Redirect::route('panel.admins');
     }
 
     public function status(Request $request)
