@@ -52,7 +52,7 @@ class UsertagController extends Controller
     public function destroy(Usertag $usertag)
     {
         if ($usertag->users->count() > 0) {
-            return Redirect::route('panel.user.tags')->with('Hata; Kategoriye ait kullanıcılar bulunmaktadır. Lütfen öncelikle kullanıcıları farklı kategorilere aktarınız');
+            return Redirect::route('panel.user.tags')->with('errors', 'Hata; Kategoriye ait kullanıcılar bulunmaktadır. Lütfen öncelikle kullanıcıları farklı kategorilere aktarınız');
         } else {
             $usertag->delete();
             return Redirect::route('panel.user.tags');

@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminCreateController extends Controller
 {

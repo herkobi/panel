@@ -1,12 +1,14 @@
 @extends('layouts.app')
 @section('content')
     @include('layouts.partials.page-title', ['title' => 'Kullanıcı Kategorileri'])
-    <div class="page-content position-relative activity-page mb-4">
+    <div class="page-content position-relative mb-4">
         <div class="row">
             <div class="col-md-4">
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
                     <div class="card-header border-0 bg-white pt-3 pb-3">
-                        <h4 class="card-title mb-0">Etiket Ekle</h4>
+                        <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+                            <h4 class="card-title mb-0">Etiket Ekle</h4>
+                        </div>
                     </div>
                     <div class="card-body">
                         <form id="user-tag-form" action="" method="post">
@@ -175,9 +177,13 @@
                     if (data.status == 'success') {
                         $('#user-tag-form').trigger("reset");
                         $("#user-tag-table").load(window.location + " #user-tag-table");
+                        toast('Success Toast', 'success');
                     }
                 },
-                error: function(data) {}
+                error: function(data) {
+                    console.log(data)
+                    toast('Error Toast', 'error');
+                }
             });
         }
 

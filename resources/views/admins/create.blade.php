@@ -11,7 +11,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('panel.store.admin') }}" autocomplete="off">
+                        <form id="create-admin" method="POST" action="{{ route('panel.store.admin') }}" autocomplete="off">
                             @csrf
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
@@ -83,18 +83,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('js')
-    <script>
-        function setAllCheckboxes(divId, divClass, sourceCheckbox) {
-            divElement = document.getElementById(divId);
-            inputElements = divElement.getElementsByClassName(divClass);
-            for (i = 0; i < inputElements.length; i++) {
-                if (inputElements[i].type != 'checkbox')
-                    continue;
-                inputElements[i].checked = sourceCheckbox.checked;
-            }
-        }
-    </script>
 @endsection
