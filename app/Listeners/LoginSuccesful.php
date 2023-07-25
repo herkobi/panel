@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Models\Activity;
-use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginSuccesful
 {
@@ -28,7 +27,5 @@ class LoginSuccesful
         activity()->log($event->user->email . ' ' . $ip . ' adresi üzerinden başarılı bir şekilde oturum açtı');
         Log::info("{$event->user->email} {$ip} adresi üzerinden başarılı bir şekilde oturum açtı", ['id' => $event->user->id]);
         //notyf()->addSuccess('Merhaba ' . $event->user->name);
-        Alert::toast('Merhaba '.$event->user->name .'.', 'info');
-        //toast('Merhaba', $event->user->name);
     }
 }
