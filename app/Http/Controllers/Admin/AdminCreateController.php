@@ -70,7 +70,7 @@ class AdminCreateController extends Controller
             activity()->log($authuser. ', '.$roles. ' rollerini tanımlayarak '. $request['name'] .' isimli yeni bir yönetici ekledi');
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$roles} rollerini tanımlayarak {$request['name']} isimli yeni bir yöneticiyi başarılı bir şekilde oluşturdu");
 
-            return Redirect::route('panel.admins')->withSuccess('Yönetici başarılı bir şekilde oluşturuldu');
+            return Redirect::route('panel.admins')->with('success', 'Yönetici başarılı bir şekilde oluşturuldu');
         }
 
         return Redirect::back()->with('errors', $request->validated()->messages()->all()[0])->withInput();

@@ -177,12 +177,10 @@
                     if (data.status == 'success') {
                         $('#user-tag-form').trigger("reset");
                         $("#user-tag-table").load(window.location + " #user-tag-table");
-                        toast('Success Toast', 'success');
                     }
                 },
                 error: function(data) {
                     console.log(data)
-                    toast('Error Toast', 'error');
                 }
             });
         }

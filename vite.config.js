@@ -13,9 +13,11 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
+            '$': 'jQuery',
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
             '~remixicon': path.resolve(__dirname, 'node_modules/remixicon'),
             '~simplebar': path.resolve(__dirname, 'node_modules/simplebar'),
+            '~sweetalert2': path.resolve(__dirname, 'node_modules/sweetalert2'),
         }
     }
 });

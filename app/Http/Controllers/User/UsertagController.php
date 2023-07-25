@@ -45,7 +45,6 @@ class UsertagController extends Controller
             Usertag::create($request->all());
             return response()->json(['status' => "success"]);
         }
-
         return response()->json(['status' => "error"]);
     }
 
