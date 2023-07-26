@@ -457,7 +457,53 @@
         }
 
         function emailVerify() {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success me-1 rounded-0 shadow-none',
+                    cancelButton: 'btn btn-danger ms-1 rounded-0 shadow-none'
+                },
+                buttonsStyling: false
+            })
 
+            swalWithBootstrapButtons.fire({
+                title: 'E-posta Onayı',
+                text: "Kullanıcının e-posta adresini onaylaması için tekrar link göndermek istiyor musunuz?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet, gönder.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "{{ route('panel.user.email.verify', $user->id) }}",
+                        data: {
+                            user_id: {{ $user->id }},
+                        },
+                        success: function(data) {
+                            if (data.status == 'success') {
+                                swalWithBootstrapButtons.fire({
+                                    icon: 'success',
+                                    title: 'Başarılı',
+                                    text: 'E-posta değiştirme linki gönderildi'
+                                })
+                            }
+                        },
+                        error: function(data) {
+                            console.log('Error:', data);
+                            swalWithBootstrapButtons.fire({
+                                icon: 'error',
+                                title: 'Hata',
+                                text: 'Bir sorun oluştu, lütfen tekrar deneyiniz'
+                            })
+                        }
+                    });
+                }
+            });
         }
 
         function statusAjax() {

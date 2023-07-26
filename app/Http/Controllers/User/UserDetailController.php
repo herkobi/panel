@@ -79,6 +79,9 @@ class UserDetailController extends Controller
 
             return response()->json(['status' => 'success']);
         }
+
+        return response()->json(['status' => 'error']);
+
     }
 
     /**
@@ -126,14 +129,17 @@ class UserDetailController extends Controller
      *
      * @param  array<string, string>  $input
      */
-    public function verifyEmail(User $user)
+    public function verifyEmail(Request $request, User $user)
     {
-        $status = $user->sendEmailVerificationNotification();
-        if($status) {
-            return redirect()->back()->with('success', 'Kullanıcıya e-posta adresini onaylaması için gerekli e-posta gönderilmiştir');
+        if ($request->ajax() && $request->has('user_id')) {
+
+            $status = $user->sendEmailVerificationNotification();
+            return response()->json(['status' => 'success']);
+
         }
 
-        return redirect()->back()->with('error', 'Bir sorun oluştu lütfen tekrar deneyiniz');
+        return response()->json(['status' => 'error']);
+
     }
 
     /**
