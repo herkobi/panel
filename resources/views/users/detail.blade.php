@@ -205,8 +205,7 @@
                         <div class="card-body">
                             <div class="text-center">
                                 <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
-                                    onclick="event.preventDefault(); document.getElementById('email-verify-form').submit()">E-posta
-                                    Onay Linkini Tekrar Gönder</button>
+                                    onclick="emailVerify()">E-posta Onay Linkini Tekrar Gönder</button>
                             </div>
                         </div>
                     @else
@@ -272,8 +271,7 @@
                     <div class="card-body">
                         <div class="mb-2 border-bottom pb-2">
                             <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
-                                onclick="event.preventDefault(); document.getElementById('password-reset-form').submit()">Şifre
-                                Yenileme Linki Gönder</button>
+                                onclick="newPassword()">Şifre Yenileme Linki Gönder</button>
                         </div>
                         <div class="mb-2 border-bottom pb-2">
                             <button class="btn text p-0" data-bs-toggle="modal" data-bs-target="#changeEmail">E-posta
@@ -323,12 +321,12 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('panel.user.password.reset', $user->id) }}" method="POST" id="password-reset-form">
+    {{-- <form action="{{ route('panel.user.password.reset', $user->id) }}" method="POST" id="password-reset-form">
         @csrf
-    </form>
-    <form action="{{ route('panel.user.email.verify', $user->id) }}" method="POST" id="email-verify-form">
+    </form> --}}
+    {{-- <form action="{{ route('panel.user.email.verify', $user->id) }}" method="POST" id="email-verify-form">
         @csrf
-    </form>
+    </form> --}}
 @endsection
 
 @section('js')
@@ -408,12 +406,63 @@
             });
         }
 
-        // TODO: data değeri dışardan tüm alanları ile birlikte gönderilecek
-        // TODO: success ve error değerleri için dinamik içerikler gelecek
-        // TODO: Bu ajax fonksiyonu globale taşınacak. her yerden kullanılacak.
+        function newPassword() {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success me-1 rounded-0 shadow-none',
+                    cancelButton: 'btn btn-danger ms-1 rounded-0 shadow-none'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Şifre Yenile?',
+                text: "Kullanıcı için şifre yenileme linki göndermek istiyor musunuz?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet, gönder.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "{{ route('panel.user.password.reset', $user->id) }}",
+                        data: {
+                            user_id: {{ $user->id }},
+                        },
+                        success: function(data) {
+                            if (data.status == 'success') {
+                                swalWithBootstrapButtons.fire({
+                                    icon: 'success',
+                                    title: 'Başarılı',
+                                    text: 'E-posta değiştirme linki gönderildi'
+                                })
+                            }
+                        },
+                        error: function(data) {
+                            console.log('Error:', data);
+                            swalWithBootstrapButtons.fire({
+                                icon: 'error',
+                                title: 'Hata',
+                                text: 'Bir sorun oluştu, lütfen tekrar deneyiniz'
+                            })
+                        }
+                    });
+                }
+            });
+        }
+
+        function emailVerify() {
+
+        }
 
         function statusAjax() {
-            sendAjaxRequest('{{ route('panel.user.update.status') }}', status, 'Kullanıcı durumu başarılı bir şekilde güncellendi');
+            sendAjaxRequest('{{ route('panel.user.update.status') }}', status,
+                'Kullanıcı durumu başarılı bir şekilde güncellendi');
         }
 
         function tagAjax() {

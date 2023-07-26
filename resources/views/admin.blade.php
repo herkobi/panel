@@ -32,7 +32,15 @@
     <script type="module">
 
     $('button').click(function(){
-        Swal.fire({
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success me-1 rounded-0 shadow-none',
+                cancelButton: 'btn btn-danger ms-1 rounded-0 shadow-none'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -42,7 +50,7 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
+                swalWithBootstrapButtons.fire(
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'

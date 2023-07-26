@@ -23,7 +23,6 @@
     </div>
     @include('layouts.partials.footer')
     @yield('js')
-
     <script type="module">
     $(function(){
         @if(Session::has('success'))

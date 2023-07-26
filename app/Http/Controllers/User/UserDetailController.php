@@ -86,14 +86,18 @@ class UserDetailController extends Controller
      *
      * @param  array<string, string>  $input
      */
-    public function passwordReset(User $user)
+    public function passwordReset(Request $request, User $user)
     {
-        $status = Password::sendResetLink($user->only('email'));
 
-        if ($status === Password::RESET_LINK_SENT) {
-            return redirect()->back()->with('success', 'Şifre yenileme linki başarılı bir şekilde gönderildi');
-        } else {
-            return redirect()->back()->with('error', $status);
+        if ($request->ajax() && $request->has('user_id')) {
+            $status = Password::sendResetLink($user->only('email'));
+
+            if ($status === Password::RESET_LINK_SENT) {
+                return response()->json(['status' => 'success']);
+
+            } else {
+                return response()->json(['status' => 'error']);
+            }
         }
     }
 
