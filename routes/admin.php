@@ -51,13 +51,13 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
 
         Route::controller(UserDetailController::class)->group(function () {
             Route::get('/user/detail/{user}', 'show')->name('user.detail');
-            Route::post('/user/update/status', 'status')->name('user.update.status');
+            Route::post('/user/update/status/{user}', 'status')->name('user.update.status');
+            Route::post('/user/synctags/{user}', 'tags')->name('user.synctags');
             Route::post('/user/password/reset/{user}', 'passwordReset')->name('user.password.reset');
-            Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
             Route::post('/user/email/change/{user}', 'changeEmail')->name('user.change.email');
+            Route::post('/user/email/verify/{user}', 'verifyEmail')->name('user.email.verify');
             Route::get('/user/permissions/{user}', 'permissions')->name('user.permissions');
             Route::post('/user/create/permissions/{user}', 'givePermissions')->name('store.user.permissions');
-            Route::post('/user/synctags', 'tags')->name('user.synctags');
 
         });
 
@@ -80,7 +80,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
 
         Route::controller(AdminDetailController::class)->group(function () {
             Route::get('/admin/detail/{user}', 'show')->name('admin.detail');
-            Route::post('/admin/update/status', 'status')->name('admin.update.status');
+            Route::post('/admin/update/status/{user}', 'status')->name('admin.update.status');
             Route::get('/admin/permissions/{user}', 'permissions')->name('admin.permissions');
             Route::post('/admin/create/permissions/{user}', 'givePermissions')->name('store.admin.permissions');
             Route::post('/admin/password/reset/{user}', 'passwordReset')->name('admin.password.reset');
@@ -133,18 +133,33 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
 
         Route::get('/health', \Spatie\Health\Http\Controllers\HealthCheckResultsController::class);
 
-        Route::get('/clear', function() {
+        Route::prefix('cache')->name('cache.')->group(function () {
+            Route::get('/clear/all', function() {
+                Artisan::call('optimize:clear');
+                return "Cleared!";
+            })->name('clear.all');
 
-            // Artisan::call('cache:clear');
-            // Artisan::call('config:clear');
-            // Artisan::call('config:cache');
-            // Artisan::call('view:clear');
+            Route::get('/clear/cache', function() {
+                Artisan::call('cache:clear');
+                return "Cleared!";
+            })->name('clear.cache');
 
-            Artisan::call('optimize:clear');
+            Route::get('/clear/config', function() {
+                Artisan::call('config:clear');
+                return "Cleared!";
+            })->name('clear.config');
 
-            return "Cleared!";
+            Route::get('/clear/route', function() {
+                Artisan::call('route:clear');
+                return "Cleared!";
+            })->name('clear.route');
 
+            Route::get('/clear/view', function() {
+                Artisan::call('view:clear');
+                return "Cleared!";
+            })->name('clear.view');
         });
+
     });
 
     Route::controller(ProfileController::class)->group(function () {

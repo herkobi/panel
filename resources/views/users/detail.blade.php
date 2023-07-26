@@ -209,57 +209,50 @@
                             </div>
                         </div>
                     @else
-                        <form action="" method="post">
-                            @csrf
-                            <div class="card-body">
-                                @foreach (UserStatus::cases() as $userStatus)
-                                    <div class="form-check">
-                                        <input class="form-check-input rounded-0 shadow-none" type="radio"
-                                            name="status" value="{{ $userStatus->value }}"
-                                            id="user-status-{{ $userStatus->value }}" onclick="checkStatus(this)"
-                                            {{ $user->status->value == $userStatus->value ? 'checked' : '' }}>
-                                        <label class="form-check-label"
-                                            for="user-status-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
-                                            Hesap</label>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div class="card-footer">
-                                <button type="button" id="update-user-status" onclick="statusAjax()"
-                                    class="btn btn-primary btn-sm rounded-0 shadow-none">Durum
-                                    Değiştir</button>
-                            </div>
-                        </form>
+                        <div class="card-body">
+                            @foreach (UserStatus::cases() as $userStatus)
+                                <div class="form-check">
+                                    <input class="form-check-input rounded-0 shadow-none" type="radio" name="status"
+                                        value="{{ $userStatus->value }}" id="user-status-{{ $userStatus->value }}"
+                                        onclick="checkStatus(this)"
+                                        {{ $user->status->value == $userStatus->value ? 'checked' : '' }}>
+                                    <label class="form-check-label"
+                                        for="user-status-{{ $userStatus->value }}">{{ UserStatus::getTitle($userStatus->value) }}
+                                        Hesap</label>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" id="update-user-status" onclick="statusAjax()"
+                                class="btn btn-primary btn-sm rounded-0 shadow-none">Durum Değiştir</button>
+                        </div>
                     @endif
                 </div>
                 @if ($tags->count() > 0)
                     <div class="card rounded-0 shadow-sm border-0 mb-3">
-                        <form action="" method="post">
-                            @csrf
-                            <div class="card-header border-0 bg-white pt-3 pb-0">
-                                <h4 class="card-title mb-0">Etiketler</h4>
-                            </div>
-                            <div class="card-body">
-                                <ul class="list-group list-group-flush">
-                                    @foreach ($tags as $tag)
-                                        <li class="list-group-item bg-white">
-                                            <div class="form-check">
-                                                <input id="user-tag-select-{{ $tag->id }}"
-                                                    class="form-check-input rounded-0 shadow-none tag" type="checkbox"
-                                                    onclick="checkTag(this)" name="tag[]" value="{{ $tag->id }}"
-                                                    {{ in_array($tag->id, $selectedTag) ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div class="card-footer">
-                                <button type="button" id="update-user-tag" onclick="tagAjax()"
-                                    class="btn btn-primary btn-sm rounded-0 shadow-none">Güncelle</button>
-                            </div>
-                        </form>
+                        <div class="card-header border-0 bg-white pt-3 pb-0">
+                            <h4 class="card-title mb-0">Etiketler</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                @foreach ($tags as $tag)
+                                    <li class="list-group-item bg-white">
+                                        <div class="form-check">
+                                            <input id="user-tag-select-{{ $tag->id }}"
+                                                class="form-check-input rounded-0 shadow-none tag" type="checkbox"
+                                                onclick="checkTag(this)" name="tag[]" value="{{ $tag->id }}"
+                                                {{ in_array($tag->id, $selectedTag) ? 'checked' : '' }}>
+                                            <label class="form-check-label"
+                                                for="user-tag-select-{{ $tag->id }}">{{ $tag->name }}</label>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" id="update-user-tag" onclick="tagAjax()"
+                                class="btn btn-primary btn-sm rounded-0 shadow-none">Güncelle</button>
+                        </div>
                     </div>
                 @endif
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
@@ -269,10 +262,12 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="mb-2 border-bottom pb-2">
-                            <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
-                                onclick="newPassword()">Şifre Yenileme Linki Gönder</button>
-                        </div>
+                        @if ($user->status == UserStatus::ACTIVE)
+                            <div class="mb-2 border-bottom pb-2">
+                                <button type="button" class="btn btn-text p-0 rounded-0 shadow-none"
+                                    onclick="newPassword()">Şifre Yenileme Linki Gönder</button>
+                            </div>
+                        @endif
                         <div class="mb-2 border-bottom pb-2">
                             <button class="btn text p-0" data-bs-toggle="modal" data-bs-target="#changeEmail">E-posta
                                 Adresini Değiştir</button>
@@ -321,18 +316,21 @@
             </div>
         </div>
     </div>
-    {{-- <form action="{{ route('panel.user.password.reset', $user->id) }}" method="POST" id="password-reset-form">
-        @csrf
-    </form> --}}
-    {{-- <form action="{{ route('panel.user.email.verify', $user->id) }}" method="POST" id="email-verify-form">
-        @csrf
-    </form> --}}
 @endsection
 
 @section('js')
     <script>
         var tagIds = [];
         var status;
+
+        window.addEventListener('load', function() {
+            var checkboxes = document.querySelectorAll('.tag[type="checkbox"]');
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    tagIds.push(checkbox.value);
+                }
+            });
+        });
 
         function checkTag(element) {
             const value = element.value;
@@ -344,29 +342,6 @@
             }
         }
 
-        // window.addEventListener('load', function() {
-        //     var checkboxes = document.querySelectorAll('.tag[type="checkbox"]');
-        //     checkboxes.forEach(function(checkbox) {
-        //         if (checkbox.checked) {
-        //             tagIds.push(checkbox.value);
-        //         }
-        //         checkbox.addEventListener('change', function() {
-        //             if (this.checked) {
-        //                 tagIds.push(this.value);
-        //             } else {
-        //                 var index = tagIds.indexOf(this.value);
-        //                 if (index !== -1) {
-        //                     tagIds.splice(index, 1);
-        //                 }
-        //             }
-        //         });
-        //         console.log(tagIds);
-        //     });
-        // });
-
-
-        // TODO: Sayfa yüklendiğinde seçili gelenler de tagIds içine alınacak
-
         function checkStatus(element) {
             const value = element.value;
             const isChecked = element.checked;
@@ -375,7 +350,22 @@
             }
         }
 
-        function sendAjaxRequest(urlToSend, datas, message) {
+        function sendAjaxRequest(urlToSend, datas, message, reload) {
+
+            if (reload === 'yes') {
+                var reload = location.reload();
+            } else {
+                var reload = '';
+            }
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success me-1 rounded-0 shadow-none',
+                    cancelButton: 'btn btn-danger ms-1 rounded-0 shadow-none'
+                },
+                buttonsStyling: false
+            })
+
             $.ajax({
                 type: "POST",
                 headers: {
@@ -388,22 +378,24 @@
                 },
                 success: function(data) {
                     if (data.status == 'success') {
-                        Swal.fire({
+                        swalWithBootstrapButtons.fire({
                             icon: 'success',
                             title: 'Başarılı',
                             text: message
                         })
+
+                        reload
                     }
                 },
                 error: function(data) {
-                    console.log('Error:', data);
-                    Swal.fire({
+                    swalWithBootstrapButtons.fire({
                         icon: 'error',
                         title: 'Hata',
                         text: data
                     })
                 }
             });
+
         }
 
         function newPassword() {
@@ -425,33 +417,11 @@
                 confirmButtonText: 'Evet, gönder.'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $.ajax({
-                        type: "POST",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: "{{ route('panel.user.password.reset', $user->id) }}",
-                        data: {
-                            user_id: {{ $user->id }},
-                        },
-                        success: function(data) {
-                            if (data.status == 'success') {
-                                swalWithBootstrapButtons.fire({
-                                    icon: 'success',
-                                    title: 'Başarılı',
-                                    text: 'E-posta değiştirme linki gönderildi'
-                                })
-                            }
-                        },
-                        error: function(data) {
-                            console.log('Error:', data);
-                            swalWithBootstrapButtons.fire({
-                                icon: 'error',
-                                title: 'Hata',
-                                text: 'Bir sorun oluştu, lütfen tekrar deneyiniz'
-                            })
-                        }
-                    });
+
+                    var datas = '';
+
+                    sendAjaxRequest('{{ route('panel.user.password.reset', $user->id) }}', datas,
+                        'Şifre yenileme linki gönderildi', 'no');
                 }
             });
         }
@@ -475,44 +445,64 @@
                 confirmButtonText: 'Evet, gönder.'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $.ajax({
-                        type: "POST",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: "{{ route('panel.user.email.verify', $user->id) }}",
-                        data: {
-                            user_id: {{ $user->id }},
-                        },
-                        success: function(data) {
-                            if (data.status == 'success') {
-                                swalWithBootstrapButtons.fire({
-                                    icon: 'success',
-                                    title: 'Başarılı',
-                                    text: 'E-posta değiştirme linki gönderildi'
-                                })
-                            }
-                        },
-                        error: function(data) {
-                            console.log('Error:', data);
-                            swalWithBootstrapButtons.fire({
-                                icon: 'error',
-                                title: 'Hata',
-                                text: 'Bir sorun oluştu, lütfen tekrar deneyiniz'
-                            })
-                        }
-                    });
+
+                    var datas = '';
+
+                    sendAjaxRequest('{{ route('panel.user.email.verify', $user->id) }}', datas,
+                        'E-posta adresi onaylama linki gönderildi', 'no');
                 }
             });
         }
 
         function statusAjax() {
-            sendAjaxRequest('{{ route('panel.user.update.status') }}', status,
-                'Kullanıcı durumu başarılı bir şekilde güncellendi');
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success me-1 rounded-0 shadow-none',
+                    cancelButton: 'btn btn-danger ms-1 rounded-0 shadow-none'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Durum Güncelle',
+                text: "Kullanıcı durumunu güncellemek istiyor musunuz?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet, gönder.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendAjaxRequest('{{ route('panel.user.update.status', $user->id) }}', status,
+                        'Kullanıcı durumu başarılı bir şekilde güncellendi', 'yes');
+                }
+            });
         }
 
         function tagAjax() {
-            sendAjaxRequest('{{ route('panel.user.synctags') }}', tagIds, 'Kullanıcıya etiket atama işlemi başarılı');
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success me-1 rounded-0 shadow-none',
+                    cancelButton: 'btn btn-danger ms-1 rounded-0 shadow-none'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Etiket Arama',
+                text: "Kullanıcıya etiket atamak istiyor musunuz?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet, gönder.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendAjaxRequest('{{ route('panel.user.synctags', $user->id) }}', tagIds,
+                        'Kullanıcıya etiket atama işlemi başarılı', 'yes');
+
+                }
+            });
         }
     </script>
 @endsection

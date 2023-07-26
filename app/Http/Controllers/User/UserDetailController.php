@@ -13,6 +13,7 @@ use App\Models\Usertag;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -64,10 +65,12 @@ class UserDetailController extends Controller
     /**
      * Kullanıcı durumunu güncelleme
      */
-    public function status(Request $request)
+    public function status(Request $request, User $user)
     {
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
         if ($request->ajax() && $request->has('ids')) {
-            $user = User::findOrFail($request->user_id);
             foreach (UserStatus::cases() as $userStatus) {
                 if ($userStatus->value == $request->ids) {
                     $status = $userStatus->value;
@@ -77,8 +80,40 @@ class UserDetailController extends Controller
             $user->status = $status;
             $user->save();
 
+            $statusname = UserStatus::getTitle($status);
+
+            activity()->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi');
+            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
+
             return response()->json(['status' => 'success']);
         }
+
+        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu güncellerken bir hata oluştu");
+
+        return response()->json(['status' => 'error']);
+
+    }
+
+    /**
+     * Kullanıcılara etiket atama
+     */
+    public function tags(Request $request, User $user)
+    {
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
+        if ($request->ajax() && $request->has('ids')) {
+            foreach ($request->ids as $tag) {
+                $user->usertags()->sync($tag);
+            }
+
+            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının etiket(ler)ini güncelledi');
+            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncelledi");
+
+            return response()->json(['status' => 'success']);
+        }
+
+        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncellerken bir hata oluştu");
 
         return response()->json(['status' => 'error']);
 
@@ -91,16 +126,31 @@ class UserDetailController extends Controller
      */
     public function passwordReset(Request $request, User $user)
     {
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
 
         if ($request->ajax() && $request->has('user_id')) {
-            $status = Password::sendResetLink($user->only('email'));
+            if($user->status == UserStatus::ACTIVE) {
+                $status = Password::sendResetLink($user->only('email'));
 
-            if ($status === Password::RESET_LINK_SENT) {
-                return response()->json(['status' => 'success']);
+                if ($status === Password::RESET_LINK_SENT) {
 
-            } else {
-                return response()->json(['status' => 'error']);
+                    activity()->log($authuser. ', '.$user->name. ' isimli kullanıcıya şifre yenileme linki gönderdi');
+                    Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderdi");
+
+                    return response()->json(['status' => 'success']);
+
+                } else {
+
+                    Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderirken bir sorun oluştu");
+
+                    return response()->json(['status' => 'error']);
+                }
             }
+
+            Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya gönderilen şifre yenileme linki kullanıcının durumu Aktif olmadığı için gönderilmedi");
+
+            return response()->json(['status' => 'error', 'message' => 'Kullanıcı durumu aktif değil, şifre yenileme linki gönderemezsiniz.']);
         }
     }
 
@@ -112,16 +162,27 @@ class UserDetailController extends Controller
      */
     public function changeEmail(Request $request, User $user)
     {
+
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
         if ($request->email !== $user->email && $user instanceof MustVerifyEmail) {
             $user->email = $request->email;
             $user->email_verified_at = null;
             $user->save();
 
             $user->sendEmailVerificationNotification();
+
+            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini değiştirdi.');
+            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirdi. Kullanıcının yeni e-posta adresine onay linki gönderildi");
+
             return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
-        } else {
-            return redirect()->back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
         }
+
+        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirirken bir sorun oluştu");
+
+        return redirect()->back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+
     }
 
     /**
@@ -191,20 +252,5 @@ class UserDetailController extends Controller
         }
 
         return Redirect::back()->with('error', 'Hata. Yönetici eklenirken bir hata oluştu.');
-    }
-
-    /**
-     * Kullanıcılara etiket atama
-     */
-    public function tags(Request $request)
-    {
-        if ($request->ajax() && $request->has('ids')) {
-            $user = User::findOrFail($request->user_id);
-
-            //$user->usertags()->detach();
-            foreach ($request->ids as $tagId) {
-                $user->usertags()->toggle($tagId);
-            }
-        }
     }
 }
