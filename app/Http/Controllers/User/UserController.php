@@ -61,11 +61,14 @@ class UserController extends Controller
     public function updateRole(Request $request): RedirectResponse
     {
         $user = User::findOrFail($request->user);
-        foreach ($request->role as $role) {
-            $user->assignRole([$role]);
+        if(is_array($request->role)) {
+            foreach ($request->role as $role) {
+                $user->assignRole([$role]);
+            }
+            return Redirect::route('panel.users')->with('success', 'Kullanıcı yetkileri başarılı bir şekilde güncellendi');
         }
 
-        return Redirect::route('panel.users');
+        return Redirect::route('panel.users')->with('error', 'Lütfen yetki seçiniz');
     }
 
     /**

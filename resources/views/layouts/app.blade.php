@@ -23,6 +23,44 @@
     </div>
     @include('layouts.partials.footer')
     @yield('js')
+
+    <script type="module">
+    $(function(){
+        @if(Session::has('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Başarılı!',
+                text: '{{ Session::get("success") }}'
+            })
+        @endif
+
+        @if(Session::has('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata',
+                text: '{{ Session::get("error") }}'
+            })
+        @endif
+
+        @if(Session::has('warning'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Önemli',
+                text: '{{ Session::get("warning") }}'
+            })
+        @endif
+
+        @if($errors->any())
+            @foreach ($errors->all() as $error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata',
+                    text: '{{ $error }}'
+                })
+            @endforeach
+        @endif
+    });
+    </script>
 </body>
 
 </html>

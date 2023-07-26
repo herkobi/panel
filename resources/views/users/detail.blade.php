@@ -377,7 +377,7 @@
             }
         }
 
-        function sendAjaxRequest(urlToSend, datas) {
+        function sendAjaxRequest(urlToSend, datas, message) {
             $.ajax({
                 type: "POST",
                 headers: {
@@ -390,11 +390,20 @@
                 },
                 success: function(data) {
                     if (data.status == 'success') {
-                        console.log('Eferim');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı',
+                            text: message
+                        })
                     }
                 },
                 error: function(data) {
                     console.log('Error:', data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata',
+                        text: data
+                    })
                 }
             });
         }
@@ -404,11 +413,11 @@
         // TODO: Bu ajax fonksiyonu globale taşınacak. her yerden kullanılacak.
 
         function statusAjax() {
-            sendAjaxRequest('{{ route('panel.user.update.status') }}', status);
+            sendAjaxRequest('{{ route('panel.user.update.status') }}', status, 'Kullanıcı durumu başarılı bir şekilde güncellendi');
         }
 
         function tagAjax() {
-            sendAjaxRequest('{{ route('panel.user.synctags') }}', tagIds);
+            sendAjaxRequest('{{ route('panel.user.synctags') }}', tagIds, 'Kullanıcıya etiket atama işlemi başarılı');
         }
     </script>
 @endsection

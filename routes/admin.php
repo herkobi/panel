@@ -131,6 +131,8 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
 
         Route::redirect('/panel/log-viewer', '/panel/log-viewer')->name('system-logs');
 
+        Route::get('/health', \Spatie\Health\Http\Controllers\HealthCheckResultsController::class);
+
         Route::get('/clear', function() {
 
             // Artisan::call('cache:clear');

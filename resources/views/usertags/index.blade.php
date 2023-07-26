@@ -177,10 +177,20 @@
                     if (data.status == 'success') {
                         $('#user-tag-form').trigger("reset");
                         $("#user-tag-table").load(window.location + " #user-tag-table");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı',
+                            text: 'Etiket başarılı bir şekilde oluşturuldu'
+                        })
                     }
                 },
                 error: function(data) {
                     console.log(data)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata',
+                        text: data
+                    })
                 }
             });
         }

@@ -54,7 +54,7 @@ class UsertagController extends Controller
             return Redirect::route('panel.user.tags')->with('errors', 'Hata; Kategoriye ait kullanıcılar bulunmaktadır. Lütfen öncelikle kullanıcıları farklı kategorilere aktarınız');
         } else {
             $usertag->delete();
-            return Redirect::route('panel.user.tags');
+            return Redirect::route('panel.user.tags')->with('success', 'Etiket başarılı bir şekilde silindi');
         }
     }
 }

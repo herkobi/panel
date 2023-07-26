@@ -91,9 +91,9 @@ class UserDetailController extends Controller
         $status = Password::sendResetLink($user->only('email'));
 
         if ($status === Password::RESET_LINK_SENT) {
-            return redirect()->back();
+            return redirect()->back()->with('success', 'Şifre yenileme linki başarılı bir şekilde gönderildi');
         } else {
-            return redirect()->back()->with($status);
+            return redirect()->back()->with('error', $status);
         }
     }
 
@@ -111,9 +111,9 @@ class UserDetailController extends Controller
             $user->save();
 
             $user->sendEmailVerificationNotification();
-            return redirect()->back();
+            return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
         } else {
-            return redirect()->back()->with('Hata; Lütfen daha sonra tekrar deneyiniz');
+            return redirect()->back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
         }
     }
 
@@ -124,8 +124,12 @@ class UserDetailController extends Controller
      */
     public function verifyEmail(User $user)
     {
-        $user->sendEmailVerificationNotification();
-        return redirect()->back();
+        $status = $user->sendEmailVerificationNotification();
+        if($status) {
+            return redirect()->back()->with('success', 'Kullanıcıya e-posta adresini onaylaması için gerekli e-posta gönderilmiştir');
+        }
+
+        return redirect()->back()->with('error', 'Bir sorun oluştu lütfen tekrar deneyiniz');
     }
 
     /**
@@ -173,10 +177,10 @@ class UserDetailController extends Controller
                 $user->givePermissionTo($permission);
             }
 
-            return Redirect::route('panel.users');
+            return Redirect::route('panel.users')->with('success', 'Kullanıcı başarılı bir şekilde oluşturuldu ve yetkileri atandı');
         }
 
-        return Redirect::back()->with('Hata. Yönetici eklenirken bir hata oluştu.');
+        return Redirect::back()->with('error', 'Hata. Yönetici eklenirken bir hata oluştu.');
     }
 
     /**

@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.8",
         "opcodesio/log-viewer": "^2.4",
         "spatie/laravel-activitylog": "^4.7",
+        "spatie/laravel-health": "^1.23",
         "spatie/laravel-permission": "^5.10"
     },
     "require-dev": {
