@@ -60,10 +60,12 @@ class AdminDetailController extends Controller
     /**
      * Kullanıcı durumunu güncelleme
      */
-    public function status(Request $request)
+    public function status(Request $request, User $user)
     {
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
         if ($request->ajax() && $request->has('ids')) {
-            $user = User::findOrFail($request->user_id);
             foreach (UserStatus::cases() as $userStatus) {
                 if ($userStatus->value == $request->ids) {
                     $status = $userStatus->value;
@@ -73,15 +75,18 @@ class AdminDetailController extends Controller
             $user->status = $status;
             $user->save();
 
-            $ip = request()->ip();
-            $authuser = auth()->user()->name;
             $statusname = UserStatus::getTitle($status);
 
             activity()->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi');
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
+            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
 
             return response()->json(['status' => 'success']);
         }
+
+        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu güncellerken bir hata oluştu");
+
+        return response()->json(['status' => 'error']);
+
     }
 
     /**
@@ -89,48 +94,93 @@ class AdminDetailController extends Controller
      *
      * @param  array<string, string>  $input
      */
-    public function passwordReset(User $user)
+    public function passwordReset(Request $request, User $user)
     {
-        $status = Password::sendResetLink($user->only('email'));
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
 
-        if ($status === Password::RESET_LINK_SENT) {
-            return redirect()->back();
-        } else {
-            return redirect()->back();
+        if ($request->ajax() && $request->has('user_id')) {
+            if($user->status == UserStatus::ACTIVE) {
+                $status = Password::sendResetLink($user->only('email'));
+
+                if ($status === Password::RESET_LINK_SENT) {
+
+                    activity()->log($authuser. ', '.$user->name. ' isimli kullanıcıya şifre yenileme linki gönderdi');
+                    Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderdi");
+
+                    return response()->json(['status' => 'success']);
+
+                } else {
+
+                    Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderirken bir sorun oluştu");
+
+                    return response()->json(['status' => 'error']);
+                }
+            }
+
+            Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya gönderilen şifre yenileme linki kullanıcının durumu Aktif olmadığı için gönderilmedi");
+
+            return response()->json(['status' => 'error', 'message' => 'Kullanıcı durumu aktif değil, şifre yenileme linki gönderemezsiniz.']);
         }
     }
 
     /**
-     * Kullanıcıya e-posta adresini değiştirme
+     * Kullanıcıya e-posta adresini onaylaması
+     * için link gönderme
      *
      * @param  array<string, string>  $input
      */
     public function changeEmail(Request $request, User $user)
     {
+
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
         if ($request->email !== $user->email && $user instanceof MustVerifyEmail) {
             $user->email = $request->email;
             $user->email_verified_at = null;
             $user->save();
 
             $user->sendEmailVerificationNotification();
-            return redirect()->back();
-        } else {
-            return redirect()->back();
+
+            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini değiştirdi.');
+            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirdi. Kullanıcının yeni e-posta adresine onay linki gönderildi");
+
+            return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
         }
+
+        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirirken bir sorun oluştu");
+
+        return redirect()->back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+
     }
 
     /**
-     * Kullanıcıya e-posta adresini onaylama
+     * Kullanıcıya e-posta adresini onaylama linki gönderme
      *
      * @param  array<string, string>  $input
      */
-    public function verifyEmail(User $user)
+    public function verifyEmail(Request $request, User $user)
     {
-        /**
-         * Burası direk işlem yapıyor. Bir kontrol yazılabilir.
-         */
-        $user->sendEmailVerificationNotification();
-        return redirect()->back();
+
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
+        if ($request->ajax() && $request->has('user_id')) {
+
+            $status = $user->sendEmailVerificationNotification();
+
+            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini onaylaması için link gönderdi.');
+            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderdi.");
+
+            return response()->json(['status' => 'success']);
+
+        }
+
+        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderirken bir sorun ile karşılaştı.");
+
+        return response()->json(['status' => 'error']);
+
     }
 
     /**

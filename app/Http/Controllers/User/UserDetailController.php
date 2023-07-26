@@ -192,12 +192,22 @@ class UserDetailController extends Controller
      */
     public function verifyEmail(Request $request, User $user)
     {
+
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
         if ($request->ajax() && $request->has('user_id')) {
 
             $status = $user->sendEmailVerificationNotification();
+
+            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini onaylaması için link gönderdi.');
+            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderdi.");
+
             return response()->json(['status' => 'success']);
 
         }
+
+        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderirken bir sorun ile karşılaştı.");
 
         return response()->json(['status' => 'error']);
 
@@ -243,13 +253,22 @@ class UserDetailController extends Controller
      */
     public function givePermissions(UserPermissionCreateRequest $request, User $user): RedirectResponse
     {
+
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
         if ($request->validated()) {
             foreach ($request->permission as $permission) {
                 $user->givePermissionTo($permission);
             }
 
+            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcıya özel izinler tanımladı.');
+            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımladı.");
+
             return Redirect::route('panel.users')->with('success', 'Kullanıcı başarılı bir şekilde oluşturuldu ve yetkileri atandı');
         }
+
+        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımlarken bir hata ile karşılaştı.");
 
         return Redirect::back()->with('error', 'Hata. Yönetici eklenirken bir hata oluştu.');
     }
