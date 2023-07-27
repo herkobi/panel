@@ -103,9 +103,8 @@ class UserDetailController extends Controller
         $authuser = auth()->user()->name;
 
         if ($request->ajax() && $request->has('ids')) {
-            foreach ($request->ids as $tag) {
-                $user->usertags()->sync($tag);
-            }
+
+            $user->usertags()->sync([$request->ids]);
 
             activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının etiket(ler)ini güncelledi');
             Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncelledi");

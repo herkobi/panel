@@ -47,6 +47,7 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
             Route::post('/role/update', 'updateRole')->name('user.role.update');
             Route::get('/user/filter', 'filter')->name('user.filter');
             Route::get('/user/search', 'search')->name('user.search');
+            Route::get('/users/list/tag/{usertag}', 'tags')->name('user.tag.list');
         });
 
         Route::controller(UserDetailController::class)->group(function () {

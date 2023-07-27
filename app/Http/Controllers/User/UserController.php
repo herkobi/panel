@@ -186,4 +186,15 @@ class UserController extends Controller
             echo json_encode($data);
         }
     }
+
+    public function tags(Usertag $usertag)
+    {
+        //dd($usertag);
+
+        $users = Usertag::find($usertag)->users()->get();
+        $users = PaginateCollection::paginate($users, 25);
+
+        return view('users.tags', ['users' => $users]);
+
+    }
 }
