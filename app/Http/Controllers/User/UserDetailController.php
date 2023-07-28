@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserPermissionCreateRequest;
 use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Usertag;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Spatie\Activitylog\Models\Activity;
 
 class UserDetailController extends Controller
 {
@@ -38,9 +40,11 @@ class UserDetailController extends Controller
     {
         $basePermissions = array();
         $permissions = array();
+        $roles = Role::where('type', UserType::USER)->get();
         $tags = Usertag::where('status', Status::ACTIVE)->get();
         $selectedTag = $user->usertags->pluck('id')->toArray();
         $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
+        $activity = Activity::where('causer_id', $user->id)->get();
 
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
@@ -56,9 +60,11 @@ class UserDetailController extends Controller
         return view('users.detail', [
             'user' => $user,
             'tags' => $tags,
+            'roles' => $roles,
             'selectedTag' => $selectedTag,
             'basePermissions' => $basePermissions,
-            'rolePermissions' => $rolePermissions
+            'rolePermissions' => $rolePermissions,
+            'activity' => $activity
         ]);
     }
 
@@ -82,8 +88,13 @@ class UserDetailController extends Controller
 
             $statusname = UserStatus::getTitle($status);
 
-            activity()->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi');
-            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
+            activity('user')
+                ->performedOn($user) // kime yapıldı
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('update') // ne yaptı
+                ->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi'); // açıklama
+
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
 
             return response()->json(['status' => 'success']);
         }
@@ -106,8 +117,13 @@ class UserDetailController extends Controller
 
             $user->usertags()->sync([$request->ids]);
 
-            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının etiket(ler)ini güncelledi');
-            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncelledi");
+            activity('user')
+                ->performedOn($user) // kime yapıldı
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('update') // ne yaptı
+                ->log($authuser. ', '.$user->name. ' isimli kullanıcının etiket(ler)ini güncelledi'); // açıklama
+
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncelledi");
 
             return response()->json(['status' => 'success']);
         }
@@ -129,13 +145,18 @@ class UserDetailController extends Controller
         $authuser = auth()->user()->name;
 
         if ($request->ajax() && $request->has('user_id')) {
-            if($user->status == UserStatus::ACTIVE) {
+            if($user->status === UserStatus::ACTIVE) {
                 $status = Password::sendResetLink($user->only('email'));
 
                 if ($status === Password::RESET_LINK_SENT) {
 
-                    activity()->log($authuser. ', '.$user->name. ' isimli kullanıcıya şifre yenileme linki gönderdi');
-                    Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderdi");
+                    activity('user')
+                        ->performedOn($user) // kime yapıldı
+                        ->causedBy(auth()->user()->id) // kim yaptı
+                        ->event('update') // ne yaptı
+                        ->log($authuser. ', '.$user->name. ' isimli kullanıcıya şifre yenileme linki gönderdi'); // açıklama
+
+                    Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderdi");
 
                     return response()->json(['status' => 'success']);
 
@@ -172,8 +193,13 @@ class UserDetailController extends Controller
 
             $user->sendEmailVerificationNotification();
 
-            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini değiştirdi.');
-            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirdi. Kullanıcının yeni e-posta adresine onay linki gönderildi");
+            activity('user')
+                ->performedOn($user) // kime yapıldı
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('update') // ne yaptı
+                ->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini değiştirdi.'); // açıklama
+
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirdi. Kullanıcının yeni e-posta adresine onay linki gönderildi");
 
             return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
         }
@@ -199,8 +225,13 @@ class UserDetailController extends Controller
 
             $status = $user->sendEmailVerificationNotification();
 
-            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini onaylaması için link gönderdi.');
-            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderdi.");
+            activity('user')
+                ->performedOn($user) // kime yapıldı
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('verify') // ne yaptı
+                ->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini onaylaması için link gönderdi.'); // açıklama
+
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderdi.");
 
             return response()->json(['status' => 'success']);
 
@@ -261,8 +292,13 @@ class UserDetailController extends Controller
                 $user->givePermissionTo($permission);
             }
 
-            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcıya özel izinler tanımladı.');
-            Log::success("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımladı.");
+            activity('user')
+                ->performedOn($user) // kime yapıldı
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('permisssion') // ne yaptı
+                ->log($authuser. ', '.$user->name. ' isimli kullanıcıya özel izinler tanımladı.'); // açıklama
+
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımladı.");
 
             return Redirect::route('panel.users')->with('success', 'Kullanıcı başarılı bir şekilde oluşturuldu ve yetkileri atandı');
         }

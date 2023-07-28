@@ -73,9 +73,10 @@
                                             class="col-md-4 fw-bold align-self-start">Zaman
                                             Dilimi</label>
                                         <div id="system-timezone-settings" class="col-md-8">
-                                            <select class="form-select form-select-sm rounded-0 shadow-none" name="timezone"
-                                                id="system-timezone">
-                                                <option>Seçiniz</option>
+                                            <select id="system-timezone" name="timezone"
+                                                class="form-select form-select-sm rounded-0 shadow-none"
+                                                data-control="select2" data-placeholder="Seçiniz..">
+                                                <option></option>
                                                 @foreach (Helper::getTimeZoneList() as $timezone => $timezone_gmt_diff)
                                                     <option value="{{ $timezone }}"
                                                         {{ $timezone === old('timezone', $default_settings['timezone']) ? 'selected' : '' }}>

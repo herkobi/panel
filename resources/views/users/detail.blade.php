@@ -15,8 +15,8 @@
                         <dl class="row">
                             <dt class="col-sm-3 mb-2">Yetki</dt>
                             <dd class="col-sm-9">
-                                @foreach ($user->roles as $role)
-                                    <span class="me-2 mb-2">{{ $role->name }}</span>
+                                @foreach ($user->getRoleNames() as $role)
+                                    <span class="me-2 mb-2">{{ $role }}</span>
                                 @endforeach
                             </dd>
                             <dt class="col-sm-3 mb-2">Ad Soyad</dt>
@@ -269,8 +269,17 @@
                             </div>
                         @endif
                         <div class="mb-2 border-bottom pb-2">
-                            <button class="btn text p-0" data-bs-toggle="modal" data-bs-target="#changeEmail">E-posta
+                            <button type="button" class="btn text p-0" data-bs-toggle="modal"
+                                data-bs-target="#changeEmail">E-posta
                                 Adresini Değiştir</button>
+                        </div>
+                        <div class="mb-2 border-bottom pb-2">
+                            <button type="button" class="btn text p-0" value="{{ $user->id }}"
+                                data-bs-toggle="modal" data-bs-target="#changeRole">Yetki Tanımla</button>
+                        </div>
+                        <div class="mb-2 border-bottom pb-2">
+                            <a href="{{ route('panel.user.permissions', $user->id) }}" class="btn text p-0">Özel
+                                İzinler</a>
                         </div>
                     </div>
                 </div>
@@ -311,6 +320,64 @@
                         <button type="button" class="btn btn-secondary btn-sm rounded-0 shadow-none"
                             data-bs-dismiss="modal">Kapat</button>
                         <button type="submit" class="btn btn-primary btn-sm rounded-0 shadow-none">Değiştir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="changeRole" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="changeRoleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-0 shadow-none bg-white">
+                <form action="{{ route('panel.user.role.update') }}" method="POST" id="user-role-form">
+                    @csrf
+                    <input type="hidden" name="user" id="user_id">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changeRoleLabel">Kullanıcı Yetki Ekle/Değiştir</h1>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 border-bottom pb-3">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-role">Tanımlı
+                                    Yetkiler</label>
+                                <div class="col-md-7">
+                                    @foreach ($user->getRoleNames() as $role)
+                                        {{ $role }}
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="add-user-role">Yetki
+                                    Tanımla/Değiştir</label>
+                                <div class="col-md-7">
+                                    @foreach ($roles as $key => $role)
+                                        <div class="form-check form-check-inline">
+                                            @foreach ($user->roles as $userrole)
+                                                <input class="form-check-input rounded-0 shadow-none" type="checkbox"
+                                                    id="role-permission-{{ $key }}" name="role[]"
+                                                    value="{{ $role->id }}"
+                                                    {{ $role->id == $userrole->id ? 'checked' : '' }}>
+                                                <label class="form-check-label"
+                                                    for="role-permission-{{ $key }}">{{ $role->name }}</label>
+                                            @endforeach
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <button type="button" class="btn btn-secondary btn-sm rounded-0 shadow-none"
+                                data-bs-dismiss="modal">Kapat</button>
+                            <button type="submit" id="update-user-role"
+                                class="btn btn-primary btn-sm rounded-0 shadow-none">Yetki
+                                Tanımla</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -501,6 +568,35 @@
                     sendAjaxRequest('{{ route('panel.user.synctags', $user->id) }}', tagIds,
                         'Kullanıcıya etiket atama işlemi başarılı', 'yes');
 
+                }
+            });
+        }
+
+        /**
+         * Rol Tanımlama İşlemleri
+         */
+        document.addEventListener("click", (event) => {
+            if (event.target.matches("#addRole")) {
+                const user_id = event.target.value;
+                sendAjaxRequest('{{ route('panel.user.modal.data') }}', user_id);
+            }
+        });
+
+        function sendAjaxRequest(urlToSend, datas) {
+            $.ajax({
+                type: "GET",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: urlToSend,
+                data: {
+                    ids: datas
+                },
+                success: function(data) {
+
+                },
+                error: function(data) {
+                    console.log('Error:', data);
                 }
             });
         }

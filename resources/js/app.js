@@ -33,6 +33,7 @@ $(document).ready(function () {
     }
 });
 
+
 if (document.body.classList.contains('.panel')) {
     /*
      * Sidebar

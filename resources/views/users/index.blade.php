@@ -58,7 +58,7 @@
                                                         </li>
                                                         <li><a class="dropdown-item small"
                                                                 href="{{ route('panel.user.permissions', $user->id) }}">Özel
-                                                                Yetkiler</a>
+                                                                İzinler</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -146,7 +146,7 @@
                     @csrf
                     <input type="hidden" name="user" id="user_id">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="changeRoleLabel">Kullanıcı Rol Ekle/Değiştir</h1>
+                        <h1 class="modal-title fs-5" id="changeRoleLabel">Kullanıcı Yetki Ekle/Değiştir</h1>
                         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -154,7 +154,7 @@
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
                                 <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-role">Tanımlı
-                                    Rol</label>
+                                    Yetkiler</label>
                                 <div class="col-md-7">
                                     <div id="userroles"></div>
                                 </div>
@@ -162,7 +162,7 @@
                         </div>
                         <div class="mb-3">
                             <div class="row">
-                                <label class="form-label col-md-5 fw-semibold mb-0" for="add-user-role">Rol
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="add-user-role">Yetki
                                     Tanımla/Değiştir</label>
                                 <div class="col-md-7">
                                     @foreach ($roles as $key => $role)
@@ -183,7 +183,7 @@
                             <button type="button" class="btn btn-secondary btn-sm rounded-0 shadow-none"
                                 data-bs-dismiss="modal">Kapat</button>
                             <button type="submit" id="update-user-role"
-                                class="btn btn-primary btn-sm rounded-0 shadow-none">Rol
+                                class="btn btn-primary btn-sm rounded-0 shadow-none">Yetki
                                 Tanımla</button>
                         </div>
                     </div>
