@@ -44,7 +44,7 @@ class UserDetailController extends Controller
         $tags = Usertag::where('status', Status::ACTIVE)->get();
         $selectedTag = $user->usertags->pluck('id')->toArray();
         $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
-        $activity = Activity::where('causer_id', $user->id)->get();
+        $activities = Activity::where('causer_id', $user->id)->get();
 
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
@@ -64,7 +64,7 @@ class UserDetailController extends Controller
             'selectedTag' => $selectedTag,
             'basePermissions' => $basePermissions,
             'rolePermissions' => $rolePermissions,
-            'activity' => $activity
+            'activities' => $activities
         ]);
     }
 
@@ -93,6 +93,8 @@ class UserDetailController extends Controller
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
                 ->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi'); // açıklama
+
+                //properties alanına işlem adı altında bir değer tanımlanacak.
 
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
 
