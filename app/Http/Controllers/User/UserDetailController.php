@@ -45,6 +45,7 @@ class UserDetailController extends Controller
         $selectedTag = $user->usertags->pluck('id')->toArray();
         $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
         $activities = Activity::where('causer_id', $user->id)->get();
+        $authlog = $user->authentications;
 
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
@@ -64,7 +65,8 @@ class UserDetailController extends Controller
             'selectedTag' => $selectedTag,
             'basePermissions' => $basePermissions,
             'rolePermissions' => $rolePermissions,
-            'activities' => $activities
+            'activities' => $activities,
+            'authlog' => $authlog
         ]);
     }
 
@@ -92,6 +94,7 @@ class UserDetailController extends Controller
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
+                ->withProperties(['title' => 'Kullanıcı Durumu Güncelleme']) // işlem başlığı
                 ->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi'); // açıklama
 
                 //properties alanına işlem adı altında bir değer tanımlanacak.
@@ -123,6 +126,7 @@ class UserDetailController extends Controller
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
+                ->withProperties(['title' => 'Kullanıcı Etiketi Güncelleme']) // işlem başlığı
                 ->log($authuser. ', '.$user->name. ' isimli kullanıcının etiket(ler)ini güncelledi'); // açıklama
 
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncelledi");
@@ -156,6 +160,7 @@ class UserDetailController extends Controller
                         ->performedOn($user) // kime yapıldı
                         ->causedBy(auth()->user()->id) // kim yaptı
                         ->event('update') // ne yaptı
+                        ->withProperties(['title' => 'Şifre Yenileme Linki Gönderimi']) // işlem başlığı
                         ->log($authuser. ', '.$user->name. ' isimli kullanıcıya şifre yenileme linki gönderdi'); // açıklama
 
                     Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderdi");
@@ -199,6 +204,7 @@ class UserDetailController extends Controller
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
+                ->withProperties(['title' => 'E-posta Adresi Değişikliği']) // işlem başlığı
                 ->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini değiştirdi.'); // açıklama
 
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirdi. Kullanıcının yeni e-posta adresine onay linki gönderildi");
@@ -231,6 +237,7 @@ class UserDetailController extends Controller
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('verify') // ne yaptı
+                ->withProperties(['title' => 'E-posta Onay Linki Gönderimi']) // işlem başlığı
                 ->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini onaylaması için link gönderdi.'); // açıklama
 
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderdi.");
@@ -298,6 +305,7 @@ class UserDetailController extends Controller
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('permisssion') // ne yaptı
+                ->withProperties(['title' => 'İzin Tanımlama']) // işlem başlığı
                 ->log($authuser. ', '.$user->name. ' isimli kullanıcıya özel izinler tanımladı.'); // açıklama
 
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımladı.");
