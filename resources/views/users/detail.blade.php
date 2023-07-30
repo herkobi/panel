@@ -50,7 +50,7 @@
                                 data-bs-target="#permissions-tab-pane" type="button" role="tab"
                                 aria-controls="permissions-tab-pane" aria-selected="false"><i
                                     class="ri-fingerprint-line"></i>
-                                Özel İzinler</button>
+                                Tanımlı İzinler</button>
                         </li>
                     </ul>
                 </div>
@@ -101,7 +101,7 @@
                             aria-labelledby="permissions-tab" tabindex="0">
                             <div class="card rounded-0 shadow-sm border-0 mb-3">
                                 <div class="card-header border-0 bg-white pt-3 pb-0">
-                                    <h4 class="card-title">Özel İzinler</h4>
+                                    <h4 class="card-title">Tanımlı İzinler</h4>
                                 </div>
                                 <div class="card-body">
                                     @foreach ($basePermissions as $key => $permissions)
@@ -218,7 +218,7 @@
                         </div>
                         <div class="mb-2 border-bottom pb-2">
                             <a href="{{ route('panel.user.permissions', $user->id) }}" class="btn text p-0">Özel
-                                İzinler</a>
+                                İzin Tanımla</a>
                         </div>
                     </div>
                 </div>
