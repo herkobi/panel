@@ -7,7 +7,6 @@ use App\Http\Requests\Permissions\PermissionCreateRequest;
 use App\Http\Requests\Permissions\PermissionUpdateRequest;
 use App\Models\Permission;
 use App\Models\Permissiongroup;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Alert;
 use App\Utils\PaginateCollection;
+use Illuminate\Support\Facades\Log;
 
 class PermissionController extends Controller
 {
@@ -44,14 +44,29 @@ class PermissionController extends Controller
         ]);
     }
 
-    public function store(PermissionCreateRequest $request): JsonResponse
+    public function store(PermissionCreateRequest $request): RedirectResponse
     {
-        if ($request->ajax() && $request->validated()) {
-            Permission::create($request->all());
-            return response()->json(['status' => "success"]);
+        $ip = request()->ip();
+        $guard_name = "web";
+
+        if ($request->validated()) {
+            $permission = Permission::create([
+                'name' => $request['name'],
+                'group_id' => $request['group_id'],
+                'text' => $request['text'],
+                'guard_name' => $guard_name
+            ]);
+
+            $group_name = Permissiongroup::find($request->group_id);
+            $authuser = auth()->user()->name;
+
+            activity()->log("$authuser, $group_name->name yetki grubu için {$request['name']} isim ve {$request['text']} açıklamalı yeni izin tanımladı");
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, '.$group_name->name.' yetki grubu için '.$request->name.' isim ve '.$request->text.' açıklamalı yeni iznini tanımladı");
+
+            return Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde oluşturuldu');
         }
 
-        return response()->json(['status' => "error"]);
+        return Redirect::back()->with('errors', $request->validated()->messages()->all()[0])->withInput();
 
     }
 

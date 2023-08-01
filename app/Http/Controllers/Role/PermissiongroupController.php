@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionGroups\PermissionGroupCreateRequest;
 use App\Http\Requests\PermissionGroups\PermissionGroupUpdateRequest;
 use App\Models\Permissiongroup;
+use App\Utils\PaginateCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -29,7 +30,9 @@ class PermissiongroupController extends Controller
 
     public function index(): View
     {
-        $groups = Permissiongroup::paginate('25');
+        $groups = Permissiongroup::get();
+        $groups = PaginateCollection::paginate($groups, 5);
+
         return view('permissiongroups.index', compact('groups'));
     }
 
@@ -39,6 +42,9 @@ class PermissiongroupController extends Controller
             $request = Permissiongroup::create($request->all());
             return response()->json(['status' => "success"]);
         }
+
+        return response()->json(['status' => "error"]);
+
     }
 
     public function edit(Permissiongroup $permissiongroup): View
@@ -49,26 +55,27 @@ class PermissiongroupController extends Controller
     public function update(Permissiongroup $permissiongroup, PermissionGroupUpdateRequest $request): RedirectResponse
     {
         if ($request->validated()) {
-            $permissiongroup->forceFill([
-                'name' => $request->name,
-                'desc' => $request->desc
-            ])->save();
+            $permissiongroup->name = $request->name;
+            $permissiongroup->desc = $request->desc;
+            $permissiongroup->save();
 
-            return Redirect::route('panel.permission.groups');
+            return Redirect::route('panel.permission.groups')->with('success', 'Yetki grubu başarılı bir şekilde oluşturuldu');
         }
 
-        return Redirect::back();
+        return Redirect::back()->with('errors', $request->validated()->messages()->all()[0])->withInput();
     }
 
     public function destroy(Permissiongroup $permissiongroup): RedirectResponse
     {
         if (auth()->user()->roles->pluck('name')[0] ?? '' === 'Super Admin') {
             if (count($permissiongroup->permission) > 0) {
-                return Redirect::back()->with('Hata. Bu grup silinemez');
+                return Redirect::back()->with('error', 'Yetki grubuna ait izinler bulunmaktadır. Lütfen öncelikle onları siliniz.');
             } else {
                 $permissiongroup->delete();
-                return Redirect::route('panel.permission.groups');
+                return Redirect::route('panel.permission.groups')->with('success', 'Yetki grubu başarılı bir şekilde silindi');
             }
         }
+        return Redirect::back()->with('error', 'Bu işlemi yapmak için yetkiniz bulunmamaktadır');
+
     }
 }

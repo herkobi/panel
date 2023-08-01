@@ -26,9 +26,7 @@ class PermissionCreateRequest extends FormRequest
         return [
             'group_id' => ['required', 'not_in:0', 'integer'],
             'name' => ['required', Rule::unique('permissions', 'name')],
-            //'name.*' => ['required', Rule::unique('permissions', 'name')],
-            'text' => 'required:name',
-            //'text.*' => 'required:name',
+            'text' => 'required',
         ];
     }
 
@@ -45,10 +43,7 @@ class PermissionCreateRequest extends FormRequest
             'group_id.integer' => 'İzin grubu rakam olmalıdır',
             'name.required' => 'Lütfen izin kodunu giriniz',
             'name.unique' => 'Bu isimde girilmiş izin kodu bulunmaktadır',
-            //'name.*.required' => 'Lütfen izin kodunu giriniz',
-            //'name.*.unique' => 'Bu isimde girilmiş izin kodu bulunmaktadır',
             'text.required' => 'Lütfen izin açıklamasını giriniz',
-            //'text.*.required' => 'Lütfen izin açıklamasını giriniz'
         ];
     }
 }
