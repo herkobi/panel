@@ -231,7 +231,7 @@
                     const checkboxes = document.getElementsByClassName('userIn');
                     Array.from(checkboxes).forEach(checkbox => {
                         const checkboxValue = parseInt(checkbox
-                            .value); // Checkbox değerini tamsayıya dönüştür
+                        .value); // Checkbox değerini tamsayıya dönüştür
 
                         // Roles içindeki id'leri kontrol et
                         const isChecked = roles.some(role => role.id === checkboxValue);
@@ -245,12 +245,14 @@
             });
         }
     </script>
-
     <script type="module">
         $(document).ready(function() {
             function fetch_customer_data(query = '') {
                 $.ajax({
                     url: "{{ route('panel.user.search') }}",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     method: 'GET',
                     data: {
                         query: query
@@ -265,9 +267,61 @@
 
             $(document).on('keyup', '#searchText', function() {
                 var query = $(this).val();
-                if( query.length < 3 ) return;
+                if (query.length < 3) return;
                 fetch_customer_data(query);
             });
         });
+    </script>
+    <script>
+        tagIds = [];
+        statusIds = [];
+
+        function checkStatus(element) {
+            const value = element.value;
+            const isChecked = element.checked;
+            if (isChecked) {
+                statusIds.push(value)
+            } else {
+                if (statusIds.length > 0) {
+                    statusIds = statusIds.filter(item => item !== value)
+                }
+            }
+            filter();
+        }
+
+        function checkTag(element) {
+            const value = element.value;
+            const isChecked = element.checked;
+            if (isChecked) {
+                tagIds.push(value)
+            } else {
+                if (tagIds.length > 0) {
+                    tagIds = tagIds.filter(item => item !== value)
+                }
+            }
+            filter();
+        }
+
+        function filter() {
+            $.ajax({
+                type: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '{{ route('panel.user.filter') }}',
+                data: {
+                    tagIds: tagIds,
+                    statusIds: statusIds
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('tbody').html(data.table_data);
+                    $('#total_records').text(data.total_data);
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
     </script>
 @endsection

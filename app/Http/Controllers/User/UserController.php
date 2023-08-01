@@ -29,6 +29,7 @@ class UserController extends Controller
         $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
         $users = PaginateCollection::paginate($users, 25);
         $tags = Usertag::where('status', [Status::ACTIVE])->has('users')->get();
+        $tags = Usertag::where('status', [Status::ACTIVE])->get();
 
         return view('users.index', [
             'users' => $users,
@@ -79,11 +80,12 @@ class UserController extends Controller
      */
     public function filter(Request $request)
     {
-        $users = User::query()->where('type', [UserType::USER]);
+        $output = '';
+        $roles = '';
 
-        if ($request->has('searchText') && $request->searchText != null) {
-            $users->where('name', 'LIKE', "%{$request->searchText}%");
-        }
+        //$users = User::query()->where('type', [UserType::USER]);
+
+        $users = User::query()->whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER]);
 
         if ($request->has('statusIds') && $request->statusIds != null) {
             $users->whereIn('status', $request->statusIds);
@@ -95,18 +97,66 @@ class UserController extends Controller
             });
         }
 
-        if (!$request->has('statusIds') && !$request->has('tagIds') && !$request->has('searchText') && $request->has('page')) {
-            $users->paginate('25', ['*'], 'page', $request->page);
-            $users = $users->getCollection();
+        $data = $users->get();
+        $total_row = $data->count();
+        if($total_row > 0)
+        {
+            foreach($data as $row)
+            {
+                foreach($row->getRoleNames() as $role) {
+                    $roles .= '<li><span class="fw-semibold mr-2 mb-2">'.$role.'</span></li>';
+                }
+
+                $output .= '
+                    <tr>
+                        <td>
+                            <span class="badge fw-normal '.UserStatus::color($row->status).'">'.UserStatus::title($row->status).'</span>
+                        </td>
+                        <td>'.$row->name.'</td>
+                        <td>'.$row->email.'</td>
+                        <td>
+                            <ul class="list-unstyled list-inline m-0 p-0">'.$roles.'</ul>
+                        </td>
+                        <td class="text-center">
+                        <div class="dropdown">
+                            <a class="btn btn-text dropdown-toggle p-0" href="#"
+                                role="button" data-bs-toggle="dropdown" data-boundary="window"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="ri-menu-3-fill"></i>
+                            </a>
+                            <ul
+                                class="dropdown-menu dropdown-menu-end rounded-0 shadow-none bg-white">
+                                <li><a class="dropdown-item small"
+                                        href="'.route('panel.user.detail', $row->id).'">Bilgiler</a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li>
+                                    <button id="addRole" type="button"
+                                        class="btn btn-text btn-sm dropdown-item"
+                                        value="'.$row->id.'" data-bs-toggle="modal"
+                                        data-bs-target="#changeRole">Rol Tanımla</button>
+                                </li>
+                                <li><a class="dropdown-item small"
+                                        href="'.route('panel.user.permissions', $row->id).'">Özel
+                                        Yetkiler</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>';
+
+                $roles = '';
+            }
         } else {
-            $users = $users->get();
+            $output = '<tr><td align="center" colspan="5">Bu isim veya e-mail adresi ile kayıtlı kullanıcı bulunmamaktadır</td></tr>';
         }
+        $data = array(
+            'table_data'  => $output,
+            'total_data'  => $total_row
+        );
 
-        $users->each(function ($user) {
-            $user->roleName = $user->roles->pluck('name')->first();
-        });
+        echo json_encode($data);
 
-        return \response()->json($users);
     }
 
     /**
@@ -189,7 +239,6 @@ class UserController extends Controller
 
     public function tags(Usertag $usertag)
     {
-        //dd($usertag);
 
         $users = Usertag::find($usertag)->users()->get();
         $users = PaginateCollection::paginate($users, 25);

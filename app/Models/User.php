@@ -57,10 +57,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
         'status' => UserStatus::class,
         'type' => UserType::class,
         'settings' => 'array',
