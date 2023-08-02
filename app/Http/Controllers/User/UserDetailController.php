@@ -97,14 +97,12 @@ class UserDetailController extends Controller
                 ->withProperties(['title' => 'Kullanıcı Durumu Güncelleme']) // işlem başlığı
                 ->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi'); // açıklama
 
-                //properties alanına işlem adı altında bir değer tanımlanacak.
-
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
 
             return response()->json(['status' => 'success']);
         }
 
-        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu güncellerken bir hata oluştu");
+        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu güncellerken bir hata oluştu");
 
         return response()->json(['status' => 'error']);
 
@@ -134,7 +132,7 @@ class UserDetailController extends Controller
             return response()->json(['status' => 'success']);
         }
 
-        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncellerken bir hata oluştu");
+        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncellerken bir hata oluştu");
 
         return response()->json(['status' => 'error']);
 

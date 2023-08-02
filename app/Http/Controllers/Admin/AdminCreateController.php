@@ -37,7 +37,6 @@ class AdminCreateController extends Controller
     public function admin(UserCreateRequest $request): RedirectResponse
     {
 
-        $ip = request()->ip();
         $type = UserType::ADMIN;
         $terms = 1;
         $email_verified_time = Carbon::now()->toDateTimeString();
@@ -64,6 +63,7 @@ class AdminCreateController extends Controller
                 $roles .= $role.', ';
             }
 
+            $ip = request()->ip();
             $authuser = auth()->user()->name;
             $roles = Role::whereIn('id', [$roles])->get()->pluck('name');
 

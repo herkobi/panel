@@ -66,7 +66,6 @@ class RoleController extends Controller
      */
     public function create(): View
     {
-        activity()->log(Auth::user()->name . ' yeni yetki oluşturmak için yetki formu sayfasını açtı');
         return view('roles.create');
     }
 
@@ -77,8 +76,6 @@ class RoleController extends Controller
      */
     public function permissions(RoleCreateRequest $request): RedirectResponse
     {
-
-        activity()->log(Auth::user()->name . ' yeni yetki oluşturdu. İzinler sayfasına geçti.');
 
         if ($request->validated()) {
             $role = Role::create(['name' => $request->name, 'type' => $request->type, 'desc' => $request->desc]);
@@ -92,7 +89,6 @@ class RoleController extends Controller
     {
         $role = Role::find($role->id);
         $groups = Permissiongroup::where('type', $role->type)->with('permission')->get();
-        activity()->log(Auth::user()->name . ' oluşturduğu yetki için izinler oluşturdu');
         return view('roles.permissions', ['role' => $role, 'groups' => $groups]);
     }
 
@@ -108,7 +104,6 @@ class RoleController extends Controller
 
         if ($request->validated()) {
             $role->syncPermissions($request->permission);
-            activity()->log(Auth::user()->name . ' oluşturduğu yetki için izinleri ayarladı');
             return Redirect::route('panel.roles');
         }
 
@@ -128,7 +123,6 @@ class RoleController extends Controller
             ->where("role_has_permissions.role_id", $role->id)
             ->get();
 
-        activity()->log(Auth::user()->name . '; ' . $role->name . ' yetkisini görüntüledi');
         return view('roles.show', compact('role', 'rolePermissions'));
     }
 

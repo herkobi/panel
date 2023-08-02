@@ -27,7 +27,7 @@ class UserController extends Controller
     {
         $roles = Role::where('type', UserType::USER)->get();
         $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
-        $users = PaginateCollection::paginate($users, 25);
+        $users = PaginateCollection::paginate($users, 5);
         $tags = Usertag::where('status', [Status::ACTIVE])->has('users')->get();
         $tags = Usertag::where('status', [Status::ACTIVE])->get();
 
@@ -82,8 +82,6 @@ class UserController extends Controller
     {
         $output = '';
         $roles = '';
-
-        //$users = User::query()->where('type', [UserType::USER]);
 
         $users = User::query()->whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER]);
 

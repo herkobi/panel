@@ -442,6 +442,10 @@ table a {
     font-size: .90rem;
 }
 
+.page-link:focus {
+    box-shadow: none !important;
+}
+
 /*
  * Form Elements
 */
