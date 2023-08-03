@@ -7,10 +7,11 @@ use App\Http\Requests\Usertags\UsertagCreateRequest;
 use App\Http\Requests\Usertags\UsertagUpdateRequest;
 use App\Models\Usertag;
 use App\Utils\PaginateCollection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class UsertagController extends Controller
@@ -45,9 +46,9 @@ class UsertagController extends Controller
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
                 ->withProperties(['title' => 'Kullanıcı Etiketi Güncelleme']) // işlem başlığı
-                ->log($authuser. ', '.$usertag. ' etiketini güncelledi'); // açıklama
+                ->log($authuser. ', '.$usertag->name. ' isimli etiketi güncelledi'); // açıklama
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag} etiketini güncelledi");
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag->name} isimli etiketi güncelledi");
 
             return Redirect::route('panel.user.tags')->with('success', __('usertag.update.success'));
         }
@@ -57,22 +58,56 @@ class UsertagController extends Controller
         return Redirect::back()->with('error', $request->validated()->messages()->all()[0])->withInput();
     }
 
-    public function store(UsertagCreateRequest $request)
+    public function store(UsertagCreateRequest $request): JsonResponse
     {
+
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
         if ($request->ajax() && $request->validated()) {
-            Usertag::create($request->all());
+            $usertag = Usertag::create($request->all());
+
+            activity('admin')
+                ->performedOn($usertag) // kime yapıldı
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('create') // ne yaptı
+                ->withProperties(['title' => 'Yeni Kullanıcı Etiketi']) // işlem başlığı
+                ->log($authuser. ', '.$usertag->name. ' isimli yeni etiket oluşturdu'); // açıklama
+
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag->name} isimli yeni etiket oluşturdu");
+
             return response()->json(['status' => "success"]);
         }
+
+        Log::info("{$authuser}, {$ip} ip adresi üzerinden, etiket oluştururken hata oluştu");
+
         return response()->json(['status' => "error"]);
     }
 
-    public function destroy(Usertag $usertag)
+    public function destroy(Request $request, Usertag $usertag): JsonResponse
     {
-        if ($usertag->users->count() > 0) {
-            return Redirect::route('panel.user.tags')->with('errors', 'Hata; Kategoriye ait kullanıcılar bulunmaktadır. Lütfen öncelikle kullanıcıları farklı kategorilere aktarınız');
-        } else {
-            $usertag->delete();
-            return Redirect::route('panel.user.tags')->with('success', 'Etiket başarılı bir şekilde silindi');
+        if ($request->ajax()) {
+            $ip = request()->ip();
+            $authuser = auth()->user()->name;
+
+            if ($usertag->users->count() > 0) {
+                Log::warning("{$authuser}, {$ip} ip adresi üzerinden, $usertag->name isimli etiketi atanmış kullanıcılar olduğundan silemedi.");
+                return response()->json(['status' => "error"]);
+            } else {
+                $usertag->delete();
+
+                activity('admin')
+                    ->performedOn($usertag) // kime yapıldı
+                    ->causedBy(auth()->user()->id) // kim yaptı
+                    ->event('delete') // ne yaptı
+                    ->withProperties(['title' => 'Kullanıcı Etiketi Silme']) // işlem başlığı
+                    ->log($authuser. ', '.$usertag->name. ' isimli etiketi sildi'); // açıklama
+
+                Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag->name} isimli etiketi sildi");
+
+                return response()->json(['status' => "success"]);
+            }
         }
+
     }
 }

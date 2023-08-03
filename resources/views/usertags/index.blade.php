@@ -21,7 +21,7 @@
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input rounded-0 shadow-none" type="radio"
                                                     name="status" id="user-tag-status-title-{{ $status->value }}"
-                                                    value="{{ $status->value }}">
+                                                    value="{{ $status->value }}" {{ $status->value == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label"
                                                     for="user-tag-status-title-{{ $status->value }}">{{ Status::getTitle($status->value) }}</label>
                                             </div>

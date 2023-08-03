@@ -167,7 +167,7 @@ class UserDetailController extends Controller
 
                 } else {
 
-                    Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderirken bir sorun oluştu");
+                    Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderirken bir sorun oluştu");
 
                     return response()->json(['status' => 'error']);
                 }
@@ -210,7 +210,7 @@ class UserDetailController extends Controller
             return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
         }
 
-        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirirken bir sorun oluştu");
+        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirirken bir sorun oluştu");
 
         return redirect()->back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
 
@@ -244,7 +244,7 @@ class UserDetailController extends Controller
 
         }
 
-        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderirken bir sorun ile karşılaştı.");
+        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderirken bir sorun ile karşılaştı.");
 
         return response()->json(['status' => 'error']);
 
@@ -311,7 +311,7 @@ class UserDetailController extends Controller
             return Redirect::route('panel.users')->with('success', 'Kullanıcı başarılı bir şekilde oluşturuldu ve yetkileri atandı');
         }
 
-        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımlarken bir hata ile karşılaştı.");
+        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımlarken bir hata ile karşılaştı.");
 
         return Redirect::back()->with('error', 'Hata. Yönetici eklenirken bir hata oluştu.');
     }

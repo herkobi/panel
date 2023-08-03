@@ -122,11 +122,28 @@
                 cancelButtonText: 'İptal Et',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire(
-                        'Silindi!',
-                        'Etiket Başarılı Bir Şekilde Silindi',
-                        'success'
-                    )
+                    $.ajax({
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "{{ route('panel.user.tag.destroy', $usertag->id) }}",
+                        data: {
+                            tag: {{ $usertag->id }}
+                        },
+                        success: function(data) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Başarılı',
+                                text: 'Etiket başarılı bir şekilde silindi',
+                            }, function() {
+                                window.location = "{{ route('panel.user.tags') }}";
+                            });
+                        },
+                        error: function(data) {
+                            console.log(data)
+                        }
+                    });
                 }
             });
         });
