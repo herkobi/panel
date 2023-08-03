@@ -137,7 +137,8 @@
                                                         <li><a class="dropdown-item small"
                                                                 href="{{ route('panel.user.tag.edit', $tag->id) }}">Düzenle</a>
                                                         </li>
-                                                        <li><a class="dropdown-item small" href="">Kullanıcılar</a>
+                                                        <li><a class="dropdown-item small"
+                                                                href="{{ route('panel.user.tag.list', $tag->id) }}">Kullanıcılar</a>
                                                         </li>
                                                     </ul>
                                                 </div>

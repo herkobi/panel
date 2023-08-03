@@ -29,7 +29,7 @@ class UserController extends Controller
         $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
         $users = PaginateCollection::paginate($users, 5);
         $tags = Usertag::where('status', [Status::ACTIVE])->has('users')->get();
-        $tags = Usertag::where('status', [Status::ACTIVE])->get();
+        //$tags = Usertag::where('status', [Status::ACTIVE])->get();
 
         return view('users.index', [
             'users' => $users,
@@ -238,10 +238,18 @@ class UserController extends Controller
     public function tags(Usertag $usertag)
     {
 
-        $users = Usertag::find($usertag)->users()->get();
+        $users = Usertag::find($usertag)->first();
+        $users = $users->users()->get();
         $users = PaginateCollection::paginate($users, 25);
+        $tags = Usertag::where('status', [Status::ACTIVE])->has('users')->get();
+        $roles = Role::where('type', UserType::USER)->get();
 
-        return view('users.tags', ['users' => $users]);
+
+        return view('users.tags', [
+            'users' => $users,
+            'roles' => $roles,
+            'tags' => $tags
+        ]);
 
     }
 }
