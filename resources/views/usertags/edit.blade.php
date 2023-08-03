@@ -92,8 +92,7 @@
                                                     class="ri-add-line"></i> Güncelle</button>
                                             @hasrole('Super Admin')
                                                 <button type="button" id="user-tag-destroy-button"
-                                                    class="btn btn-danger btn-sm rounded-0 shadow-none text-white"
-                                                    onclick="event.preventDefault(); document.getElementById('user-tag-destroy').submit()"><i
+                                                    class="btn btn-danger btn-sm rounded-0 shadow-none text-white"><i
                                                         class="ri-delete-bin-3-line"></i> Etiketi Sil</button>
                                             @endhasrole
                                         </div>
@@ -106,33 +105,30 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('panel.user.tag.destroy', $usertag->id) }}" method="POST" id="user-tag-destroy">
-        @csrf
-    </form>
 @endsection
-
 
 @section('js')
     <script type="module">
-    const btn = document.querySelector("#save-user-tag-form");
-    btn.addEventListener('click', (e) => {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
+        const btn = document.querySelector("#user-tag-destroy-button");
+        btn.addEventListener('click', (e) => {
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Bu işlem geri alınamaz!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet. Etiketi Sil!',
+                cancelButtonText: 'İptal Et',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Silindi!',
+                        'Etiket Başarılı Bir Şekilde Silindi',
+                        'success'
+                    )
+                }
+            });
         });
-    });
     </script>
 @endsection

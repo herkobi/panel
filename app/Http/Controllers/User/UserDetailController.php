@@ -90,7 +90,7 @@ class UserDetailController extends Controller
 
             $statusname = UserStatus::getTitle($status);
 
-            activity('user')
+            activity('admin')
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
@@ -120,7 +120,7 @@ class UserDetailController extends Controller
 
             $user->usertags()->sync([$request->ids]);
 
-            activity('user')
+            activity('admin')
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
@@ -154,7 +154,7 @@ class UserDetailController extends Controller
 
                 if ($status === Password::RESET_LINK_SENT) {
 
-                    activity('user')
+                    activity('admin')
                         ->performedOn($user) // kime yapıldı
                         ->causedBy(auth()->user()->id) // kim yaptı
                         ->event('update') // ne yaptı
@@ -198,7 +198,7 @@ class UserDetailController extends Controller
 
             $user->sendEmailVerificationNotification();
 
-            activity('user')
+            activity('admin')
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
@@ -231,7 +231,7 @@ class UserDetailController extends Controller
 
             $status = $user->sendEmailVerificationNotification();
 
-            activity('user')
+            activity('admin')
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('verify') // ne yaptı
@@ -299,7 +299,7 @@ class UserDetailController extends Controller
                 $user->givePermissionTo($permission);
             }
 
-            activity('user')
+            activity('admin')
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('permisssion') // ne yaptı

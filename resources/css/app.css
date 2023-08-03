@@ -464,6 +464,31 @@ table a {
 }
 
 /*
+ * Swal
+*/
+div:where(.swal2-container) div:where(.swal2-popup) {
+    width: 26rem !important;
+    font-size: .90rem !important;
+}
+
+div:where(.swal2-container) h2:where(.swal2-title) {
+    padding-top: 0 1em 0 !important;
+    font-size: 1.65em;
+}
+
+div:where(.swal2-container) .swal2-html-container {
+    margin: .5em 1.6em .3em !important;
+}
+
+div:where(.swal2-container) div:where(.swal2-actions) {
+    margin: 0.5em auto 0 !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled) {
+    box-shadow: none !important;
+}
+
+/*
  * Activity
 */
 .user-activity {
@@ -772,26 +797,6 @@ table a {
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none
-}
-
-/*
- * Select2
-*/
-.select2-container--default .select2-selection--single {
-    border: 1px solid #ced4da;
-    border-radius: 0;
-}
-
-.select2-container .select2-selection--single {
-    height: 32px;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 32px;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 30px;
 }
 
 /*

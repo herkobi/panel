@@ -180,7 +180,8 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Başarılı',
-                            text: 'Etiket başarılı bir şekilde oluşturuldu'
+                            text: 'Etiket başarılı bir şekilde oluşturuldu',
+                            confirmButtonText: 'Tamam'
                         })
                     }
                 },
@@ -189,7 +190,8 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Hata',
-                        text: data
+                        text: data,
+                        confirmButtonText: 'Tamam'
                     })
                 }
             });

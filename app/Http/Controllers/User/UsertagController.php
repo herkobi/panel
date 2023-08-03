@@ -8,6 +8,7 @@ use App\Http\Requests\Usertags\UsertagUpdateRequest;
 use App\Models\Usertag;
 use App\Utils\PaginateCollection;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
@@ -27,6 +28,10 @@ class UsertagController extends Controller
 
     public function update(UsertagUpdateRequest $request, Usertag $usertag): RedirectResponse
     {
+
+        $ip = request()->ip();
+        $authuser = auth()->user()->name;
+
         if ($request->validated()) {
 
             $usertag->status = $request->status;
@@ -35,8 +40,21 @@ class UsertagController extends Controller
             $usertag->desc = $request->desc;
             $usertag->save();
 
-            return Redirect::route('panel.user.tags');
+            activity('admin')
+                ->performedOn($usertag) // kime yapıldı
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('update') // ne yaptı
+                ->withProperties(['title' => 'Kullanıcı Etiketi Güncelleme']) // işlem başlığı
+                ->log($authuser. ', '.$usertag. ' etiketini güncelledi'); // açıklama
+
+            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag} etiketini güncelledi");
+
+            return Redirect::route('panel.user.tags')->with('success', __('usertag.update.success'));
         }
+
+        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$usertag} güncellerken bir sorun ile karşılaştı: Hata içeriği:" .$request->validated()->messages()->all()[0]);
+
+        return Redirect::back()->with('error', $request->validated()->messages()->all()[0])->withInput();
     }
 
     public function store(UsertagCreateRequest $request)
