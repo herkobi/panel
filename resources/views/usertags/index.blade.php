@@ -176,6 +176,9 @@
                     color: color,
                     desc: desc
                 },
+                beforeSend: function() {
+                    $("#spinner-div").show();
+                },
                 success: function(data) {
                     if (data.status == 'success') {
                         $('#user-tag-form').trigger("reset");
@@ -196,6 +199,9 @@
                         text: data,
                         confirmButtonText: "{{ __('usertag.create.error.button.text') }}"
                     })
+                },
+                complete: function(data) {
+                    $("#spinner-div").hide(); //Request is complete so hide spinner
                 }
             });
         }

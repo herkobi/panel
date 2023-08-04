@@ -231,7 +231,7 @@
                     const checkboxes = document.getElementsByClassName('userIn');
                     Array.from(checkboxes).forEach(checkbox => {
                         const checkboxValue = parseInt(checkbox
-                        .value); // Checkbox değerini tamsayıya dönüştür
+                            .value); // Checkbox değerini tamsayıya dönüştür
 
                         // Roles içindeki id'leri kontrol et
                         const isChecked = roles.some(role => role.id === checkboxValue);
@@ -303,6 +303,7 @@
         }
 
         function filter() {
+            $("#spinner-div").show();
             $.ajax({
                 type: 'GET',
                 headers: {
@@ -314,12 +315,18 @@
                     statusIds: statusIds
                 },
                 dataType: 'json',
+                beforeSend: function() {
+                    $("#spinner-div").show();
+                },
                 success: function(data) {
                     $('tbody').html(data.table_data);
                     $('#total_records').text(data.total_data);
                 },
                 error: function(data) {
                     console.log(data);
+                },
+                complete: function(data) {
+                    $("#spinner-div").hide(); //Request is complete so hide spinner
                 }
             });
         }

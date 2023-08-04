@@ -135,6 +135,9 @@
                         data: {
                             tag: {{ $usertag->id }}
                         },
+                        beforeSend: function() {
+                            $("#spinner-div").show();
+                        },
                         success: function(data) {
                             if (data.status == 'success') {
                                 Swal.fire({
@@ -155,6 +158,9 @@
                         },
                         error: function(data) {
                             console.log(data.message)
+                        },
+                        complete: function(data) {
+                            $("#spinner-div").hide(); //Request is complete so hide spinner
                         }
                     });
                 }
