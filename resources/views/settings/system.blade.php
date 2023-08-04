@@ -176,7 +176,13 @@
                 },
                 success: function(data) {
                     if (data.status == 'success') {
-                        console.log('Eferim');
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Başarılı!",
+                            text: "Sistem ayarları başarılı bir şekilde güncellendi",
+                        }).then(function() {
+                            window.location = "{{ route('panel.system.settings') }}";
+                        });
                     }
                 },
                 error: function(data) {

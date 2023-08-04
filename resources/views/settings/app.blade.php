@@ -134,7 +134,13 @@
                 },
                 success: function(data) {
                     if (data.status == 'success') {
-                        console.log('Eferim');
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Başarılı!",
+                            text: "Ayarlarınız başarılı bir şekilde güncellendi",
+                        }).then(function() {
+                            window.location = "{{ route('panel.app.settings') }}";
+                        });
                     }
                 },
                 error: function(data) {
