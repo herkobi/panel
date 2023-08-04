@@ -21,10 +21,10 @@ enum UserStatus: int
     public static function title($title): string
     {
         return match ($title) {
-            self::ACTIVE => 'Aktif',
-            self::DRAFT => 'Duraklatılmış',
-            self::PASSIVE => 'Dondurulmuş',
-            self::DELETED => 'Silinmiş',
+            self::ACTIVE => __('enum.userstatus.active'),
+            self::DRAFT => __('enum.userstatus.draft'),
+            self::PASSIVE => __('enum.userstatus.passive'),
+            self::DELETED => __('enum.userstatus.deleted'),
         };
     }
 
@@ -48,13 +48,13 @@ enum UserStatus: int
     {
         switch ($type) {
             case self::ACTIVE->value:
-                return 'Aktif';
+                return __('enum.userstatus.active');
             case self::DRAFT->value:
-                return 'Duraklatılmış';
+                return __('enum.userstatus.draft');
             case self::PASSIVE->value:
-                return 'Dondurulmuş';
+                return __('enum.userstatus.passive');
             case self::DELETED->value:
-                return 'Silinmiş';
+                return __('enum.userstatus.deleted');
             default:
                 throw new \Exception('Invalid type');
         }

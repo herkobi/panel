@@ -112,14 +112,14 @@
         const btn = document.querySelector("#user-tag-destroy-button");
         btn.addEventListener('click', (e) => {
             Swal.fire({
-                title: 'Emin misiniz?',
-                text: "Bu işlem geri alınamaz!",
+                title: "{{ __('usertag.confirm.delete.title') }}",
+                text: "{{ __('usertag.confirm.delete.text') }}",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Evet. Etiketi Sil!',
-                cancelButtonText: 'İptal Et',
+                confirmButtonText: "{{ __('usertag.confirm.delete.button') }}",
+                cancelButtonText: "{{ __('usertag.confirm.cancel.button') }}",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -134,14 +134,19 @@
                         success: function(data) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Başarılı',
-                                text: 'Etiket başarılı bir şekilde silindi',
+                                title: "{{ __('usertag.title.success') }}",
+                                text: "{{ __('usertag.delete.success.message') }}",
                             }, function() {
                                 window.location = "{{ route('panel.user.tags') }}";
                             });
                         },
                         error: function(data) {
                             console.log(data)
+                            Swal.fire({
+                                icon: 'success',
+                                title: "{{ __('usertag.title.success') }}",
+                                text: "{{ __('usertag.delete.error.message') }}",
+                            });
                         }
                     });
                 }
