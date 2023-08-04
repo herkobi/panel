@@ -50,7 +50,7 @@ class UsertagController extends Controller
 
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag->name} isimli etiketi güncelledi");
 
-            return Redirect::route('panel.user.tags')->with('success', __('usertag.update.success'));
+            return Redirect::route('panel.user.tags')->with('success', __('usertag.update.success.message'));
         }
 
         Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$usertag} güncellerken bir sorun ile karşılaştı: Hata içeriği:" .$request->validated()->messages()->all()[0]);
@@ -87,12 +87,13 @@ class UsertagController extends Controller
     public function destroy(Request $request, Usertag $usertag): JsonResponse
     {
         if ($request->ajax()) {
+
             $ip = request()->ip();
             $authuser = auth()->user()->name;
 
-            if ($usertag->users->count() > 0) {
+            if ($usertag->users()->count() > 0) {
                 Log::warning("{$authuser}, {$ip} ip adresi üzerinden, $usertag->name isimli etiketi atanmış kullanıcılar olduğundan silemedi.");
-                return response()->json(['status' => "error"]);
+                return response()->json(['status' => "error", 'message' => __('usertag.delete.error.message.text')]);
             } else {
                 $usertag->delete();
 

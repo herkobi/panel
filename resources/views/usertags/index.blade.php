@@ -7,7 +7,7 @@
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
                     <div class="card-header border-0 bg-white pt-3 pb-3">
                         <div class="d-flex align-items-center justify-content-between w-100 mb-2">
-                            <h4 class="card-title mb-0">{{ __('usertag.form.title') }}</h4>
+                            <h4 class="card-title mb-0">{{ __('usertag.create.form.title') }}</h4>
                         </div>
                     </div>
                     <div class="card-body">
@@ -16,7 +16,7 @@
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
                                     <label for="user-tag-status"
-                                        class="col-md-3 fw-bold align-self-center">{{ __('usertag.form.status.label') }}</label>
+                                        class="col-md-3 fw-bold align-self-center">{{ __('usertag.create.form.status.label') }}</label>
                                     <div id="user-tag-status" class="col-md-9">
                                         @foreach (Status::cases() as $status)
                                             <div class="form-check form-check-inline">
@@ -33,14 +33,14 @@
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-center"
-                                        for="user-tag-name">{{ __('usertag.form.tag.label') }}</label>
+                                        for="user-tag-name">{{ __('usertag.create.form.tag.label') }}</label>
                                     <div class="col-md-9">
                                         <div class="input-group">
                                             <span class="input-group-text rounded-0 shadow-none bg-white">
                                                 <i class="ri-text"></i>
                                             </span>
                                             <input type="text" id="user-tag-name"
-                                                placeholder="{{ __('usertag.form.tag.placeholder') }}"
+                                                placeholder="{{ __('usertag.create.form.tag.placeholder') }}"
                                                 class="form-control border-start-0  rounded-0 shadow-none ps-0 @error('name') is-invalid @enderror"
                                                 name="name" value="{{ old('name') }}" autocomplete="off">
                                             @error('name')
@@ -55,7 +55,7 @@
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-center"
-                                        for="color">{{ __('usertag.form.color.label') }}</label>
+                                        for="color">{{ __('usertag.create.form.color.label') }}</label>
                                     <div class="col-md-9">
                                         <div class="input-group">
                                             <span class="input-group-text rounded-0 shadow-none bg-white py-0">
@@ -75,12 +75,12 @@
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-start"
-                                        for="user-tag-desc">{{ __('usertag.form.desc.label') }}</label>
+                                        for="user-tag-desc">{{ __('usertag.create.form.desc.label') }}</label>
                                     <div class="col-md-9">
                                         <input type="text" id="user-tag-desc"
                                             class="form-control rounded-0 shadow-none form-control-sm" name="desc"
                                             value="{{ old('desc') }}"
-                                            placeholder="{{ __('usertag.form.desc.placeholder') }}">
+                                            placeholder="{{ __('usertag.create.form.desc.placeholder') }}">
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +89,8 @@
                                     <div class="offset-md-3 col-md-5">
                                         <button id="save-user-tag-form" type="button"
                                             class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
-                                                class="ri-add-line"></i> {{ __('usertag.form.submit.text') }}</button>
+                                                class="ri-add-line"></i>
+                                            {{ __('usertag.create.form.submit.text') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -160,8 +161,6 @@
         </div>
     </div>
 @endsection
-
-
 @section('js')
     <script>
         function sendAjaxRequest(urlToSend, status, name, color, desc) {
@@ -183,9 +182,9 @@
                         $("#user-tag-table").load(window.location + " #user-tag-table");
                         Swal.fire({
                             icon: 'success',
-                            title: 'Başarılı',
-                            text: "__('usertag.tag.created')",
-                            confirmButtonText: 'Tamam'
+                            title: "{{ __('usertag.create.success.title') }}",
+                            text: "{{ __('usertag.create.success.message') }}",
+                            confirmButtonText: "{{ __('usertag.create.success.button.text') }}"
                         })
                     }
                 },
@@ -193,9 +192,9 @@
                     console.log(data)
                     Swal.fire({
                         icon: 'error',
-                        title: 'Hata',
+                        title: "{{ __('usertag.create.error.title') }}",
                         text: data,
-                        confirmButtonText: 'Tamam'
+                        confirmButtonText: "{{ __('usertag.create.error.button.text') }}"
                     })
                 }
             });

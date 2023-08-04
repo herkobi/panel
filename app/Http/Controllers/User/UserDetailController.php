@@ -118,7 +118,7 @@ class UserDetailController extends Controller
 
         if ($request->ajax() && $request->has('ids')) {
 
-            $user->usertags()->sync([$request->ids]);
+            $user->usertags()->sync($request->ids);
 
             activity('admin')
                 ->performedOn($user) // kime yapıldı

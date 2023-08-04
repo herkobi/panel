@@ -15,23 +15,54 @@ return [
     'page.title' => 'Kullanıcı Etiketleri',
 
     /* Etiket Ekleme Formu */
-    'form.title' => 'Etiket Ekle',
-    'form.status.label' => 'Durum',
-    'form.tag.label' => 'Etiket',
-    'form.tag.placeholder' => 'Etiket Adı',
-    'form.color.label' => 'Renk',
-    'form.desc.label' => 'Açıklama',
-    'form.desc.placeholder' => 'Etiket ile ilgili kısa bilgi',
-    'form.submit.text' => 'Kaydet',
+    'create.form.title' => 'Etiket Ekle',
+    'create.form.status.label' => 'Durum',
+    'create.form.tag.label' => 'Etiket',
+    'create.form.tag.placeholder' => 'Etiket Adı',
+    'create.form.color.label' => 'Renk',
+    'create.form.desc.label' => 'Açıklama',
+    'create.form.desc.placeholder' => 'Etiket ile ilgili kısa bilgi',
+    'create.form.submit.text' => 'Kaydet',
 
     /* Etiket Ekleme Form Sonucu */
-    
+    'create.success.title' => 'Başarılı',
+    'create.success.message' => 'Etiket başarılı bir şekilde oluşturuldu',
+    'create.success.button.text' => 'Tamam',
+    'create.error.title' => 'Hata!',
+    'create.error.button.text' => 'Tamam',
+
+    /* Etiket Güncelleme Formu */
+    'update.form.title' => 'Etiket Düzenle',
+    'update.form.status.label' => 'Durum',
+    'update.form.tag.label' => 'Etiket',
+    'update.form.tag.placeholder' => 'Etiket Adı',
+    'update.form.color.label' => 'Renk',
+    'update.form.desc.label' => 'Açıklama',
+    'update.form.desc.placeholder' => 'Etiket ile ilgili kısa bilgi',
+    'update.form.submit.button.text' => 'Güncelle',
+    'update.form.delete.button.text' => 'Etiketi Sil',
+
+    /* Etiket Güncelleme Formu Sonucu */
+    'update.success.message' => 'Etiket başarılı bir şekilde güncellendi',
+
     /* Kayıtlı Etiketler Tablosu */
+    'tags.title' => 'Kayıtlı Etiketler',
+    'table.status' => 'Durum',
+    'table.tag' => 'Etiket Adı',
+    'table.color' => 'Renk',
+    'table.desc' => 'Açıklama',
+    'table.process' => 'İşlemler',
+    'table.color.text' => 'renk',
+    'table.edit.text' => 'Düzenle',
+    'table.users.text' => 'Kullanıcılar',
 
     /* Etiket Silme Onay Modalı */
-    'deleted' => 'Etiket başarılı bir şekilde silindi',
-    'confirm.delete.title' => 'Emin misiniz?',
-    'confirm.delete.text' => 'Bu işlem geri alınamaz.',
-    'confirm.delete.button' => 'Evet, Etiketi Sil',
-    'confirm.cancel.button' => 'İptal Et',
+    'delete.confirm.title' => 'Emin misiniz?',
+    'delete.confirm.text' => 'Bu işlem geri alınamaz.',
+    'delete.confirm.delete.button.text' => 'Evet, Etiketi Sil',
+    'delete.confirm.cancel.button.text' => 'İptal Et',
+    'delete.success.title.text' => 'Başarılı',
+    'delete.success.message.text' => 'Etiket başarılı bir şekilde silindi',
+    'delete.error.title.text' => 'Hata',
+    'delete.error.message.text' => 'Etikete ait kullanıcılar bulunmaktadır. Önce onları kaldırınız.',
 ];

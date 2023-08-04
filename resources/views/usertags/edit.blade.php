@@ -1,19 +1,20 @@
 @extends('layouts.app')
 @section('content')
-    @include('layouts.partials.page-title', ['title' => 'Kullanıcı Kategorileri'])
+    @include('layouts.partials.page-title', ['title' => __('usertag.page.title')])
     <div class="page-content position-relative activity-page mb-4">
         <div class="row">
             <div class="col-md-4">
                 <div class="card rounded-0 shadow-sm border-0 mb-3">
                     <div class="card-header border-0 bg-white pt-3 pb-3">
-                        <h4 class="card-title mb-0">Etiket Ekle</h4>
+                        <h4 class="card-title mb-0">{{ __('usertag.update.form.title') }}</h4>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('panel.user.tag.update', $usertag->id) }}" method="post">
                             @csrf
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
-                                    <label for="ser-tag-status" class="col-md-3 fw-bold align-self-center">Durum</label>
+                                    <label for="ser-tag-status"
+                                        class="col-md-3 fw-bold align-self-center">{{ __('usertag.update.form.status.label') }}</label>
                                     <div class="col-md-9">
                                         @foreach (Status::cases() as $type)
                                             <div class="form-check form-check-inline">
@@ -31,13 +32,14 @@
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-center"
-                                        for="tag">Etiket</label>
+                                        for="tag">{{ __('usertag.update.form.tag.label') }}</label>
                                     <div class="col-md-9">
                                         <div class="input-group">
                                             <span class="input-group-text rounded-0 shadow-none bg-white">
                                                 <i class="ri-text"></i>
                                             </span>
-                                            <input type="text" id="tag" placeholder="Etiket"
+                                            <input type="text" id="tag"
+                                                placeholder="{{ __('usertag.update.form.tag.placeholder') }}"
                                                 class="form-control border-start-0  rounded-0 shadow-none ps-0 @error('name') is-invalid @enderror"
                                                 name="name" value="{{ $usertag->name ? $usertag->name : old('name') }}"
                                                 required>
@@ -53,7 +55,7 @@
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-center"
-                                        for="color">Renk</label>
+                                        for="color">{{ __('usertag.update.form.color.label') }}</label>
                                     <div class="col-md-9">
                                         <div class="input-group">
                                             <span class="input-group-text rounded-0 shadow-none bg-white py-0">
@@ -74,12 +76,12 @@
                             <div class="mb-3 border-bottom pb-3">
                                 <div class="row">
                                     <label class="form-label col-md-3 fw-semibold mb-0 align-self-start"
-                                        for="user-tag-desc">Açıklama</label>
+                                        for="user-tag-desc">{{ __('usertag.update.form.desc.label') }}</label>
                                     <div class="col-md-9">
                                         <input type="text" class="form-control rounded-0 shadow-none form-control-sm"
                                             id="user-tag-desc" name="desc"
                                             value="{{ $usertag->desc ? $usertag->desc : old('desc') }}"
-                                            placeholder="Etiketle İlgili Kısa Açıklama">
+                                            placeholder="{{ __('usertag.update.form.desc.placeholder') }}">
                                     </div>
                                 </div>
                             </div>
@@ -89,11 +91,13 @@
                                         <div class="d-flex align-items-center justify-content-between w-100">
                                             <button type="submit"
                                                 class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
-                                                    class="ri-add-line"></i> Güncelle</button>
+                                                    class="ri-add-line"></i>
+                                                {{ __('usertag.update.form.submit.button.text') }}</button>
                                             @hasrole('Super Admin')
                                                 <button type="button" id="user-tag-destroy-button"
                                                     class="btn btn-danger btn-sm rounded-0 shadow-none text-white"><i
-                                                        class="ri-delete-bin-3-line"></i> Etiketi Sil</button>
+                                                        class="ri-delete-bin-3-line"></i>
+                                                    {{ __('usertag.update.form.delete.button.text') }}</button>
                                             @endhasrole
                                         </div>
                                     </div>
@@ -112,14 +116,14 @@
         const btn = document.querySelector("#user-tag-destroy-button");
         btn.addEventListener('click', (e) => {
             Swal.fire({
-                title: "{{ __('usertag.confirm.delete.title') }}",
-                text: "{{ __('usertag.confirm.delete.text') }}",
+                title: "{{ __('usertag.delete.confirm.title') }}",
+                text: "{{ __('usertag.delete.confirm.text') }}",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: "{{ __('usertag.confirm.delete.button') }}",
-                cancelButtonText: "{{ __('usertag.confirm.cancel.button') }}",
+                confirmButtonText: "{{ __('usertag.delete.confirm.delete.button.text') }}",
+                cancelButtonText: "{{ __('usertag.delete.confirm.cancel.button.text') }}",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -132,21 +136,25 @@
                             tag: {{ $usertag->id }}
                         },
                         success: function(data) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: "{{ __('usertag.title.success') }}",
-                                text: "{{ __('usertag.delete.success.message') }}",
-                            }, function() {
-                                window.location = "{{ route('panel.user.tags') }}";
-                            });
+                            if (data.status == 'success') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: "{{ __('usertag.delete.success.title.text') }}",
+                                    text: "{{ __('usertag.delete.success.message.text') }}",
+                                }).then(function() {
+                                    window.location = "{{ route('panel.user.tags') }}";
+                                });
+                            };
+                            if (data.status == 'error') {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: "{{ __('usertag.delete.error.title.text') }}",
+                                    text: data.message,
+                                });
+                            };
                         },
                         error: function(data) {
-                            console.log(data)
-                            Swal.fire({
-                                icon: 'success',
-                                title: "{{ __('usertag.title.success') }}",
-                                text: "{{ __('usertag.delete.error.message') }}",
-                            });
+                            console.log(data.message)
                         }
                     });
                 }
