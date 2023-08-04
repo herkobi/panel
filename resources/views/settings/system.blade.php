@@ -1,15 +1,14 @@
 @extends('layouts.app')
 @section('content')
-    @include('layouts.partials.page-title', ['title' => 'Sistem Ayarları'])
+    @include('layouts.partials.page-title', ['title' => __('systemsettings.page.title')])
     <div class="page-content position-relative mb-4">
         <div class="page-content position-relative mb-4">
             <div class="row">
                 <div class="col-md-6">
                     <div class="card rounded-0 shadow-sm border-0 mb-3">
                         <div class="card-header border-0 bg-white pt-3 pb-3">
-                            <h4 class="card-title mb-0">Sistem Ayarları</h4>
-                            <small>Sisteme özgü ayarlardır. Eğer kullanıcı kendi ayarlarında bir değişiklik yapmazsa bu
-                                ayarlar geçerli olur.</small>
+                            <h4 class="card-title mb-0">{{ __('systemsettings.card.title') }}</h4>
+                            <small>{{ __('systemsettings.card.desc') }}</small>
                         </div>
                         <div class="card-body">
                             <form id="system-settings-form" action="" method="post">
@@ -17,12 +16,12 @@
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
                                         <label for="system-user-role-settings"
-                                            class="col-md-4 fw-bold align-self-center">Genel
-                                            Kullanıcı Yetkisi</label>
+                                            class="col-md-4 fw-bold align-self-center">{{ __('systemsettings.defaul.user.role.label') }}</label>
                                         <div id="system-user-role-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none" name="userrole"
                                                 id="system-user-role">
-                                                <option>Seçiniz</option>
+                                                <option>{{ __('systemsettings.default.user.role.selectbox.placeholder') }}
+                                                </option>
                                                 @foreach ($user_roles as $role)
                                                     <option value="{{ $role->id }}"
                                                         {{ $role->id == $default_settings['userrole'] ? 'selected' : '' }}>
@@ -35,11 +34,12 @@
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
                                         <label for="system-admin-role-settings"
-                                            class="col-md-4 fw-bold align-self-center">Genel Yönetici Yetkisi</label>
+                                            class="col-md-4 fw-bold align-self-center">{{ __('systemsettings.default.admin.role.label') }}</label>
                                         <div id="system-admin-role-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none"
                                                 name="adminrole" id="system-admin-role">
-                                                <option>Seçiniz</option>
+                                                <option>{{ __('systemsettings.default.admin.role.selectbox.placeholder') }}
+                                                </option>
                                                 @foreach ($admin_roles as $role)
                                                     <option value="{{ $role->id }}"
                                                         {{ $role->id == $default_settings['adminrole'] ? 'selected' : '' }}>
@@ -52,12 +52,12 @@
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
                                         <label for="system-language-settings"
-                                            class="col-md-4 fw-bold align-self-center">Sistem
-                                            Dili</label>
+                                            class="col-md-4 fw-bold align-self-center">{{ __('systemsettings.default.language.label') }}</label>
                                         <div id="system-language-settings" class="col-md-8">
                                             <select class="form-select form-select-sm rounded-0 shadow-none" name="language"
                                                 id="system-language">
-                                                <option>Seçiniz</option>
+                                                <option>{{ __('systemsettings.default.language.selectbox.placeholder') }}
+                                                </option>
                                                 @foreach (config('app.available_locales') as $key => $locale)
                                                     <option value="{{ $locale }}"
                                                         {{ $locale == $default_settings['language'] ? 'selected' : '' }}>
@@ -70,13 +70,14 @@
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
                                         <label for="system-timezone-settings"
-                                            class="col-md-4 fw-bold align-self-start">Zaman
-                                            Dilimi</label>
+                                            class="col-md-4 fw-bold align-self-start">{{ __('systemsettings.default.timezone.label') }}</label>
                                         <div id="system-timezone-settings" class="col-md-8">
                                             <select id="system-timezone" name="timezone"
                                                 class="form-select form-select-sm rounded-0 shadow-none"
-                                                data-control="select2" data-placeholder="Seçiniz..">
-                                                <option></option>
+                                                data-control="select2"
+                                                data-placeholder="{{ __('systemsettings.default.timezone.selectbox.placeholder') }}">
+                                                <option>{{ __('systemsettings.default.timezone.selectbox.placeholderc') }}
+                                                </option>
                                                 @foreach (Helper::getTimeZoneList() as $timezone => $timezone_gmt_diff)
                                                     <option value="{{ $timezone }}"
                                                         {{ $timezone === old('timezone', $default_settings['timezone']) ? 'selected' : '' }}>
@@ -84,15 +85,14 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <small>Kendi zaman diliminizde yer alan bir şehir ya da bir UTC zaman dilimi
-                                                seçin.</small>
+                                            <small>{{ __('systemsettings.default.timezone.desc') }}</small>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
-                                        <label for="system-date-settings" class="col-md-4 fw-bold align-self-start">Tarih
-                                            Formatı</label>
+                                        <label for="system-date-settings"
+                                            class="col-md-4 fw-bold align-self-start">{{ __('systemsettings.date.format.label') }}</label>
                                         <div id="system-date-settings" class="col-md-8">
                                             <div class="list-group list-group-flush">
                                                 @foreach (Helper::dateformats() as $format)
@@ -115,8 +115,8 @@
                                 </div>
                                 <div class="mb-3 border-bottom pb-3">
                                     <div class="row">
-                                        <label for="system-time-settings" class="col-md-4 fw-bold align-self-start">Saat
-                                            Formatı</label>
+                                        <label for="system-time-settings"
+                                            class="col-md-4 fw-bold align-self-start">{{ __('systemsettings.time.format.label') }}</label>
                                         <div id="system-time-settings" class="col-md-8">
                                             <div class="list-group list-group-flush">
                                                 @foreach (Helper::timeformats() as $format)
@@ -142,7 +142,8 @@
                                         <div class="offset-md-4 col-md-5">
                                             <button id="save-system-settings-form" type="button"
                                                 class="btn add-btn btn-primary btn-sm rounded-0 shadow-none"><i
-                                                    class="ri-add-line"></i> Kaydet</button>
+                                                    class="ri-add-line"></i>
+                                                {{ __('systemsettings.submit.button.text') }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -174,6 +175,9 @@
                     date: date,
                     time: time
                 },
+                beforeSend: function() {
+                    $("#spinner-div").show();
+                },
                 success: function(data) {
                     if (data.status == 'success') {
                         Swal.fire({
@@ -187,6 +191,9 @@
                 },
                 error: function(data) {
                     console.log('Error:', data);
+                },
+                complete: function(data) {
+                    $("#spinner-div").hide(); //Request is complete so hide spinner
                 }
             });
         }

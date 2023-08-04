@@ -7,7 +7,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Aşağıdaki metinler kullanıcı etiket sayfalarında yapılan işlemler sırasında
-    | kullanıcılara gösterilebilecek mesajlardır. Bu metinleri uygulamanızın
+    | kullanıcılara gösterilen mesajlardır. Bu metinleri uygulamanızın
     | gereksinimlerine göre düzenlemekte özgürsünüz.
     |
     */
