@@ -37,15 +37,15 @@
     @endhasrole
     @hasrole(['Super Admin', 'Admin'])
         <li class="menu-header">{{ __('admin-navigation.settings') }}</li>
-        @can('settings-list')
-            <li class="menu-item {{ request()->routeIs('panel.app.settings') ? 'active' : '' }}">
-                <a href="{{ route('panel.app.settings') }}" title="{{ __('admin-navigation.general-settings') }}"
+        @if (Helper::checkUserSettings())
+            <li class="menu-item {{ request()->routeIs('panel.user.settings') ? 'active' : '' }}">
+                <a href="{{ route('panel.user.settings') }}" title="{{ __('admin-navigation.general-settings') }}"
                     class="d-flex align-items-center justify-content-start">
                     <i class="ri-settings-line"></i> <span
                         class="align-middle">{{ __('admin-navigation.general-settings') }}</span>
                 </a>
             </li>
-        @endcan
+        @endif
         @hasrole('Super Admin')
             <li class="menu-item {{ request()->routeIs('panel.system.settings') ? 'active' : '' }}">
                 <a href="{{ route('panel.system.settings') }}" title="{{ __('admin-navigation.system-settings') }}"

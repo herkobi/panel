@@ -6,13 +6,15 @@
         </a>
     </li>
     <li class="menu-header">{{ __('user-navigation.settings') }}</li>
-    <li class="menu-item {{ request()->routeIs('panel.settings') ? 'active' : '' }}">
-        <a href="{{ route('panel.app.settings') }}" title="{{ __('user-navigation.general-settings') }}"
-            class="d-flex align-items-center justify-content-start">
-            <i class="ri-settings-line"></i> <span
-                class="align-middle">{{ __('user-navigation.general-settings') }}</span>
-        </a>
-    </li>
+    @if (!Helper::checkUserSettings())
+        <li class="menu-item {{ request()->routeIs('panel.settings') ? 'active' : '' }}">
+            <a href="{{ route('panel.app.settings') }}" title="{{ __('user-navigation.general-settings') }}"
+                class="d-flex align-items-center justify-content-start">
+                <i class="ri-settings-line"></i> <span
+                    class="align-middle">{{ __('user-navigation.general-settings') }}</span>
+            </a>
+        </li>
+    @endif
     <li class="menu-item">
         <a href="" title="{{ __('user-navigation.user-app-logs') }}"
             class="d-flex align-items-center justify-content-start">

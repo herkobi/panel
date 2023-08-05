@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use App\Models\Settings;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -64,6 +65,26 @@ class Helper
         $user_settings = json_decode(Auth::user()->settings, true);
         $user_timezone = $user_settings['timezone'];
         return optional($user_timezone ?? config('app.timezone'));
+    }
+
+    /**
+     * User Settings is active
+     *
+     * Check usersettings is active
+     */
+    static public function checkUserSettings()
+    {
+
+        /**
+         * Sistem ayarlarındaki kullanıcı ayarları kısmı değeri alınıyor.
+         * Bu yapı AppServiceProviders içinde tanımlanmıştır.
+         */
+        $usersettings = config('panel.usersettings');
+
+        if($usersettings == 1)
+        {
+            return true;
+        }
     }
 
     /**

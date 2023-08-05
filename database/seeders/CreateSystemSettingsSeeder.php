@@ -14,6 +14,7 @@ class CreateSystemSettingsSeeder extends Seeder
     public function run(): void
     {
         $default_values = [
+            'usersettings' => '0',
             'userrole' => '3',
             'adminrole' => '2',
             'language' => 'tr',

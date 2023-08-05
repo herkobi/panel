@@ -139,7 +139,7 @@
                             title: "Başarılı!",
                             text: "Ayarlarınız başarılı bir şekilde güncellendi",
                         }).then(function() {
-                            window.location = "{{ route('panel.app.settings') }}";
+                            window.location = "{{ route('panel.user.settings') }}";
                         });
                     }
                 },
@@ -173,7 +173,7 @@
                 date: date,
                 time: time
             }
-            sendAjaxRequest('{{ route('panel.system.update.user.settings') }}', settings);
+            sendAjaxRequest('{{ route('panel.update.user.settings') }}', settings);
         });
     </script>
 @endsection

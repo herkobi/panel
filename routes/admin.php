@@ -95,10 +95,10 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
         });
 
         Route::controller(SettingController::class)->group(function () {
-            Route::get('/settings/general', 'index')->name('app.settings');
+            Route::get('/settings/general', 'index')->name('user.settings');
+            Route::post('/settings/user', 'user')->name('update.user.settings');
             Route::get('/settings/system', 'system')->name('system.settings');
-            Route::post('/settings/update', 'update')->name('system.update.settings');
-            Route::post('/settings/user', 'user')->name('system.update.user.settings');
+            Route::post('/settings/update', 'update')->name('update.system.settings');
         });
 
         Route::controller(RoleController::class)->group(function () {
