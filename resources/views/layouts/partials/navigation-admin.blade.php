@@ -38,8 +38,8 @@
     @hasrole(['Super Admin', 'Admin'])
         <li class="menu-header">{{ __('admin-navigation.settings') }}</li>
         @if (Helper::checkUserSettings())
-            <li class="menu-item {{ request()->routeIs('panel.user.settings') ? 'active' : '' }}">
-                <a href="{{ route('panel.user.settings') }}" title="{{ __('admin-navigation.general-settings') }}"
+            <li class="menu-item {{ request()->routeIs('panel.general.user.settings') ? 'active' : '' }}">
+                <a href="{{ route('panel.general.user.settings') }}" title="{{ __('admin-navigation.general-settings') }}"
                     class="d-flex align-items-center justify-content-start">
                     <i class="ri-settings-line"></i> <span
                         class="align-middle">{{ __('admin-navigation.general-settings') }}</span>

@@ -139,7 +139,7 @@
                             title: "Başarılı!",
                             text: "Ayarlarınız başarılı bir şekilde güncellendi",
                         }).then(function() {
-                            window.location = "{{ route('panel.user.settings') }}";
+                            window.location = "{{ route('panel.general.user.settings') }}";
                         });
                     }
                 },
