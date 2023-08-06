@@ -30,9 +30,6 @@ class UsertagController extends Controller
     public function update(UsertagUpdateRequest $request, Usertag $usertag): RedirectResponse
     {
 
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
-
         if ($request->validated()) {
 
             $usertag->status = $request->status;
@@ -46,14 +43,14 @@ class UsertagController extends Controller
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
                 ->withProperties(['title' => 'Kullanıcı Etiketi Güncelleme']) // işlem başlığı
-                ->log($authuser. ', '.$usertag->name. ' isimli etiketi güncelledi'); // açıklama
+                ->log( __("usertag.activity.update.success", ['authuser' => auth()->user()->name, 'name' => $usertag->name])); // açıklama
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag->name} isimli etiketi güncelledi");
+            Log::info( __("usertag.log.update.success", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $usertag->name]) );
 
             return Redirect::route('panel.user.tags')->with('success', __('usertag.update.success.message'));
         }
 
-        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$usertag} güncellerken bir sorun ile karşılaştı: Hata içeriği:" .$request->validated()->messages()->all()[0]);
+        Log::warning( __("usertag.log.update.error", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $usertag->name, 'error' => $request->validated()->messages()->all()[0]]) );
 
         return Redirect::back()->with('error', $request->validated()->messages()->all()[0])->withInput();
     }
@@ -61,27 +58,28 @@ class UsertagController extends Controller
     public function store(UsertagCreateRequest $request): JsonResponse
     {
 
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
+        if ($request->ajax()) {
+            if($request->validated()) {
+                $usertag = Usertag::create($request->all());
 
-        if ($request->ajax() && $request->validated()) {
-            $usertag = Usertag::create($request->all());
+                activity('admin')
+                    ->performedOn($usertag) // kime yapıldı
+                    ->causedBy(auth()->user()->id) // kim yaptı
+                    ->event('create') // ne yaptı
+                    ->withProperties(['title' => 'Yeni Kullanıcı Etiketi']) // işlem başlığı
+                    ->log( __("usertag.activity.create.success", ['authuser' => auth()->user()->name, 'name' => $usertag->name])); // açıklama
 
-            activity('admin')
-                ->performedOn($usertag) // kime yapıldı
-                ->causedBy(auth()->user()->id) // kim yaptı
-                ->event('create') // ne yaptı
-                ->withProperties(['title' => 'Yeni Kullanıcı Etiketi']) // işlem başlığı
-                ->log($authuser. ', '.$usertag->name. ' isimli yeni etiket oluşturdu'); // açıklama
+                Log::info( __("usertag.log.create.success", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $usertag->name]) );
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag->name} isimli yeni etiket oluşturdu");
-
-            return response()->json(['status' => "success"]);
+                return response()->json(['status' => "success"]);
+            }
+            
+            Log::warning( __("usertag.log.validation.error", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $request->name, 'error' => $request->validated()->messages()->all()[0]]) );
+            return response()->json(["status" => "error", "message" => $request->validated()->messages()->all()[0]]);
         }
 
-        Log::info("{$authuser}, {$ip} ip adresi üzerinden, etiket oluştururken hata oluştu");
-
-        return response()->json(['status' => "error"]);
+        Log::warning( __("usertag.log.critical.error") );
+        return response()->json(['status' => "error", "message" => __("usertag.log.critical.error")]);
     }
 
     public function destroy(Request $request, Usertag $usertag): JsonResponse

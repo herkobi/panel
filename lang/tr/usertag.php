@@ -65,4 +65,17 @@ return [
     'delete.success.message.text' => 'Etiket başarılı bir şekilde silindi',
     'delete.error.title.text' => 'Hata',
     'delete.error.message.text' => 'Etikete ait kullanıcılar bulunmaktadır. Önce onları kaldırınız.',
+
+    /* Log Kayıtları */
+    'activity.create.success' => ':authuser :name isimli yeni bir kullanıcı etiketi oluşturdu',
+    'log.create.success' => ':authuser, :ip ip adresi üzerinden, :name isimli yeni bir kullanıcı etiketi oluşturdu',
+    'log.create.error' => ':name, :ip adresi üzerinden, :tag isimli yeni bir kullanıcı etiketi oluştururken bir sorun ile karşılaştı: Hata içeriği :error',
+
+    'activity.update.success' => ':authuser :name isimli etiketi güncelledi',
+    'log.update.success' => ':authuser, :ip ip adresi üzerinden, :name isimli etiketi güncelledi',
+    'log.update.error' => ':name, :ip adresi üzerinden, :tag isimli etiketi güncellerken bir sorun ile karşılaştı: Hata içeriği :error',
+
+    'activity.delete.success' => ':authuser :name isimli etiketi sildi',
+    'log.delete.success' => ':authuser, :ip ip adresi üzerinden, :name isimli etiketi sildi',
+    'log.delete.error' => ':name, :ip adresi üzerinden, :tag isimli etiketi silerken bir sorun ile karşılaştı: Hata içeriği :error',
 ];
