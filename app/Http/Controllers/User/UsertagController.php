@@ -73,13 +73,13 @@ class UsertagController extends Controller
 
                 return response()->json(['status' => "success"]);
             }
-            
-            Log::warning( __("usertag.log.validation.error", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $request->name, 'error' => $request->validated()->messages()->all()[0]]) );
+
+            Log::warning( __("usertag.log.create.validation.error", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $request->name, 'error' => $request->validated()->messages()->all()[0]]) );
             return response()->json(["status" => "error", "message" => $request->validated()->messages()->all()[0]]);
         }
 
-        Log::warning( __("usertag.log.critical.error") );
-        return response()->json(['status' => "error", "message" => __("usertag.log.critical.error")]);
+        Log::warning( __("global.critical.error") );
+        return response()->json(['status' => "error", "message" => __("global.critical.error")]);
     }
 
     public function destroy(Request $request, Usertag $usertag): JsonResponse

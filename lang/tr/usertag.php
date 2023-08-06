@@ -69,7 +69,7 @@ return [
     /* Log Kayıtları */
     'activity.create.success' => ':authuser :name isimli yeni bir kullanıcı etiketi oluşturdu',
     'log.create.success' => ':authuser, :ip ip adresi üzerinden, :name isimli yeni bir kullanıcı etiketi oluşturdu',
-    'log.create.error' => ':name, :ip adresi üzerinden, :tag isimli yeni bir kullanıcı etiketi oluştururken bir sorun ile karşılaştı: Hata içeriği :error',
+    'log.create.validation.error' => ':name, :ip adresi üzerinden, :tag isimli yeni bir kullanıcı etiketi oluştururken bir sorun ile karşılaştı: Hata içeriği :error',
 
     'activity.update.success' => ':authuser :name isimli etiketi güncelledi',
     'log.update.success' => ':authuser, :ip ip adresi üzerinden, :name isimli etiketi güncelledi',
