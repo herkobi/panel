@@ -96,7 +96,8 @@
                 <i class="ri-profile-line"></i> <span class="align-middle">{{ __('admin-navigation.user-logs') }}</span>
             </a>
             <ul id="user-logs" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                <li class="menu-item"><a href="" title="{{ __('admin-navigation.user-app-logs') }}"
+                <li class="menu-item"><a href="{{ route('panel.user.activity') }}"
+                        title="{{ __('admin-navigation.user-app-logs') }}"
                         class="menu-link">{{ __('admin-navigation.user-app-logs') }}</a>
                 </li>
                 <li class="menu-item"><a href="" title="{{ __('admin-navigation.user-auth-logs') }}"
@@ -113,7 +114,8 @@
                     class="align-middle">{{ __('admin-navigation.admin-logs') }}</span>
             </a>
             <ul id="admin-logs" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                <li class="menu-item"><a href="" title="{{ __('admin-navigation.admin-app-logs') }}"
+                <li class="menu-item"><a href="{{ route('panel.admin.activity') }}"
+                        title="{{ __('admin-navigation.admin-app-logs') }}"
                         class="menu-link">{{ __('admin-navigation.admin-app-logs') }}</a></li>
                 <li class="menu-item"><a href="" title="{{ __('admin-navigation.admin-auth-logs') }}"
                         class="menu-link">{{ __('admin-navigation.admin-auth-logs') }}</a></li>

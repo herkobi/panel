@@ -527,7 +527,7 @@ div:where(.swal2-container) button:where(.swal2-styled) {
 
 .vertical-timeline-element {
     position: relative;
-    margin: 0 0 1rem;
+    margin: 0;
 }
 
 .vertical-timeline--animate .vertical-timeline-element-icon.bounce-in {

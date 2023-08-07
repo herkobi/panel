@@ -15,7 +15,11 @@ use Illuminate\View\View;
 
 class SettingController extends Controller
 {
-
+    /**
+     * Kullanıcı ayarları
+     *
+     * Eğer aktifse görünür..
+     */
     public function index()
     {
         if(!Helper::checkUserSettings()) {
@@ -29,7 +33,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Kullanıcı kendi ayarlarını güncelliyor
+     * Kullanıcı bazlı ayarları güncelleme
      */
     public function user(Request $request): JsonResponse
     {
@@ -51,6 +55,9 @@ class SettingController extends Controller
         }
     }
 
+    /**
+     * Sistem Ayarları
+     */
     public function system(): View
     {
         $default_settings = Settings::pluck('value', 'key')->toArray();
@@ -63,6 +70,9 @@ class SettingController extends Controller
         ]);
     }
 
+    /**
+     * Sistem ayarları güncelleme
+     */
     public function update(Request $request): JsonResponse
     {
         if ($request->ajax()) {

@@ -73,9 +73,9 @@ return [
 
     'activity.update.success' => ':authuser :name isimli etiketi güncelledi',
     'log.update.success' => ':authuser, :ip ip adresi üzerinden, :name isimli etiketi güncelledi',
-    'log.update.error' => ':name, :ip adresi üzerinden, :tag isimli etiketi güncellerken bir sorun ile karşılaştı: Hata içeriği :error',
+    'log.update.validation.error' => ':name, :ip adresi üzerinden, :tag isimli etiketi güncellerken bir sorun ile karşılaştı: Hata içeriği :error',
 
     'activity.delete.success' => ':authuser :name isimli etiketi sildi',
     'log.delete.success' => ':authuser, :ip ip adresi üzerinden, :name isimli etiketi sildi',
-    'log.delete.error' => ':name, :ip adresi üzerinden, :tag isimli etiketi silerken bir sorun ile karşılaştı: Hata içeriği :error',
+    'log.delete.confirm.error' => ':name, :ip adresi üzerinden, :tag isimli etiketi silerken etikete ait kullanıcılar olduğu için hata aldı',
 ];

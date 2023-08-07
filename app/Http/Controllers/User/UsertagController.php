@@ -50,7 +50,7 @@ class UsertagController extends Controller
             return Redirect::route('panel.user.tags')->with('success', __('usertag.update.success.message'));
         }
 
-        Log::warning( __("usertag.log.update.error", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $usertag->name, 'error' => $request->validated()->messages()->all()[0]]) );
+        Log::warning( __("usertag.log.update.validation.error", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $usertag->name, 'error' => $request->validated()->messages()->all()[0]]) );
 
         return Redirect::back()->with('error', $request->validated()->messages()->all()[0])->withInput();
     }
@@ -90,9 +90,12 @@ class UsertagController extends Controller
             $authuser = auth()->user()->name;
 
             if ($usertag->users()->count() > 0) {
-                Log::warning("{$authuser}, {$ip} ip adresi üzerinden, $usertag->name isimli etiketi atanmış kullanıcılar olduğundan silemedi.");
-                return response()->json(['status' => "error", 'message' => __('usertag.delete.error.message.text')]);
+
+                Log::warning( __("usertag.log.delete.confirm.error", ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $request->name]) );
+                return response()->json(["status" => "error", "message" => "__('usertag.log.delete.confirm.error', ['authuser' => auth()->user()->name, 'ip' => request()->ip(), 'name' => $request->name])"]);
+
             } else {
+
                 $usertag->delete();
 
                 activity('admin')
@@ -100,13 +103,16 @@ class UsertagController extends Controller
                     ->causedBy(auth()->user()->id) // kim yaptı
                     ->event('delete') // ne yaptı
                     ->withProperties(['title' => 'Kullanıcı Etiketi Silme']) // işlem başlığı
-                    ->log($authuser. ', '.$usertag->name. ' isimli etiketi sildi'); // açıklama
+                    ->log(__("activity.delete.success", ['authuser' => auth()->user()->name, 'name' => $usertag->name])); // açıklama
 
-                Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$usertag->name} isimli etiketi sildi");
+                Log::info( __("activity.delete.success", ['authuser' => auth()->user()->name, 'name' => $usertag->name]) );
 
                 return response()->json(['status' => "success"]);
             }
         }
+
+        Log::warning( __("global.critical.error") );
+        return response()->json(['status' => "error", "message" => __("global.critical.error")]);
 
     }
 }

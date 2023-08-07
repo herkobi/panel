@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Activity\AdminActivity;
+use App\Http\Controllers\Activity\UserActivity;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\TwoFactorAuthenticationController;
@@ -128,6 +130,14 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
             Route::get('/permission-group/{permissiongroup}', 'edit')->name('permission.group.edit');
             Route::post('/permission-group/edit/{permissiongroup}', 'update')->name('permission.group.update');
             Route::post('/permission-group/destroy/{permissiongroup}', 'destroy')->name('permission.group.destroy');
+        });
+
+        Route::controller(AdminActivity::class)->group(function () {
+            Route::get('/activity/admin', 'index')->name('admin.activity');
+        });
+
+        Route::controller(UserActivity::class)->group(function () {
+            Route::get('/activity/user', 'index')->name('user.activity');
         });
 
         Route::redirect('/panel/log-viewer', '/panel/log-viewer')->name('system-logs');

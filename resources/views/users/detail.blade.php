@@ -209,8 +209,7 @@
                         @endif
                         <div class="mb-2 border-bottom pb-2">
                             <button type="button" class="btn text p-0" data-bs-toggle="modal"
-                                data-bs-target="#changeEmail">E-posta
-                                Adresini Değiştir</button>
+                                data-bs-target="#changeEmail">E-posta Adresini Değiştir</button>
                         </div>
                         <div class="mb-2 border-bottom pb-2">
                             <button type="button" class="btn text p-0" value="{{ $user->id }}"
