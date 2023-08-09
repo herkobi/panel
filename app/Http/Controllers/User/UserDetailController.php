@@ -75,36 +75,55 @@ class UserDetailController extends Controller
      */
     public function status(Request $request, User $user)
     {
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
-
-        if ($request->ajax() && $request->has('ids')) {
-            foreach (UserStatus::cases() as $userStatus) {
-                if ($userStatus->value == $request->ids) {
-                    $status = $userStatus->value;
+        if ($request->ajax()) {
+            if($request->has('ids')) {
+                foreach (UserStatus::cases() as $userStatus) {
+                    if ($userStatus->value == $request->ids) {
+                        $status = $userStatus->value;
+                    }
                 }
+
+                $user->status = $status;
+                $user->save();
+
+                activity('admin')
+                    ->performedOn($user) // kime yapıldı
+                    ->causedBy(auth()->user()->id) // kim yaptı
+                    ->event('update') // ne yaptı
+                    ->withProperties(['title' => 'Kullanıcı Durumu Güncelleme']) // işlem başlığı
+                    ->log( __('userdetail.update.user.status.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
+
+                Log::info(
+                    __('userdetail.log.update.user.status.success', [
+                        'authuser' => auth()->user()->name,
+                        'ip' => request()->ip(),
+                        'name' => $user->name
+                    ])
+                );
+
+                return response()->json(['status' => 'success']);
             }
 
-            $user->status = $status;
-            $user->save();
+            Log::warning(
+                __('userdetail.log.update.user.status.error', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $user->name
+                ])
+            );
 
-            $statusname = UserStatus::getTitle($status);
-
-            activity('admin')
-                ->performedOn($user) // kime yapıldı
-                ->causedBy(auth()->user()->id) // kim yaptı
-                ->event('update') // ne yaptı
-                ->withProperties(['title' => 'Kullanıcı Durumu Güncelleme']) // işlem başlığı
-                ->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi'); // açıklama
-
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
-
-            return response()->json(['status' => 'success']);
+            return response()->json([
+                "status" => "error",
+                "message" => __("usertag.update.user.status.error", [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $request->name
+                ])
+            ]);
         }
 
-        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu güncellerken bir hata oluştu");
-
-        return response()->json(['status' => 'error']);
+        Log::warning( __("global.critical.error") );
+        return response()->json(['status' => "error", "message" => __("global.critical.error")]);
 
     }
 
@@ -113,9 +132,6 @@ class UserDetailController extends Controller
      */
     public function tags(Request $request, User $user)
     {
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
-
         if ($request->ajax() && $request->has('ids')) {
 
             $user->usertags()->sync($request->ids);
@@ -125,16 +141,22 @@ class UserDetailController extends Controller
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
                 ->withProperties(['title' => 'Kullanıcı Etiketi Güncelleme']) // işlem başlığı
-                ->log($authuser. ', '.$user->name. ' isimli kullanıcının etiket(ler)ini güncelledi'); // açıklama
+                ->log(__('userdetail.update.user.tag.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncelledi");
+            Log::info(
+                __('userdetail.log.update.user.tag.success', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $user->name
+                ])
+            );
 
             return response()->json(['status' => 'success']);
+
         }
 
-        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının etiket(ler)ini güncellerken bir hata oluştu");
-
-        return response()->json(['status' => 'error']);
+        Log::warning( __("global.critical.error") );
+        return response()->json(['status' => "error", "message" => __("global.critical.error")]);
 
     }
 
@@ -145,8 +167,6 @@ class UserDetailController extends Controller
      */
     public function passwordReset(Request $request, User $user)
     {
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
 
         if ($request->ajax() && $request->has('user_id')) {
             if($user->status === UserStatus::ACTIVE) {
@@ -159,24 +179,59 @@ class UserDetailController extends Controller
                         ->causedBy(auth()->user()->id) // kim yaptı
                         ->event('update') // ne yaptı
                         ->withProperties(['title' => 'Şifre Yenileme Linki Gönderimi']) // işlem başlığı
-                        ->log($authuser. ', '.$user->name. ' isimli kullanıcıya şifre yenileme linki gönderdi'); // açıklama
+                        ->log(__('userdetail.reset.user.password.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
-                    Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderdi");
+                        Log::info(
+                            __('userdetail.log.reset.user.password.success', [
+                                'authuser' => auth()->user()->name,
+                                'ip' => request()->ip(),
+                                'name' => $user->name
+                            ])
+                        );
 
                     return response()->json(['status' => 'success']);
 
                 } else {
 
-                    Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderirken bir sorun oluştu");
+                    Log::warning(
+                        __('userdetail.log.reset.user.password.error', [
+                            'authuser' => auth()->user()->name,
+                            'ip' => request()->ip(),
+                            'name' => $user->name
+                        ])
+                    );
 
-                    return response()->json(['status' => 'error']);
+                    return response()->json([
+                        "status" => "error",
+                        "message" => __("usertag.update.user.password.error", [
+                            'authuser' => auth()->user()->name,
+                            'ip' => request()->ip(),
+                            'name' => $request->name
+                        ])
+                    ]);
                 }
             }
 
-            Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya gönderilen şifre yenileme linki kullanıcının durumu Aktif olmadığı için gönderilmedi");
+            Log::warning(
+                __('userdetail.log.reset.user.password.status.error', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $user->name
+                ])
+            );
 
-            return response()->json(['status' => 'error', 'message' => 'Kullanıcı durumu aktif değil, şifre yenileme linki gönderemezsiniz.']);
+            return response()->json([
+                "status" => "error",
+                "message" => __("usertag.update.user.password.status.error", [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $request->name
+                ])
+            ]);
         }
+
+        Log::warning( __("global.critical.error") );
+        return response()->json(['status' => "error", "message" => __("global.critical.error")]);
     }
 
     /**
