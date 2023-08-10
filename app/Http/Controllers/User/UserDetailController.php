@@ -203,7 +203,7 @@ class UserDetailController extends Controller
 
                     return response()->json([
                         "status" => "error",
-                        "message" => __("usertag.update.user.password.error", [
+                        "message" => __("userdetail.reset.user.password.error", [
                             'authuser' => auth()->user()->name,
                             'ip' => request()->ip(),
                             'name' => $request->name
@@ -222,7 +222,7 @@ class UserDetailController extends Controller
 
             return response()->json([
                 "status" => "error",
-                "message" => __("usertag.update.user.password.status.error", [
+                "message" => __("userdetail.reset.user.password.status.error", [
                     'authuser' => auth()->user()->name,
                     'ip' => request()->ip(),
                     'name' => $request->name
@@ -243,9 +243,6 @@ class UserDetailController extends Controller
     public function changeEmail(Request $request, User $user)
     {
 
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
-
         if ($request->email !== $user->email && $user instanceof MustVerifyEmail) {
             $user->email = $request->email;
             $user->email_verified_at = null;
@@ -258,16 +255,28 @@ class UserDetailController extends Controller
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
                 ->withProperties(['title' => 'E-posta Adresi Değişikliği']) // işlem başlığı
-                ->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini değiştirdi.'); // açıklama
+                ->log(__('userdetail.chane.user.email.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirdi. Kullanıcının yeni e-posta adresine onay linki gönderildi");
+            Log::info(
+                __('userdetail.log.chane.user.email.success', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $user->name
+                ])
+            );
 
             return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
         }
 
-        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirirken bir sorun oluştu");
+        Log::warning(
+            __('userdetail.log.reset.user.password.error', [
+                'authuser' => auth()->user()->name,
+                'ip' => request()->ip(),
+                'name' => $user->name
+            ])
+        );
 
-        return redirect()->back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+        return redirect()->back()->with('error', __('userdetail.chane.user.email.error', ['authuser' => auth()->user()->name, 'name' => $user->name]));
 
     }
 
@@ -291,17 +300,36 @@ class UserDetailController extends Controller
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('verify') // ne yaptı
                 ->withProperties(['title' => 'E-posta Onay Linki Gönderimi']) // işlem başlığı
-                ->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini onaylaması için link gönderdi.'); // açıklama
+                ->log(__('userdetail.verify.user.email.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderdi.");
+            Log::info(
+                __('userdetail.log.verify.user.email.success', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $user->name
+                ])
+            );
 
             return response()->json(['status' => 'success']);
 
         }
 
-        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderirken bir sorun ile karşılaştı.");
+        Log::info(
+            __('userdetail.log.verify.user.email.error', [
+                'authuser' => auth()->user()->name,
+                'ip' => request()->ip(),
+                'name' => $user->name
+            ])
+        );
 
-        return response()->json(['status' => 'error']);
+        return response()->json([
+            "status" => "error",
+            "message" => __("userdetail.verify.user.email.error", [
+                'authuser' => auth()->user()->name,
+                'ip' => request()->ip(),
+                'name' => $request->name
+            ])
+        ]);
 
     }
 
@@ -346,9 +374,6 @@ class UserDetailController extends Controller
     public function givePermissions(UserPermissionCreateRequest $request, User $user): RedirectResponse
     {
 
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
-
         if ($request->validated()) {
             foreach ($request->permission as $permission) {
                 $user->givePermissionTo($permission);
@@ -359,15 +384,27 @@ class UserDetailController extends Controller
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('permisssion') // ne yaptı
                 ->withProperties(['title' => 'İzin Tanımlama']) // işlem başlığı
-                ->log($authuser. ', '.$user->name. ' isimli kullanıcıya özel izinler tanımladı.'); // açıklama
+                ->log(__('userdetail.give.user.permissions.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımladı.");
+            Log::info(
+                __('userdetail.log.give.user.permissions.success', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $user->name
+                ])
+            );
 
-            return Redirect::route('panel.users')->with('success', 'Kullanıcı başarılı bir şekilde oluşturuldu ve yetkileri atandı');
+            return Redirect::route('panel.users')->with('success', __('userdetail.give.user.permissions.success', ['authuser' => auth()->user()->name, 'name' => $user->name]));
         }
 
-        Log::warning("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya özel izinler tanımlarken bir hata ile karşılaştı.");
+        Log::info(
+            __('userdetail.log.give.user.permissions.error', [
+                'authuser' => auth()->user()->name,
+                'ip' => request()->ip(),
+                'name' => $user->name
+            ])
+        );
 
-        return Redirect::back()->with('error', 'Hata. Yönetici eklenirken bir hata oluştu.');
+        return Redirect::back()->with('error', __('userdetail.give.user.permissions.error', ['authuser' => auth()->user()->name, 'name' => $user->name]));
     }
 }
