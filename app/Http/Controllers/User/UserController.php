@@ -13,6 +13,7 @@ use App\Utils\PaginateCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,7 +30,6 @@ class UserController extends Controller
         $users = User::whereNotIn('status', [UserStatus::DELETED])->where('type', [UserType::USER])->get();
         $users = PaginateCollection::paginate($users, 5);
         $tags = Usertag::where('status', [Status::ACTIVE])->has('users')->get();
-        //$tags = Usertag::where('status', [Status::ACTIVE])->get();
 
         return view('users.index', [
             'users' => $users,
@@ -59,17 +59,32 @@ class UserController extends Controller
      *
      * @param  array<string, string>  $input
      */
-    public function updateRole(Request $request): RedirectResponse
+    public function updateRole(Request $request, User $user): RedirectResponse
     {
-        $user = User::findOrFail($request->user);
         if(is_array($request->role)) {
             foreach ($request->role as $role) {
                 $user->assignRole([$role]);
             }
-            return Redirect::route('panel.users')->with('success', 'Kullanıcı yetkileri başarılı bir şekilde güncellendi');
+
+            activity('admin')
+                ->performedOn($user) // kime yapıldı
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('update') // ne yaptı
+                ->withProperties(['title' => 'Kullanıcı Yetkisi Güncelleme']) // işlem başlığı
+                ->log(__('user.update.user.role.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
+
+            Log::info(
+                __('user.update.user.role.success', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $user->name
+                ])
+            );
+
+            return Redirect::route('panel.users')->with('success', __('user.update.user.role.success.message'));
         }
 
-        return Redirect::route('panel.users')->with('error', 'Lütfen yetki seçiniz');
+        return Redirect::route('panel.users')->with('error', __('user.update.user.role.empty.role.error'));
     }
 
     /**

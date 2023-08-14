@@ -11,6 +11,7 @@ use App\Utils\Helper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -38,9 +39,12 @@ class SettingController extends Controller
     public function user(Request $request): JsonResponse
     {
         if(!Helper::checkUserSettings()) {
+
+            Log::warning( __('systemsettings.log.user.settings.policy.error') );
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Bu İşlemi gerçekleştiremezsiniz'
+                'message' => __('systemsettings.user.settings.policy.error')
             ]);
         } else {
             if ($request->ajax() && $request->has('data')) {
@@ -48,10 +52,26 @@ class SettingController extends Controller
                 $settings = json_encode($request->data, JSON_UNESCAPED_SLASHES);
                 $user->settings = $settings;
                 $user->save();
+
+                activity('admin')
+                    ->performedOn($user) // kime yapıldı
+                    ->causedBy(auth()->user()->id) // kim yaptı
+                    ->event('update') // ne yaptı
+                    ->withProperties(['title' => 'Kullanıcı Ayarlarını Güncelleme']) // işlem başlığı
+                    ->log( __("systemsettings.user.settings.update.success", ['authuser' => auth()->user()->name])); // açıklama
+
+                Log::info(
+                    __("systemsettings.log.user.settings.update.success", [
+                        'authuser' => auth()->user()->name,
+                        'ip' => request()->ip()
+                    ])
+                );
+
                 return response()->json(['status' => 'success']);
             }
 
-            return response()->json(['error' => 'olmadı']);
+            Log::warning( __("global.critical.error") );
+            return response()->json(['status' => "error", "message" => __("global.critical.error")]);
         }
     }
 

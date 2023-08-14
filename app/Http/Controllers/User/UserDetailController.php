@@ -128,7 +128,7 @@ class UserDetailController extends Controller
     }
 
     /**
-     * Kullanıcılara etiket atama
+     * Kullanıcıya etiket atama
      */
     public function tags(Request $request, User $user)
     {
@@ -168,7 +168,7 @@ class UserDetailController extends Controller
     public function passwordReset(Request $request, User $user)
     {
 
-        if ($request->ajax() && $request->has('user_id')) {
+        if ($request->ajax() && $request->has('ids')) {
             if($user->status === UserStatus::ACTIVE) {
                 $status = Password::sendResetLink($user->only('email'));
 
@@ -181,13 +181,13 @@ class UserDetailController extends Controller
                         ->withProperties(['title' => 'Şifre Yenileme Linki Gönderimi']) // işlem başlığı
                         ->log(__('userdetail.reset.user.password.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
-                        Log::info(
-                            __('userdetail.log.reset.user.password.success', [
-                                'authuser' => auth()->user()->name,
-                                'ip' => request()->ip(),
-                                'name' => $user->name
-                            ])
-                        );
+                    Log::info(
+                        __('userdetail.log.reset.user.password.success', [
+                            'authuser' => auth()->user()->name,
+                            'ip' => request()->ip(),
+                            'name' => $user->name
+                        ])
+                    );
 
                     return response()->json(['status' => 'success']);
 
@@ -235,8 +235,8 @@ class UserDetailController extends Controller
     }
 
     /**
-     * Kullanıcıya e-posta adresini onaylaması
-     * için link gönderme
+     * Kullanıcıya e-posta adresini değiştirmesi
+     * için onay link gönderme
      *
      * @param  array<string, string>  $input
      */
@@ -255,28 +255,28 @@ class UserDetailController extends Controller
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
                 ->withProperties(['title' => 'E-posta Adresi Değişikliği']) // işlem başlığı
-                ->log(__('userdetail.chane.user.email.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
+                ->log(__('userdetail.change.user.email.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
             Log::info(
-                __('userdetail.log.chane.user.email.success', [
+                __('userdetail.log.change.user.email.success', [
                     'authuser' => auth()->user()->name,
                     'ip' => request()->ip(),
                     'name' => $user->name
                 ])
             );
 
-            return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
+            return redirect()->back()->with('success', __('userdetail.change.user.email.success.message'));
         }
 
         Log::warning(
-            __('userdetail.log.reset.user.password.error', [
+            __('userdetail.log.change.user.email.error', [
                 'authuser' => auth()->user()->name,
                 'ip' => request()->ip(),
                 'name' => $user->name
             ])
         );
 
-        return redirect()->back()->with('error', __('userdetail.chane.user.email.error', ['authuser' => auth()->user()->name, 'name' => $user->name]));
+        return redirect()->back()->with('error', __('userdetail.change.user.email.error', ['authuser' => auth()->user()->name, 'name' => $user->name]));
 
     }
 
@@ -287,9 +287,6 @@ class UserDetailController extends Controller
      */
     public function verifyEmail(Request $request, User $user)
     {
-
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
 
         if ($request->ajax() && $request->has('user_id')) {
 
@@ -331,6 +328,42 @@ class UserDetailController extends Controller
             ])
         ]);
 
+    }
+
+    /**
+     * Kullanıcı rolünü güncelleme
+     * Ek rol tanımlama
+     *
+     * @param  array<string, string>  $input
+     */
+    public function updateRole(Request $request, User $user): RedirectResponse
+    {
+        if ($request->ajax() && $request->has('user_id')) {
+            if(is_array($request->role)) {
+                foreach ($request->role as $role) {
+                    $user->assignRole([$role]);
+                }
+
+                activity('admin')
+                    ->performedOn($user) // kime yapıldı
+                    ->causedBy(auth()->user()->id) // kim yaptı
+                    ->event('update') // ne yaptı
+                    ->withProperties(['title' => 'Kullanıcı Yetkisi Güncelleme']) // işlem başlığı
+                    ->log(__('user.update.user.role.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
+
+                Log::info(
+                    __('user.update.user.role.success', [
+                        'authuser' => auth()->user()->name,
+                        'ip' => request()->ip(),
+                        'name' => $user->name
+                    ])
+                );
+
+                return Redirect::route('panel.users')->with('success', __('user.update.user.role.success.message'));
+            }
+
+            return Redirect::route('panel.users')->with('error', __('user.update.user.role.empty.role.error'));
+        }
     }
 
     /**
