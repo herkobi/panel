@@ -73,6 +73,8 @@ class SettingController extends Controller
             Log::warning( __("global.critical.error") );
             return response()->json(['status' => "error", "message" => __("global.critical.error")]);
         }
+
+        Log::warning( __("systemsettings.log.user.settings.policy.error") );
     }
 
     /**

@@ -16,6 +16,7 @@ use App\Models\Role;
 use App\Models\Permission;
 use App\Models\Permissiongroup;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RoleController extends Controller
 {
@@ -79,15 +80,37 @@ class RoleController extends Controller
 
         if ($request->validated()) {
             $role = Role::create(['name' => $request->name, 'type' => $request->type, 'desc' => $request->desc]);
-            return Redirect::route('panel.role.permissions.store', $role);
-        } else {
-            return Redirect::back()->with('Hata');
+
+            activity('admin')
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('create') // ne yaptı
+                ->withProperties(['title' => 'Yeni Yetki Oluşturma']) // işlem başlığı
+                ->log(__('role.created.success', ['authuser' => auth()->user()->name, 'name' => $role->name])); // açıklama
+
+            Log::info(
+                __('role.log.created.success', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $role->name
+                ])
+            );
+
+            return Redirect::route('panel.role.permissions.store', $role)->with('success', __('role.created.success.message'));
         }
+
+        Log::warning(
+            __('role.log.created.error', [
+                'authuser' => auth()->user()->name,
+                'ip' => request()->ip()
+            ])
+        );
+
+        return redirect()->back()->with('error', __('role.created.error.message'));
+
     }
 
     public function permissionsstore(Role $role): View
     {
-        $role = Role::find($role->id);
         $groups = Permissiongroup::where('type', $role->type)->with('permission')->get();
         return view('roles.permissions', ['role' => $role, 'groups' => $groups]);
     }
@@ -104,7 +127,23 @@ class RoleController extends Controller
 
         if ($request->validated()) {
             $role->syncPermissions($request->permission);
-            return Redirect::route('panel.roles');
+
+
+            activity('admin')
+                ->causedBy(auth()->user()->id) // kim yaptı
+                ->event('create') // ne yaptı
+                ->withProperties(['title' => 'Oluşturulan Yetkiye İzin Atama']) // işlem başlığı
+                ->log(__('role.created.permission.success', ['authuser' => auth()->user()->name, 'name' => $role->name])); // açıklama
+
+            Log::info(
+                __('role.log.permission.created.success', [
+                    'authuser' => auth()->user()->name,
+                    'ip' => request()->ip(),
+                    'name' => $role->name
+                ])
+            );
+
+            return Redirect::route('panel.roles')->with('success', __('role.created.permission.success.message'));
         }
 
         return Redirect::back()->with('Hata; Lütfen en az bir adet izin seçiniz');
@@ -118,7 +157,6 @@ class RoleController extends Controller
      */
     public function show(Role $role): View
     {
-        $role = Role::find($role->id);
         $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
             ->where("role_has_permissions.role_id", $role->id)
             ->get();
@@ -134,7 +172,6 @@ class RoleController extends Controller
      */
     public function edit(Role $role): View
     {
-        $role = Role::find($role->id);
         if ($role->name != 'Super Admin') {
             $basePermissions = array();
             $permissions = array();
