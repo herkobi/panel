@@ -142,7 +142,7 @@ class RoleController extends Controller
                     'name' => $role->name
                 ])
             );
-
+            
             return Redirect::route('panel.roles')->with('success', __('role.created.permission.success.message'));
         }
 
