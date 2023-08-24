@@ -21,6 +21,13 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        $ip = request()->ip();
+        $api_url = "http://ip-api.com/json/$ip";
+        $response = file_get_contents($api_url);
+        $data = json_decode($response, true);
+
+        $timezone = $data['timezone'];
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -43,6 +50,7 @@ class CreateNewUser implements CreatesNewUsers
          * user_settings değişkenine atanıyor ve değer json formatına dönüştürülüyor.
          */
         $user_settings = Settings::whereNotIn('key', ['userrole', 'adminrole'])->pluck('value', 'key');
+        $user_settings['timezone'] = $timezone;
         $user_settings = json_encode($user_settings, JSON_UNESCAPED_SLASHES);
 
         /**
@@ -57,6 +65,8 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
             'terms' => $terms,
             'settings' => $user_settings,
+            'created_by' => 0,
+            'created_by_name' => 'New User'
         ]);
 
         /**
