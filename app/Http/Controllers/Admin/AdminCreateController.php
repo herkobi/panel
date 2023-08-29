@@ -67,7 +67,6 @@ class AdminCreateController extends Controller
             $authuser = auth()->user()->name;
             $roles = Role::whereIn('id', [$roles])->get()->pluck('name');
 
-            activity()->log($authuser. ', '.$roles. ' rollerini tanımlayarak '. $request['name'] .' isimli yeni bir yönetici ekledi');
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$roles} rollerini tanımlayarak {$request['name']} isimli yeni bir yöneticiyi başarılı bir şekilde oluşturdu");
 
             return Redirect::route('panel.admins')->with('success', 'Yönetici başarılı bir şekilde oluşturuldu');

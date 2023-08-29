@@ -70,7 +70,7 @@ class UserController extends Controller
                 ->performedOn($user) // kime yapıldı
                 ->causedBy(auth()->user()->id) // kim yaptı
                 ->event('update') // ne yaptı
-                ->withProperties(['title' => 'Kullanıcı Yetkisi Güncelleme']) // işlem başlığı
+                ->withProperties(['title' => __('user.update.user.role.modal.title')]) // işlem başlığı
                 ->log(__('user.update.user.role.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
             Log::info(
@@ -161,7 +161,7 @@ class UserController extends Controller
                 $roles = '';
             }
         } else {
-            $output = '<tr><td align="center" colspan="5">Bu isim veya e-mail adresi ile kayıtlı kullanıcı bulunmamaktadır</td></tr>';
+            $output = '<tr><td align="center" colspan="5">'.__('user.filter.no.result').'</td></tr>';
         }
         $data = array(
             'table_data'  => $output,
@@ -239,7 +239,7 @@ class UserController extends Controller
                     </tr>';
                 }
             } else {
-                $output = '<tr><td align="center" colspan="5">Bu isim veya e-mail adresi ile kayıtlı kullanıcı bulunmamaktadır</td></tr>';
+                $output = '<tr><td align="center" colspan="5">'.__('user.filter.no.search.result').'</td></tr>';
             }
             $data = array(
                 'table_data'  => $output,

@@ -38,13 +38,6 @@ class UsertagController extends Controller
             $usertag->desc = $request->desc;
             $usertag->save();
 
-            activity('admin')
-                ->performedOn($usertag) // kime yapıldı
-                ->causedBy(auth()->user()->id) // kim yaptı
-                ->event('update') // ne yaptı
-                ->withProperties(['title' => 'Kullanıcı Etiketi Güncelleme']) // işlem başlığı
-                ->log( __("usertag.activity.update.success", ['authuser' => auth()->user()->name, 'name' => $usertag->name])); // açıklama
-
             Log::info(
                 __("usertag.log.update.success", [
                     'authuser' => auth()->user()->name,
@@ -74,13 +67,6 @@ class UsertagController extends Controller
         if ($request->ajax()) {
             if($request->validated()) {
                 $usertag = Usertag::create($request->all());
-
-                activity('admin')
-                    ->performedOn($usertag) // kime yapıldı
-                    ->causedBy(auth()->user()->id) // kim yaptı
-                    ->event('create') // ne yaptı
-                    ->withProperties(['title' => 'Yeni Kullanıcı Etiketi']) // işlem başlığı
-                    ->log( __("usertag.activity.create.success", ['authuser' => auth()->user()->name, 'name' => $usertag->name])); // açıklama
 
                 Log::info(
                     __("usertag.log.create.success", [
@@ -133,13 +119,6 @@ class UsertagController extends Controller
             } else {
 
                 $usertag->delete();
-
-                activity('admin')
-                    ->performedOn($usertag) // kime yapıldı
-                    ->causedBy(auth()->user()->id) // kim yaptı
-                    ->event('delete') // ne yaptı
-                    ->withProperties(['title' => 'Kullanıcı Etiketi Silme']) // işlem başlığı
-                    ->log(__("activity.delete.success", ['authuser' => auth()->user()->name, 'name' => $usertag->name])); // açıklama
 
                 Log::info(
                     __("activity.delete.success", [

@@ -60,7 +60,6 @@ class PermissionController extends Controller
             $group_name = Permissiongroup::find($request->group_id);
             $authuser = auth()->user()->name;
 
-            activity()->log("$authuser, $group_name->name yetki grubu için {$request['name']} isim ve {$request['text']} açıklamalı yeni izin tanımladı");
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, '.$group_name->name.' yetki grubu için '.$request->name.' isim ve '.$request->text.' açıklamalı yeni iznini tanımladı");
 
             return Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde oluşturuldu');

@@ -53,13 +53,6 @@ class SettingController extends Controller
                 $user->settings = $settings;
                 $user->save();
 
-                activity('admin')
-                    ->performedOn($user) // kime yapıldı
-                    ->causedBy(auth()->user()->id) // kim yaptı
-                    ->event('update') // ne yaptı
-                    ->withProperties(['title' => 'Kullanıcı Ayarlarını Güncelleme']) // işlem başlığı
-                    ->log( __("systemsettings.user.settings.update.success", ['authuser' => auth()->user()->name])); // açıklama
-
                 Log::info(
                     __("systemsettings.log.user.settings.update.success", [
                         'authuser' => auth()->user()->name,

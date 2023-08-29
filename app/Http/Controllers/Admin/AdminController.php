@@ -61,7 +61,6 @@ class AdminController extends Controller
             $ip = request()->ip();
             $authuser = auth()->user()->name;
 
-            activity()->log("$authuser.', ' $user->name.'nın durumunu $status olarak güncelledi");
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, $user->name durumunu $status olarak güncelledi'");
 
             return response()->json(['status' => "success"]);

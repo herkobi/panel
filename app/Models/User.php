@@ -14,10 +14,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, AuthenticationLoggable, TwoFactorAuthenticatable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, AuthenticationLoggable, TwoFactorAuthenticatable, HasRoles, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -66,27 +69,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'settings' => 'array',
     ];
 
-    /**
-     * Get the user's settigns.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function settings(): Attribute
+    public function tapActivity(Activity $activity, string $eventName)
     {
-        return Attribute::make(
-            get: fn ($value) => json_decode($value, true),
-            set: fn ($value) => json_encode($value),
-        );
+        $activity->description = __("user.activity.message.{$eventName}", ['authuser' => auth()->user()->name]);
     }
 
-    public function getTimeZoneAttribute($value): string
+    public function getActivitylogOptions(): LogOptions
     {
-        return $value == config('app.timezone') || empty($value) ? config('app.timezone') : $value;
-    }
-
-    public function setTimeZoneAttribute($value)
-    {
-        $this->attributes['timezone'] = $value == config('app.timezone') || is_null($value) ? null : $value;
+        return LogOptions::defaults()
+                ->useLogName('admin')
+                ->logOnly(['type', 'status', 'name', 'email', 'email_verified_at', 'password', 'created_by', 'created_by_name', 'terms']);
     }
 
     public function usertags()

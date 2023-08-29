@@ -86,13 +86,6 @@ class UserDetailController extends Controller
                 $user->status = $status;
                 $user->save();
 
-                activity('admin')
-                    ->performedOn($user) // kime yapıldı
-                    ->causedBy(auth()->user()->id) // kim yaptı
-                    ->event('update') // ne yaptı
-                    ->withProperties(['title' => 'Kullanıcı Durumu Güncelleme']) // işlem başlığı
-                    ->log( __('userdetail.update.user.status.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
-
                 Log::info(
                     __('userdetail.log.update.user.status.success', [
                         'authuser' => auth()->user()->name,
@@ -136,13 +129,6 @@ class UserDetailController extends Controller
 
             $user->usertags()->sync($request->ids);
 
-            activity('admin')
-                ->performedOn($user) // kime yapıldı
-                ->causedBy(auth()->user()->id) // kim yaptı
-                ->event('update') // ne yaptı
-                ->withProperties(['title' => 'Kullanıcı Etiketi Güncelleme']) // işlem başlığı
-                ->log(__('userdetail.update.user.tag.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
-
             Log::info(
                 __('userdetail.log.update.user.tag.success', [
                     'authuser' => auth()->user()->name,
@@ -173,13 +159,6 @@ class UserDetailController extends Controller
                 $status = Password::sendResetLink($user->only('email'));
 
                 if ($status === Password::RESET_LINK_SENT) {
-
-                    activity('admin')
-                        ->performedOn($user) // kime yapıldı
-                        ->causedBy(auth()->user()->id) // kim yaptı
-                        ->event('update') // ne yaptı
-                        ->withProperties(['title' => 'Şifre Yenileme Linki Gönderimi']) // işlem başlığı
-                        ->log(__('userdetail.reset.user.password.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
                     Log::info(
                         __('userdetail.log.reset.user.password.success', [
@@ -250,13 +229,6 @@ class UserDetailController extends Controller
 
             $user->sendEmailVerificationNotification();
 
-            activity('admin')
-                ->performedOn($user) // kime yapıldı
-                ->causedBy(auth()->user()->id) // kim yaptı
-                ->event('update') // ne yaptı
-                ->withProperties(['title' => 'E-posta Adresi Değişikliği']) // işlem başlığı
-                ->log(__('userdetail.change.user.email.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
-
             Log::info(
                 __('userdetail.log.change.user.email.success', [
                     'authuser' => auth()->user()->name,
@@ -292,12 +264,12 @@ class UserDetailController extends Controller
 
             $status = $user->sendEmailVerificationNotification();
 
-            activity('admin')
-                ->performedOn($user) // kime yapıldı
-                ->causedBy(auth()->user()->id) // kim yaptı
-                ->event('verify') // ne yaptı
-                ->withProperties(['title' => 'E-posta Onay Linki Gönderimi']) // işlem başlığı
-                ->log(__('userdetail.verify.user.email.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
+            // activity('admin')
+            //     ->performedOn($user) // kime yapıldı
+            //     ->causedBy(auth()->user()->id) // kim yaptı
+            //     ->event('verify') // ne yaptı
+            //     ->withProperties(['title' => 'E-posta Onay Linki Gönderimi']) // işlem başlığı
+            //     ->log(__('userdetail.verify.user.email.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
             Log::info(
                 __('userdetail.log.verify.user.email.success', [
@@ -343,13 +315,6 @@ class UserDetailController extends Controller
                 foreach ($request->role as $role) {
                     $user->assignRole([$role]);
                 }
-
-                activity('admin')
-                    ->performedOn($user) // kime yapıldı
-                    ->causedBy(auth()->user()->id) // kim yaptı
-                    ->event('update') // ne yaptı
-                    ->withProperties(['title' => 'Kullanıcı Yetkisi Güncelleme']) // işlem başlığı
-                    ->log(__('user.update.user.role.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
                 Log::info(
                     __('user.update.user.role.success', [
@@ -411,13 +376,6 @@ class UserDetailController extends Controller
             foreach ($request->permission as $permission) {
                 $user->givePermissionTo($permission);
             }
-
-            activity('admin')
-                ->performedOn($user) // kime yapıldı
-                ->causedBy(auth()->user()->id) // kim yaptı
-                ->event('permisssion') // ne yaptı
-                ->withProperties(['title' => 'İzin Tanımlama']) // işlem başlığı
-                ->log(__('userdetail.give.user.permissions.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
 
             Log::info(
                 __('userdetail.log.give.user.permissions.success', [

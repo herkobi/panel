@@ -77,7 +77,6 @@ class AdminDetailController extends Controller
 
             $statusname = UserStatus::getTitle($status);
 
-            activity()->log($authuser. ', '.$user->name. ' durumunu '. $statusname .' olarak değiştirdi');
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
 
             return response()->json(['status' => 'success']);
@@ -105,7 +104,6 @@ class AdminDetailController extends Controller
 
                 if ($status === Password::RESET_LINK_SENT) {
 
-                    activity()->log($authuser. ', '.$user->name. ' isimli kullanıcıya şifre yenileme linki gönderdi');
                     Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderdi");
 
                     return response()->json(['status' => 'success']);
@@ -143,7 +141,6 @@ class AdminDetailController extends Controller
 
             $user->sendEmailVerificationNotification();
 
-            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini değiştirdi.');
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirdi. Kullanıcının yeni e-posta adresine onay linki gönderildi");
 
             return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
@@ -170,7 +167,6 @@ class AdminDetailController extends Controller
 
             $status = $user->sendEmailVerificationNotification();
 
-            activity()->log($authuser. ', '.$user->name. ' isimli kullanıcının e-posta adresini onaylaması için link gönderdi.');
             Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderdi.");
 
             return response()->json(['status' => 'success']);
