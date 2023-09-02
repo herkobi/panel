@@ -140,11 +140,24 @@
                 },
                 success: function(data) {
                     if (data.status == 'success') {
-                        console.log('Eferim');
+                        $('#permission-group-form').trigger("reset");
+                        $("#permission-group-table").load(window.location + " #permission-group-table");
+                        Swal.fire({
+                            icon: 'success',
+                            title: "{{ __('permission.group.create.success.title') }}",
+                            text: "{{ __('permission.group.create.success.message') }}",
+                            confirmButtonText: "{{ __('permission.group.create.success.button.text') }}"
+                        })
                     }
                 },
                 error: function(data) {
                     console.log('Error:', data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: "{{ __('permission.group.create.error.title') }}",
+                        text: data,
+                        confirmButtonText: "{{ __('permission.group.create.error.button.text') }}"
+                    })
                 }
             });
         }

@@ -42,7 +42,7 @@ class Usertag extends Model
     {
         return LogOptions::defaults()
                 ->useLogName('admin')
-                ->logOnly(['status', 'name', 'color', 'desc', 'users.name']);
+                ->logOnly(['status', 'name', 'color', 'desc']);
     }
 
     public function users()
