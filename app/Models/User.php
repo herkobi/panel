@@ -71,7 +71,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function tapActivity(Activity $activity, string $eventName)
     {
-        $activity->description = __("user.activity.message.{$eventName}", ['authuser' => auth()->user()->name]);
+        $authuser = !empty(auth()->user()->name) ? auth()->user()->name : 'Super Admin';
+        $activity->description = __("user.activity.message.{$eventName}", ['authuser' => $authuser]);
     }
 
     public function getActivitylogOptions(): LogOptions
