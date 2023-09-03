@@ -13,7 +13,8 @@ class LogEventActivity
             __($event->model . '.log.' . $event->method . '.' . $event->status.'message', [
                 'authuser' => auth()->user()->name,
                 'ip' => request()->ip(),
-                'name' => $event->data
+                'name' => $event->data,
+                'error' => $event->error
             ])
         );
     }

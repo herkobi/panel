@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\LogEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Usertags\UsertagCreateRequest;
 use App\Http\Requests\Usertags\UsertagUpdateRequest;
@@ -38,26 +39,28 @@ class UsertagController extends Controller
             $usertag->desc = $request->desc;
             $usertag->save();
 
-            Log::info(
-                __("usertag.log.update.success", [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $usertag->name
-                ])
-            );
+            // Log::info(
+            //     __("usertag.log.update.success", [
+            //         'authuser' => auth()->user()->name,
+            //         'ip' => request()->ip(),
+            //         'name' => $usertag->name
+            //     ])
+            // );
 
+            event(new LogEvent(['type' => 'info', 'model' => 'usertag', 'method' => 'update', 'status' => 'success', 'data' => $usertag->name]));
             return Redirect::route('panel.user.tags')->with('success', __('usertag.update.success.message'));
         }
 
-        Log::warning(
-            __("usertag.log.update.validation.error", [
-                'authuser' => auth()->user()->name,
-                'ip' => request()->ip(),
-                'name' => $usertag->name,
-                'error' => $request->validated()->messages()->all()[0]
-            ])
-        );
+        // Log::warning(
+        //     __("usertag.log.update.validation.error", [
+        //         'authuser' => auth()->user()->name,
+        //         'ip' => request()->ip(),
+        //         'name' => $usertag->name,
+        //         'error' => $request->validated()->messages()->all()[0]
+        //     ])
+        // );
 
+        event(new LogEvent(['type' => 'warning', 'model' => 'usertag', 'method' => 'update', 'status' => 'error', 'error' => $request->validated()->messages()->all()[0]]));
         return Redirect::back()->with('error', $request->validated()->messages()->all()[0])->withInput();
     }
 

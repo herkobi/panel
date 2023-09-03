@@ -192,11 +192,17 @@
                     }
                 },
                 error: function(data) {
+                    const validationErrors = data.responseJSON.errors;
+                    if (validationErrors) {
+                        var messageText = Object.values(validationErrors).map((item) => {
+                            return item[0];
+                        }).join('<br>');
+                    }
                     console.log(data)
                     Swal.fire({
                         icon: 'error',
                         title: "{{ __('usertag.create.error.title') }}",
-                        text: data,
+                        text: messageText,
                         confirmButtonText: "{{ __('usertag.create.error.button.text') }}"
                     })
                 },
