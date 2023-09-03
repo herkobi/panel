@@ -198,7 +198,6 @@
                             return item[0];
                         }).join('<br>');
                     }
-                    console.log(data)
                     Swal.fire({
                         icon: 'error',
                         title: "{{ __('usertag.create.error.title') }}",

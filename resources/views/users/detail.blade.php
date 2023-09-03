@@ -355,54 +355,6 @@
             }
         }
 
-        // function sendAjaxRequest(urlToSend, datas, message, reload) {
-
-        //     if (reload === 'yes') {
-        //         var reload = location.reload();
-        //     } else {
-        //         var reload = '';
-        //     }
-
-        //     const swalWithBootstrapButtons = Swal.mixin({
-        //         customClass: {
-        //             confirmButton: 'btn btn-success me-1 rounded-0 shadow-none',
-        //             cancelButton: 'btn btn-danger ms-1 rounded-0 shadow-none'
-        //         },
-        //         buttonsStyling: false
-        //     })
-
-        //     $.ajax({
-        //         type: "POST",
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         url: urlToSend,
-        //         data: {
-        //             user_id: {{ $user->id }},
-        //             ids: datas
-        //         },
-        //         success: function(data) {
-        //             if (data.status == 'success') {
-        //                 swalWithBootstrapButtons.fire({
-        //                     icon: 'success',
-        //                     title: 'Başarılı',
-        //                     text: message
-        //                 })
-
-        //                 reload
-        //             }
-        //         },
-        //         error: function(data) {
-        //             swalWithBootstrapButtons.fire({
-        //                 icon: 'error',
-        //                 title: 'Hata',
-        //                 text: data
-        //             })
-        //         }
-        //     });
-
-        // }
-
         function newPassword() {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {

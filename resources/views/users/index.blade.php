@@ -153,8 +153,7 @@
                     <div class="modal-body">
                         <div class="mb-3 border-bottom pb-3">
                             <div class="row">
-                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-role">Tanımlı
-                                    Yetkiler</label>
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="user-default-role">{{ __('user.attach.role.attached.roles') }}</label>
                                 <div class="col-md-7">
                                     <div id="userroles"></div>
                                 </div>
@@ -162,8 +161,7 @@
                         </div>
                         <div class="mb-3">
                             <div class="row">
-                                <label class="form-label col-md-5 fw-semibold mb-0" for="add-user-role">Yetki
-                                    Tanımla/Değiştir</label>
+                                <label class="form-label col-md-5 fw-semibold mb-0" for="add-user-role">{{ __('user.attach.role.role.title') }}</label>
                                 <div class="col-md-7">
                                     @foreach ($roles as $key => $role)
                                         <div class="form-check form-check-inline">
@@ -240,7 +238,12 @@
                     });
                 },
                 error: function(data) {
-                    console.log('Error:', data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: "{{ __('user.add.extra.rol.error.title') }}",
+                        text: "{{ __('user.add.extra.rol.error.text') }}",
+                        confirmButtonText: "{{ __('user.add.extra.rol.error.button.text') }}"
+                    })
                 }
             });
         }
@@ -323,7 +326,12 @@
                     $('#total_records').text(data.total_data);
                 },
                 error: function(data) {
-                    console.log(data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: "{{ __('user.filter.error.title') }}",
+                        text: "{{ __('user.filter.error.text') }}",
+                        confirmButtonText: "{{ __('user.filter.error.button.text') }}"
+                    })
                 },
                 complete: function(data) {
                     $("#spinner-div").hide(); //Request is complete so hide spinner
