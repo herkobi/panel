@@ -86,24 +86,8 @@ class UserDetailController extends Controller
                 $user->status = $status;
                 $user->save();
 
-                Log::info(
-                    __('userdetail.log.update.user.status.success', [
-                        'authuser' => auth()->user()->name,
-                        'ip' => request()->ip(),
-                        'name' => $user->name
-                    ])
-                );
-
                 return response()->json(['status' => 'success']);
             }
-
-            Log::warning(
-                __('userdetail.log.update.user.status.error', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $user->name
-                ])
-            );
 
             return response()->json([
                 "status" => "error",
@@ -115,7 +99,6 @@ class UserDetailController extends Controller
             ]);
         }
 
-        Log::warning( __("global.critical.error") );
         return response()->json(['status' => "error", "message" => __("global.critical.error")]);
 
     }
@@ -129,19 +112,10 @@ class UserDetailController extends Controller
 
             $user->usertags()->sync($request->ids);
 
-            Log::info(
-                __('userdetail.log.update.user.tag.success', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $user->name
-                ])
-            );
-
             return response()->json(['status' => 'success']);
 
         }
 
-        Log::warning( __("global.critical.error") );
         return response()->json(['status' => "error", "message" => __("global.critical.error")]);
 
     }
@@ -160,25 +134,9 @@ class UserDetailController extends Controller
 
                 if ($status === Password::RESET_LINK_SENT) {
 
-                    Log::info(
-                        __('userdetail.log.reset.user.password.success', [
-                            'authuser' => auth()->user()->name,
-                            'ip' => request()->ip(),
-                            'name' => $user->name
-                        ])
-                    );
-
                     return response()->json(['status' => 'success']);
 
                 } else {
-
-                    Log::warning(
-                        __('userdetail.log.reset.user.password.error', [
-                            'authuser' => auth()->user()->name,
-                            'ip' => request()->ip(),
-                            'name' => $user->name
-                        ])
-                    );
 
                     return response()->json([
                         "status" => "error",
@@ -191,14 +149,6 @@ class UserDetailController extends Controller
                 }
             }
 
-            Log::warning(
-                __('userdetail.log.reset.user.password.status.error', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $user->name
-                ])
-            );
-
             return response()->json([
                 "status" => "error",
                 "message" => __("userdetail.reset.user.password.status.error", [
@@ -209,7 +159,6 @@ class UserDetailController extends Controller
             ]);
         }
 
-        Log::warning( __("global.critical.error") );
         return response()->json(['status' => "error", "message" => __("global.critical.error")]);
     }
 
@@ -229,24 +178,8 @@ class UserDetailController extends Controller
 
             $user->sendEmailVerificationNotification();
 
-            Log::info(
-                __('userdetail.log.change.user.email.success', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $user->name
-                ])
-            );
-
             return redirect()->back()->with('success', __('userdetail.change.user.email.success.message'));
         }
-
-        Log::warning(
-            __('userdetail.log.change.user.email.error', [
-                'authuser' => auth()->user()->name,
-                'ip' => request()->ip(),
-                'name' => $user->name
-            ])
-        );
 
         return redirect()->back()->with('error', __('userdetail.change.user.email.error', ['authuser' => auth()->user()->name, 'name' => $user->name]));
 
@@ -263,33 +196,9 @@ class UserDetailController extends Controller
         if ($request->ajax() && $request->has('user_id')) {
 
             $status = $user->sendEmailVerificationNotification();
-
-            // activity('admin')
-            //     ->performedOn($user) // kime yapıldı
-            //     ->causedBy(auth()->user()->id) // kim yaptı
-            //     ->event('verify') // ne yaptı
-            //     ->withProperties(['title' => 'E-posta Onay Linki Gönderimi']) // işlem başlığı
-            //     ->log(__('userdetail.verify.user.email.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
-
-            Log::info(
-                __('userdetail.log.verify.user.email.success', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $user->name
-                ])
-            );
-
             return response()->json(['status' => 'success']);
 
         }
-
-        Log::info(
-            __('userdetail.log.verify.user.email.error', [
-                'authuser' => auth()->user()->name,
-                'ip' => request()->ip(),
-                'name' => $user->name
-            ])
-        );
 
         return response()->json([
             "status" => "error",
@@ -315,14 +224,6 @@ class UserDetailController extends Controller
                 foreach ($request->role as $role) {
                     $user->assignRole([$role]);
                 }
-
-                Log::info(
-                    __('user.update.user.role.success', [
-                        'authuser' => auth()->user()->name,
-                        'ip' => request()->ip(),
-                        'name' => $user->name
-                    ])
-                );
 
                 return Redirect::route('panel.users')->with('success', __('user.update.user.role.success.message'));
             }
@@ -377,24 +278,8 @@ class UserDetailController extends Controller
                 $user->givePermissionTo($permission);
             }
 
-            Log::info(
-                __('userdetail.log.give.user.permissions.success', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $user->name
-                ])
-            );
-
             return Redirect::route('panel.users')->with('success', __('userdetail.give.user.permissions.success', ['authuser' => auth()->user()->name, 'name' => $user->name]));
         }
-
-        Log::info(
-            __('userdetail.log.give.user.permissions.error', [
-                'authuser' => auth()->user()->name,
-                'ip' => request()->ip(),
-                'name' => $user->name
-            ])
-        );
 
         return Redirect::back()->with('error', __('userdetail.give.user.permissions.error', ['authuser' => auth()->user()->name, 'name' => $user->name]));
     }

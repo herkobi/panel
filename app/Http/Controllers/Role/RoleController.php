@@ -80,24 +80,8 @@ class RoleController extends Controller
 
         if ($request->validated()) {
             $role = Role::create(['name' => $request->name, 'type' => $request->type, 'desc' => $request->desc]);
-
-            Log::info(
-                __('role.log.created.success', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $role->name
-                ])
-            );
-
             return Redirect::route('panel.role.permissions.store', $role)->with('success', __('role.created.success.message'));
         }
-
-        Log::warning(
-            __('role.log.created.error', [
-                'authuser' => auth()->user()->name,
-                'ip' => request()->ip()
-            ])
-        );
 
         return redirect()->back()->with('error', __('role.created.error.message'));
 
@@ -121,20 +105,6 @@ class RoleController extends Controller
 
         if ($request->validated()) {
             $role->syncPermissions($request->permission);
-
-            // activity('admin')
-            //     ->causedBy(auth()->user()->id) // kim yaptı
-            //     ->event('create') // ne yaptı
-            //     ->withProperties(['title' => 'Oluşturulan Yetkiye İzin Atama']) // işlem başlığı
-            //     ->log(__('role.created.permission.success', ['authuser' => auth()->user()->name, 'name' => $role->name])); // açıklama
-
-            Log::info(
-                __('role.log.permission.created.success', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $role->name
-                ])
-            );
 
             return Redirect::route('panel.roles')->with('success', __('role.created.permission.success.message'));
         }

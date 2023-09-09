@@ -46,7 +46,6 @@ class PermissionController extends Controller
 
     public function store(PermissionCreateRequest $request): RedirectResponse
     {
-        $ip = request()->ip();
         $guard_name = "web";
 
         if ($request->validated()) {
@@ -56,11 +55,6 @@ class PermissionController extends Controller
                 'text' => $request['text'],
                 'guard_name' => $guard_name
             ]);
-
-            $group_name = Permissiongroup::find($request->group_id);
-            $authuser = auth()->user()->name;
-
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, '.$group_name->name.' yetki grubu için '.$request->name.' isim ve '.$request->text.' açıklamalı yeni iznini tanımladı");
 
             return Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde oluşturuldu');
         }

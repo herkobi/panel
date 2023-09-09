@@ -66,21 +66,6 @@ class UserController extends Controller
                 $user->assignRole([$role]);
             }
 
-            activity('admin')
-                ->performedOn($user) // kime yapıldı
-                ->causedBy(auth()->user()->id) // kim yaptı
-                ->event('update') // ne yaptı
-                ->withProperties(['title' => __('user.update.user.role.modal.title')]) // işlem başlığı
-                ->log(__('user.update.user.role.success', ['authuser' => auth()->user()->name, 'name' => $user->name])); // açıklama
-
-            Log::info(
-                __('user.update.user.role.success', [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $user->name
-                ])
-            );
-
             return Redirect::route('panel.users')->with('success', __('user.update.user.role.success.message'));
         }
 

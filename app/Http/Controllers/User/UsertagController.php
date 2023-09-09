@@ -39,63 +39,27 @@ class UsertagController extends Controller
             $usertag->desc = $request->desc;
             $usertag->save();
 
-            // Log::info(
-            //     __("usertag.log.update.success", [
-            //         'authuser' => auth()->user()->name,
-            //         'ip' => request()->ip(),
-            //         'name' => $usertag->name
-            //     ])
-            // );
-
-            event(new LogEvent(['type' => 'info', 'model' => 'usertag', 'method' => 'update', 'status' => 'success', 'data' => $usertag->name]));
             return Redirect::route('panel.user.tags')->with('success', __('usertag.update.success.message'));
+
+        } else {
+
+            return Redirect::back()->with('error', $request->validated()->messages()->all()[0])->withInput();
+
         }
 
-        // Log::warning(
-        //     __("usertag.log.update.validation.error", [
-        //         'authuser' => auth()->user()->name,
-        //         'ip' => request()->ip(),
-        //         'name' => $usertag->name,
-        //         'error' => $request->validated()->messages()->all()[0]
-        //     ])
-        // );
-
-        event(new LogEvent(['type' => 'warning', 'model' => 'usertag', 'method' => 'update', 'status' => 'error', 'error' => $request->validated()->messages()->all()[0]]));
-        return Redirect::back()->with('error', $request->validated()->messages()->all()[0])->withInput();
     }
 
     public function store(UsertagCreateRequest $request): JsonResponse
     {
-
         if ($request->ajax()) {
+
             if($request->validated()) {
                 $usertag = Usertag::create($request->all());
-
-                Log::info(
-                    __("usertag.log.create.success", [
-                        'authuser' => auth()->user()->name,
-                        'ip' => request()->ip(),
-                        'name' => $usertag->name
-                    ])
-                );
-
                 return response()->json(['status' => "success"]);
             }
-
-            Log::warning(
-                __("usertag.log.create.validation.error", [
-                    'authuser' => auth()->user()->name,
-                    'ip' => request()->ip(),
-                    'name' => $request->name,
-                    'error' => $request->validated()->messages()->all()[0]
-                ])
-            );
-
-            return response()->json(["status" => "error", "message" => $request->validated()->messages()->all()[0]]);
+        } else {
+            return response()->json(['status' => "error", "message" => __("global.critical.error")]);
         }
-
-        Log::warning( __("global.critical.error") );
-        return response()->json(['status' => "error", "message" => __("global.critical.error")]);
     }
 
     public function destroy(Request $request, Usertag $usertag): JsonResponse
@@ -103,13 +67,6 @@ class UsertagController extends Controller
         if ($request->ajax()) {
 
             if ($usertag->users()->count() > 0) {
-
-                Log::warning(
-                    __("usertag.log.delete.confirm.error", [
-                        'authuser' => auth()->user()->name,
-                        'ip' => request()->ip(), 'name' => $request->name
-                    ])
-                );
 
                 return response()->json([
                     "status" => "error",
@@ -122,19 +79,10 @@ class UsertagController extends Controller
             } else {
 
                 $usertag->delete();
-
-                Log::info(
-                    __("activity.delete.success", [
-                        'authuser' => auth()->user()->name,
-                        'name' => $usertag->name
-                    ])
-                );
-
                 return response()->json(['status' => "success"]);
             }
         }
 
-        Log::warning( __("global.critical.error") );
         return response()->json(['status' => "error", "message" => __("global.critical.error")]);
 
     }

@@ -77,13 +77,9 @@ class AdminDetailController extends Controller
 
             $statusname = UserStatus::getTitle($status);
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu {$statusname} olarak güncelledi");
-
             return response()->json(['status' => 'success']);
         }
-
-        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının durumunu güncellerken bir hata oluştu");
-
+        
         return response()->json(['status' => 'error']);
 
     }
@@ -103,20 +99,12 @@ class AdminDetailController extends Controller
                 $status = Password::sendResetLink($user->only('email'));
 
                 if ($status === Password::RESET_LINK_SENT) {
-
-                    Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderdi");
-
                     return response()->json(['status' => 'success']);
 
                 } else {
-
-                    Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya şifre yenileme linki gönderirken bir sorun oluştu");
-
                     return response()->json(['status' => 'error']);
                 }
             }
-
-            Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcıya gönderilen şifre yenileme linki kullanıcının durumu Aktif olmadığı için gönderilmedi");
 
             return response()->json(['status' => 'error', 'message' => 'Kullanıcı durumu aktif değil, şifre yenileme linki gönderemezsiniz.']);
         }
@@ -141,12 +129,8 @@ class AdminDetailController extends Controller
 
             $user->sendEmailVerificationNotification();
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirdi. Kullanıcının yeni e-posta adresine onay linki gönderildi");
-
             return redirect()->back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.');
         }
-
-        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini değiştirirken bir sorun oluştu");
 
         return redirect()->back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
 
@@ -167,13 +151,9 @@ class AdminDetailController extends Controller
 
             $status = $user->sendEmailVerificationNotification();
 
-            Log::info("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderdi.");
-
             return response()->json(['status' => 'success']);
 
         }
-
-        Log::error("{$authuser}, {$ip} ip adresi üzerinden, {$user->name} isimli kullanıcının e-posta adresini onaylaması için link gönderirken bir sorun ile karşılaştı.");
 
         return response()->json(['status' => 'error']);
 

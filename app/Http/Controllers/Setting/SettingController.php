@@ -40,12 +40,11 @@ class SettingController extends Controller
     {
         if(!Helper::checkUserSettings()) {
 
-            Log::warning( __('systemsettings.log.user.settings.policy.error') );
-
             return response()->json([
                 'status' => 'error',
                 'message' => __('systemsettings.user.settings.policy.error')
             ]);
+
         } else {
             if ($request->ajax() && $request->has('data')) {
                 $user = User::findOrFail(Auth::user()->id);
@@ -53,21 +52,12 @@ class SettingController extends Controller
                 $user->settings = $settings;
                 $user->save();
 
-                Log::info(
-                    __("systemsettings.log.user.settings.update.success", [
-                        'authuser' => auth()->user()->name,
-                        'ip' => request()->ip()
-                    ])
-                );
-
                 return response()->json(['status' => 'success']);
             }
 
-            Log::warning( __("global.critical.error") );
             return response()->json(['status' => "error", "message" => __("global.critical.error")]);
         }
 
-        Log::warning( __("systemsettings.log.user.settings.policy.error") );
     }
 
     /**
@@ -78,6 +68,7 @@ class SettingController extends Controller
         $default_settings = Settings::pluck('value', 'key')->toArray();
         $user_roles = Role::where('type', UserType::USER)->get();
         $admin_roles = Role::where('type', UserType::ADMIN)->get()->except(Role::where('name', 'Super Admin')->first()->id);
+        
         return view('settings.system', [
             'default_settings' => $default_settings,
             'user_roles' => $user_roles,
