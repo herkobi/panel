@@ -8,13 +8,10 @@ use App\Http\Requests\Permissions\PermissionUpdateRequest;
 use App\Models\Permission;
 use App\Models\Permissiongroup;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Alert;
 use App\Utils\PaginateCollection;
-use Illuminate\Support\Facades\Log;
 
 class PermissionController extends Controller
 {

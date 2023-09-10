@@ -15,7 +15,6 @@ use App\Http\Controllers\User\UsertagController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminCreateController;
 use App\Http\Controllers\Admin\AdminDetailController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
@@ -141,8 +140,6 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
         });
 
         Route::redirect('/panel/log-viewer', '/panel/log-viewer')->name('system-logs');
-
-        Route::get('/health', \Spatie\Health\Http\Controllers\HealthCheckResultsController::class);
 
         Route::prefix('cache')->name('cache.')->group(function () {
             Route::get('/clear/all', function() {
