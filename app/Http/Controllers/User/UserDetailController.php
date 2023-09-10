@@ -44,7 +44,6 @@ class UserDetailController extends Controller
         $selectedTag = $user->usertags->pluck('id')->toArray();
         $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
         $activities = Activity::where('causer_id', $user->id)->get();
-        $authlog = $user->authentications;
 
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
@@ -64,8 +63,7 @@ class UserDetailController extends Controller
             'selectedTag' => $selectedTag,
             'basePermissions' => $basePermissions,
             'rolePermissions' => $rolePermissions,
-            'activities' => $activities,
-            'authlog' => $authlog
+            'activities' => $activities
         ]);
     }
 

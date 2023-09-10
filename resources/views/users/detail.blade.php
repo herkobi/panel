@@ -91,9 +91,6 @@
                                     <h4 class="card-title">Oturum Kayıtları</h4>
                                 </div>
                                 <div class="card-body">
-                                    @foreach ($authlog as $log)
-                                        {{ $log }}
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
