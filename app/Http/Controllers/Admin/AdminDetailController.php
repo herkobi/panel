@@ -49,10 +49,13 @@ class AdminDetailController extends Controller
 
         $rolePermissions = !empty($userCustomPermissions) ? array_merge($rolePermissions, $userCustomPermissions) : $rolePermissions;
 
+        $auth_activities = User::select('last_login_at', 'last_login_ip')->where('id', $user->id)->get();
+
         return view('admins.detail', [
             'user' => $user,
             'basePermissions' => $basePermissions,
-            'rolePermissions' => $rolePermissions
+            'rolePermissions' => $rolePermissions,
+            'auth_activities' => $auth_activities
         ]);
     }
 
@@ -61,8 +64,6 @@ class AdminDetailController extends Controller
      */
     public function status(Request $request, User $user)
     {
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
 
         if ($request->ajax() && $request->has('ids')) {
             foreach (UserStatus::cases() as $userStatus) {
@@ -73,8 +74,6 @@ class AdminDetailController extends Controller
 
             $user->status = $status;
             $user->save();
-
-            $statusname = UserStatus::getTitle($status);
 
             return response()->json(['status' => 'success']);
         }
@@ -90,8 +89,6 @@ class AdminDetailController extends Controller
      */
     public function passwordReset(Request $request, User $user)
     {
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
 
         if ($request->ajax() && $request->has('user_id')) {
             if($user->status == UserStatus::ACTIVE) {
@@ -118,9 +115,6 @@ class AdminDetailController extends Controller
     public function changeEmail(Request $request, User $user)
     {
 
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
-
         if ($request->email !== $user->email && $user instanceof MustVerifyEmail) {
             $user->email = $request->email;
             $user->email_verified_at = null;
@@ -142,9 +136,6 @@ class AdminDetailController extends Controller
      */
     public function verifyEmail(Request $request, User $user)
     {
-
-        $ip = request()->ip();
-        $authuser = auth()->user()->name;
 
         if ($request->ajax() && $request->has('user_id')) {
 

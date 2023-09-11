@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\UserStatus;
 use App\Enums\UserType;
 use App\Models\Usertag;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,13 +12,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Models\Activity;
+use Haruncpi\LaravelUserActivity\Traits\Loggable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles, LogsActivity;
+    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -67,19 +64,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'type' => UserType::class,
         'settings' => 'array',
     ];
-
-    public function tapActivity(Activity $activity, string $eventName)
-    {
-        $authuser = !empty(auth()->user()->name) ? auth()->user()->name : 'Super Admin';
-        $activity->description = __("user.activity.message.{$eventName}", ['authuser' => $authuser]);
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-                ->useLogName('admin')
-                ->logOnly(['type', 'status', 'name', 'email', 'email_verified_at', 'password', 'created_by', 'created_by_name', 'terms']);
-    }
 
     public function usertags()
     {

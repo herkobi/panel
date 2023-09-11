@@ -537,7 +537,7 @@ div:where(.swal2-container) button:where(.swal2-styled) {
 
 .vertical-timeline-element-icon {
     position: absolute;
-    top: 0;
+    top: 5px;
     left: 120px;
 }
 

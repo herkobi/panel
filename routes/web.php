@@ -4,7 +4,6 @@ use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\TwoFactorAuthenticationController;
 use App\Http\Controllers\Setting\SettingController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
 

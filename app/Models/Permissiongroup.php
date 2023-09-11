@@ -6,13 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\UserType;
 use App\Models\Permission;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Models\Activity;
+use Haruncpi\LaravelUserActivity\Traits\Loggable;
 
 class Permissiongroup extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, Loggable;
 
     protected $table = 'permissiongroups';
 
@@ -25,19 +23,6 @@ class Permissiongroup extends Model
     protected $casts = [
         'type' => UserType::class
     ];
-
-    public function tapActivity(Activity $activity, string $eventName)
-    {
-        $authuser = !empty(auth()->user()->name) ? auth()->user()->name : 'Super Admin';
-        $activity->description = __("permissiongroup.activity.message.{$eventName}", ['authuser' => $authuser]);
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-                ->useLogName('admin')
-                ->logOnly(['name', 'type', 'desc']);
-    }
 
     public function permission()
     {

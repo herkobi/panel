@@ -17,7 +17,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Spatie\Activitylog\Models\Activity;
 
 class UserDetailController extends Controller
 {
@@ -43,7 +42,7 @@ class UserDetailController extends Controller
         $tags = Usertag::where('status', Status::ACTIVE)->get();
         $selectedTag = $user->usertags->pluck('id')->toArray();
         $userCustomPermissions = $user->getAllPermissions()->pluck('id')->toArray();
-        $activities = Activity::where('causer_id', $user->id)->get();
+        $auth_activities = User::select('last_login_at', 'last_login_ip')->where('id', $user->id)->get();
 
         foreach ($user->roles as $key => $role) {
             $permissions = Permission::withWhereHas('group', fn ($query) => $query->where('type', $role->type))->get();
@@ -63,7 +62,7 @@ class UserDetailController extends Controller
             'selectedTag' => $selectedTag,
             'basePermissions' => $basePermissions,
             'rolePermissions' => $rolePermissions,
-            'activities' => $activities
+            'auth_activities' => $auth_activities
         ]);
     }
 

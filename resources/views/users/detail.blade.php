@@ -63,7 +63,7 @@
                                     <h4 class="card-title">Hesap Hareketleri</h4>
                                 </div>
                                 <div class="card-body">
-                                    @foreach ($activities as $activity)
+                                    @foreach ($auth_activities as $auth_activity)
                                         <div
                                             class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
                                             <div class="vertical-timeline-item vertical-timeline-element">
@@ -72,10 +72,10 @@
                                                         <i class="badge badge-dot badge-dot-xl bg-success"> </i>
                                                     </span>
                                                     <div class="vertical-timeline-element-content border-bottom bounce-in">
-                                                        <h4 class="timeline-title">Başarılı Ödeme</h4>
-                                                        <p>Paket ödemesi başarılı bir şekilde gerçekleşti</p>
-                                                        <span class="vertical-timeline-element-date">12 Ağustos
-                                                            2022<br>15:30:45</span>
+                                                        <p>{{ $auth_activity->last_login_at }} tarihinde
+                                                            {{ $auth_activity->last_login_ip }} ip adresi üzerinden oturum
+                                                            açtı
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>

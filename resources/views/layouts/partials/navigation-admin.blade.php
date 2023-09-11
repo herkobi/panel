@@ -89,17 +89,9 @@
             </a>
         </li>
         <li class="menu-item">
-            <a href="{{ route('panel.admin.activity') }}" title="{{ __('admin-navigation.admin-logs') }}"
+            <a href="{{ route('panel.app-logs') }}" title="{{ __('admin-navigation.app-logs') }}"
                 class="d-flex align-items-center justify-content-start">
-                <i class="ri-shield-user-line"></i> <span
-                    class="align-middle">{{ __('admin-navigation.admin-logs') }}</span>
-            </a>
-        </li>
-        <li class="menu-item">
-            <a href="{{ route('panel.user.activity') }}" title="{{ __('admin-navigation.user-logs') }}"
-                class="d-flex align-items-center justify-content-start">
-                <i class="ri-user-follow-line"></i> <span
-                    class="align-middle">{{ __('admin-navigation.user-logs') }}</span>
+                <i class="ri-shield-user-line"></i> <span class="align-middle">{{ __('admin-navigation.app-logs') }}</span>
             </a>
         </li>
     @endhasrole

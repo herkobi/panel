@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Activity\Activity;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\TwoFactorAuthenticationController;
@@ -31,7 +30,7 @@ use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
 
 Route::redirect('/', 'login');
 
-Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_settings'])->prefix('panel')->name('panel.')->group(function () {
+Route::middleware(['auth', 'auth.session', 'verified', 'panel_settings'])->prefix('panel')->name('panel.')->group(function () {
 
     Route::middleware(['adminonly'])->group(function(){
 
@@ -130,12 +129,8 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminonly', 'panel_setti
             Route::post('/permission-group/destroy/{permissiongroup}', 'destroy')->name('permission.group.destroy');
         });
 
-        Route::controller(Activity::class)->group(function () {
-            Route::get('/activity/admin', 'index')->name('admin.activity');
-            Route::get('/activity/user', 'users')->name('user.activity');
-        });
-
         Route::redirect('/panel/log-viewer', '/panel/log-viewer')->name('system-logs');
+        Route::redirect('/panel/user-activity', '/panel/user-activity')->name('app-logs');
 
         Route::prefix('cache')->name('cache.')->group(function () {
             Route::get('/clear/all', function() {
