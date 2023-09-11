@@ -88,38 +88,17 @@
                     class="align-middle">{{ __('admin-navigation.system-logs') }}</span>
             </a>
         </li>
-    @endhasrole
-    @hasrole(['Super Admin', 'Admin'])
         <li class="menu-item">
-            <a data-bs-target="#user-logs" data-bs-toggle="collapse" title="{{ __('admin-navigation.user-logs') }}"
-                class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">
+            <a href="{{ route('panel.admin.activity') }}" title="{{ __('admin-navigation.user-logs') }}"
+                class="d-flex align-items-center justify-content-start">
                 <i class="ri-profile-line"></i> <span class="align-middle">{{ __('admin-navigation.user-logs') }}</span>
             </a>
-            <ul id="user-logs" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                <li class="menu-item"><a href="{{ route('panel.user.activity') }}"
-                        title="{{ __('admin-navigation.user-app-logs') }}"
-                        class="menu-link">{{ __('admin-navigation.user-app-logs') }}</a>
-                </li>
-                <li class="menu-item"><a href="" title="{{ __('admin-navigation.user-auth-logs') }}"
-                        class="menu-link">{{ __('admin-navigation.user-auth-logs') }}</a>
-                </li>
-            </ul>
         </li>
-    @endhasrole
-    @hasrole('Super Admin')
         <li class="menu-item">
-            <a data-bs-target="#admin-logs" data-bs-toggle="collapse" title="{{ __('admin-navigation.admin-logs') }}"
-                class="d-flex align-items-center justify-content-start collapsed" aria-expanded="false">
-                <i class="ri-folder-user-line"></i> <span
-                    class="align-middle">{{ __('admin-navigation.admin-logs') }}</span>
+            <a href="{{ route('panel.user.activity') }}" title="{{ __('admin-navigation.user-logs') }}"
+                class="d-flex align-items-center justify-content-start">
+                <i class="ri-profile-line"></i> <span class="align-middle">{{ __('admin-navigation.user-logs') }}</span>
             </a>
-            <ul id="admin-logs" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                <li class="menu-item"><a href="{{ route('panel.admin.activity') }}"
-                        title="{{ __('admin-navigation.admin-app-logs') }}"
-                        class="menu-link">{{ __('admin-navigation.admin-app-logs') }}</a></li>
-                <li class="menu-item"><a href="" title="{{ __('admin-navigation.admin-auth-logs') }}"
-                        class="menu-link">{{ __('admin-navigation.admin-auth-logs') }}</a></li>
-            </ul>
         </li>
     @endhasrole
     @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))

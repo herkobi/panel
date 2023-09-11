@@ -6,7 +6,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "binafy/laravel-user-monitoring": "^1.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/fortify": "^1.17",
         "laravel/framework": "^10.8",

@@ -19,7 +19,7 @@
                                                 <i class="badge badge-dot badge-dot-xl bg-success"> </i>
                                             </span>
                                             <div class="vertical-timeline-element-content border-bottom bounce-in">
-                                                <h4 class="timeline-title">{{ $activity->properties['title'] }}</h4>
+                                                <h4 class="timeline-title"></h4>
                                                 <p>{{ $activity->description }}</p>
                                                 <span
                                                     class="vertical-timeline-element-date">{{ $activity->created_at->format('d-m-Y') }}<br>{{ $activity->created_at->format('H:i:s') }}</span>
