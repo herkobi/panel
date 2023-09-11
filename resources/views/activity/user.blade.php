@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    @include('layouts.partials.page-title', ['title' => 'Yönetici Uygulama Kayıtları'])
+    @include('layouts.partials.page-title', ['title' => 'Kullanıcı Uygulama Kayıtları'])
     <div class="page-content position-relative mb-4">
         <div class="page-content position-relative mb-4">
             <div class="row">

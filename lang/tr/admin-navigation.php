@@ -26,11 +26,7 @@ return [
     'permissions' => 'İzinler',
     'permission-groups' => 'İzinler Grupları',
     'system-logs' => 'Sistem Kayıtları',
-    'user-logs' => 'Kullanıcı Kayıtlar',
-    'user-app-logs' => 'Uygulama Kayıtları',
-    'user-auth-logs' => 'Oturum Kayıtları',
     'admin-logs' => 'Yönetici Kayıtları',
-    'admin-app-logs' => 'Uygulama Kayıtları',
-    'admin-auth-logs' => 'Oturum Kayıtları',
+    'user-logs' => 'Kullanıcı Kayıtları',
     'twofa' => 'İki Faktörlü Doğrulama'
 ];
