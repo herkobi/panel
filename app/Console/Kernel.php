@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Binafy\LaravelUserMonitoring\Commands\RemoveVisitMonitoringRecordsCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,8 +14,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command(\Spatie\Health\Commands\RunHealthChecksCommand::class)->everyMinute();
-
+        $schedule->command(RemoveVisitMonitoringRecordsCommand::class)->hourly();
     }
 
     /**
