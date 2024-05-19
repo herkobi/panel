@@ -21,12 +21,12 @@
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <a href="{{ route('panel.profile.settings') }}" class="dropdown-item" title="Hesap Ayarları">Hesap
-                        Ayarları</a>
                     <a href="{{ route('panel.profile') }}" class="dropdown-item" title="Profil Bilgileri">Profil
                         Bilgileri</a>
+                    <a href="{{ route('panel.profile.settings') }}" class="dropdown-item" title="Hesap Ayarları">Hesap
+                        Ayarları</a>
                     @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
-                        <a href="{{ route('panel.twofactor') }}" class="dropdown-item"
+                        <a href="{{ route('panel.profile.twofactor') }}" class="dropdown-item"
                             title="İki Faktörlü Doğrulama">İki Faktörlü Doğrulama</a>
                     @endif
                     <div class="dropdown-divider my-1"></div>

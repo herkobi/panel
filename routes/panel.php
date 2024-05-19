@@ -299,13 +299,15 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile');
         Route::get('/profile/settings', 'settings')->name('profile.settings');
+        Route::get('/profile/two-factor-authentication', 'twofactor')->name('profile.twofactor');
+        Route::get('/profile/activity', 'activity')->name('profile.activity');
+        Route::get('/profile/auth-logs', 'authlogs')->name('profile.authlogs');
     });
 
     /**
      * İki Faktörlü Doğrulama
      */
     Route::controller(TwoFactorAuthenticationController::class)->group(function () {
-        Route::get('/two-factor-authentication', 'index')->name('twofactor');
     });
 
 });

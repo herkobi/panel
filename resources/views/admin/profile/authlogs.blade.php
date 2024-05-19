@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
                     'subtitle' => 'Herkobi',
-                    'title' => 'Hesap Bilgileri',
+                    'title' => 'Oturum Bilgileri',
                 ])
             </div>
         </div>
@@ -89,6 +89,9 @@
                         </div>
                         <div class="card-footer bg-transparent mt-auto">
                             <div class="btn-list justify-content-end">
+                                <a href="#" class="btn">
+                                    Cancel
+                                </a>
                                 <a href="#" class="btn btn-primary">
                                     Submit
                                 </a>
