@@ -1,1 +1,0 @@
-yönetici hatası bu

@@ -3,8 +3,10 @@
 namespace App\Actions\Fortify;
 
 use App\Enums\UserType;
-use App\Models\Settings;
+use App\Enums\AccountStatus;
+use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -21,15 +23,10 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        $ip = request()->ip();
-        $api_url = "http://ip-api.com/json/$ip";
-        $response = file_get_contents($api_url);
-        $data = json_decode($response, true);
-
-        $timezone = $data['timezone'];
 
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
+            'surname' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',
@@ -38,42 +35,41 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'terms' => ['required']
         ])->validate();
-
-        /**
-         * Sözleşmenin kabul edildiğini belirtir. Lazım olabilir diye kayıt altına alınıyor.
-         */
-        $terms = 1;
 
         /**
          * Genel sistem ayarları, userrole ve adminrole değerleri çıkarılarak kullanıcıya aktarılması için
          * user_settings değişkenine atanıyor ve değer json formatına dönüştürülüyor.
          */
-        $user_settings = Settings::whereNotIn('key', ['userrole', 'adminrole'])->pluck('value', 'key');
-        $user_settings['timezone'] = $timezone;
-        $user_settings = json_encode($user_settings, JSON_UNESCAPED_SLASHES);
+        $user_settings = json_encode([
+            'language' => config('panel.language'),
+            'timezone' => config('panel.timezone'),
+            'dateformat' => config('panel.dateformat'),
+            'timeformat' => config('panel.timeformat'),
+        ], JSON_UNESCAPED_SLASHES);
 
-        /**
-         * Kullanıcı kaydı gerçekleştiriliyor.
-         * type değeri UserType Enum dosyasından USER olarak belirtiliyor.
-         * settings değeri yukarıda tanımlanan user_settings değişkeni ile dolduruluyor.
-         */
+        $input['terms'] = $input['terms'] ? '1' : '0';
+
         $user = User::create([
+            'status' => AccountStatus::ACTIVE,
             'type' => UserType::USER,
             'name' => $input['name'],
+            'surname' => $input['surname'],
             'email' => $input['email'],
+            'email_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make($input['password']),
-            'terms' => $terms,
+            'terms' => $input['terms'],
             'settings' => $user_settings,
             'created_by' => 0,
-            'created_by_name' => 'New User'
+            'created_by_name' => 'Owner'
         ]);
 
         /**
          * Sistem ayarlarındaki kullanıcılara atanacak rol kayıt edilen kullanıcıya aktarılıyor.
-         * Bu yapı AppServiceProviders içinde tanımlanmıştır.
          */
-        $user->assignRole([config('panel.userrole')]);
+        $role = Role::find(config('panel.userrole'));
+        $user->assignRole($role->id);
 
         return $user;
     }

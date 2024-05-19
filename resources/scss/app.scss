@@ -1,5 +1,3 @@
-@import "~bootstrap/scss/bootstrap";
-@import "~remixicon/fonts/remixicon";
-@import "~simplebar/dist/simplebar";
-@import "@sweetalert2/theme-minimal";
-@import "resources/css/app";
+@import "@tabler/core/dist/css/tabler.min";
+@import "@tabler/core/dist/css/tabler-flags.min";
+@import "resources/css/app"

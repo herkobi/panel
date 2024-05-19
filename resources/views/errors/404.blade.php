@@ -1,1 +1,0 @@
-kullanıcı hatası bu

@@ -6,16 +6,18 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Enums\UserStatus;
+use App\Enums\AccountStatus;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use App\Http\Responses\LoginResponse;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Jenssegers\Agent\Agent;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Contracts\TwoFactorLoginResponse as TwoFactorLoginResponseContract;
 
@@ -69,9 +71,9 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
         RateLimiter::for('login', function (Request $request) {
-            $email = (string) $request->email;
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
-            return Limit::perMinute(5)->by($email.$request->ip());
+            return Limit::perMinute(5)->by($throttleKey);
         });
 
         RateLimiter::for('two-factor', function (Request $request) {
@@ -83,13 +85,29 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(TwoFactorLoginResponseContract::class, LoginResponse::class);
 
         Fortify::authenticateUsing (function (Request $request) {
-            $user = User::where('email', $request->email)->where('status', '!=', UserStatus::DELETED )->first();
+            $user = User::where('email', $request->email)->where('status', '!=', AccountStatus::DELETED )->first();
+
+            $agent = new Agent();
+            $device = $agent->device();
+            $browser = $agent->browser();
+            $browser_version = $agent->version($browser);
+            $os = $agent->platform();
+            $os_version = $agent->version($os);
+            $language = $agent->languages();
 
             if ($user && Hash::check($request->password, $user->password)) {
 
                 $user->update([
                     'last_login_at' => Carbon::now()->toDateTimeString(),
-                    'last_login_ip' => $request->getClientIp()
+                    'last_login_ip' => $request->getClientIp(),
+                    'agent' => json_encode([
+                        'device' => $device,
+                        'os' => $os,
+                        'os_version' => $os_version,
+                        'browser' => $browser,
+                        'browser_version' => $browser_version,
+                        'language' => implode(',', $language)
+                    ]),
                 ]);
 
                 return $user;

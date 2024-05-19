@@ -2,7 +2,6 @@
 
 namespace App\Utils;
 
-use App\Models\Settings;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -75,10 +74,6 @@ class Helper
     static public function checkUserSettings()
     {
 
-        /**
-         * Sistem ayarlarındaki kullanıcı ayarları kısmı değeri alınıyor.
-         * Bu yapı AppServiceProviders içinde tanımlanmıştır.
-         */
         $usersettings = config('panel.usersettings');
 
         if($usersettings == 1)
@@ -96,6 +91,7 @@ class Helper
     public static function dateformats(): array
     {
         return [
+            'j F Y',
             'F j, Y',
             'Y-m-d',
             'm/d/Y',
@@ -112,8 +108,9 @@ class Helper
     {
         return [
             'g:i a',
-            'g:i A',
+            'g:i:s a',
             'H:i',
         ];
     }
+
 }

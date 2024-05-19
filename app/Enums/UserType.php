@@ -19,8 +19,8 @@ enum UserType: int
     public static function title($title): string
     {
         return match ($title) {
-            self::ADMIN => __('enum.usertype.admin'),
-            self::USER => __('enum.usertype.user'),
+            self::ADMIN => "Yönetici",
+            self::USER => "Kullanıcı",
         };
     }
 
@@ -31,9 +31,9 @@ enum UserType: int
     {
         switch ($type) {
             case self::ADMIN->value:
-                return __('enum.usertype.admin');
+                return "Yönetici";
             case self::USER->value:
-                return __('enum.usertype.user');
+                return "Kullanıcı";
             default:
                 throw new \Exception('Invalid type');
         }
