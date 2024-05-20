@@ -84,34 +84,5 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
         $this->app->singleton(TwoFactorLoginResponseContract::class, LoginResponse::class);
 
-        Fortify::authenticateUsing (function (Request $request) {
-            $user = User::where('email', $request->email)->where('status', '!=', AccountStatus::DELETED )->first();
-
-            $agent = new Agent();
-            $device = $agent->device();
-            $browser = $agent->browser();
-            $browser_version = $agent->version($browser);
-            $os = $agent->platform();
-            $os_version = $agent->version($os);
-            $language = $agent->languages();
-
-            if ($user && Hash::check($request->password, $user->password)) {
-
-                $user->update([
-                    'last_login_at' => Carbon::now()->toDateTimeString(),
-                    'last_login_ip' => $request->getClientIp(),
-                    'agent' => json_encode([
-                        'device' => $device,
-                        'os' => $os,
-                        'os_version' => $os_version,
-                        'browser' => $browser,
-                        'browser_version' => $browser_version,
-                        'language' => implode(',', $language)
-                    ]),
-                ]);
-
-                return $user;
-            }
-        });
     }
 }
