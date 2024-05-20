@@ -28,6 +28,7 @@ class UserCreateRequest extends FormRequest
             'surname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', Password::default()],
+            'status' => ['nullable', 'boolean'],
         ];
     }
 
@@ -73,6 +74,11 @@ class UserCreateRequest extends FormRequest
              */
             'password.required' => 'Lütfen şifre giriniz',
             'password.password' => 'Lütfen uygun formatta şifre giriniz',
+
+            /**
+             * Status Messages
+             */
+            'status.boolean' => 'Kullanıcı durumu yalnızca aktif veya pasif olabilir'
         ];
     }
 }

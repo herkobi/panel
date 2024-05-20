@@ -191,7 +191,7 @@
                                                     <span class="col">Kullanıcı Durumunu Pasif Yap</span>
                                                     <span class="col-auto">
                                                         <label class="form-check form-check-single form-switch">
-                                                            <input class="form-check-input" name="status"
+                                                            <input class="form-check-input" name="status" value="1"
                                                                 type="checkbox">
                                                         </label>
                                                     </span>
