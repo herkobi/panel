@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Admin\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Registered as Event;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ class AuthRegistered
     {
         if ($event instanceof Event) {
 
+            $user = User::findOrFail($this->getUserIdParameter($event));
             DB::table('auth_logs')->insert([
                 'event_name' => class_basename($event),
                 'email' => $this->getEmailParameter($event),
@@ -22,6 +24,13 @@ class AuthRegistered
                 'context' => is_array($context) ? json_encode($context) : null,
                 'created_at' => Carbon::now()->timezone(config('app.timezone', 'UTC')),
             ]);
+
+            activity('panel')
+                ->performedOn($user)
+                ->causedBy($user)
+                ->event('registered')
+                ->withProperties(['ip' => Request::ip()])
+                ->log("$user->name, isimli kişi e-posta adresini onayladı.");
         }
     }
 

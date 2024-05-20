@@ -2,20 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\AccountStatus;
 use App\Enums\UserType;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use Spatie\Activitylog\Contracts\Activity;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, HasRoles, Notifiable, LogsActivity;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -69,31 +66,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'settings' => 'array',
             'agent' => 'array'
         ];
-    }
-
-    protected static $logAttributes = ['type', 'status', 'name', 'surname', 'title', 'about', 'email', 'email_verified_at', 'settings', 'created_by', 'created_by_name', 'terms', 'last_login_at', 'last_login_ip', 'agent'];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-                ->useLogName('panel')
-                ->logOnlyDirty()
-                ->dontSubmitEmptyLogs()
-                ->logFillable();
-    }
-
-    public function tapActivity(Activity $activity, string $eventName)
-    {
-        $userName = auth()->user()?->name ?? "Panel User";
-        $pageTitle = $this->title;
-
-        if ($eventName === 'created') {
-            $activity->description = "{$userName}, {$pageTitle} isimli kişi üye oldu.";
-        } elseif ($eventName === 'updated') {
-            $activity->description = "{$userName}, {$pageTitle} isimli kişi bilgilerini güncelledi.";
-        } elseif ($eventName === 'deleted') {
-            $activity->description = "{$userName}, {$pageTitle} isimli kişi hesabını sildi.";
-        }
     }
 
 }

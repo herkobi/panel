@@ -50,6 +50,7 @@ class AuthLogin
             activity('panel')
                 ->performedOn($user)
                 ->causedBy($user)
+                ->event('loggedin')
                 ->withProperties(['ip' => Request::ip()])
                 ->log("$user->name, isimli kişi oturum açtı.");
 
