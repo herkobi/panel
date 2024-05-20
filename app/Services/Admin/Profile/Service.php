@@ -42,7 +42,7 @@ class Service extends BaseService
         return $activities;
     }
 
-    public function authLogs($id): LengthAwarePaginator
+    public function authLogs(int $id): LengthAwarePaginator
     {
         $user = $this->model->findOrFail($id);
         $logs =  DB::table('auth_logs')->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate('40');

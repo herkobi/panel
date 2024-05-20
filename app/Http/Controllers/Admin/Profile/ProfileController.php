@@ -6,6 +6,7 @@ use App\Actions\Admin\Profile\Activities;
 use App\Actions\Admin\Profile\AuthLogs;
 use App\Actions\Admin\Profile\GetUser;
 use App\Http\Controllers\Controller;
+use Cjmellor\BrowserSessions\Facades\BrowserSessions;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -52,8 +53,9 @@ class ProfileController extends Controller
 
     public function authlogs(): View
     {
-        $user = $this->getUser->execute(auth()->user()->id);
-        $authLogs = $this->authLogs->execute($user->id);
+        $authLogs = $this->authLogs->execute(auth()->user()->id);
+        $sessions = BrowserSessions::getUserLastActivity(human: true);
+        dd($sessions);
         return view('admin.profile.authlogs', [
             'logs' => $authLogs
         ]);

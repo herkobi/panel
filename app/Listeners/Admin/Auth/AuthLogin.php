@@ -24,16 +24,6 @@ class AuthLogin
             $os_version = $agent->version($os);
             $language = $agent->languages();
 
-            DB::table('auth_logs')->insert([
-                'event_name' => class_basename($event),
-                'email' => $this->getEmailParameter($event),
-                'user_id' => $this->getUserIdParameter($event),
-                'ip_address' => Request::ip(),
-                'user_agent' => Request::userAgent(),
-                'context' => is_array($context) ? json_encode($context) : null,
-                'created_at' => Carbon::now()->timezone(config('panel.timezone')),
-            ]);
-
             $user->update([
                 'last_login_at' => Carbon::now()->toDateTimeString(),
                 'last_login_ip' => Request::ip(),
@@ -47,12 +37,15 @@ class AuthLogin
                 ]),
             ]);
 
-            activity('panel')
-                ->performedOn($user)
-                ->causedBy($user)
-                ->event('loggedin')
-                ->withProperties(['ip' => Request::ip()])
-                ->log("$user->name, isimli kişi oturum açtı.");
+            DB::table('auth_logs')->insert([
+                'event_name' => class_basename($event),
+                'email' => $this->getEmailParameter($event),
+                'user_id' => $this->getUserIdParameter($event),
+                'ip_address' => Request::ip(),
+                'user_agent' => Request::userAgent(),
+                'context' => is_array($context) ? json_encode($context) : null,
+                'created_at' => Carbon::now()->timezone(config('panel.timezone')),
+            ]);
 
         }
     }
