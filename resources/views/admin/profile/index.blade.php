@@ -27,17 +27,22 @@
                             <h2 class="mb-4">My Account</h2>
                             <h3 class="card-title">Profile Details</h3>
                             <div class="row align-items-center">
-                                <div class="col-auto"><span class="avatar avatar-xl"
-                                        style="background-image: url(./static/avatars/000m.jpg)"></span>
+                                <div class="col-auto">
+                                    <span class="avatar avatar-xl"
+                                        style="background-image: url({{ Avatar::create(auth()->user()?->name . ' ' . auth()->user()?->surname)->toBase64() }})">
+                                    </span>
                                 </div>
-                                <div class="col-auto"><a href="#" class="btn">
-                                        Change avatar
-                                    </a></div>
-                                <div class="col-auto"><a href="#" class="btn btn-ghost-danger">
-                                        Delete avatar
-                                    </a></div>
+                                <div class="col-auto">
+                                    <a href="#" class="btn">
+                                        Resmi Değiştir
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#" class="btn btn-ghost-danger">
+                                        Resmi Sil
+                                    </a>
+                                </div>
                             </div>
-                            <h3 class="card-title mt-4">Business Profile</h3>
                             <div class="row g-3">
                                 <div class="col-md">
                                     <div class="form-label">Business Name</div>
