@@ -7,6 +7,7 @@ use App\Actions\Admin\Profile\AuthLogs;
 use App\Actions\Admin\Profile\GetUser;
 use App\Http\Controllers\Controller;
 use Cjmellor\BrowserSessions\Facades\BrowserSessions;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -59,5 +60,11 @@ class ProfileController extends Controller
             'logs' => $authLogs,
             'sessions' => $sessions
         ]);
+    }
+
+    public function logoutfromdevices(): RedirectResponse
+    {
+        BrowserSessions::logoutOtherBrowserSessions();
+        return back()->with('status', 'Tüm cihazlardan çıkışınız başarılı bir şekilde gerçekleştirildi');
     }
 }

@@ -1,4 +1,4 @@
-<div class="dropdown-menu panel-dropdown shadow-none">
+<div class="dropdown-menu panel-dropdown shadow-none pb-0">
     <span class="dropdown-header">Oturum Kayıtları</span>
     <a class="dropdown-item {{ request()->routeIs('panel.tools.accounts.auth.logs') ? 'active' : '' }}"
         href="{{ route('panel.tools.accounts.auth.logs') }}" title="Ödeme Yöntemleri">

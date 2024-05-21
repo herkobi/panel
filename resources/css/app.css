@@ -120,3 +120,19 @@
 #user-status-4:checked {
     background-color: var(--tblr-danger) !important;
 }
+
+.timeline.browser li::before {
+    content: none;
+}
+
+.timeline.browser .avatar {
+    --tblr-avatar-size: 5rem;
+    --tblr-avatar-status-size: 0.75rem;
+    --tblr-avatar-font-size: 4rem;
+    --tblr-avatar-icon-size: 3.5rem;
+}
+
+.timeline.browser .icon {
+    --tblr-icon-size: 4rem;
+    color: rgba(var(--tblr-azure-rgb), var(--tblr-text-opacity)) !important;
+}
