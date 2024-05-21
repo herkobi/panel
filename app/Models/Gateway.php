@@ -73,7 +73,7 @@ class Gateway extends Model
 
     public function tapActivity(Activity $activity, string $eventName)
     {
-        $userName = auth()->user()?->name ?? "Panel User";
+        $userName = auth()->user()?->name .' '.auth()->user()?->surname ?? "Panel User";
         $newTitle = $this->title;
 
         if ($eventName === 'created') {

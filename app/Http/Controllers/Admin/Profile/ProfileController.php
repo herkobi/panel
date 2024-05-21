@@ -4,26 +4,18 @@ namespace App\Http\Controllers\Admin\Profile;
 
 use App\Actions\Admin\Profile\Activities;
 use App\Actions\Admin\Profile\AuthLogs;
-use App\Actions\Admin\Profile\GetUser;
 use App\Http\Controllers\Controller;
-use Cjmellor\BrowserSessions\Facades\BrowserSessions;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-
-    private $getUser;
     private $activities;
     private $authLogs;
 
     public function __construct(
-        GetUser $getUser,
         Activities $activities,
         AuthLogs $authLogs
     ) {
-        $this->getUser = $getUser;
         $this->activities = $activities;
         $this->authLogs = $authLogs;
     }
@@ -45,8 +37,7 @@ class ProfileController extends Controller
 
     public function activity(): View
     {
-        $user = $this->getUser->execute(auth()->user()->id);
-        $activities = $this->activities->execute($user->id);
+        $activities = $this->activities->execute(auth()->user()->id);
         return view('admin.profile.activity', [
             'activities' => $activities
         ]);
@@ -55,16 +46,8 @@ class ProfileController extends Controller
     public function authlogs(): View
     {
         $authLogs = $this->authLogs->execute(auth()->user()->id);
-        $sessions = BrowserSessions::sessions();
         return view('admin.profile.authlogs', [
-            'logs' => $authLogs,
-            'sessions' => $sessions
+            'logs' => $authLogs
         ]);
-    }
-
-    public function logoutfromdevices(): RedirectResponse
-    {
-        BrowserSessions::logoutOtherBrowserSessions();
-        return back()->with('status', 'Tüm cihazlardan çıkışınız başarılı bir şekilde gerçekleştirildi');
     }
 }

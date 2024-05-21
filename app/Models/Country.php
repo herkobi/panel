@@ -70,7 +70,7 @@ class Country extends Model
 
     public function tapActivity(Activity $activity, string $eventName)
     {
-        $userName = auth()->user()?->name ?? "Panel User";
+        $userName = auth()->user()?->name .' '.auth()->user()?->surname ?? "Panel User";
         $pageTitle = $this->title;
 
         if ($eventName === 'created') {

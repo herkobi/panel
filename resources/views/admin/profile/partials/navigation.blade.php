@@ -11,7 +11,7 @@
 @endif
 <a href="{{ route('panel.profile.activity') }}"
     class="list-group-item list-group-item-action d-flex align-items-center {{ request()->routeIs('panel.profile.activity') ? 'active' : '' }} py-3">Hesap
-    Aktivitesi</a>
+    Etkinliği</a>
 <a href="{{ route('panel.profile.authlogs') }}"
     class="list-group-item list-group-item-action d-flex align-items-center {{ request()->routeIs('panel.profile.authlogs') ? 'active' : '' }} py-3">Oturum
     Kayıtları</a>

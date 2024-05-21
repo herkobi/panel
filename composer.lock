@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e09b184b75570b0f4410a7ecc62cf0d9",
+    "content-hash": "bffc5d9e061b3f587f3137819066951f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -188,75 +188,6 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
-        },
-        {
-            "name": "cjmellor/browser-sessions",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cjmellor/browser-sessions.git",
-                "reference": "28d4cc4ab9501f17504a39fe990197d6ae303e9c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cjmellor/browser-sessions/zipball/28d4cc4ab9501f17504a39fe990197d6ae303e9c",
-                "reference": "28d4cc4ab9501f17504a39fe990197d6ae303e9c",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "^10.0|^11.0",
-                "jenssegers/agent": "^2.6",
-                "php": "^8.2",
-                "spatie/laravel-package-tools": "^1.14"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.0",
-                "nunomaduro/collision": "^7.0|^8.0",
-                "orchestra/testbench": "^8.0|^9.0",
-                "pestphp/pest": "^2.0",
-                "pestphp/pest-plugin-arch": "^2.0",
-                "pestphp/pest-plugin-laravel": "^2.0",
-                "phpunit/phpunit": "^10.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Cjmellor\\BrowserSessions\\BrowserSessionsServiceProvider"
-                    ],
-                    "aliases": {
-                        "BrowserSessions": "Cjmellor\\BrowserSessions\\Facades\\BrowserSessions"
-                    }
-                },
-                "minimum-stability": "stable",
-                "prefer-stable": true
-            },
-            "autoload": {
-                "psr-4": {
-                    "Cjmellor\\BrowserSessions\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Chris Mellor",
-                    "email": "cmellor@gmail.com"
-                }
-            ],
-            "description": "A Laravel package to enable users to manage and monitor their active browser sessions. Allows users to view devices where they are logged in and provides options to terminate unrecognized or all sessions, enhancing account security",
-            "homepage": "https://github.com/cjmellor/browser-sessions",
-            "keywords": [
-                "browser-sessions",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/cjmellor/browser-sessions/issues",
-                "source": "https://github.com/cjmellor/browser-sessions/tree/v1.1.0"
-            },
-            "time": "2024-03-24T00:16:50+00:00"
         },
         {
             "name": "dasprid/enum",
@@ -9461,5 +9392,5 @@
         "php": "^8.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

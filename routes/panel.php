@@ -302,8 +302,6 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
         Route::get('/profile/two-factor-authentication', 'twofactor')->name('profile.twofactor');
         Route::get('/profile/activity', 'activity')->name('profile.activity');
         Route::get('/profile/auth-logs', 'authlogs')->name('profile.authlogs');
-
-        Route::delete('/profile/logout-browser-sessions', 'logoutfromdevices')->name('profile.logoutfromdevices');
     });
 
     /**
