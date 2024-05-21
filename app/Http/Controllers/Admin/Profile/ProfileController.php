@@ -54,10 +54,10 @@ class ProfileController extends Controller
     public function authlogs(): View
     {
         $authLogs = $this->authLogs->execute(auth()->user()->id);
-        $sessions = BrowserSessions::getUserLastActivity(human: true);
-        dd($sessions);
+        $sessions = BrowserSessions::sessions();
         return view('admin.profile.authlogs', [
-            'logs' => $authLogs
+            'logs' => $authLogs,
+            'sessions' => $sessions
         ]);
     }
 }
