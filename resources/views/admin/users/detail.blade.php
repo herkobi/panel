@@ -88,7 +88,7 @@
                                             <div class="datagrid-content">{{ $user->created_at }}</div>
                                         </div>
                                         <div class="datagrid-item">
-                                            <div class="datagrid-title">Hesabı Oluşturun Kişi</div>
+                                            <div class="datagrid-title">Hesabı Oluşturan Kişi</div>
                                             <div class="datagrid-content">{{ $user->created_by_name }}</div>
                                         </div>
                                         <div class="datagrid-item">
