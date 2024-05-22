@@ -13,8 +13,7 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
                     aria-label="Open user menu">
-                    <span class="avatar avatar-sm"
-                        style="background-image: url({{ Avatar::create(auth()->user()?->name . ' ' . auth()->user()?->surname)->toBase64() }})"></span>
+                    <span class="avatar">PU</span>
                     <div class="d-none d-lg-block ps-2">
                         <div>{{ auth()->user()?->name . ' ' . auth()->user()?->surname }}</div>
                         <div class="mt-1 small text-muted">{{ auth()->user()?->type->name }}</div>

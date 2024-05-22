@@ -28,9 +28,7 @@
                             <h3 class="card-title">Profile Details</h3>
                             <div class="row align-items-center">
                                 <div class="col-auto">
-                                    <span class="avatar avatar-xl"
-                                        style="background-image: url({{ Avatar::create(auth()->user()?->name . ' ' . auth()->user()?->surname)->toBase64() }})">
-                                    </span>
+                                    <span class="avatar avatar-xl">PU</span>
                                 </div>
                                 <div class="col-auto">
                                     <a href="#" class="btn">
