@@ -26,7 +26,7 @@ class GetUser
      */
     public function execute($id)
     {
-        $user = $this->postService->getUser($id);
+        $user = $this->postService->getById($id);
         return $user;
     }
 }

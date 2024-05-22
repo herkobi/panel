@@ -24,80 +24,77 @@
                     </div>
                     <div class="col-12 col-md-9 d-flex flex-column">
                         <div class="card-body">
-                            <h2 class="mb-4">My Account</h2>
-                            <h3 class="card-title">Profile Details</h3>
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <span class="avatar avatar-xl">PU</span>
-                                </div>
-                                <div class="col-auto">
-                                    <a href="#" class="btn">
-                                        Resmi Değiştir
-                                    </a>
-                                </div>
-                                <div class="col-auto">
-                                    <a href="#" class="btn btn-ghost-danger">
-                                        Resmi Sil
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-md">
-                                    <div class="form-label">Business Name</div>
-                                    <input type="text" class="form-control" value="Tabler">
-                                </div>
-                                <div class="col-md">
-                                    <div class="form-label">Business ID</div>
-                                    <input type="text" class="form-control" value="560afc32">
-                                </div>
-                                <div class="col-md">
-                                    <div class="form-label">Location</div>
-                                    <input type="text" class="form-control" value="Peimei, China">
-                                </div>
-                            </div>
-                            <h3 class="card-title mt-4">Email</h3>
-                            <p class="card-subtitle">This contact will be shown to others publicly, so choose it carefully.
-                            </p>
-                            <div>
-                                <div class="row g-2">
-                                    <div class="col-auto">
-                                        <input type="text" class="form-control w-auto"
-                                            value="paweluna@howstuffworks.com">
+                            <div class="row g-0 mb-3">
+                                <form class="card border-0 rounded-none">
+                                    <div class="card-header px-0 pt-0">
+                                        <h2 class="card-title">Kişisel Bilgiler</h2>
                                     </div>
-                                    <div class="col-auto"><a href="#" class="btn">
-                                            Change
-                                        </a></div>
-                                </div>
-                            </div>
-                            <h3 class="card-title mt-4">Password</h3>
-                            <p class="card-subtitle">You can set a permanent password if you don't want to use temporary
-                                login codes.</p>
-                            <div>
-                                <a href="#" class="btn">
-                                    Set new password
-                                </a>
-                            </div>
-                            <h3 class="card-title mt-4">Public profile</h3>
-                            <p class="card-subtitle">Making your profile public means that anyone on the Dashkit network
-                                will be able to find
-                                you.</p>
-                            <div>
-                                <label class="form-check form-switch form-switch-lg">
-                                    <input class="form-check-input" type="checkbox">
-                                    <span class="form-check-label form-check-label-on">You're currently visible</span>
-                                    <span class="form-check-label form-check-label-off">You're
-                                        currently invisible</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-transparent mt-auto">
-                            <div class="btn-list justify-content-end">
-                                <a href="#" class="btn">
-                                    Cancel
-                                </a>
-                                <a href="#" class="btn btn-primary">
-                                    Submit
-                                </a>
+                                    <div class="card-body px-0">
+                                        <div class="mb-3 row">
+                                            <label class="col-3 col-form-label required">Email address</label>
+                                            <div class="col">
+                                                <input type="email" class="form-control" aria-describedby="emailHelp"
+                                                    placeholder="Enter email">
+                                                <small class="form-hint">We'll never share your email with anyone
+                                                    else.</small>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 row">
+                                            <label class="col-3 col-form-label required">Password</label>
+                                            <div class="col">
+                                                <input type="password" class="form-control" placeholder="Password">
+                                                <small class="form-hint">
+                                                    Your password must be 8-20 characters long, contain letters and numbers,
+                                                    and must not contain
+                                                    spaces, special characters, or emoji.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 row">
+                                            <label class="col-3 col-form-label">Select</label>
+                                            <div class="col">
+                                                <select class="form-select">
+                                                    <option>Option 1</option>
+                                                    <optgroup label="Optgroup 1">
+                                                        <option>Option 1</option>
+                                                        <option>Option 2</option>
+                                                    </optgroup>
+                                                    <option>Option 2</option>
+                                                    <optgroup label="Optgroup 2">
+                                                        <option>Option 1</option>
+                                                        <option>Option 2</option>
+                                                    </optgroup>
+                                                    <optgroup label="Optgroup 3">
+                                                        <option>Option 1</option>
+                                                        <option>Option 2</option>
+                                                    </optgroup>
+                                                    <option>Option 3</option>
+                                                    <option>Option 4</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-3 col-form-label pt-0">Checkboxes</label>
+                                            <div class="col">
+                                                <label class="form-check">
+                                                    <input class="form-check-input" type="checkbox" checked="">
+                                                    <span class="form-check-label">Option 1</span>
+                                                </label>
+                                                <label class="form-check">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <span class="form-check-label">Option 2</span>
+                                                </label>
+                                                <label class="form-check">
+                                                    <input class="form-check-input" type="checkbox" disabled="">
+                                                    <span class="form-check-label">Option 3</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer px-0 text-end">
+                                        <button type="submit" class="btn btn-success">Güncelle</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
