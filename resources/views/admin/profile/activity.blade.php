@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-12 col-md-9 d-flex flex-column">
                         <div class="card-body">
-                            <h2 class="mb-4">Hesap Etkinliği</h2>
+                            <h2 class="profile-section-title border-bottom fw-normal pb-3 mb-5">Hesap Etkinliği</h2>
                             <ul class="timeline">
                                 @foreach ($activities as $key => $log)
                                     <li class="timeline-event">
