@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Admin\Profile;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
@@ -18,7 +16,8 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['string', 'max:255'],
-            'email' => ['string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+            'title' => ['string', 'max:255'],
+            'about' => ['string'],
         ];
     }
 
@@ -46,13 +45,15 @@ class ProfileUpdateRequest extends FormRequest
             'surname.max' => 'Lütfen soyismi daha kısa giriniz',
 
             /**
-             * E-mail Messages
+             * Title Messages
              */
-            'email.string' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email.lowercase' => 'Lütfen e-posta adresini küçük harflerler giriniz',
-            'email.email' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email.max' => 'Lütfen daha kısa bir e-posta adresi giriniz',
+            'title.string' => 'Lütfen geçerli bir görev giriniz',
+            'title.max' => 'Lütfen daha kısa görev giriniz',
 
+            /**
+             * About Messages
+             */
+            'about.string' => 'Lütfen geçerli bir içerik giriniz',
         ];
     }
 }

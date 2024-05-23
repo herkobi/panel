@@ -25,7 +25,7 @@
                     <div class="col-12 col-md-9 d-flex flex-column">
                         <div class="card-body px-5">
                             <h2 class="profile-section-title border-bottom fw-normal pb-3 mb-5">Kişisel Bilgiler</h2>
-                            <form action="" method="POST" class="form">
+                            <form action="{{ route('panel.profile.update') }}" method="POST" class="form mb-5">
                                 @csrf
                                 <div class="row mb-3">
                                     <label class="col-3 col-form-label required">Ad Soyad</label>
@@ -98,23 +98,16 @@
                                     <label class="col-3 col-form-label required">E-posta Adresi</label>
                                     <div class="col">
                                         <div class="row">
-                                            <div class="col-11">
-                                                <input type="email"
-                                                    class="form-control @error('email') is-invalid @enderror" name="email"
-                                                    value="{{ $user->email ? $user->email : old('email') }}"
-                                                    aria-describedby="emailHelp" placeholder="E-posta Adresi" readonly>
-                                                @error('email')
-                                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                                @enderror
+                                            <div class="col-10">
+                                                <input type="email" class="form-control" value="{{ $user->email }}"
+                                                    aria-describedby="emailHelp" placeholder="E-posta Adresi" disabled>
                                             </div>
-                                            <div class="col-1">
-                                                <button type="button" class="btn px-2" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                                    data-bs-title="E-posta adresini değiştirmek için tıklayınız.">
+                                            <div class="col-2">
+                                                <a href="#" id="changeEmail" class="btn px-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-mail-cog m-0">
+                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-mail-cog me-2">
                                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                         <path
                                                             d="M12 19h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v5" />
@@ -127,7 +120,8 @@
                                                         <path d="M15.97 17.25l1.3 .75" />
                                                         <path d="M20.733 20l1.3 .75" />
                                                     </svg>
-                                                </button>
+                                                    Değiştir
+                                                </a>
                                             </div>
                                         </div>
                                         <small class="form-hint">E-posta Adresiniz. E-posta adresinizi değiştirmek
@@ -143,7 +137,17 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col offset-lg-3">
+                                    <div class="col">
+                                        <div class="border-top p-3 bg-gray-300 text-end">
+                                            <button type="submit" class="btn btn-success">Güncelle</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form action="{{ route('panel.profile.password.update') }}" method="post">
+                                @csrf
+                                <div class="row mb-3">
+                                    <div class="col">
                                         <h3 class="profile-section-title border-bottom fw-normal pb-2 mb-2">Şifre Yenileme
                                         </h3>
                                         <small>Şifrenizi yenilemek isterseniz aşağıdaki alandan yeni şifre
@@ -215,6 +219,156 @@
             </div>
         </div>
     </div>
+    <div class="modal modal-blur fade" id="modal-changeEmail" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Kullanıcı Bilgileri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('panel.profile.email.update', $user->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()))
+                            <div class="alert alert-info shadow-none mb-5" role="alert">
+                                <div class="d-flex">
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24"
+                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                            <path d="M12 9v4"></path>
+                                            <path
+                                                d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z">
+                                            </path>
+                                            <path d="M12 16h.01"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="alert-title">Bilgilendirme</h4>
+                                        <div class="text-secondary">Sisteminizde e-posta adreslerinin onay işlemi açıktır.
+                                            Yeni girdiğiniz e-posta adresine onaylaması için onay e-postası gönderilecektir.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Yeni E-posta Adresi</label>
+                                    <input type="email" class="form-control" name="email"
+                                        placeholder="Yeni E-posta Adresiniz">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Yeni E-posta Adresi Tekrar</label>
+                                    <input type="email" class="form-control" name="email_confirmation"
+                                        placeholder="Yeni E-posta Adresi Tekrar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">
+                            İptal Et
+                        </button>
+                        <button type="submit" class="btn btn-primary ms-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                <path d="M16 5l3 3" />
+                            </svg>
+                            E-posta Adresini Değiştir
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @if (Session::has('success'))
+        <div class="modal modal-blur fade" id="modal-success" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                    <div class="modal-status bg-success"></div>
+                    <div class="modal-body text-center py-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24"
+                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                            <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <h3>Başarılı</h3>
+                        <div class="text-secondary">{{ Session::get('success') }}</div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="w-100 text-center">
+                            <button type="button" class="btn btn-success mx-auto" data-bs-dismiss="modal">
+                                Kapat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="module">
+            var successModal = new bootstrap.Modal(document.getElementById('modal-success'), {})
+            successModal.toggle()
+        </script>
+    @endif
+    @if (Session::has('error') || $errors->any())
+        <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-status bg-danger"></div>
+                    <div class="modal-body text-center py-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24"
+                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 9v4" />
+                            <path
+                                d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
+                            <path d="M12 16h.01" />
+                        </svg>
+                        <h3>Hata</h3>
+                        @if ($errors->any())
+                            <div class="text-secondary">
+                                <ul class="list-unstyled">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @else
+                            <div class="text-secondary">İşleminizi gerçekleştirirken bir sorun oluştu, lütfen tekrar
+                                deneyiniz.
+                            </div>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <div class="w-100 text-center">
+                            <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal">
+                                Kapat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="module">
+            var errorModal = new bootstrap.Modal(document.getElementById('modal-danger'), {})
+            errorModal.toggle()
+        </script>
+    @endif
 @endsection
 @section('js')
     <script>
@@ -252,5 +406,9 @@
             // Oluşturulan şifreyi input alanına yerleştir
             document.getElementById("password").value = randPassword;
         }
+
+        document.querySelector('#changeEmail').addEventListener('click', function() {
+            new bootstrap.Modal(document.getElementById('modal-changeEmail')).show();
+        });
     </script>
 @endsection

@@ -211,10 +211,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-3 row">
-                                </div>
-                                <div class="mb-3 row">
-                                </div>
                             </div>
                             <div class="card-footer text-end">
                                 <button type="submit" class="btn btn-primary">Güncelle</button>

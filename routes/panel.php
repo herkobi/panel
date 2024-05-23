@@ -302,6 +302,10 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
         Route::get('/profile/two-factor-authentication', 'twofactor')->name('profile.twofactor');
         Route::get('/profile/activity', 'activity')->name('profile.activity');
         Route::get('/profile/auth-logs', 'authlogs')->name('profile.authlogs');
+
+        Route::post('/profile/update', 'updateProfile')->name('profile.update');
+        Route::post('/profile/email', 'updateEmail')->name('profile.email.update');
+        Route::post('/profile/password', 'updatePassword')->name('profile.password.update');
     });
 
     /**
