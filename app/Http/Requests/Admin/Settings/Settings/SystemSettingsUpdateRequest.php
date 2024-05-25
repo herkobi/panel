@@ -22,7 +22,6 @@ class SystemSettingsUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'usersettings' => ['nullable'],
             'userrole' => ['required'],
             'adminrole' => ['required'],
             'language' => ['required'],

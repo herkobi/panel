@@ -3,7 +3,6 @@
 namespace App\Utils;
 
 use DateTimeZone;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class Helper
@@ -52,34 +51,6 @@ class Helper
             }
             return collect($timezone)->sortKeys();
         });
-    }
-
-    /**
-     * User Timezone
-     *
-     * List of timezones
-     */
-    static public function getUserTimeZone()
-    {
-        $user_settings = json_decode(Auth::user()->settings, true);
-        $user_timezone = $user_settings['timezone'];
-        return optional($user_timezone ?? config('app.timezone'));
-    }
-
-    /**
-     * User Settings is active
-     *
-     * Check usersettings is active
-     */
-    static public function checkUserSettings()
-    {
-
-        $usersettings = config('panel.usersettings');
-
-        if($usersettings == 1)
-        {
-            return true;
-        }
     }
 
     /**

@@ -46,16 +46,6 @@ class Service extends BaseService
         return $data;
     }
 
-    public function settingsData()
-    {
-        return [
-            'languages' => $this->getLanguages(),
-            'locations' => $this->getLocations(),
-            'currencies' => $this->getCurrencies(),
-            'taxes' => $this->getTaxes()
-        ];
-    }
-
     public function updateProfile($id, $data)
     {
         $user = $this->model->findOrFail($id);

@@ -48,11 +48,10 @@ class SystemService extends BaseService
         return $data;
     }
 
-    public function updateData(Request $request)
+    public function updateData(Request $request): array
     {
         $data = [];
 
-        $data['usersettings'] = $request->input('usersettings', config('panel.usersettings'));
         $data['userrole'] = $request->input('userrole', config('panel.userrole'));
         $data['adminrole'] = $request->input('adminrole', config('panel.adminrole'));
         $data['language'] = $request->input('language', config('panel.language'));

@@ -24,22 +24,6 @@
                         <form method="POST" action="{{ route('panel.settings.update.system') }}">
                             @csrf
                             <div class="card-body">
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label">Kullanıcı Ayarları</label>
-                                    <div class="col col-form-label">
-                                        <div class="row">
-                                            <span class="col">Kullanıcı Ayarlarını Etkinleştir</span>
-                                            <span class="col-auto">
-                                                <label class="form-check form-check-single form-switch">
-                                                    <input type="checkbox" name="usersettings" class="form-check-input"
-                                                        {{ config('panel.usersettings') === true ? 'checked' : '' }}>
-                                                </label>
-                                            </span>
-                                            <small class="form-hint">Üyelerin kendi ayarlarını yapmasına izin vermek için
-                                                etkinleştiriniz.</small>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="row mb-3">
                                     <label class="col-3 col-form-label">Yetkiler</label>
                                     <div class="col">

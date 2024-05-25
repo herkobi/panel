@@ -25,7 +25,6 @@ class ProfileController extends Controller
     private $updateProfile;
     private $updateEmail;
     private $updatePassword;
-    private $settingsData;
 
     public function __construct(
         Activities $activities,
@@ -33,8 +32,7 @@ class ProfileController extends Controller
         GetUser $getUser,
         UpdateProfile $updateProfile,
         UpdateEmail $updateEmail,
-        UpdatePassword $updatePassword,
-        SettingsData $settingsData
+        UpdatePassword $updatePassword
     ) {
         $this->activities = $activities;
         $this->authLogs = $authLogs;
@@ -42,7 +40,6 @@ class ProfileController extends Controller
         $this->updateProfile = $updateProfile;
         $this->updateEmail = $updateEmail;
         $this->updatePassword = $updatePassword;
-        $this->settingsData = $settingsData;
     }
 
     public function index(): View
@@ -78,18 +75,6 @@ class ProfileController extends Controller
         return $updated
             ? Redirect::back()->with('success', 'Şifreniz başarılı bir şekilde güncellendi.')
             : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
-    }
-
-    public function settings(): View
-    {
-        $user = $this->getUser->execute(auth()->user()?->id);
-        $userSettings = json_decode($user->settings, true);
-        $settings = $this->settingsData;
-        return view('admin.profile.settings', [
-            'user' => $user,
-            'userSettings' => $userSettings,
-            'settings' => $settings
-        ]);
     }
 
     public function twofactor(): View

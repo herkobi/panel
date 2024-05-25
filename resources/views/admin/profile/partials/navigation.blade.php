@@ -1,9 +1,6 @@
 <a href="{{ route('panel.profile') }}"
     class="list-group-item list-group-item-action d-flex align-items-center {{ request()->routeIs('panel.profile') ? 'active' : '' }} py-3">Kişisel
     Bilgiler</a>
-<a href="{{ route('panel.profile.settings') }}"
-    class="list-group-item list-group-item-action d-flex align-items-center {{ request()->routeIs('panel.profile.settings') ? 'active' : '' }} py-3">Hesap
-    Bilgileri</a>
 @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
     <a href="{{ route('panel.profile.twofactor') }}"
         class="list-group-item list-group-item-action d-flex align-items-center {{ request()->routeIs('panel.profile.twofactor') ? 'active' : '' }} py-3">İki

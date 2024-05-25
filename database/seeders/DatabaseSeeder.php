@@ -10,7 +10,6 @@ use App\Models\Gateway;
 use App\Models\Language;
 use App\Models\Page;
 use App\Models\Payment;
-use App\Models\Permissiongroup;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\State;
@@ -60,7 +59,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //Sistem Ayarları
-        $settings_data = ['usersettings' => true, 'userrole' => '3', 'adminrole' => '2', 'language' => 'tr', 'location' => 'TR', 'currency' => 'TRY', 'tax' => 'KDV', 'timezone' => 'Europe/Istanbul', 'dateformat' => 'd/m/Y', 'timeformat' => 'H:i'];
+        $settings_data = ['userrole' => '3', 'adminrole' => '2', 'language' => 'tr', 'location' => 'TR', 'currency' => 'TRY', 'tax' => 'KDV', 'timezone' => 'Europe/Istanbul', 'dateformat' => 'd/m/Y', 'timeformat' => 'H:i'];
         $settings_data = json_encode($settings_data);
         $settings_key = 'settings';
 
