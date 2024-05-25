@@ -48,7 +48,7 @@ class SystemService extends BaseService
         return $data;
     }
 
-    public function updateData(Request $request): array
+    public function updateData(Request $request): Setting
     {
         $data = [];
 
@@ -62,9 +62,15 @@ class SystemService extends BaseService
         $data['dateformat'] = $request->input('dateformat', config('panel.dateformat'));
         $data['timeformat'] = $request->input('timeformat', config('panel.timeformat'));
 
-        $setting = $this->model->firstWhere('key', self::KEY)->update([
-            'value' => json_encode($data),
+        $value = json_encode($data);
+
+        $setting = $this->model->firstWhere('key', self::KEY);
+        $setting->update([
+            'value' => $value, // JSON dizesini 'value' kolonuna kaydeder
         ]);
+
+        // Ayar türünü Model'e set et
+        $setting->type = $request->input('type', 'system');
 
         return $setting;
     }

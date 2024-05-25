@@ -24,9 +24,10 @@ class Update
      *
      * @return mixed Sistem ayarlarını güncelleme
      */
-    public function execute($request)
+    public function execute($request, $type)
     {
         $settings = $this->postService->updateData($request);
-        event(new SystemUpdated($settings));
+        event(new SystemUpdated($settings, $type));
+        return $settings;
     }
 }

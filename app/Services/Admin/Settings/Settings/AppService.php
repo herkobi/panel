@@ -42,7 +42,7 @@ class AppService extends BaseService
         ];
     }
 
-    public function updateData(Request $request)
+    public function updateData(Request $request): Setting
     {
         $data = [];
 
@@ -62,9 +62,15 @@ class AppService extends BaseService
             $data['favicon'] = config('panel.favicon');
         }
 
-        $setting = $this->model->firstWhere('key', self::KEY)->update([
-            'value' => json_encode($data),
+        $value = json_encode($data);
+
+        $setting = $this->model->firstWhere('key', self::KEY);
+        $setting->update([
+            'value' => $value, // JSON dizesini 'value' kolonuna kaydeder
         ]);
+
+        // Ayar türünü Model'e set et
+        $setting->type = $request->input('type', 'app');
 
         return $setting;
     }

@@ -2,7 +2,6 @@
 
 namespace App\Events\Admin\Settings\Settings;
 
-use App\Models\Setting;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -11,9 +10,11 @@ class SystemUpdated
     use Dispatchable, SerializesModels;
 
     public $setting;
+    public $type;
 
-    public function __construct(Setting $setting)
+    public function __construct($settings, $type)
     {
-        $this->setting = $setting;
+        $this->setting = $settings;
+        $this->type = $type;
     }
 }

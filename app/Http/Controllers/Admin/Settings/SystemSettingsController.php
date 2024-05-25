@@ -38,7 +38,7 @@ class SystemSettingsController extends Controller
      */
     public function update(SystemSettingsUpdateRequest $request): RedirectResponse
     {
-        $updated = $this->update->execute($request);
+        $updated = $this->update->execute($request, 'system');
         return $updated
                 ? Redirect::back()->with('success', 'Sistem ayarları başarılı bir şekilde güncellendi.')
                 : Redirect::route('panel.settings.system')->with('error', 'Sistem ayarları güncellenemedi.');

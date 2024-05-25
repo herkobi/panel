@@ -43,7 +43,8 @@ class Setting extends Model
     public function tapActivity(Activity $activity, string $eventName)
     {
         $userName = auth()->user()?->name .' '.auth()->user()?->surname ?? "Panel User";
-        $activity->description = "{$userName}, sistem ayarlarını güncelledi.";
+        $type = $this->type === 'application' ? 'uygulama' : 'sistem';
+        $activity->description = "{$userName}, {$type} ayarlarını güncelledi.";
     }
 
 }

@@ -24,9 +24,10 @@ class Update
      *
      * @return mixed Uygulama ayarları listesi
      */
-    public function execute($request)
+    public function execute($request, $type)
     {
         $app = $this->postService->updateData($request);
-        event(new AppUpdated($app));
+        event(new AppUpdated($app, $type));
+        return $app;
     }
 }
