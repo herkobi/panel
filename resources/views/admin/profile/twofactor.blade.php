@@ -24,78 +24,55 @@
                     </div>
                     <div class="col-12 col-md-9 d-flex flex-column">
                         <div class="card-body">
-                            <h2 class="mb-4">My Account</h2>
-                            <h3 class="card-title">Profile Details</h3>
-                            <div class="row align-items-center">
-                                <div class="col-auto"><span class="avatar avatar-xl"
-                                        style="background-image: url(./static/avatars/000m.jpg)"></span>
+                            <h2 class="profile-section-title border-bottom fw-normal pb-3 mb-5">İki Faktörlü Doğrulama</h2>
+                            @if (!auth()->user()->two_factor_secret)
+                                <h3 class="card-title mt-4">Etkinleştir</h3>
+                                <p class="card-subtitle">İki faktörlü doğrulama ile oturum açmak için lütfen
+                                    etkinleştiriniz.</p>
+                                <div>
+                                    <form method="POST" action="{{ url('/user/two-factor-authentication') }}">
+                                        @csrf
+                                        <button type="submit" class="btn">
+                                            {{ __('İki Faktörlü Doğrulamayı Etkinleştir') }}
+                                        </button>
+                                    </form>
                                 </div>
-                                <div class="col-auto"><a href="#" class="btn">
-                                        Change avatar
-                                    </a></div>
-                                <div class="col-auto"><a href="#" class="btn btn-ghost-danger">
-                                        Delete avatar
-                                    </a></div>
-                            </div>
-                            <h3 class="card-title mt-4">Business Profile</h3>
-                            <div class="row g-3">
-                                <div class="col-md">
-                                    <div class="form-label">Business Name</div>
-                                    <input type="text" class="form-control" value="Tabler">
+                            @else
+                                <h3 class="card-title mt-4">QR Kod</h3>
+                                <p class="card-subtitle">İki faktörlü kimlik doğrulama artık etkin. Telefonunuzun kimlik
+                                    doğrulayıcı uygulamasını kullanarak aşağıdaki QR kodunu tarayın.</p>
+                                <div class="mb-3">
+                                    {!! auth()->user()->twoFactorQrCodeSvg() !!}
                                 </div>
-                                <div class="col-md">
-                                    <div class="form-label">Business ID</div>
-                                    <input type="text" class="form-control" value="560afc32">
+                                <h3 class="card-title mt-4">Kurtarma Kodları</h3>
+                                <p class="card-subtitle">Bu kurtarma kodlarını güvenli bir parola yöneticisinde saklayın.
+                                    İki faktörlü kimlik doğrulama cihazınızın kaybolması durumunda, hesabınıza erişimi
+                                    kurtarmak için kullanabilirsiniz.</p>
+                                <ul class="ps-3">
+                                    @foreach (json_decode(decrypt(auth()->user()->two_factor_recovery_codes), true) as $code)
+                                        <li>{{ $code }}</li>
+                                    @endforeach
+                                </ul>
+                                <form method="POST" action="{{ url('user/two-factor-recovery-codes') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-dark">
+                                        {{ __('Kodları yeniden oluştur') }}
+                                    </button>
+                                </form>
+                                <hr>
+                                <h3 class="card-title mt-4">Devre Dışı Bırak</h3>
+                                <p class="card-subtitle">İki faktörlü doğrulamayı devre dışı bırakmak için aşağıdaki
+                                    butona tıklayınız.</p>
+                                <div>
+                                    <form method="POST" action="{{ url('user/two-factor-authentication') }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">
+                                            {{ __('İki Faktörlü Doğrulamayı Devre Dışı Bırak') }}
+                                        </button>
+                                    </form>
                                 </div>
-                                <div class="col-md">
-                                    <div class="form-label">Location</div>
-                                    <input type="text" class="form-control" value="Peimei, China">
-                                </div>
-                            </div>
-                            <h3 class="card-title mt-4">Email</h3>
-                            <p class="card-subtitle">This contact will be shown to others publicly, so choose it carefully.
-                            </p>
-                            <div>
-                                <div class="row g-2">
-                                    <div class="col-auto">
-                                        <input type="text" class="form-control w-auto"
-                                            value="paweluna@howstuffworks.com">
-                                    </div>
-                                    <div class="col-auto"><a href="#" class="btn">
-                                            Change
-                                        </a></div>
-                                </div>
-                            </div>
-                            <h3 class="card-title mt-4">Password</h3>
-                            <p class="card-subtitle">You can set a permanent password if you don't want to use temporary
-                                login codes.</p>
-                            <div>
-                                <a href="#" class="btn">
-                                    Set new password
-                                </a>
-                            </div>
-                            <h3 class="card-title mt-4">Public profile</h3>
-                            <p class="card-subtitle">Making your profile public means that anyone on the Dashkit network
-                                will be able to find
-                                you.</p>
-                            <div>
-                                <label class="form-check form-switch form-switch-lg">
-                                    <input class="form-check-input" type="checkbox">
-                                    <span class="form-check-label form-check-label-on">You're currently visible</span>
-                                    <span class="form-check-label form-check-label-off">You're
-                                        currently invisible</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-transparent mt-auto">
-                            <div class="btn-list justify-content-end">
-                                <a href="#" class="btn">
-                                    Cancel
-                                </a>
-                                <a href="#" class="btn btn-primary">
-                                    Submit
-                                </a>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

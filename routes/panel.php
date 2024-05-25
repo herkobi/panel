@@ -307,10 +307,4 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
         Route::post('/profile/password', 'updatePassword')->name('profile.password.update');
     });
 
-    /**
-     * İki Faktörlü Doğrulama
-     */
-    Route::controller(TwoFactorAuthenticationController::class)->group(function () {
-    });
-
 });
