@@ -14,4 +14,14 @@ class TwoFactorAuthenticationController extends Controller
             'user' => $request->user(),
         ]);
     }
+
+    public function confirm(Request $request)
+    {
+        $confirmed = $request->user()->confirmTwoFactorAuth($request->code);
+        if (!$confirmed) {
+            return back()->withErrors('Invalid Two Factor Authentication code');
+        }
+
+        return back();
+    }
 }
