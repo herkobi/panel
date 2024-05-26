@@ -9,8 +9,10 @@ use App\Http\Requests\Admin\Roles\Roles\RoleUpdateRequest;
 use App\Actions\Admin\Roles\Role\Create;
 use App\Actions\Admin\Roles\Role\Update;
 use App\Actions\Admin\Roles\Role\Delete;
+use App\Actions\Admin\Roles\Role\Detail;
 use App\Actions\Admin\Roles\Role\GetAll;
 use App\Actions\Admin\Roles\Role\GetOne;
+use App\Actions\Admin\Roles\Role\Permissions;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\RedirectResponse;
@@ -25,19 +27,25 @@ class RoleController extends Controller
     private $create;
     private $update;
     private $delete;
+    private $detail;
+    private $permissions;
 
     public function __construct(
         GetAll $getAll,
         GetOne $getOne,
         Create $create,
         Update $update,
-        Delete $delete
+        Delete $delete,
+        Detail $detail,
+        Permissions $permissions,
     ) {
         $this->getAll = $getAll;
         $this->getOne = $getOne;
         $this->create = $create;
         $this->update = $update;
         $this->delete = $delete;
+        $this->detail = $detail;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -152,15 +160,15 @@ class RoleController extends Controller
         return Redirect::back()->with('Hata; Lütfen en az bir adet izin seçiniz');
     }
 
-    public function detail(Role $role): View
+    public function detail($id): View
     {
-        $permissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
-            ->where("role_has_permissions.role_id", $role->id)
-            ->get();
-
+        $role = $this->getOne->execute($id);
+        $rolePermissions = $this->detail->execute($role->id);
+        $permissions = $this->permissions->execute();
         return view('admin.roles.roles.detail', [
             'role' => $role,
-            'permissions' => $permissions
+            'rolePermissions' => $rolePermissions,
+            'permissions' => $permissions,
         ]);
     }
 

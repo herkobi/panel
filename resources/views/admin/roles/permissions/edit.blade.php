@@ -39,10 +39,10 @@
                                                 <option value="0" {{ $permission->parent_id == 0 ? 'selected' : '' }}>
                                                     Ana İzin
                                                 </option>
-                                                @foreach ($permissions as $key => $permission)
-                                                    <option value="{{ $permission->id }}"
-                                                        {{ $permission->parent_id == $permission->id ? 'selected' : '' }}>
-                                                        {{ $permission->desc }}</option>
+                                                @foreach ($mainPermissions as $key => $prm)
+                                                    <option value="{{ $prm->id }}"
+                                                        {{ $permission->parent_id == $prm->id ? 'selected' : '' }}>
+                                                        {{ $prm->desc }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

@@ -86,19 +86,32 @@ class PermissionController extends Controller
     public function edit($id): View
     {
         $permission = $this->getOne->execute($id);
-        $permissions = $this->mainPermissions->execute();
+        $mainPermissions = $this->mainPermissions->execute();
         return view('admin.roles.permissions.edit', [
             'permission' => $permission,
-            'permissions' => $permissions
+            'mainPermissions' => $mainPermissions
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(PermissionUpdateRequest $request, $id): RedirectResponse
     {
         $this->update->execute($id, $request->validated());
         return Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde güncellendi');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id): RedirectResponse
     {
         $permission = $this->getOne->execute($id);
@@ -115,7 +128,7 @@ class PermissionController extends Controller
             return Redirect::back()->with('error', 'İzne tanımlı alt izinler bulunmaktadır. Lütfen öncelikle onları kaldırınız.');
         }
 
-        $permission->delete();
+        $this->delete->execute($id);
         return Redirect::route('panel.permissions')->with('succes', 'İzin başarılı bir şekilde silindi');
     }
 }

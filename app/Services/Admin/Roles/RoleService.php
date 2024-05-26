@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin\Roles;
 
+use App\Models\Permission;
 use App\Services\Admin\BaseService;
 use App\Models\Role;
 use Illuminate\Support\Collection;
@@ -9,9 +10,16 @@ use Illuminate\Support\Collection;
 class RoleService extends BaseService
 {
 
-    public function __construct(Role $model)
+    protected $model;
+    protected $permissionModel;
+
+    public function __construct(
+        Role $model,
+        Permission $permissionModel
+    )
     {
         $this->model = $model;
+        $this->permissionModel = $permissionModel;
     }
 
     protected function prepareData(array $data, string $action = 'create'): array
@@ -35,6 +43,12 @@ class RoleService extends BaseService
         return $filteredRoles;
     }
 
+    public function detailRole(int $id): Collection
+    {
+        $role = $this->getById($id);
+        return $this->permissionModel->join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")->where("role_has_permissions.role_id", $role->id)->get();
+    }
+
     // RoleService içinde yeni bir metod ekle
     protected function filterRoles(Collection $roles): Collection
     {
@@ -42,6 +56,12 @@ class RoleService extends BaseService
         return $roles->reject(function ($role) {
             return $role->name === 'Super Admin';
         });
+    }
+
+    public function permissions(): Collection
+    {
+        return $this->permissionModel->with('children')->where('parent_id', 0)->get();
+
     }
 
 }

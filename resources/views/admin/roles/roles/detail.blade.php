@@ -42,6 +42,21 @@
                         <form action="" method="post">
                             @csrf
                             <div class="card-body">
+                                <div class="divide-y">
+                                    @foreach ($permissions as $permission)
+                                        <div>
+                                            <label class="row ">
+                                                <span class="col">{{ $permission->desc }}</span>
+                                                <span class="col-auto">
+                                                    <label class="form-check form-check-single form-switch">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            name="rolePermission[]" value="{{ $permission->id }}">
+                                                    </label>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                             <div class="card-footer text-end">
                                 <button type="submit" class="btn btn-primary">İzinleri Tanımla</button>
