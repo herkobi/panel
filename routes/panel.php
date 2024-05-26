@@ -293,7 +293,9 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
         Route::get('/permissions', 'index')->name('permissions');
         Route::get('/permission.create', 'create')->name('permission.create');
         Route::post('/permission/create/store', 'store')->name('permission.create.store');
-        Route::get('/permission/edit/{permission}', 'permission')->name('permission.edit');
+        Route::get('/permission/edit/{permission}', 'edit')->name('permission.edit');
+        Route::post('/permission/update/{permission}', 'update')->name('permission.update');
+        Route::delete('/permission/destroy/{permission}', 'destroy')->name('permission.destroy');
 
     });
 

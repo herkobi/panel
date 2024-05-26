@@ -24,7 +24,7 @@ class PermissionUpdateRequest extends FormRequest
     {
         return [
             'parent_id' => ['integer', 'required'],
-            'name' => ['required', Rule::unique('permissions', 'name')->ignore($this->permission->id, 'id')],
+            'name' => ['required', Rule::unique('permissions', 'name')->ignore($this->permission, 'id')],
             'desc' => 'required',
         ];
     }
