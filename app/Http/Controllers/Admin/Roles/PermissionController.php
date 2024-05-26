@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Roles;
 
+use App\Actions\Admin\Roles\Permission\Create;
+use App\Actions\Admin\Roles\Permission\Delete;
+use App\Actions\Admin\Roles\Permission\AllPermissions;
+use App\Actions\Admin\Roles\Permission\GetOne;
+use App\Actions\Admin\Roles\Permission\MainPermissions;
+use App\Actions\Admin\Roles\Permission\Update;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Roles\Permissions\PermissionCreateRequest;
 use App\Http\Requests\Admin\Roles\Permissions\PermissionUpdateRequest;
@@ -15,37 +21,73 @@ use App\Utils\PaginateCollection;
 class PermissionController extends Controller
 {
 
+    private $allPermissions;
+    private $mainPermissions;
+    private $getOne;
+    private $create;
+    private $update;
+    private $delete;
+
+    public function __construct(
+        AllPermissions $allPermissions,
+        MainPermissions $mainPermissions,
+        GetOne $getOne,
+        Create $create,
+        Update $update,
+        Delete $delete
+    ) {
+        $this->allPermissions = $allPermissions;
+        $this->mainPermissions = $mainPermissions;
+        $this->getOne = $getOne;
+        $this->create = $create;
+        $this->update = $update;
+        $this->delete = $delete;
+    }
+
     public function index(): View
     {
-        $permissions = Permission::get();
-        $permissions = PaginateCollection::paginate($permissions, 5);
+        $permissions = $this->allPermissions->execute();
         return view('admin.roles.permissions.index', [
             'permissions' => $permissions
         ]);
     }
 
-    public function store(PermissionCreateRequest $request): RedirectResponse
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(): View
     {
-        $guard_name = "web";
-
-        $permission = Permission::create([
-            'name' => $request['name'],
-            'text' => $request['text'],
-            'guard_name' => $guard_name
+        $permissions = $this->mainPermissions->execute();
+        return view('admin.roles.permissions.create', [
+            'permissions' => $permissions
         ]);
-
-        if ($permission) {
-            return Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde oluşturuldu');
-        }
-
-        return Redirect::back()->with('errors', $request->validated()->messages()->all()[0])->withInput();
-
     }
 
-    public function edit(Permission $permission): View
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(PermissionCreateRequest $request): RedirectResponse
     {
+        $this->create->execute($request->validated());
+        return Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde eklendi.');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id): View
+    {
+        $permission = $this->getOne->execute($id);
         return view('admin.roles.permissions.edit', [
-            'permission' => $permission,
+            'permission' => $permission
         ]);
     }
 

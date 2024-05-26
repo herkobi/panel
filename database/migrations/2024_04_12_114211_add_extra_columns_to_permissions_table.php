@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('permissions', function (Blueprint $table) {
-            $table->string('text')->after('name')->nullable();
+            $table->unsignedBigInteger('parent_id')->default(0)->after('id');
+            $table->string('desc')->after('name');
         });
     }
 

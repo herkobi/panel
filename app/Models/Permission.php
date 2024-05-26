@@ -16,8 +16,9 @@ class Permission extends PermissionModel
     protected $table = 'permissions';
 
     protected $fillable = [
+        'parent_id',
         'name',
-        'text',
+        'desc',
         'guard_name'
     ];
 
@@ -27,6 +28,16 @@ class Permission extends PermissionModel
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Permission::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Permission::class, 'parent_id');
     }
 
     protected static $logAttributes = ['name', 'text', 'guard_name'];

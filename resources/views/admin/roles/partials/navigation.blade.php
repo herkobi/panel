@@ -1,4 +1,4 @@
-<div class="dropdown-menu panel-dropdown shadow-none">
+<div class="dropdown-menu panel-dropdown shadow-none pb-0">
     <span class="dropdown-header">Yetki ve İzinler</span>
     <a class="dropdown-item {{ request()->routeIs(['panel.roles', 'panel.role.edit', 'panel.role.detail']) ? 'active' : '' }}"
         href="{{ route('panel.roles') }}" title="Yetkiler">
@@ -50,7 +50,8 @@
         İzinler
     </a>
     @if (request()->routeIs(['panel.permissions', 'panel.permission.*']))
-        <a class="dropdown-item" href="{{ route('panel.roles') }}" title="Yetkiler">
+        <a class="dropdown-item {{ request()->routeIs('panel.permission.create') ? 'active' : '' }}"
+            href="{{ route('panel.permission.create') }}" title="Yetkiler">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24" height="24"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-shield-heart">

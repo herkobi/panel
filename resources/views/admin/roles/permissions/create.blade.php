@@ -5,11 +5,11 @@
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
                     'subtitle' => 'Herkobi',
-                    'title' => 'Yetkiler',
+                    'title' => 'İzinler',
                 ])
                 @include('admin.roles.roles.partials.page-buttons', [
-                    'first_button' => 'Yetkiler',
-                    'first_link' => 'panel.roles',
+                    'first_button' => 'İzinler',
+                    'first_link' => 'panel.permissions',
                 ])
             </div>
         </div>
@@ -24,43 +24,21 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">Yeni Yetki Ekle</h1>
+                            <h1 class="card-title">Yeni İzin Ekle</h1>
                         </div>
-                        <form action="{{ route('panel.role.create.store') }}" method="POST">
+                        <form action="{{ route('panel.permission.create.store') }}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Durum</label>
+                                    <label class="col-3 col-form-label required">İzin Türü</label>
                                     <div class="col">
                                         <div>
-                                            @foreach (Status::cases() as $type)
-                                                <label class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="status"
-                                                        value="{{ $type->value }}"
-                                                        {{ 1 == $type->value ? 'checked' : '' }}>
-                                                    <span
-                                                        class="form-check-label">{{ Status::getTitle($type->value) }}</span>
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                        @error('status')
-                                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Yetki Türü</label>
-                                    <div class="col">
-                                        <div>
-                                            @foreach (UserType::cases() as $type)
-                                                <label class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="type"
-                                                        value="{{ $type->value }}"
-                                                        {{ 1 == $type->value ? 'checked' : '' }}>
-                                                    <span
-                                                        class="form-check-label">{{ UserType::getTitle($type->value) }}</span>
-                                                </label>
-                                            @endforeach
+                                            <select name="parent_id" class="form-select">
+                                                <option value="0">Ana İzin</option>
+                                                @foreach ($permissions as $key => $permission)
+                                                    <option value="{{ $permission->id }}">{{ $permission->desc }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         @error('type')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
@@ -68,27 +46,27 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Yetki Adı</label>
-                                    <div class="col">
-                                        <input type="text" name="name"
-                                            class="form-control @error('name') is-invalid @enderror"
-                                            value="{{ old('name') }}" placeholder="Yetki Adı">
-                                        @error('name')
-                                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                        @enderror
-                                        <small class="form-hint">Yetki adını giriniz. Örnek: Admin</small>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-3 col-form-label">Açıklama</label>
+                                    <label class="col-3 col-form-label required">İzin Açıklaması</label>
                                     <div class="col">
                                         <input type="text" name="desc"
                                             class="form-control @error('desc') is-invalid @enderror"
-                                            value="{{ old('desc') }}" placeholder="Açıklama">
+                                            value="{{ old('desc') }}" placeholder="İzin Açıklaması">
                                         @error('desc')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Yetki ile ilgili kısa açıklama</small>
+                                        <small class="form-hint">İzinin görünecek adı</small>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-3 col-form-label required">İzin</label>
+                                    <div class="col">
+                                        <input type="text" name="name"
+                                            class="form-control @error('name') is-invalid @enderror"
+                                            value="{{ old('name') }}" placeholder="İzin">
+                                        @error('name')
+                                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                        @enderror
+                                        <small class="form-hint">İzni giriniz. Örnek: pages create</small>
                                     </div>
                                 </div>
                             </div>

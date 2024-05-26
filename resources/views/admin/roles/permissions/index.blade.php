@@ -11,7 +11,7 @@
                     'first_button' => 'İzinler',
                     'first_link' => 'panel.permissions',
                     'second_button' => 'Yeni İzin Ekle',
-                    'second_link' => 'panel.permissions',
+                    'second_link' => 'panel.permission.create',
                 ])
             </div>
         </div>
@@ -32,40 +32,66 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-5">Durum</th>
-                                        <th class="w-60">İzin Adı</th>
-                                        <th class="w-20">İzin Grubu</th>
+                                        <th class="w-35">İzin Adı</th>
+                                        <th class="w-35">İzin</th>
+                                        <th class="w-15"></th>
                                         <th class="w-15"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($permissions as $permission)
                                         <tr>
-                                            <td>
-                                                @if ($permission->status->value == 1)
-                                                    <span
-                                                        class="badge bg-green text-green-fg">{{ Status::title($permission->status) }}</span>
-                                                @else
-                                                    <span
-                                                        class="badge bg-red text-red-fg">{{ Status::title($permission->status) }}</span>
-                                                @endif
+                                            <td>{{ $permission->desc }}</td>
+                                            <td>{{ $permission->name }}</td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-ghost-secondary btn-sm"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#collapse{{ $permission->id }}" aria-expanded="false"
+                                                    aria-controls="collapse{{ $permission->id }}">
+                                                    İzinler
+                                                </button>
                                             </td>
-                                            <td class="fw-bold">{{ $permission->title }}</td>
-                                            <td>{{ $permission->group->name }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('panel.permission.edit', $permission->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Düzenle">
-                                                    Düzenle
-                                                </a>
+                                                    class="btn btn-ghost-primary btn-sm" title="Düzenle">Düzenle</a>
+                                            </td>
+                                        </tr>
+                                        <tr class="collapse" id="collapse{{ $permission->id }}">
+                                            <td colspan="4">
+                                                <div class="table-responsive nested-table">
+                                                    <table class="table card-table table-vcenter text-nowrap datatable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="w-50">Alt İzin Adı</th>
+                                                                <th class="w-35">Alt İzin</th>
+                                                                <th class="w-15"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($permission->children as $child)
+                                                                <tr>
+                                                                    <td>{{ $child->desc }}</td>
+                                                                    <td>{{ $child->name }}</td>
+                                                                    <td class="text-center">
+                                                                        <a href="{{ route('panel.permission.edit', $child->id) }}"
+                                                                            class="btn btn-ghost-primary btn-sm"
+                                                                            title="Düzenle">Düzenle</a>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer d-flex align-items-center pb-1 text-end w-100">
+
+                        {{-- <div class="card-footer d-flex align-items-center pb-1 text-end w-100">
                             {{ $permissions->links() }}
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

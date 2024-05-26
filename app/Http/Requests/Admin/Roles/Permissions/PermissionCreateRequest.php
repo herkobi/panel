@@ -24,8 +24,9 @@ class PermissionCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'parent_id' => ['integer', 'required'],
             'name' => ['required', Rule::unique('permissions', 'name')],
-            'text' => 'required',
+            'desc' => 'required',
         ];
     }
 
@@ -37,12 +38,11 @@ class PermissionCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'group_id.required' => 'Lütfen izin grubu seçiniz',
-            'group_id.not_in' => 'Lütfen izin grubu seçiniz',
-            'group_id.integer' => 'İzin grubu rakam olmalıdır',
+            'parent_id.required' => 'Lütfen izin türünü giriniz',
+            'parent_id.integer' => 'Lütfen geçerli bir izin türü giriniz',
             'name.required' => 'Lütfen izin kodunu giriniz',
             'name.unique' => 'Bu isimde girilmiş izin kodu bulunmaktadır',
-            'text.required' => 'Lütfen izin açıklamasını giriniz',
+            'desc.required' => 'Lütfen izin açıklamasını giriniz',
         ];
     }
 }

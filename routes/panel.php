@@ -291,6 +291,10 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
      */
     Route::controller(PermissionController::class)->group(function(){
         Route::get('/permissions', 'index')->name('permissions');
+        Route::get('/permission.create', 'create')->name('permission.create');
+        Route::post('/permission/create/store', 'store')->name('permission.create.store');
+        Route::get('/permission/edit/{permission}', 'permission')->name('permission.edit');
+
     });
 
     /**

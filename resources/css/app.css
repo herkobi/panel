@@ -136,3 +136,8 @@
     --tblr-icon-size: 4rem;
     color: rgba(var(--tblr-azure-rgb), var(--tblr-text-opacity)) !important;
 }
+
+/* Accordion transition speed */
+.collapse {
+    transition: height 0.3s ease;
+}

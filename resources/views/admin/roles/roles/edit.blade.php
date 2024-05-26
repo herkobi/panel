@@ -156,8 +156,8 @@
             </div>
         </div>
         <script type="module">
-            var successModal = new bootstrap.Modal(document.getElementById('modal-danger'), {})
-            successModal.toggle()
+            var errorModal = new bootstrap.Modal(document.getElementById('modal-danger'), {})
+            errorModal.toggle()
         </script>
     @endif
     <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
