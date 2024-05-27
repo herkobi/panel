@@ -42,18 +42,48 @@
                         <form action="" method="post">
                             @csrf
                             <div class="card-body">
-                                <div class="divide-y">
+                                <div class="row row-cards">
                                     @foreach ($permissions as $permission)
-                                        <div>
-                                            <label class="row ">
-                                                <span class="col">{{ $permission->desc }}</span>
-                                                <span class="col-auto">
-                                                    <label class="form-check form-check-single form-switch">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="rolePermission[]" value="{{ $permission->id }}">
-                                                    </label>
-                                                </span>
-                                            </label>
+                                        <div class="col-lg-4">
+                                            <div class="card selectPermissions">
+                                                <div class="card-header p-3">
+                                                    <div class="d-flex align-items-center justify-content-between w-100">
+                                                        <div class="card-title">
+                                                            {{ $permission->desc }}
+                                                        </div>
+                                                        <div class="permission-all">
+                                                            <label class="form-check form-switch m-0">
+                                                                <input type="checkbox"
+                                                                    class="form-check-input position-static all-permissions ms-0"
+                                                                    name="permission" value="{{ $permission->id }}">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body p-3">
+                                                    <label class="form-label">İşlem Bazlı İzinler</label>
+                                                    <div class="divide-y">
+                                                        @foreach ($permission->children as $child)
+                                                            <div>
+                                                                <label class="row">
+                                                                    <span class="col">
+                                                                        {{ $child->desc }}
+                                                                        <small>{{ $child->name }}</small>
+                                                                    </span>
+                                                                    <span class="col-auto">
+                                                                        <label
+                                                                            class="form-check form-check-single form-switch">
+                                                                            <input type="checkbox" class="form-check-input permission"
+                                                                                name="permission"
+                                                                                value="{{ $child->id }}">
+                                                                        </label>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endforeach
                                 </div>
@@ -67,4 +97,29 @@
             </div>
         </div>
     </div>
+@endsection
+
+
+@section('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.selectPermissions');
+
+            cards.forEach(function(card) {
+                const allPermissionsCheckbox = card.querySelector('.all-permissions');
+                const individualPermissionsCheckboxes = card.querySelectorAll('.permission');
+
+                if (allPermissionsCheckbox) {
+                    allPermissionsCheckbox.addEventListener('change', function() {
+                        const isChecked = allPermissionsCheckbox.checked;
+
+                        individualPermissionsCheckboxes.forEach(function(checkbox) {
+                            checkbox.checked = isChecked;
+                            checkbox.disabled = isChecked;
+                        });
+                    });
+                }
+            });
+        });
+    </script>
 @endsection

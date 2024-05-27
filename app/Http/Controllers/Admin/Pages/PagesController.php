@@ -35,6 +35,11 @@ class PagesController extends Controller
         $this->create = $create;
         $this->update = $update;
         $this->delete = $delete;
+
+        $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:product-create', ['only' => ['create','store']]);
+        $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:product-delete', ['only' => ['destroy']]);
     }
 
     public function index(): View
