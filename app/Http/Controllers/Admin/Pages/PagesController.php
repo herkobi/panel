@@ -13,8 +13,10 @@ use App\Actions\Admin\Pages\GetOne;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PagesController extends Controller
+class PagesController extends Controller implements HasMiddleware
 {
 
     private $getAll;
@@ -35,17 +37,14 @@ class PagesController extends Controller
         $this->create = $create;
         $this->update = $update;
         $this->delete = $delete;
-
-        $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:product-create', ['only' => ['create','store']]);
-        $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:product-delete', ['only' => ['destroy']]);
     }
 
     public function index(): View
     {
         $pages = $this->getAll->execute();
-        return view('admin.pages.index', compact('pages'));
+        return view('admin.pages.index', [
+            'pages' => $pages
+        ]);
     }
 
     public function create(): View
@@ -62,7 +61,9 @@ class PagesController extends Controller
     public function edit($id): View
     {
         $page = $this->getOne->execute($id);
-        return view('admin.pages.edit', compact('page'));
+        return view('admin.pages.edit', [
+            'page' => $page
+        ]);
     }
 
     public function update(PageUpdateRequest $request, $id): RedirectResponse
@@ -75,5 +76,16 @@ class PagesController extends Controller
     {
         $this->delete->execute($id);
         return Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde silindi');
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            // examples with aliases, pipe-separated names, guards, etc:
+            'role_or_permission:manager|edit articles',
+            new Middleware('role:author', only: ['index']),
+            new Middleware(\Spatie\Permission\Middleware\RoleMiddleware::using('manager'), except:['show']),
+            new Middleware(\Spatie\Permission\Middleware\PermissionMiddleware::using('delete records,api'), only:['destroy']),
+        ];
     }
 }

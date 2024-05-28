@@ -46,10 +46,11 @@
                                     @foreach ($permissions as $permission)
                                         <div class="col-lg-4">
                                             <div class="card selectPermissions">
-                                                <div class="card-header p-3">
+                                                <div class="card-header bg-gray-400 p-2">
                                                     <div class="d-flex align-items-center justify-content-between w-100">
                                                         <div class="card-title">
-                                                            {{ $permission->desc }}
+                                                            <div class="d-block">{{ $permission->desc }}</div>
+                                                            <small class="fw-normal">Bölüme ait tüm işlemleri yap</small>
                                                         </div>
                                                         <div class="permission-all">
                                                             <label class="form-check form-switch m-0">
@@ -61,31 +62,34 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="card-body p-3">
-                                                    <label class="form-label">İşlem Bazlı İzinler</label>
-                                                    <div class="divide-y">
-                                                        @foreach ($permission->children as $child)
-                                                            <div>
-                                                                <label class="row">
-                                                                    <span class="col">
-                                                                        {{ $child->desc }}
-                                                                        <small>{{ $child->name }}</small>
-                                                                    </span>
-                                                                    <span class="col-auto">
-                                                                        <label
-                                                                            class="form-check form-check-single form-switch">
-                                                                            <input type="checkbox"
-                                                                                class="form-check-input permission"
-                                                                                name="permission[]"
-                                                                                value="{{ $child->id }}"
-                                                                                @if (in_array($child->id, $rolePermissions)) checked @endif>
-                                                                        </label>
-                                                                    </span>
-                                                                </label>
-                                                            </div>
-                                                        @endforeach
+                                                @if (count($permission->children) > 0)
+                                                    <div class="card-body p-2">
+                                                        <label class="form-label border-bottom mb-3 pb-2">İşlem Bazlı
+                                                            İzinler</label>
+                                                        <div class="divide-y">
+                                                            @foreach ($permission->children as $child)
+                                                                <div>
+                                                                    <label class="row">
+                                                                        <span class="col">
+                                                                            {{ $child->desc }}
+                                                                            <small>{{ $child->name }}</small>
+                                                                        </span>
+                                                                        <span class="col-auto">
+                                                                            <label
+                                                                                class="form-check form-check-single form-switch">
+                                                                                <input type="checkbox"
+                                                                                    class="form-check-input permission"
+                                                                                    name="permission[]"
+                                                                                    value="{{ $child->id }}"
+                                                                                    @if (in_array($child->id, $rolePermissions)) checked @endif>
+                                                                            </label>
+                                                                        </span>
+                                                                    </label>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @endif
                                             </div>
                                         </div>
                                     @endforeach
@@ -116,11 +120,33 @@
                     allPermissionsCheckbox.addEventListener('change', function() {
                         const isChecked = allPermissionsCheckbox.checked;
 
-                        // Ana izin seçildiyse alt izinleri de seç
+                        // Ana izin seçildiyse alt izinleri de seç ve kilitle
                         for (let i = 0; i < individualPermissionsCheckboxes.length; i++) {
                             individualPermissionsCheckboxes[i].checked = isChecked;
                             individualPermissionsCheckboxes[i].readOnly = isChecked;
                         }
+                    });
+
+                    individualPermissionsCheckboxes.forEach(function(individualCheckbox) {
+                        individualCheckbox.addEventListener('change', function() {
+                            // Eğer herhangi bir alt izin kaldırılırsa ana izni de kaldır
+                            if (!individualCheckbox.checked) {
+                                allPermissionsCheckbox.checked = false;
+                                allPermissionsCheckbox.readOnly = false;
+                            } else {
+                                // Tüm alt izinler işaretliyse ana izni işaretle ve kilitle
+                                let allChecked = true;
+                                for (let i = 0; i < individualPermissionsCheckboxes
+                                    .length; i++) {
+                                    if (!individualPermissionsCheckboxes[i].checked) {
+                                        allChecked = false;
+                                        break;
+                                    }
+                                }
+                                allPermissionsCheckbox.checked = allChecked;
+                                allPermissionsCheckbox.readOnly = allChecked;
+                            }
+                        });
                     });
                 }
             });
