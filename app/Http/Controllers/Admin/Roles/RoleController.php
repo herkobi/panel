@@ -13,6 +13,7 @@ use App\Actions\Admin\Roles\Role\Detail;
 use App\Actions\Admin\Roles\Role\GetAll;
 use App\Actions\Admin\Roles\Role\GetOne;
 use App\Actions\Admin\Roles\Role\Permissions;
+use App\Actions\Admin\Roles\Role\SyncPermissions;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\RedirectResponse;
@@ -29,6 +30,7 @@ class RoleController extends Controller
     private $delete;
     private $detail;
     private $permissions;
+    private $syncpermissions;
 
     public function __construct(
         GetAll $getAll,
@@ -38,6 +40,7 @@ class RoleController extends Controller
         Delete $delete,
         Detail $detail,
         Permissions $permissions,
+        SyncPermissions $syncpermissions,
     ) {
         $this->getAll = $getAll;
         $this->getOne = $getOne;
@@ -46,6 +49,7 @@ class RoleController extends Controller
         $this->delete = $delete;
         $this->detail = $detail;
         $this->permissions = $permissions;
+        $this->syncpermissions = $syncpermissions;
     }
 
     /**
@@ -149,17 +153,20 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function permissions(RolePermissionCreateRequest $request, Role $role): RedirectResponse
+    public function permissions(RolePermissionCreateRequest $request, $id): RedirectResponse
     {
-        if ($request->validated()) {
-            $role->syncPermissions($request->permission);
-
-            return Redirect::route('panel.roles')->with('success', __('role.created.permission.success.message'));
-        }
-
-        return Redirect::back()->with('Hata; Lütfen en az bir adet izin seçiniz');
+        $synced = $this->syncpermissions->execute($id, $request);
+        return $synced ?
+            Redirect::route('panel.roles')->with('success', __('role.created.permission.success.message'))
+            : Redirect::back()->with('Hata', 'Lütfen en az bir adet izin seçiniz');
     }
 
+    /**
+     * Show detail the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function detail($id): View
     {
         $role = $this->getOne->execute($id);

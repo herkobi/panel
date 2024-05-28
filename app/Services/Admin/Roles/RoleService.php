@@ -36,17 +36,15 @@ class RoleService extends BaseService
     {
         // Tüm rolleri getir
         $roles = $this->model::all();
-
         // Super Admin rolünü filtrele
         $filteredRoles = $this->filterRoles($roles);
-
         return $filteredRoles;
     }
 
-    public function detailRole(int $id): Collection
+    public function detailRole(int $id): array
     {
         $role = $this->getById($id);
-        return $this->permissionModel->join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")->where("role_has_permissions.role_id", $role->id)->get();
+        return $this->permissionModel->join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")->where("role_has_permissions.role_id", $role->id)->pluck('permission_id')->toArray();
     }
 
     // RoleService içinde yeni bir metod ekle
@@ -61,7 +59,18 @@ class RoleService extends BaseService
     public function permissions(): Collection
     {
         return $this->permissionModel->with('children')->where('parent_id', 0)->get();
+    }
 
+    public function syncPermissions(int $id, $request)
+    {
+    $role = $this->getById($id);
+    $permissionIds = (array)$request->input('permission', []);
+
+    // İzin ID'lerini `Permission` modellerine çevirin ve isimlerini alın
+    $permissionNames = $this->permissionModel->whereIn('id', $permissionIds)->pluck('name')->toArray();
+
+    // İzinleri role'a senkronize edin
+    return $role->syncPermissions($permissionNames);
     }
 
 }

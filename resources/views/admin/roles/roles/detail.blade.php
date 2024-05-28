@@ -39,7 +39,7 @@
                             <span class="badge bg-primary text-green-fg">Kullanıcı Türü:
                                 {{ UserType::title($role->type) }}</span>
                         </div>
-                        <form action="" method="post">
+                        <form action="{{ route('panel.role.sync.permissions', $role->id) }}" method="post">
                             @csrf
                             <div class="card-body">
                                 <div class="row row-cards">
@@ -55,7 +55,8 @@
                                                             <label class="form-check form-switch m-0">
                                                                 <input type="checkbox"
                                                                     class="form-check-input position-static all-permissions ms-0"
-                                                                    name="permission" value="{{ $permission->id }}">
+                                                                    name="permission[]" value="{{ $permission->id }}"
+                                                                    @if (in_array($permission->id, $rolePermissions)) checked @endif>
                                                             </label>
                                                         </div>
                                                     </div>
@@ -73,9 +74,11 @@
                                                                     <span class="col-auto">
                                                                         <label
                                                                             class="form-check form-check-single form-switch">
-                                                                            <input type="checkbox" class="form-check-input permission"
-                                                                                name="permission"
-                                                                                value="{{ $child->id }}">
+                                                                            <input type="checkbox"
+                                                                                class="form-check-input permission"
+                                                                                name="permission[]"
+                                                                                value="{{ $child->id }}"
+                                                                                @if (in_array($child->id, $rolePermissions)) checked @endif>
                                                                         </label>
                                                                     </span>
                                                                 </label>
@@ -113,10 +116,11 @@
                     allPermissionsCheckbox.addEventListener('change', function() {
                         const isChecked = allPermissionsCheckbox.checked;
 
-                        individualPermissionsCheckboxes.forEach(function(checkbox) {
-                            checkbox.checked = isChecked;
-                            checkbox.disabled = isChecked;
-                        });
+                        // Ana izin seçildiyse alt izinleri de seç
+                        for (let i = 0; i < individualPermissionsCheckboxes.length; i++) {
+                            individualPermissionsCheckboxes[i].checked = isChecked;
+                            individualPermissionsCheckboxes[i].readOnly = isChecked;
+                        }
                     });
                 }
             });

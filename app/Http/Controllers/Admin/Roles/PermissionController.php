@@ -2,21 +2,18 @@
 
 namespace App\Http\Controllers\Admin\Roles;
 
+use App\Http\Controllers\Controller;
 use App\Actions\Admin\Roles\Permission\Create;
 use App\Actions\Admin\Roles\Permission\Delete;
 use App\Actions\Admin\Roles\Permission\AllPermissions;
 use App\Actions\Admin\Roles\Permission\GetOne;
 use App\Actions\Admin\Roles\Permission\MainPermissions;
 use App\Actions\Admin\Roles\Permission\Update;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Roles\Permissions\PermissionCreateRequest;
 use App\Http\Requests\Admin\Roles\Permissions\PermissionUpdateRequest;
-use App\Models\Permission;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use App\Utils\PaginateCollection;
 
 class PermissionController extends Controller
 {

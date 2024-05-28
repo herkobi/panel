@@ -282,7 +282,7 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
         Route::delete('/role/destroy/{role}', 'destroy')->name('role.destroy');
 
         Route::get('/role/detail/{role}', 'detail')->name('role.detail');
-        Route::post('/role/permissions/{role}', 'permissions')->name('role.permissions');
+        Route::post('/role/permissions/{role}', 'permissions')->name('role.sync.permissions');
 
     });
 
@@ -296,7 +296,6 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
         Route::get('/permission/edit/{permission}', 'edit')->name('permission.edit');
         Route::post('/permission/update/{permission}', 'update')->name('permission.update');
         Route::delete('/permission/destroy/{permission}', 'destroy')->name('permission.destroy');
-
     });
 
     /**
