@@ -6,7 +6,7 @@ use App\Enums\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Currency>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tax>
  */
 class TaxFactory extends Factory
 {
