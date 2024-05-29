@@ -37,6 +37,8 @@ class AccountDetailController extends Controller
         $this->verifyEmail = $verifyEmail;
         $this->checkEmail = $checkEmail;
         $this->changePassword = $changePassword;
+
+        
     }
 
     /**

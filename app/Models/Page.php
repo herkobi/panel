@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Status;
 use App\Traits\HasDefaultPagination;
+use App\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Contracts\Activity;
@@ -12,7 +13,7 @@ use Spatie\Activitylog\LogOptions;
 
 class Page extends Model
 {
-    use HasFactory, LogsActivity, HasDefaultPagination;
+    use HasFactory, LogsActivity, HasDefaultPagination, Sluggable;
 
     protected $table = 'pages';
 
@@ -40,6 +41,17 @@ class Page extends Model
             'updated_at' => 'datetime',
             'status' => Status::class,
         ];
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = $this->generateSlug($value);
     }
 
     protected static $logAttributes = ['status', 'title', 'slug', 'text'];
