@@ -11,6 +11,7 @@ use App\Actions\Admin\Settings\Language\Delete;
 use App\Actions\Admin\Settings\Language\GetAll;
 use App\Actions\Admin\Settings\Language\GetOne;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class LanguageController extends Controller
@@ -68,8 +69,10 @@ class LanguageController extends Controller
             return redirect()->back()->with('error', __('Seçili dil genel dil olarak tanımlı. Genel dilin durumunu değiştiremezsiniz.'));
         }
 
-        $this->update->execute($id, $request->validated());
-        return redirect()->route('panel.settings.languages')->with('success', __('Dil başarılı bir şekilde güncellendi.'));
+        $updated = $this->update->execute($id, $request->validated());
+        return $updated
+                ? Redirect::route('panel.settings.languages')->with('success', __('Dil başarılı bir şekilde güncellendi.'))
+                : Redirect::back()->with('error', __('Dil başarılı bir şekilde güncellendi.'));
     }
 
     public function destroy($id): RedirectResponse
@@ -84,8 +87,10 @@ class LanguageController extends Controller
             return redirect()->back()->with('error', __('Seçili dil sistem dili olarak tanımlı. Lütfen önce sistem ayarlarından bu değeri değiştiriniz.'));
         }
 
-        $this->delete->execute($id);
-        return redirect()->route('panel.settings.languages')->with('success', __('Dil başarılı bir şekilde silindi'));
+        $deleted = $this->delete->execute($id);
+        return $deleted
+                ? Redirect::route('panel.settings.languages')->with('success', __('Dil başarılı bir şekilde silindi'))
+                : Redirect::back()->with('error', __('Dil başarılı bir şekilde silindi'));
     }
 
     private function isDefault($language): bool
