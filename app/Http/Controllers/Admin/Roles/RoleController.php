@@ -14,8 +14,6 @@ use App\Actions\Admin\Roles\Role\GetAll;
 use App\Actions\Admin\Roles\Role\GetOne;
 use App\Actions\Admin\Roles\Role\Permissions;
 use App\Actions\Admin\Roles\Role\SyncPermissions;
-use App\Models\Permission;
-use App\Models\Role;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -83,8 +81,10 @@ class RoleController extends Controller
      */
     public function store(RoleCreateRequest $request): RedirectResponse
     {
-        $this->create->execute($request->validated());
-        return Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde eklendi.');
+        $created = $this->create->execute($request->validated());
+        return $created
+                ? Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde eklendi.')
+                : Redirect::route('panel.roles')->with('error', 'Yetki eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     /**
@@ -110,8 +110,10 @@ class RoleController extends Controller
      */
     public function update(RoleUpdateRequest $request, $id): RedirectResponse
     {
-        $this->update->execute($id, $request->validated());
-        return Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde güncellendi');
+        $updated = $this->update->execute($id, $request->validated());
+        return $updated
+                ? Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde güncellendi')
+                : Redirect::route()->with('error', 'Yetki güncellenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     /**
@@ -129,23 +131,25 @@ class RoleController extends Controller
         }
 
         if ($this->isDefault($role)) {
-            return Redirect::back()->with('error', 'Seçili rol kullanıcılar ya da yöneticiler için genel rol olarak tanımlı. Lütfen önce sistem ayarlarından bu değeri değiştiriniz.');
+            return Redirect::back()->with('error', 'Seçili yetki kullanıcılar ya da yöneticiler için genel yetki olarak tanımlı. Lütfen önce sistem ayarlarından bu değeri değiştiriniz.');
         }
 
         if($role->permissions->count() > 0) {
-            return Redirect::back()->with('error', 'Role tanımlı yetkiler bulunmaktadır. Lütfen önce yetkileri kaldırınız.');
+            return Redirect::back()->with('error', 'Yetkiye tanımlı izinler bulunmaktadır. Lütfen önce izinleri kaldırınız.');
         }
 
         if($role->users()->count() > 0) {
-            return Redirect::back()->with('error', 'Role tanımlı kullanıcılar bulunmaktadır. Lütfen önce kullanıcıları kaldırınız.');
+            return Redirect::back()->with('error', 'Yetkiye tanımlı kullanıcılar bulunmaktadır. Lütfen önce tanımları kaldırınız.');
         }
 
         if($role->name === 'Super Admin') {
             return Redirect::back()->with('error', 'İşleminiz gerçekleştirilemedi.');
         }
 
-        $this->delete->execute($id);
-        return Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde silindi');
+        $deleted = $this->delete->execute($id);
+        return $deleted
+                ? Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde silindi')
+                : Redirect::back()->with('error', 'Yetki silinirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     /**
@@ -156,9 +160,9 @@ class RoleController extends Controller
     public function permissions(RolePermissionCreateRequest $request, $id): RedirectResponse
     {
         $synced = $this->syncpermissions->execute($id, $request);
-        return $synced ?
-            Redirect::route('panel.roles')->with('success', __('role.created.permission.success.message'))
-            : Redirect::back()->with('Hata', 'Lütfen en az bir adet izin seçiniz');
+        return $synced
+                ? Redirect::route('panel.roles')->with('success', __('role.created.permission.success.message'))
+                : Redirect::back()->with('error', 'Lütfen en az bir adet izin seçiniz');
     }
 
     /**

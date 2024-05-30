@@ -11,6 +11,7 @@ use App\Actions\Admin\Settings\Currency\Delete;
 use App\Actions\Admin\Settings\Currency\GetAll;
 use App\Actions\Admin\Settings\Currency\GetOne;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class CurrencyController extends Controller
@@ -48,8 +49,10 @@ class CurrencyController extends Controller
 
     public function store(CurrencyCreateRequest $request): RedirectResponse
     {
-        $this->create->execute($request->validated());
-        return redirect()->route('panel.settings.currencies')->with('success', __('Para birimi başarılı bir şekilde eklendi'));
+        $created = $this->create->execute($request->validated());
+        return $created
+                ? Redirect::route('panel.settings.currencies')->with('success', 'Para birimi başarılı bir şekilde eklendi.')
+                : Redirect::back()->with('error', 'Para birimi eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     public function edit($id): View
@@ -68,8 +71,10 @@ class CurrencyController extends Controller
             return redirect()->back()->with('error', __('Seçili para birimi genel olarak tanımlı. Genel para biriminin durumunu değiştiremezsiniz.'));
         }
 
-        $this->update->execute($id, $request->validated());
-        return redirect()->route('panel.settings.currencies')->with('success', __('Para birimi başarılı bir şekilde güncellendi'));
+        $updated = $this->update->execute($id, $request->validated());
+        return $updated
+               ? Redirect::route('panel.settings.currencies')->with('success', 'Para birimi başarılı bir şekilde güncellendi')
+               : Redirect::back()->with('error', 'Para birimi başarılı bir şekilde güncellendi');
     }
 
     public function destroy($id): RedirectResponse
@@ -84,8 +89,10 @@ class CurrencyController extends Controller
             return redirect()->back()->with('error', __('Bu para birimi bazı ödeme geçitleriyle ilişkilendirilmiş. Lütfen önce bu ilişkileri kaldırınız.'));
         }
 
-        $this->delete->execute($id);
-        return redirect()->route('panel.settings.currencies')->with('success', __('Para birimi başarılı bir şekilde silindi'));
+        $deleted = $this->delete->execute($id);
+        return $deleted
+                ? Redirect::route('panel.settings.currencies')->with('success', 'Para birimi başarılı bir şekilde silindi')
+                : Redirect::back()->with('error', 'Para birimi silinirken bir hata oluştu. Lütfen tekrar deneyiniz.');
     }
 
     private function isDefault($currency): bool

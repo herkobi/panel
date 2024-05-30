@@ -70,8 +70,10 @@ class PermissionController extends Controller
      */
     public function store(PermissionCreateRequest $request): RedirectResponse
     {
-        $this->create->execute($request->validated());
-        return Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde eklendi.');
+        $created = $this->create->execute($request->validated());
+        return $created
+                ? Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde eklendi.')
+                : Redirect::back()->with('error', 'İzin eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     /**
@@ -99,8 +101,10 @@ class PermissionController extends Controller
      */
     public function update(PermissionUpdateRequest $request, $id): RedirectResponse
     {
-        $this->update->execute($id, $request->validated());
-        return Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde güncellendi');
+        $updated = $this->update->execute($id, $request->validated());
+        return $updated
+                ? Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde güncellendi')
+                : Redirect::back()->with('error', 'İzin güncellenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     /**
@@ -125,7 +129,9 @@ class PermissionController extends Controller
             return Redirect::back()->with('error', 'İzne tanımlı alt izinler bulunmaktadır. Lütfen öncelikle onları kaldırınız.');
         }
 
-        $this->delete->execute($id);
-        return Redirect::route('panel.permissions')->with('succes', 'İzin başarılı bir şekilde silindi');
+        $deleted = $this->delete->execute($id);
+        return $deleted
+                ? Redirect::route('panel.permissions')->with('succes', 'İzin başarılı bir şekilde silindi')
+                : Redirect::back()->with('error', 'İzin silinirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 }

@@ -125,8 +125,8 @@
             </div>
         </div>
         <script type="module">
-            var successModal = new bootstrap.Modal(document.getElementById('modal-danger'), {})
-            successModal.toggle()
+            var errorModal = new bootstrap.Modal(document.getElementById('modal-danger'), {})
+            errorModal.toggle()
         </script>
     @endif
     @if (Session::has('success'))
@@ -157,7 +157,6 @@
                 </div>
             </div>
         </div>
-
         <script type="module">
             var successModal = new bootstrap.Modal(document.getElementById('modal-success'), {})
             successModal.toggle()

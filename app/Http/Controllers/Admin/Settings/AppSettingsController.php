@@ -32,7 +32,7 @@ class AppSettingsController extends Controller
 
     public function update(AppSettingsUpdateRequest $request): RedirectResponse
     {
-        $updated = $this->update->execute($request, 'app');
+        $updated = $this->update->execute($request->validated(), 'app');
         return $updated
                 ? Redirect::back()->with('success', 'Uygulama bilgileri başarılı bir şekilde güncellendi.')
                 : Redirect::route('panel.settings.system')->with('error', 'Uygulama bilgileri güncellenemedi.');

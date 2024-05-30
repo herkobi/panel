@@ -5,6 +5,7 @@ namespace App\Services\Admin\Settings\Settings;
 use App\Services\Admin\BaseService;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class AppService extends BaseService
@@ -42,57 +43,53 @@ class AppService extends BaseService
         ];
     }
 
-    public function updateData(Request $request): Setting
+    public function updateData(array $data): Setting
     {
-        $data = [];
-
-        $data['title'] = $request->input('title', config('panel.title'));
-        $data['slogan'] = $request->input('slogan', config('panel.slogan'));
-        $data['email'] = $request->input('email', config('panel.email'));
-
-        if ($request->hasFile('logo')) {
-            $this->uploadAndDeleteLogo($request, $data);
+        if (isset($data['logo']) && $data['logo'] instanceof UploadedFile) {
+            $this->uploadAndDeleteLogo($data['logo'], $data);
         } else {
             $data['logo'] = config('panel.logo');
         }
 
-        if ($request->hasFile('favicon')) {
-            $this->uploadAndDeleteFavicon($request, $data);
+        if (isset($data['favicon']) && $data['favicon'] instanceof UploadedFile) {
+            $this->uploadAndDeleteFavicon($data['favicon'], $data);
         } else {
             $data['favicon'] = config('panel.favicon');
         }
 
+        $data['title'] = $data['title'] ?? config('panel.title');
+        $data['slogan'] = $data['slogan'] ?? config('panel.slogan');
+        $data['email'] = $data['email'] ?? config('panel.email');
+
         $value = json_encode($data);
 
         $setting = $this->model->firstWhere('key', self::KEY);
-        $setting->update([
-            'value' => $value, // JSON dizesini 'value' kolonuna kaydeder
-        ]);
+        $setting->update(['value' => $value]);
 
-        // Ayar türünü Model'e set et
-        $setting->type = $request->input('type', 'app');
+        $setting->type = $data['type'] ?? 'app';
 
         return $setting;
     }
 
-    protected function uploadAndDeleteLogo($request, array &$data)
+    protected function uploadAndDeleteLogo(UploadedFile $logo, array &$data)
     {
         if (Storage::exists('public/logo/' . config('panel.logo'))) {
             Storage::delete('public/logo/' . config('panel.logo'));
         }
-        $logo_name = 'logo.' . $request->logo->extension();
-        $request->logo->storeAs('public/logo', $logo_name);
+        $logo_name = 'logo.' . $logo->extension();
+        $logo->storeAs('public/logo', $logo_name);
         $data['logo'] = $logo_name;
     }
 
-    protected function uploadAndDeleteFavicon($request, array &$data)
+    protected function uploadAndDeleteFavicon(UploadedFile $favicon, array &$data)
     {
         if (Storage::exists('public/favicon/' . config('panel.favicon'))) {
             Storage::delete('public/favicon/' . config('panel.favicon'));
         }
-        $favicon_name = 'favicon.' . $request->favicon->extension();
-        $request->favicon->storeAs('public/favicon', $favicon_name);
+        $favicon_name = 'favicon.' . $favicon->extension();
+        $favicon->storeAs('public/favicon', $favicon_name);
         $data['favicon'] = $favicon_name;
     }
+
 
 }

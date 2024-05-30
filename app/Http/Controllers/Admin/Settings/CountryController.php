@@ -40,7 +40,9 @@ class CountryController extends Controller
     public function index(GetAll $countries): View
     {
         $countries = $this->getAll->execute();
-        return view('admin.settings.locations.country.index', compact('countries'));
+        return view('admin.settings.locations.country.index', [
+            'countries' => $countries
+        ]);
     }
 
     public function create(): View
@@ -50,8 +52,10 @@ class CountryController extends Controller
 
     public function store(CountryCreateRequest $request): RedirectResponse
     {
-        $this->create->execute($request->validated());
-        return Redirect::route('panel.settings.locations.countries')->with('success', 'Ülke başarılı bir şekilde eklendi');
+        $created = $this->create->execute($request->validated());
+        return $created
+                ? Redirect::route('panel.settings.locations.countries')->with('success', 'Ülke başarılı bir şekilde eklendi')
+                : Redirect::back()->with('error', 'Ülke eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     public function edit($id): View
@@ -67,11 +71,13 @@ class CountryController extends Controller
         $oldStatus = $country->status->value;
 
         if ($newStatus != $oldStatus && $this->isDefault($country)) {
-            return redirect()->back()->with('error', __('Seçili bölge genel bölge olarak tanımlı. Genel bölgenin durumunu değiştiremezsiniz.'));
+            return Redirect::back()->with('error', 'Seçili bölge genel bölge olarak tanımlı. Genel bölgenin durumunu değiştiremezsiniz.');
         }
 
-        $this->update->execute($id, $request->validated());
-        return redirect()->route('panel.settings.locations.countries')->with('success', __('Bölge başarılı bir şekilde güncellendi.'));
+        $updated = $this->update->execute($id, $request->validated());
+        return $updated
+                ? Redirect::route('panel.settings.locations.countries')->with('success', 'Bölge başarılı bir şekilde güncellendi.')
+                : Redirect::back()->with('error', 'Bölge güncellenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     public function destroy($id): RedirectResponse
@@ -90,9 +96,10 @@ class CountryController extends Controller
             return Redirect::back()->with('error', 'Bu ülkeye ait eyalet/şehir kayıtları olduğu için silme işlemi gerçekleştirilemedi.');
         }
 
-        $this->delete->execute($id);
-        return Redirect::route('panel.settings.locations.countries')->with('success', 'Ülke başarılı bir şekilde silindi');
-
+        $deleted = $this->delete->execute($id);
+        return $deleted
+                ? Redirect::route('panel.settings.locations.countries')->with('success', 'Ülke başarılı bir şekilde silindi')
+                : Redirect::back()->with('error', 'Ülke silinirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     private function isDefault($country): bool

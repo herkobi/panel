@@ -49,7 +49,9 @@ class PaytrController extends Controller
 
     public function update(PaytrUpdateRequest $request, $id): RedirectResponse
     {
-        $this->update->execute($id, $request->validated());
-        return Redirect::route('panel.gateways.cc')->with('success', 'Paytr ödeme bilgileri başarılı bir şekilde güncellendi');
+        $updated = $this->update->execute($id, $request->validated());
+        return $updated
+                ? Redirect::route('panel.gateways.cc')->with('success', 'Paytr ödeme bilgileri başarılı bir şekilde güncellendi')
+                : Redirect::back()->with('error', 'Paytr ödeme bilgileri güncellenirken bir sorun oluştu. Lütfen tekrar deneyiniz');
     }
 }

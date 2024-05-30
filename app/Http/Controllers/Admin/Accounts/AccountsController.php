@@ -42,14 +42,8 @@ class AccountsController extends Controller
         $this->userActivities = $userActivities;
     }
 
-    /**
-     * Yöneticileri listeleme sayfası
-     */
     public function index(): View
     {
-        /**
-         * Super Admin rolü dışında yöneticiler için tanımlanmış kullanıcılar çekiliyor.
-         */
         $users = $this->getAccounts->execute();
         return view('admin.accounts.index', [
             'users' => $users
@@ -106,7 +100,9 @@ class AccountsController extends Controller
             Mail::to($user->email)->send(new NewAdminUserEmail($user, $request->password));
         }
 
-        return Redirect::route('panel.accounts')->with('success', 'Kullanıcı başarılı bir şekilde oluşturuldu');
+        return $user
+                ? Redirect::route('panel.accounts')->with('success', 'Kullanıcı başarılı bir şekilde oluşturuldu')
+                : Redirect::back()->with('error', 'Kullanıcı eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
 }

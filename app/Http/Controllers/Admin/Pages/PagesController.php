@@ -52,8 +52,10 @@ class PagesController extends Controller
 
     public function store(PageCreateRequest $request): RedirectResponse
     {
-        $this->create->execute($request->validated());
-        return Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde oluşturuldu');
+        $created = $this->create->execute($request->validated());
+        return $created
+                ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde oluşturuldu')
+                : Redirect::back()->with('error', 'Sayfa eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     public function edit($id): View
@@ -66,24 +68,18 @@ class PagesController extends Controller
 
     public function update(PageUpdateRequest $request, $id): RedirectResponse
     {
-        $this->update->execute($id, $request->validated());
-        return Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde güncellendi');
+        $updated = $this->update->execute($id, $request->validated());
+        return $updated
+                ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde güncellendi')
+                : Redirect::back()->with('error', 'Sayfa güncellenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     public function destroy($id): RedirectResponse
     {
-        $this->delete->execute($id);
-        return Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde silindi');
+        $deleted = $this->delete->execute($id);
+        return $deleted
+                ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde silindi')
+                : Redirect::back()->with('error', 'Sayfa silinirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
-    // public static function middleware(): array
-    // {
-    //     return [
-    //         // examples with aliases, pipe-separated names, guards, etc:
-    //         'role_or_permission:Admin|edit articles',
-    //         new Middleware('role:Admin', only: ['index']),
-    //         new Middleware(\Spatie\Permission\Middleware\RoleMiddleware::using('manager'), except:['show']),
-    //         new Middleware(\Spatie\Permission\Middleware\PermissionMiddleware::using('delete records,api'), only:['destroy']),
-    //     ];
-    // }
 }
