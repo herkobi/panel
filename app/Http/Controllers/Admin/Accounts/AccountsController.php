@@ -101,8 +101,8 @@ class AccountsController extends Controller
         }
 
         return $user
-                ? Redirect::route('panel.accounts')->with('success', 'Kullanıcı başarılı bir şekilde oluşturuldu')
-                : Redirect::back()->with('error', 'Kullanıcı eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
+                ? Redirect::route('panel.accounts')->with('success', __('admin.accounts.accounts.store.success'))
+                : Redirect::back()->with('error', __('admin.accounts.accounts.store.error'));
     }
 
 }
