@@ -113,7 +113,7 @@ class RoleController extends Controller
         $updated = $this->update->execute($id, $request->validated());
         return $updated
                 ? Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde güncellendi')
-                : Redirect::route()->with('error', 'Yetki güncellenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
+                : Redirect::back()->with('error', 'Yetki güncellenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
     /**

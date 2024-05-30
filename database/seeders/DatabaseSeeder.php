@@ -65,5 +65,10 @@ class DatabaseSeeder extends Seeder
         //Kullanıcı Hesabı ve Rolü
         $user = User::factory()->normalUser()->create();
         $user->assignRole([$userRole->id]);
+
+        $this->call([
+            PermissionsTableSeeder::class,
+            // Diğer seeder'larınızı buraya ekleyin
+        ]);
     }
 }
