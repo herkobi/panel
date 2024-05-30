@@ -57,8 +57,10 @@ class StateController extends Controller
 
     public function store(StateCreateRequest $request): RedirectResponse
     {
-        $this->create->execute($request->validated());
-        return Redirect::route('panel.settings.locations.states', $request->country_id)->with('success', 'Bölge başarılı bir şekilde eklendi');
+        $created = $this->create->execute($request->validated());
+        return $created
+                ? Redirect::route('panel.settings.locations.states', $request->country_id)->with('success', 'Bölge başarılı bir şekilde eklendi')
+                : Redirect::back()->with('error', 'Bölge başarılı bir şekilde eklendi');
     }
 
     public function edit($id): View
@@ -71,15 +73,19 @@ class StateController extends Controller
 
     public function update(StateUpdateRequest $request, $id): RedirectResponse
     {
-        $this->update->execute($id, $request->validated());
+        $updated = $this->update->execute($id, $request->validated());
         $state = $this->getOne->execute($id);
-        return Redirect::route('panel.settings.locations.states', $state->country_id)->with('success', 'Bölge bilgisi başarılı bir şekilde güncellendi');
+        return $updated
+                ? Redirect::route('panel.settings.locations.states', $state->country_id)->with('success', 'Bölge bilgisi başarılı bir şekilde güncellendi')
+                : Redirect::back()->with('error', 'Bölge bilgisi başarılı bir şekilde güncellendi');
     }
 
     public function destroy($id): RedirectResponse
     {
         $state = $this->getOne->execute($id);
-        $this->delete->execute($id);
-        return Redirect::route('panel.settings.locations.states', $state->country_id)->with('success', 'Bölge başarılı bir şekilde silindi');
+        $deleted = $this->delete->execute($id);
+        return $deleted
+                ? Redirect::route('panel.settings.locations.states', $state->country_id)->with('success', 'Bölge başarılı bir şekilde silindi')
+                : Redirect::back()->with('error', 'Bölge başarılı bir şekilde silindi');
     }
 }

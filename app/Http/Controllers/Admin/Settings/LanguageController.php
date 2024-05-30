@@ -49,8 +49,10 @@ class LanguageController extends Controller
 
     public function store(LanguageCreateRequest $request): RedirectResponse
     {
-        $this->create->execute($request->validated());
-        return redirect()->route('panel.settings.languages')->with('success', __('Dil başarılı bir şekilde eklendi.'));
+        $created = $this->create->execute($request->validated());
+        return $created
+                ? Redirect::route('panel.settings.languages')->with('success', __('Dil başarılı bir şekilde eklendi.'))
+                : Redirect::back()->with('error', __('Dil başarılı bir şekilde eklendi.'));
     }
 
     public function edit($id): View

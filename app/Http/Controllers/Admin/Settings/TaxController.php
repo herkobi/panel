@@ -12,6 +12,7 @@ use App\Actions\Admin\Settings\Tax\GetAll;
 use App\Actions\Admin\Settings\Tax\GetOne;
 use App\Actions\Admin\Settings\Tax\Countries;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class TaxController extends Controller
@@ -53,8 +54,10 @@ class TaxController extends Controller
 
     public function store(TaxCreateRequest $request): RedirectResponse
     {
-        $this->create->execute($request->validated());
-        return redirect()->route('panel.settings.taxes')->with('success', 'Vergi bilgisi başarılı bir şekilde eklendi');
+        $created = $this->create->execute($request->validated());
+        return $created
+                ? Redirect::route('panel.settings.taxes')->with('success', 'Vergi bilgisi başarılı bir şekilde eklendi')
+                : Redirect::back()->with('error', 'Vergi bilgisi başarılı bir şekilde eklendi');
     }
 
     public function edit($id): View
@@ -71,17 +74,21 @@ class TaxController extends Controller
         $oldStatus = $tax->status->value;
 
         if ($newStatus != $oldStatus && $this->isDefault($tax)) {
-            return redirect()->back()->with('error', 'Seçili vergi oranı genel vergi oranı olarak tanımlı. Genel vergi oranının durumunu değiştiremezsiniz.');
+            return Redirect::back()->with('error', 'Seçili vergi oranı genel vergi oranı olarak tanımlı. Genel vergi oranının durumunu değiştiremezsiniz.');
         }
 
-        $this->update->execute($id, $request->validated());
-        return redirect()->route('panel.settings.taxes')->with('success', 'Vergi bilgisi başarılı bir şekilde güncellendi');
+        $updated = $this->update->execute($id, $request->validated());
+        return $updated
+                ? Redirect::route('panel.settings.taxes')->with('success', 'Vergi bilgisi başarılı bir şekilde güncellendi')
+                : Redirect::back()->with('error', 'Vergi bilgisi başarılı bir şekilde güncellendi');
     }
 
     public function destroy($id): RedirectResponse
     {
-        $this->delete->execute($id);
-        return redirect()->route('panel.settings.taxes')->with('success', 'Vergi bilgisi başarılı bir şekilde silindi');
+        $deleted = $this->delete->execute($id);
+        return $deleted
+                ? Redirect::route('panel.settings.taxes')->with('success', 'Vergi bilgisi başarılı bir şekilde silindi')
+                : Redirect::back()->with('error', 'Vergi bilgisi başarılı bir şekilde silindi');
     }
 
     private function isDefault($tax): bool

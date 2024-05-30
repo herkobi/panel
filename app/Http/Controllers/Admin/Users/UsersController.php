@@ -106,7 +106,9 @@ class UsersController extends Controller
             Mail::to($user->email)->send(new NewAdminUserEmail($user, $request->password));
         }
 
-        return Redirect::route('panel.users')->with('success', 'Yönetici başarılı bir şekilde oluşturuldu');
+        return $user
+                ? Redirect::route('panel.users')->with('success', 'Yönetici başarılı bir şekilde oluşturuldu')
+                : Redirect::back()->with('error', 'Yönetici başarılı bir şekilde oluşturuldu');
     }
 
 }
