@@ -29,10 +29,10 @@ class Service extends BaseService
     protected function prepareData(array $data, string $action = 'create'): array
     {
         if($action === 'create') {
+            $data['status'] = !isset($data['status']) ? AccountStatus::PASSIVE : AccountStatus::ACTIVE;
             $data["type"] = UserType::ADMIN;
             $data["terms"] = 1;
             $data['password'] = Hash::make($data['password']);
-            $data['status'] = !isset($data['status']) ? AccountStatus::PASSIVE : AccountStatus::ACTIVE;
             $data['email_verified_at'] = !isset($data['verifyemail']) ? null : Carbon::now()->toDateTimeString();
             $data['created_by'] = auth()->user()->id;
             $data['created_by_name'] = auth()->user()->name . ' ' . auth()->user()->surname;

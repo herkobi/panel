@@ -41,59 +41,65 @@
                         </div>
                         <form action="{{ route('panel.role.sync.permissions', $role->id) }}" method="post">
                             @csrf
-                            <div class="card-body">
-                                <div class="row row-cards">
-                                    @foreach ($permissions as $permission)
-                                        <div class="col-lg-4">
-                                            <div class="card selectPermissions">
-                                                <div class="card-header bg-gray-400 p-2">
-                                                    <div class="d-flex align-items-center justify-content-between w-100">
-                                                        <div class="card-title">
-                                                            <div class="d-block">{{ $permission->desc }}</div>
-                                                            <small class="fw-normal">Bölüme ait tüm işlemleri yap</small>
-                                                        </div>
-                                                        <div class="permission-all">
-                                                            <label class="form-check form-switch m-0">
-                                                                <input type="checkbox"
-                                                                    class="form-check-input position-static all-permissions ms-0"
-                                                                    name="permission[]" value="{{ $permission->id }}"
-                                                                    @if (in_array($permission->id, $rolePermissions)) checked @endif>
-                                                            </label>
-                                                        </div>
-                                                    </div>
+                            <div class="accordion" id="permissionsAccordion">
+                                @foreach ($permissions as $permission)
+                                    <div class="accordion-item rounded-0 border-0 border-bottom">
+                                        <h2 class="accordion-header" id="heading{{ $permission->id }}">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapse{{ $permission->id }}" aria-expanded="true"
+                                                aria-controls="collapse{{ $permission->id }}">
+                                                <div class="d-flex justify-content-between w-100">
+                                                    <span>{{ $permission->desc }}</span>
+                                                    <label class="form-check form-switch m-0">
+                                                        <input type="checkbox" class="form-check-input all-permissions"
+                                                            name="permission[]" value="{{ $permission->id }}"
+                                                            @if (in_array($permission->id, $rolePermissions)) checked @endif>
+                                                    </label>
                                                 </div>
-                                                @if (count($permission->children) > 0)
-                                                    <div class="card-body p-2">
-                                                        <label class="form-label border-bottom mb-3 pb-2">İşlem Bazlı
-                                                            İzinler</label>
-                                                        <div class="divide-y">
-                                                            @foreach ($permission->children as $child)
-                                                                <div>
-                                                                    <label class="row">
-                                                                        <span class="col">
-                                                                            {{ $child->desc }}
+                                            </button>
+                                        </h2>
+                                        <div id="collapse{{ $permission->id }}" class="accordion-collapse collapse"
+                                            aria-labelledby="heading{{ $permission->id }}"
+                                            data-bs-parent="#permissionsAccordion">
+                                            <div class="accordion-body p-0 bg-gray-500">
+                                                <div class="table-responsive">
+                                                    @if (count($permission->children) > 0)
+                                                        <table class="table sub-permissions">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col" class="w-90">Alt İzin Açıklaması
+                                                                    </th>
+                                                                    <th scope="col" class="w-10">İşlemler</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($permission->children as $child)
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div>{{ $child->desc }}</div>
                                                                             <small>{{ $child->name }}</small>
-                                                                        </span>
-                                                                        <span class="col-auto">
-                                                                            <label
-                                                                                class="form-check form-check-single form-switch">
+                                                                        </td>
+                                                                        <td>
+                                                                            <label class="form-check form-switch m-0">
                                                                                 <input type="checkbox"
                                                                                     class="form-check-input permission"
                                                                                     name="permission[]"
                                                                                     value="{{ $child->id }}"
                                                                                     @if (in_array($child->id, $rolePermissions)) checked @endif>
                                                                             </label>
-                                                                        </span>
-                                                                    </label>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    @else
+                                                        <div>Alt izin bulunmamaktadır.</div>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
-                                    @endforeach
-                                </div>
+                                    </div>
+                                @endforeach
                             </div>
                             <div class="card-footer text-end">
                                 <button type="submit" class="btn btn-primary">İzinleri Tanımla</button>
@@ -110,45 +116,39 @@
 @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.selectPermissions');
+            const mainPermissions = document.querySelectorAll('.all-permissions');
 
-            cards.forEach(function(card) {
-                const allPermissionsCheckbox = card.querySelector('.all-permissions');
-                const individualPermissionsCheckboxes = card.querySelectorAll('.permission');
+            mainPermissions.forEach(function(mainCheckbox) {
+                const mainPermissionRow = mainCheckbox.closest('.accordion-item');
+                const mainPermissionId = mainPermissionRow.querySelector('.accordion-header button')
+                    .getAttribute('data-bs-target').replace('#collapse', '');
+                const childPermissionRows = mainPermissionRow.querySelectorAll('.permission');
 
-                if (allPermissionsCheckbox) {
-                    allPermissionsCheckbox.addEventListener('change', function() {
-                        const isChecked = allPermissionsCheckbox.checked;
+                mainCheckbox.addEventListener('change', function() {
+                    const isChecked = mainCheckbox.checked;
 
-                        // Ana izin seçildiyse alt izinleri de seç ve kilitle
-                        for (let i = 0; i < individualPermissionsCheckboxes.length; i++) {
-                            individualPermissionsCheckboxes[i].checked = isChecked;
-                            individualPermissionsCheckboxes[i].readOnly = isChecked;
+                    childPermissionRows.forEach(function(childCheckbox) {
+                        childCheckbox.checked = isChecked;
+                        childCheckbox.readOnly = isChecked;
+                    });
+                });
+
+                childPermissionRows.forEach(function(childCheckbox) {
+                    childCheckbox.addEventListener('change', function() {
+                        if (!childCheckbox.checked) {
+                            mainCheckbox.checked = false;
+                            mainCheckbox.readOnly = false;
+                        } else {
+                            const allChecked = Array.from(childPermissionRows).every(
+                                function(childCheckbox) {
+                                    return childCheckbox.checked;
+                                });
+
+                            mainCheckbox.checked = allChecked;
+                            mainCheckbox.readOnly = allChecked;
                         }
                     });
-
-                    individualPermissionsCheckboxes.forEach(function(individualCheckbox) {
-                        individualCheckbox.addEventListener('change', function() {
-                            // Eğer herhangi bir alt izin kaldırılırsa ana izni de kaldır
-                            if (!individualCheckbox.checked) {
-                                allPermissionsCheckbox.checked = false;
-                                allPermissionsCheckbox.readOnly = false;
-                            } else {
-                                // Tüm alt izinler işaretliyse ana izni işaretle ve kilitle
-                                let allChecked = true;
-                                for (let i = 0; i < individualPermissionsCheckboxes
-                                    .length; i++) {
-                                    if (!individualPermissionsCheckboxes[i].checked) {
-                                        allChecked = false;
-                                        break;
-                                    }
-                                }
-                                allPermissionsCheckbox.checked = allChecked;
-                                allPermissionsCheckbox.readOnly = allChecked;
-                            }
-                        });
-                    });
-                }
+                });
             });
         });
     </script>

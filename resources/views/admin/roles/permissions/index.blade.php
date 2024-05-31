@@ -88,10 +88,6 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        {{-- <div class="card-footer d-flex align-items-center pb-1 text-end w-100">
-                            {{ $permissions->links() }}
-                        </div> --}}
                     </div>
                 </div>
             </div>

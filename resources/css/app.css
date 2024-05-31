@@ -141,3 +141,15 @@
 .collapse {
     transition: height 0.3s ease;
 }
+
+.sub-permissions thead th {
+    background-color: #dedede;
+}
+
+.sub-permissions> :not(caption)>*>* {
+    padding: 0.75rem 1.25rem;
+}
+
+.sub-permissions> :not(caption)>tr:last-child>* {
+    border-bottom: 0;
+}

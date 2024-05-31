@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserType;
 use Illuminate\Database\Seeder;
 use App\Models\Permission;
+use App\Models\Role;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -38,18 +40,6 @@ class PermissionsTableSeeder extends Seeder
                 'parent_id' => 0,
                 'name' => 'gateway.management',
                 'desc' => 'Ödeme Yöntemi Yönetimi',
-                'guard_name' => 'web'
-            ],
-            [
-                'parent_id' => 0,
-                'name' => 'bac.management',
-                'desc' => 'EFT/Havale Ödeme Yönetimi',
-                'guard_name' => 'web'
-            ],
-            [
-                'parent_id' => 0,
-                'name' => 'cc.management',
-                'desc' => 'Kredi Kartı İle Ödeme Yönetimi',
                 'guard_name' => 'web'
             ],
             [
@@ -202,10 +192,117 @@ class PermissionsTableSeeder extends Seeder
                 'desc' => 'İzin Sil',
                 'guard_name' => 'web'
             ],
+            [
+                'parent_id' => 5,
+                'name' => 'bac.create',
+                'desc' => 'EFT/Havale Ödeme Yöntemi Ekle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 5,
+                'name' => 'bac.update',
+                'desc' => 'EFT/Havale Ödeme Yöntemi Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 5,
+                'name' => 'bac.delete',
+                'desc' => 'EFT/Havale Ödeme Yöntemi Sil',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 5,
+                'name' => 'cc.update',
+                'desc' => 'Kredi Kartı İle Ödeme Yöntemi Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 6,
+                'name' => 'tax.create',
+                'desc' => 'Vergi Bilgisi Ekle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 6,
+                'name' => 'tax.update',
+                'desc' => 'Vergi Bilgisi Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 6,
+                'name' => 'tax.delete',
+                'desc' => 'Vergi Bilgisi Sil',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 7,
+                'name' => 'currency.create',
+                'desc' => 'Para Birimi Ekle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 7,
+                'name' => 'currency.update',
+                'desc' => 'Para Birimi Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 7,
+                'name' => 'currency.delete',
+                'desc' => 'Para Birimi Sil',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 8,
+                'name' => 'location.create',
+                'desc' => 'Konum Bilgisi Ekle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 8,
+                'name' => 'location.update',
+                'desc' => 'Konum Bilgisi Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 8,
+                'name' => 'location.delete',
+                'desc' => 'Konum Bilgisi Sil',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 9,
+                'name' => 'language.create',
+                'desc' => 'Arayüz Dili Ekle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 9,
+                'name' => 'language.update',
+                'desc' => 'Arayüz Dili Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 9,
+                'name' => 'language.delete',
+                'desc' => 'Arayüz Dili Sil',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 9,
+                'name' => 'language.translate',
+                'desc' => 'Arayüz Dili Çevir',
+                'guard_name' => 'web'
+            ],
         ];
 
         foreach ($permissions as $permission) {
             Permission::create($permission);
         }
+
+        $allPermissions = Permission::all();
+        $role = Role::where('name', 'Admin')->first();
+
+        $role->givePermissionTo($allPermissions);
     }
 }
