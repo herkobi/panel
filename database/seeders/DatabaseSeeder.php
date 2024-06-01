@@ -30,8 +30,6 @@ class DatabaseSeeder extends Seeder
         Language::factory()->otherLanguage()->create();
         //Ülkeler
         Country::factory()->create();
-        //Şehirler
-        State::factory()->create();
         //Para Birimleri
         Currency::factory()->create();
         //Vergi Bilgileri
@@ -54,8 +52,8 @@ class DatabaseSeeder extends Seeder
         Setting::factory()->create();
         //Uygulama Ayarları
         Setting::factory()->appSettings()->create();
-        //Sayfalar
-        Page::factory()->create();
+
+
         //Süper Yönetici Hesabı ve Rolü
         $super = User::factory()->create();
         $super->assignRole([$superRole->id]);
@@ -67,8 +65,9 @@ class DatabaseSeeder extends Seeder
         $user->assignRole([$userRole->id]);
 
         $this->call([
-            PermissionsTableSeeder::class,
-            // Diğer seeder'larınızı buraya ekleyin
+            PermissionsSeeder::class,
+            StateSeeder::class,
+            PageSeeder::class,
         ]);
     }
 }

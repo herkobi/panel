@@ -1,33 +1,30 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
+use App\Models\Page;
 use App\Enums\Status;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Page>
- */
-class PageFactory extends Factory
+class PageSeeder extends Seeder
 {
     /**
-     * Define the model's default state.
+     * Run the database seeds.
      *
-     * @return array<string, mixed>
+     * @return void
      */
-    public function definition(): array
+    public function run()
     {
         $pages = ['Gizlilik Politikası', 'Çerez Politikası', 'Kullanım Sözleşmesi', 'KVKK Politikası', 'Kullanıcı Aydınlatma Metni', 'Ziyaretçi Aydınlatma Metni', 'Üyelik Sözleşmesi', 'Hizmet Sözleşmesi'];
-        foreach($pages as $page)
-        {
-            return [
+
+        foreach ($pages as $page) {
+            Page::create([
                 'status' => Status::ACTIVE,
                 'title' => $page,
                 'slug' => Str::slug($page),
                 'text' => '',
-            ];
+            ]);
         }
-
     }
 }

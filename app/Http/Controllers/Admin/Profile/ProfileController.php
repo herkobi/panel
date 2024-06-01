@@ -8,7 +8,6 @@ use App\Actions\Admin\Profile\GetUser;
 use App\Actions\Admin\Profile\UpdateEmail;
 use App\Actions\Admin\Profile\UpdatePassword;
 use App\Actions\Admin\Profile\UpdateProfile;
-use App\Actions\Admin\Profile\SettingsData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Profile\EmailUpdateRequest;
 use App\Http\Requests\Admin\Profile\PasswordUpdateRequest;

@@ -39,7 +39,6 @@ use App\Http\Controllers\Admin\Tools\{
     CacheController
 };
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Events\TwoFactorAuthenticationEvent;
 use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
@@ -138,11 +137,14 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
      * Araçlar
      */
     Route::prefix('tools')->name('tools.')->group(function () {
-        Route::get('/health', HealthCheckResultsController::class)->name('health');
-        Route::get('/health?fresh', HealthCheckResultsController::class)->name('fresh');
 
-        Route::controller(LogViewerController::class)->group(function () {
-            Route::get('/logs', 'index')->name('logs');
+        Route::group(['middleware' => ['role:Super Admin']], function () {
+            Route::get('/health', HealthCheckResultsController::class)->name('health');
+            Route::get('/health?fresh', HealthCheckResultsController::class)->name('fresh');
+
+            Route::controller(LogViewerController::class)->group(function () {
+                Route::get('/logs', 'index')->name('logs');
+            });
         });
 
         Route::controller(AuthLogsController::class)->group(function () {

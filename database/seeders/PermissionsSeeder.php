@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserType;
 use Illuminate\Database\Seeder;
 use App\Models\Permission;
 use App\Models\Role;
 
-class PermissionsTableSeeder extends Seeder
+class PermissionsSeeder extends Seeder
 {
     public function run()
     {
@@ -64,6 +63,18 @@ class PermissionsTableSeeder extends Seeder
                 'parent_id' => 0,
                 'name' => 'language.management',
                 'desc' => 'Dil Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 0,
+                'name' => 'page.management',
+                'desc' => 'Sayfa Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 0,
+                'name' => 'account.management',
+                'desc' => 'Hesap Yönetimi',
                 'guard_name' => 'web'
             ],
             [
@@ -292,6 +303,102 @@ class PermissionsTableSeeder extends Seeder
                 'parent_id' => 9,
                 'name' => 'language.translate',
                 'desc' => 'Arayüz Dili Çevir',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 10,
+                'name' => 'page.create',
+                'desc' => 'Sayfa Ekle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 10,
+                'name' => 'page.update',
+                'desc' => 'Sayfa Düzenle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 10,
+                'name' => 'page.delete',
+                'desc' => 'Sayfa Sil',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.index',
+                'desc' => 'Hesapları Görüntüle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.create',
+                'desc' => 'Hesap Ekle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.detail',
+                'desc' => 'Hesap Bilgilerini Gör',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.activity',
+                'desc' => 'Hesap İşlemlerini Gör',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.permission',
+                'desc' => 'Hesap İzin ve Yetkilerini Gör',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.permission.update',
+                'desc' => 'Hesap İzin ve Yetkilerini Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.autlogs',
+                'desc' => 'Hesap Oturum Kayıtlarını Gör',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.status.update',
+                'desc' => 'Hesap Durumunu Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.email.update',
+                'desc' => 'Hesap E-posta Adresini Güncelle',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.email.verified',
+                'desc' => 'Hesap E-posta Adresini Onayla',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.email.send',
+                'desc' => 'Hesap E-posta Onay Linki Gönder',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.password.update',
+                'desc' => 'Hesap Şifresini Değiştir',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 11,
+                'name' => 'account.password.reset',
+                'desc' => 'Hesap Şifre Yenileme Linki Gönder',
                 'guard_name' => 'web'
             ],
         ];

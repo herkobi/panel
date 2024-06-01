@@ -7,10 +7,11 @@ use App\Http\Requests\Admin\Settings\Settings\SystemSettingsUpdateRequest;
 use App\Actions\Admin\Settings\Settings\System\GetAll;
 use App\Actions\Admin\Settings\Settings\System\Update;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
-class SystemSettingsController extends Controller
+class SystemSettingsController extends Controller implements HasMiddleware
 {
 
     private $getAll;
@@ -42,5 +43,12 @@ class SystemSettingsController extends Controller
         return $updated
                 ? Redirect::back()->with('success', 'Sistem ayarları başarılı bir şekilde güncellendi.')
                 : Redirect::route('panel.settings.system')->with('error', 'Sistem ayarları güncellenemedi.');
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            'role:Super Admin'
+        ];
     }
 }

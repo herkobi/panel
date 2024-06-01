@@ -11,11 +11,13 @@ use App\Actions\Admin\Pages\Delete;
 use App\Actions\Admin\Pages\GetAll;
 use App\Actions\Admin\Pages\GetOne;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Spatie\Permission\Middleware\PermissionMiddleware;
 
-class PagesController extends Controller
+class PagesController extends Controller implements HasMiddleware
 {
     private $getAll;
     private $getOne;
@@ -39,14 +41,10 @@ class PagesController extends Controller
 
     public function index(): View|RedirectResponse
     {
-        if(auth()->user()->can('page.management') || auth()->user()->can('page.create') || auth()->user()->can('page.update') || auth()->user()->can('page.delete')) {
-            $pages = $this->getAll->execute();
-            return view('admin.pages.index', [
-                'pages' => $pages
-            ]);
-        } else {
-            return Redirect::back()->with('error', 'Bu işlemi gerçekleştirmek için yetkiniz bulunmuyor.');
-        }
+        $pages = $this->getAll->execute();
+        return view('admin.pages.index', [
+            'pages' => $pages
+        ]);
     }
 
     public function create(): View
@@ -84,6 +82,14 @@ class PagesController extends Controller
         return $deleted
                 ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde silindi')
                 : Redirect::back()->with('error', 'Sayfa silinirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            'role:Super Admin',
+            new Middleware(PermissionMiddleware::using('index,create,store,edit,update,destroy')),
+        ];
     }
 
 }
