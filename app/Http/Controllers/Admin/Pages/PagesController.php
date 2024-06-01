@@ -11,12 +11,12 @@ use App\Actions\Admin\Pages\Delete;
 use App\Actions\Admin\Pages\GetAll;
 use App\Actions\Admin\Pages\GetOne;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class PagesController extends Controller
 {
-
     private $getAll;
     private $getOne;
     private $create;
@@ -37,12 +37,16 @@ class PagesController extends Controller
         $this->delete = $delete;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
-        $pages = $this->getAll->execute();
-        return view('admin.pages.index', [
-            'pages' => $pages
-        ]);
+        if(auth()->user()->can('page.management') || auth()->user()->can('page.create') || auth()->user()->can('page.update') || auth()->user()->can('page.delete')) {
+            $pages = $this->getAll->execute();
+            return view('admin.pages.index', [
+                'pages' => $pages
+            ]);
+        } else {
+            return Redirect::back()->with('error', 'Bu işlemi gerçekleştirmek için yetkiniz bulunmuyor.');
+        }
     }
 
     public function create(): View
