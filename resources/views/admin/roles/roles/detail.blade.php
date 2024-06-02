@@ -133,10 +133,7 @@
 
                 childPermissionRows.forEach(function(childCheckbox) {
                     childCheckbox.addEventListener('change', function() {
-                        if (!childCheckbox.checked) {
-                            mainCheckbox.checked = false;
-                            mainCheckbox.readOnly = false;
-                        } else {
+                        if (childCheckbox.checked) {
                             const allChecked = Array.from(childPermissionRows).every(
                                 function(childCheckbox) {
                                     return childCheckbox.checked;

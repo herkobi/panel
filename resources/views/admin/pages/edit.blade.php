@@ -75,15 +75,19 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <div class="btn-list">
-                                    @hasrole('Super Admin')
+                            @if (auth()->user()->can('page.delete'))
+                                <div class="card-footer">
+                                    <div class="btn-list">
                                         <a href="#" class="btn btn-outline-danger me-auto" data-bs-toggle="modal"
                                             data-bs-target="#modal-danger">Sil</a>
-                                    @endhasrole
+                                        <button type="submit" class="btn btn-success">Güncelle</button>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="card-footer text-end">
                                     <button type="submit" class="btn btn-success">Güncelle</button>
                                 </div>
-                            </div>
+                            @endif
                         </form>
                     </div>
                 </div>

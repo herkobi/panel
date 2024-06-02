@@ -51,10 +51,12 @@
                                             </td>
                                             <td class="fw-bold">{{ $page->title }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.page.edit', $page->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm">
-                                                    Düzenle
-                                                </a>
+                                                @if (auth()->user()->can('page.update'))
+                                                    <a href="{{ route('panel.page.edit', $page->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm">
+                                                        Düzenle
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

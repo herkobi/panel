@@ -11,13 +11,10 @@ use App\Actions\Admin\Pages\Delete;
 use App\Actions\Admin\Pages\GetAll;
 use App\Actions\Admin\Pages\GetOne;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Spatie\Permission\Middleware\PermissionMiddleware;
 
-class PagesController extends Controller implements HasMiddleware
+class PagesController extends Controller
 {
     private $getAll;
     private $getOne;
@@ -41,19 +38,33 @@ class PagesController extends Controller implements HasMiddleware
 
     public function index(): View|RedirectResponse
     {
+
+        if (!auth()->user()->can('page.management')) {
+            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
+
         $pages = $this->getAll->execute();
         return view('admin.pages.index', [
             'pages' => $pages
         ]);
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        if (!auth()->user()->can('page.create')) {
+            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
+
         return view('admin.pages.create');
     }
 
     public function store(PageCreateRequest $request): RedirectResponse
     {
+
+        if (!auth()->user()->can('page.create')) {
+            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde oluşturuldu')
@@ -62,6 +73,11 @@ class PagesController extends Controller implements HasMiddleware
 
     public function edit($id): View
     {
+
+        if (!auth()->user()->can('page.update')) {
+            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
+
         $page = $this->getOne->execute($id);
         return view('admin.pages.edit', [
             'page' => $page
@@ -78,18 +94,15 @@ class PagesController extends Controller implements HasMiddleware
 
     public function destroy($id): RedirectResponse
     {
+
+        if (!auth()->user()->can('page.update')) {
+            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
+
         $deleted = $this->delete->execute($id);
         return $deleted
                 ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde silindi')
                 : Redirect::back()->with('error', 'Sayfa silinirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
-    }
-
-    public static function middleware(): array
-    {
-        return [
-            'role:Super Admin',
-            new Middleware(PermissionMiddleware::using('index,create,store,edit,update,destroy')),
-        ];
     }
 
 }
