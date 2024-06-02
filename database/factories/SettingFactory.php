@@ -34,7 +34,7 @@ class SettingFactory extends Factory
     public function appSettings()
     {
         return $this->state(function (array $attributes) {
-            $app_data = ['title' => 'Herkobi Panel', 'slogan' => 'Herkobi Panel', 'logo' => 'herkobi-site-logo.png', 'favicon' => 'herkobi-favicon.png', 'email' => 'site@site.com'];
+            $app_data = ['title' => 'Herkobi', 'slogan' => 'Herkobi Panel', 'logo' => 'herkobi-site-logo.png', 'favicon' => 'herkobi-favicon.png', 'email' => 'site@site.com'];
             $app_data = json_encode($app_data);
             $app_key = 'app';
 

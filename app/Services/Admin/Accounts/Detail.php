@@ -11,11 +11,11 @@ use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Support\Facades\Password;
 
 class Detail extends BaseService
 {
@@ -105,6 +105,13 @@ class Detail extends BaseService
 
         Mail::to($user->email)->send(new NewAdminUserEmail($user, $data['password']));
         return $user;
+    }
+
+    public function resetPassword($id, array $data)
+    {
+        $user = $this->model->findOrFail($id);
+        $status = Password::sendResetLink(['email' => $data["email"]]);
+        return ['status' => $status, 'user' => $user];
     }
 
     public function authLogs(int $id)

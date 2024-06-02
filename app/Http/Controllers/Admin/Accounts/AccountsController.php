@@ -44,6 +44,11 @@ class AccountsController extends Controller
 
     public function index(): View
     {
+
+        if (!auth()->user()->can('account.management')) {
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
+
         $users = $this->getAccounts->execute();
         return view('admin.accounts.index', [
             'users' => $users
@@ -55,6 +60,11 @@ class AccountsController extends Controller
      */
     public function show($id): View
     {
+
+        if (!auth()->user()->can('account.detail')) {
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
+
         $user = $this->getAccount->execute($id);
         $authLogs = $this->authLogs->execute($id);
         $userActivities = $this->userActivities->execute($id);
@@ -71,6 +81,11 @@ class AccountsController extends Controller
      */
     public function create(): View
     {
+
+        if (!auth()->user()->can('account.create')) {
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
+
         $roles = $this->getRoles->execute();
         return view('admin.accounts.create', [
             'roles' => $roles
@@ -84,6 +99,10 @@ class AccountsController extends Controller
      */
     public function store(AccountCreateRequest $request): RedirectResponse
     {
+
+        if (!auth()->user()->can('account.create')) {
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        }
 
         $user = $this->create->execute($request->validated());
         foreach ($request->role as $role) {

@@ -325,12 +325,6 @@ class PermissionsSeeder extends Seeder
             ],
             [
                 'parent_id' => 11,
-                'name' => 'account.index',
-                'desc' => 'Hesapları Görüntüle',
-                'guard_name' => 'web'
-            ],
-            [
-                'parent_id' => 11,
                 'name' => 'account.create',
                 'desc' => 'Hesap Ekle',
                 'guard_name' => 'web'

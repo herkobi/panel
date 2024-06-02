@@ -684,8 +684,11 @@
                             </svg>
                             <h3>Dikkat</h3>
                         </div>
-                        <div class="text-secondary mb-3">Kullanıcı şifresini yenilemesi için yenileme e-postası gönder.
-                        </div>
+                        <div class="text-secondary mb-3">Kullanıcı şifresini yenilemesi için e-posta
+                            gönderiyorsunuz.</div>
+                        <label for="userVerifedEmail" class="form-label">Kullanıcı e-posta adresi</label>
+                        <input type="email" name="email" id="userVerifedEmail" class="form-control"
+                            value="{{ $user->email }}" readonly>
                     </div>
                     <div class="modal-footer">
                         <div class="d-flex align-items-center justify-content-between w-100">
