@@ -24,11 +24,11 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Hesaplar',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/accounts/accounts.main.title'),
                 ])
                 @include('admin.accounts.partials.page-buttons', [
-                    'first_button' => 'Hesaplar',
+                    'first_button' => __('admin/accounts/accounts.main.button'),
                     'first_link' => 'panel.accounts',
                 ])
             </div>

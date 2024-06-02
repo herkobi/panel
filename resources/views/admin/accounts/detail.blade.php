@@ -4,13 +4,13 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Hesaplar',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/accounts/accounts.main.title'),
                 ])
                 @include('admin.accounts.partials.page-buttons', [
-                    'first_button' => 'Hesaplar',
+                    'first_button' => __('admin/accounts/accounts.main.button'),
                     'first_link' => 'panel.accounts',
-                    'second_button' => 'Yeni Hesap Ekle',
+                    'second_button' => __('admin/accounts/accounts.create.button'),
                     'second_link' => 'panel.account.create',
                 ])
             </div>
@@ -47,10 +47,9 @@
                                 <div class="alert alert-info shadow-none mb-5" role="alert">
                                     <div class="d-flex">
                                         <div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon"
-                                                width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                stroke="currentColor" fill="none" stroke-linecap="round"
-                                                stroke-linejoin="round">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24"
+                                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M12 9v4"></path>
                                                 <path
@@ -62,8 +61,8 @@
                                         <div>
                                             <h4 class="alert-title">Bilgilendirme</h4>
                                             <div class="text-secondary">Kullanıcı e-posta adresini onaylamamış.
-                                                Kullanıcıya e-posta onay linkini tekrar göndermek için <a
-                                                    href="#" data-bs-toggle="modal"
+                                                Kullanıcıya e-posta onay linkini tekrar göndermek için <a href="#"
+                                                    data-bs-toggle="modal"
                                                     data-bs-target="#modal-verifyEmail">tıklayınız.</a>
                                             </div>
                                         </div>
@@ -103,9 +102,8 @@
                                     <a href="#tabs-user-activity" class="nav-link active" data-bs-toggle="tab"
                                         aria-selected="true" role="tab">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon me-2">
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="icon me-2">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                             <path d="M12 20m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
                                             <path d="M10 20h-6" />
@@ -122,9 +120,8 @@
                                     <a href="#tabs-roles-permissions" class="nav-link" data-bs-toggle="tab"
                                         aria-selected="false" role="tab">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon me-2">
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="icon me-2">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                             <path
                                                 d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
@@ -134,12 +131,11 @@
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="#tabs-auth-logs" class="nav-link" data-bs-toggle="tab"
-                                        aria-selected="false" role="tab">
+                                    <a href="#tabs-auth-logs" class="nav-link" data-bs-toggle="tab" aria-selected="false"
+                                        role="tab">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon me-2">
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="icon me-2">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                             <path
                                                 d="M8 11m0 1a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z" />
@@ -228,9 +224,8 @@
                         <div class="card-body">
                             @foreach (AccountStatus::cases() as $userStatus)
                                 <div class="form-check">
-                                    <input class="form-check-input rounded-0 shadow-none" type="radio"
-                                        name="status" value="{{ $userStatus->value }}"
-                                        id="user-status-{{ $userStatus->value }}"
+                                    <input class="form-check-input rounded-0 shadow-none" type="radio" name="status"
+                                        value="{{ $userStatus->value }}" id="user-status-{{ $userStatus->value }}"
                                         data-status-name={{ AccountStatus::getTitle($userStatus->value) }}
                                         {{ $user->status->value == $userStatus->value ? 'checked' : '' }}>
                                     <label class="form-check-label"
@@ -249,9 +244,9 @@
                         <span class="dropdown-header">Kullanıcı İşlemleri</span>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal"
                             data-bs-target="#modal-changeEmail" title="E-posta Adresini Değiştir">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="icon dropdown-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="icon dropdown-item-icon">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M12 19h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v5.5" />
                                 <path d="M16 19h6" />
@@ -262,9 +257,9 @@
                         </a>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal"
                             data-bs-target="#modal-verifyEmail" title="E-posta Onay Linki Gönder">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="icon dropdown-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="icon dropdown-item-icon">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M13 19h-8a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v6" />
                                 <path d="M3 7l9 6l9 -6" />
@@ -278,8 +273,7 @@
                                 data-bs-target="#modal-checkEmail" title="E-posta Onay Linki Gönder">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon dropdown-item-icon">
+                                    stroke-linecap="round" stroke-linejoin="round" class="icon dropdown-item-icon">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path d="M11 19h-6a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v6" />
                                     <path d="M3 7l9 6l9 -6" />
@@ -291,15 +285,14 @@
                         <div class="dropdown-divider my-0"></div>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal"
                             data-bs-target="#modal-changePassword" title="Şifre Değiştir">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="icon dropdown-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="icon dropdown-item-icon">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <path d="M14 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
                                 <path d="M12.5 11.5l-4 4l1.5 1.5" />
                                 <path d="M12 15l-1.5 -1.5" />
-                                <path
-                                    d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                                <path d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
                             </svg>
                             Şifre Değiştir
                         </a>
@@ -308,8 +301,7 @@
                                 data-bs-target="#modal-resetPassword" title="Şifre Yenileme Linki Gönder">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon dropdown-item-icon">
+                                    stroke-linecap="round" stroke-linejoin="round" class="icon dropdown-item-icon">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                     <path
                                         d="M19 18a3.5 3.5 0 0 0 0 -7h-1c.397 -1.768 -.285 -3.593 -1.788 -4.787c-1.503 -1.193 -3.6 -1.575 -5.5 -1s-3.315 2.019 -3.712 3.787c-2.199 -.088 -4.155 1.326 -4.666 3.373c-.512 2.047 .564 4.154 2.566 5.027" />

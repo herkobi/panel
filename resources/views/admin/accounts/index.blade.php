@@ -4,13 +4,13 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Hesaplar',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/accounts/accounts.main.title'),
                 ])
                 @include('admin.accounts.partials.page-buttons', [
-                    'first_button' => 'Hesaplar',
+                    'first_button' => __('admin/accounts/accounts.main.button'),
                     'first_link' => 'panel.accounts',
-                    'second_button' => 'Yeni Hesap Ekle',
+                    'second_button' => __('admin/accounts/accounts.create.button'),
                     'second_link' => 'panel.account.create',
                 ])
             </div>
@@ -22,16 +22,16 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title lh-1">Kullanıcı Hesapları</h1>
+                            <h1 class="card-title lh-1">{{ __('admin/accounts/index.page.title') }}</h1>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-5">Durum</th>
-                                        <th class="w-40">Ad Soyad</th>
-                                        <th class="w-20">E-posta Adresi</th>
-                                        <th class="w-20">Yetkiler</th>
+                                        <th class="w-5">{{ __('admin/accounts/index.table.status') }}</th>
+                                        <th class="w-40">{{ __('admin/accounts/index.table.name') }}</th>
+                                        <th class="w-20">{{ __('admin/accounts/index.table.email') }}</th>
+                                        <th class="w-20">{{ __('admin/accounts/index.table.role') }}</th>
                                         <th class="w-15"></th>
                                     </tr>
                                 </thead>
@@ -59,8 +59,9 @@
                                             </td>
                                             <td class="text-center">
                                                 <a href="{{ route('panel.account.detail', $user->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Bilgiler">
-                                                    Bilgiler
+                                                    class="btn btn-ghost-primary btn-sm"
+                                                    title="{{ __('admin/accounts/index.table.detail') }}">
+                                                    {{ __('admin/accounts/index.table.detail') }}
                                                 </a>
                                             </td>
                                         </tr>

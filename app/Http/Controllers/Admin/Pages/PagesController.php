@@ -40,7 +40,7 @@ class PagesController extends Controller
     {
 
         if (!auth()->user()->can('page.management')) {
-            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
         }
 
         $pages = $this->getAll->execute();
@@ -52,7 +52,7 @@ class PagesController extends Controller
     public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('page.create')) {
-            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
         }
 
         return view('admin.pages.create');
@@ -62,7 +62,7 @@ class PagesController extends Controller
     {
 
         if (!auth()->user()->can('page.create')) {
-            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
         }
 
         $created = $this->create->execute($request->validated());
@@ -75,7 +75,7 @@ class PagesController extends Controller
     {
 
         if (!auth()->user()->can('page.update')) {
-            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
         }
 
         $page = $this->getOne->execute($id);
@@ -96,7 +96,7 @@ class PagesController extends Controller
     {
 
         if (!auth()->user()->can('page.update')) {
-            Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
         }
 
         $deleted = $this->delete->execute($id);
