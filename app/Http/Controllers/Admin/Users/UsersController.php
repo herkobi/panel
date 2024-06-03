@@ -45,8 +45,12 @@ class UsersController extends Controller
     /**
      * Yöneticileri listeleme sayfası
      */
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
+        if (!auth()->user()->can('user.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $users = $this->getAll->execute();
         return view('admin.users.index', [
             'users' => $users
@@ -56,8 +60,13 @@ class UsersController extends Controller
     /**
      * Yönetici detay sayfası
      */
-    public function show($id): View
+    public function show($id): View|RedirectResponse
     {
+
+        if (!auth()->user()->can('user.detail')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $user = $this->getUser->execute($id);
         $authLogs = $this->authLogs->execute($id);
         $userActivities = $this->userActivities->execute($id);
@@ -72,8 +81,12 @@ class UsersController extends Controller
      * Yeni yönetici ekleme
      * @param  array<string, string>  $input
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        if (!auth()->user()->can('user.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $roles = $this->getRoles->execute();
         return view('admin.users.create', [
             'roles' => $roles
@@ -87,6 +100,9 @@ class UsersController extends Controller
      */
     public function store(UserCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('user.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
 
         $user = $this->create->execute($request->validated());
         foreach ($request->role as $role) {

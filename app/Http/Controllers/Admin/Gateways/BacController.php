@@ -41,7 +41,7 @@ class BacController extends Controller
         $this->currencies = $currencies;
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('gateway.bac.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -69,7 +69,7 @@ class BacController extends Controller
                 : Redirect::back()->with('error', 'Hesap bilgisi eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('gateway.bac.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

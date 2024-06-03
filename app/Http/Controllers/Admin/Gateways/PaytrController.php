@@ -32,7 +32,7 @@ class PaytrController extends Controller
         $this->currencies = $currencies;
     }
 
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('gateway.cc.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

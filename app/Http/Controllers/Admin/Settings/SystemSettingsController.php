@@ -29,7 +29,7 @@ class SystemSettingsController extends Controller implements HasMiddleware
     /**
      * Sistem Ayarları
      */
-    public function system(): View
+    public function system(): View|RedirectResponse
     {
         if (!auth()->user()->hasRole('Super Admin')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -46,7 +46,7 @@ class SystemSettingsController extends Controller implements HasMiddleware
         if (!auth()->user()->hasRole('Super Admin')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
-        
+
         $updated = $this->update->execute($request, 'system');
         return $updated
                 ? Redirect::back()->with('success', 'Sistem ayarları başarılı bir şekilde güncellendi.')

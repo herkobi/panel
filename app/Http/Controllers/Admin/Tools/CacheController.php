@@ -35,7 +35,7 @@ class CacheController extends Controller
         $this->clearView = $clearView;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('tools.cache.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Actions\Admin\Settings\Payment\GetAll;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 class PaymentController extends Controller
@@ -17,7 +18,7 @@ class PaymentController extends Controller
         $this->getAll = $getAll;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('gateway.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

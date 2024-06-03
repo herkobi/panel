@@ -94,10 +94,12 @@
                                                     Bilgisi</button>
                                             </td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.tools.logs.detail', $log->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Bilgiler">
-                                                    Bilgiler
-                                                </a>
+                                                @if (auth()->user()->can('tools.auth.logs.detail'))
+                                                    <a href="{{ route('panel.tools.logs.detail', $log->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm" title="Bilgiler">
+                                                        Bilgiler
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

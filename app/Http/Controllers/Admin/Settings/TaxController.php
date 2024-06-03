@@ -40,7 +40,7 @@ class TaxController extends Controller
         $this->countries = $countries;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('tax.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -50,7 +50,7 @@ class TaxController extends Controller
         return view('admin.settings.taxes.index', compact('taxes'));
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('tax.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -72,7 +72,7 @@ class TaxController extends Controller
                 : Redirect::back()->with('error', 'Vergi bilgisi başarılı bir şekilde eklendi');
     }
 
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('tax.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

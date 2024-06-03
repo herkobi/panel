@@ -44,6 +44,10 @@ class UserDetailController extends Controller
      */
     public function updateStatus(UpdateStatusRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('user.status.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->updateStatus->execute($id, $request->validated());
         return $updated
             ? Redirect::back()->with('success', 'Kullanıcı durumu başarılı bir şekilde güncellendi.')
@@ -57,6 +61,10 @@ class UserDetailController extends Controller
      */
     public function changeEmail(ChangeEmailRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('user.email.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->changeEmail->execute($id, $request->validated());
         return $updated
             ? Redirect::back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.')
@@ -70,6 +78,10 @@ class UserDetailController extends Controller
      */
     public function verifyEmail(VerifyEmailRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('user.email.send')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $verified = $this->verifyEmail->execute($id, $request->validated());
         return $verified
             ? Redirect::back()->with('success', 'Kullanıcıya e-posta adresi onay linki gönderilmiştir.')
@@ -83,6 +95,10 @@ class UserDetailController extends Controller
      */
     public function checkEmail(CheckEmailRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('user.email.verified')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $checked = $this->checkEmail->execute($id, $request->validated());
         return $checked
             ? Redirect::back()->with('success', 'Kullanıcı e-posta adresi başarılı bir şekilde onaylandı.')
@@ -96,6 +112,10 @@ class UserDetailController extends Controller
      */
     public function changePassword(ChangePasswordRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('user.password.change')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $changed = $this->changePassword->execute($id, $request->validated());
         return $changed
             ? Redirect::back()->with('success', 'Kullanıcı şifresi başarılı bir şekilde değiştirildi.')

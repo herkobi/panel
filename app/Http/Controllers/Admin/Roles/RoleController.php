@@ -55,7 +55,7 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('role.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -72,7 +72,7 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('role.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -105,7 +105,7 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('role.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -199,7 +199,7 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function detail($id): View
+    public function detail($id): View|RedirectResponse
     {
         if (!auth()->user()->can('role.sync')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

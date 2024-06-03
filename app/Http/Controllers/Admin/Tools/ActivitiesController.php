@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Tools;
 use App\Http\Controllers\Controller;
 use App\Actions\Admin\Tools\Activities\AccountActivities;
 use App\Actions\Admin\Tools\Activities\UserActivities;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -21,7 +22,7 @@ class ActivitiesController extends Controller
         $this->userActivities = $userActivities;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('tools.accounts.activities')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -33,9 +34,9 @@ class ActivitiesController extends Controller
         ]);
     }
 
-    public function users(): View
+    public function users(): View|RedirectResponse
     {
-        if (!auth()->user()->can('tools.user.activities')) {
+        if (!auth()->user()->can('tools.users.activities')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 

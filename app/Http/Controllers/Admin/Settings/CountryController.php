@@ -37,7 +37,7 @@ class CountryController extends Controller
         $this->delete = $delete;
     }
 
-    public function index(GetAll $countries): View
+    public function index(GetAll $countries): View|RedirectResponse
     {
         if (!auth()->user()->can('location.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -49,7 +49,7 @@ class CountryController extends Controller
         ]);
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('location.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -70,7 +70,7 @@ class CountryController extends Controller
                 : Redirect::back()->with('error', 'Ülke eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('location.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

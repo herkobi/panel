@@ -7,6 +7,7 @@ use App\Actions\Admin\Tools\AuthLogs\AccountLogs;
 use App\Actions\Admin\Tools\AuthLogs\AuthLogs;
 use App\Actions\Admin\Tools\AuthLogs\GetUser;
 use App\Actions\Admin\Tools\AuthLogs\UserLogs;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,7 +30,7 @@ class AuthLogsController extends Controller
         $this->authLogs = $authLogs;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('tools.accounts.auth.logs')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -41,9 +42,9 @@ class AuthLogsController extends Controller
         ]);
     }
 
-    public function users(): View
+    public function users(): View|RedirectResponse
     {
-        if (!auth()->user()->can('tools.users.auth.logs')) {
+        if (!auth()->user()->can('tools.user.auth.logs')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -53,7 +54,7 @@ class AuthLogsController extends Controller
         ]);
     }
 
-    public function authLogs($id): View
+    public function authLogs($id): View|RedirectResponse
     {
         if (!auth()->user()->can('tools.auth.logs.detail')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

@@ -42,7 +42,7 @@ class AccountsController extends Controller
         $this->userActivities = $userActivities;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('account.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -57,7 +57,7 @@ class AccountsController extends Controller
     /**
      * Hesap detay sayfası
      */
-    public function show($id): View
+    public function show($id): View|RedirectResponse
     {
         if (!auth()->user()->can('account.detail')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -77,7 +77,7 @@ class AccountsController extends Controller
      * Yeni hesap ekleme
      * @param  array<string, string>  $input
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('account.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

@@ -36,7 +36,7 @@ class LanguageController extends Controller
         $this->delete = $delete;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('language.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -46,7 +46,7 @@ class LanguageController extends Controller
         return view('admin.settings.languages.index', compact('languages'));
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('language.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -67,7 +67,7 @@ class LanguageController extends Controller
                 : Redirect::back()->with('error', __('Dil başarılı bir şekilde eklendi.'));
     }
 
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('language.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

@@ -36,7 +36,7 @@ class CurrencyController extends Controller
         $this->delete = $delete;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('currency.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -46,7 +46,7 @@ class CurrencyController extends Controller
         return view('admin.settings.currencies.index', compact('currencies'));
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('currency.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -67,7 +67,7 @@ class CurrencyController extends Controller
                 : Redirect::back()->with('error', 'Para birimi eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('currency.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));

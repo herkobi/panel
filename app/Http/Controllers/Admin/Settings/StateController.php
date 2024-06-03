@@ -37,7 +37,7 @@ class StateController extends Controller
         $this->delete = $delete;
     }
 
-    public function index($country): View
+    public function index($country): View|RedirectResponse
     {
         if (!auth()->user()->can('location.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -51,7 +51,7 @@ class StateController extends Controller
         ]);
     }
 
-    public function create($country): View
+    public function create($country): View|RedirectResponse
     {
         if (!auth()->user()->can('location.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -75,7 +75,7 @@ class StateController extends Controller
                 : Redirect::back()->with('error', 'Bölge başarılı bir şekilde eklendi');
     }
 
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('location.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -105,7 +105,7 @@ class StateController extends Controller
         if (!auth()->user()->can('location.delete')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
-        
+
         $state = $this->getOne->execute($id);
         $deleted = $this->delete->execute($id);
         return $deleted

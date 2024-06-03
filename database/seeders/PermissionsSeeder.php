@@ -78,6 +78,24 @@ class PermissionsSeeder extends Seeder
                 'guard_name' => 'web'
             ],
             [
+                'parent_id' => 0,
+                'name' => 'tools.authlogs.management',
+                'desc' => 'Oturum Kayıtları Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 0,
+                'name' => 'tools.activity.management',
+                'desc' => 'Kullanıcı Eylemleri Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 0,
+                'name' => 'tools.cache.management',
+                'desc' => 'Önbellek Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
                 'parent_id' => 1,
                 'name' => 'app.update',
                 'desc' => 'Uygulama Ayarlarını Güncelle',
@@ -387,6 +405,66 @@ class PermissionsSeeder extends Seeder
                 'parent_id' => 11,
                 'name' => 'account.password.reset',
                 'desc' => 'Hesap Şifre Yenileme Linki Gönder',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 12,
+                'name' => 'tools.accounts.auth.logs',
+                'desc' => 'Hesap Oturum Kayıtları Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 12,
+                'name' => 'tools.user.auth.logs',
+                'desc' => 'Kullanıcı Oturum Kayıtları Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 12,
+                'name' => 'tools.auth.logs.detail',
+                'desc' => 'Oturum Kayıtları Bilgisi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 13,
+                'name' => 'tools.accounts.activities',
+                'desc' => 'Hesap Eylemleri Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 13,
+                'name' => 'tools.users.activities',
+                'desc' => 'Kullanıcı Eylemleri Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 14,
+                'name' => 'tools.cache.cache',
+                'desc' => 'Uygulama Önbelliği Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 14,
+                'name' => 'tools.cache.optimize',
+                'desc' => 'Sistem Önbelliği Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 14,
+                'name' => 'tools.cache.view',
+                'desc' => 'Görünüm Önbelliği Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 14,
+                'name' => 'tools.cache.route',
+                'desc' => 'Rota Önbelliği Yönetimi',
+                'guard_name' => 'web'
+            ],
+            [
+                'parent_id' => 14,
+                'name' => 'tools.cache.config',
+                'desc' => 'Yapılandırma Önbelliği Yönetimi',
                 'guard_name' => 'web'
             ],
         ];

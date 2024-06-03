@@ -41,7 +41,7 @@ class PermissionController extends Controller
         $this->delete = $delete;
     }
 
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         if (!auth()->user()->can('permission.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -58,7 +58,7 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('permission.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
@@ -94,7 +94,7 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('permission.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
