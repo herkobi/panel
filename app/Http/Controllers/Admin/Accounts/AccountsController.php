@@ -44,9 +44,8 @@ class AccountsController extends Controller
 
     public function index(): View
     {
-
         if (!auth()->user()->can('account.management')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $users = $this->getAccounts->execute();
@@ -60,9 +59,8 @@ class AccountsController extends Controller
      */
     public function show($id): View
     {
-
         if (!auth()->user()->can('account.detail')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $user = $this->getAccount->execute($id);
@@ -81,9 +79,8 @@ class AccountsController extends Controller
      */
     public function create(): View
     {
-
         if (!auth()->user()->can('account.create')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $roles = $this->getRoles->execute();
@@ -99,9 +96,8 @@ class AccountsController extends Controller
      */
     public function store(AccountCreateRequest $request): RedirectResponse
     {
-
         if (!auth()->user()->can('account.create')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $user = $this->create->execute($request->validated());

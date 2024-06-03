@@ -43,6 +43,10 @@ class BacController extends Controller
 
     public function create(): View
     {
+        if (!auth()->user()->can('gateway.bac.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $payments = $this->payments->execute();
         $currencies = $this->currencies->execute();
 
@@ -55,6 +59,10 @@ class BacController extends Controller
 
     public function store(BacCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('gateway.bac.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.gateways.bac')->with('success', 'Hesap bilgileri başarılı bir şekilde kayıt edildi')
@@ -63,6 +71,10 @@ class BacController extends Controller
 
     public function edit($id): View
     {
+        if (!auth()->user()->can('gateway.bac.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $bac = $this->getOne->execute($id);
         $values = json_decode($bac->value, true);
         $currencies = $this->currencies->execute();
@@ -78,6 +90,10 @@ class BacController extends Controller
 
     public function update(BacUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('gateway.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->update->execute($id, $request->validated());
         return $updated
                 ? Redirect::route('panel.gateways.bac')->with('success', 'Hesap bilgileri başarılı bir şekilde güncellendi')
@@ -86,6 +102,10 @@ class BacController extends Controller
 
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('gateway.bac.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $deleted = $this->delete->execute($id);
         return $deleted
                 ? Redirect::route('panel.gateways.bac')->with('success', 'Hesap bilgileri başarılı bir şekilde silindi')

@@ -85,12 +85,6 @@ class PermissionsSeeder extends Seeder
             ],
             [
                 'parent_id' => 2,
-                'name' => 'user.index',
-                'desc' => 'Kullanıcıları Görüntüle',
-                'guard_name' => 'web'
-            ],
-            [
-                'parent_id' => 2,
                 'name' => 'user.create',
                 'desc' => 'Kullanıcı Ekle',
                 'guard_name' => 'web'

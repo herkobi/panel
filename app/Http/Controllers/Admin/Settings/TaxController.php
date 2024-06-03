@@ -42,18 +42,30 @@ class TaxController extends Controller
 
     public function index(): View
     {
+        if (!auth()->user()->can('tax.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $taxes = $this->getAll->execute();
         return view('admin.settings.taxes.index', compact('taxes'));
     }
 
     public function create(): View
     {
+        if (!auth()->user()->can('tax.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $countries = $this->countries->execute();
         return view('admin.settings.taxes.create', compact('countries'));
     }
 
     public function store(TaxCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('tax.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.settings.taxes')->with('success', 'Vergi bilgisi başarılı bir şekilde eklendi')
@@ -62,6 +74,10 @@ class TaxController extends Controller
 
     public function edit($id): View
     {
+        if (!auth()->user()->can('tax.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $tax = $this->getOne->execute($id);
         $countries = $this->countries->execute();
         return view('admin.settings.taxes.edit', compact('tax', 'countries'));
@@ -69,6 +85,10 @@ class TaxController extends Controller
 
     public function update(TaxUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('tax.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $tax = $this->getOne->execute($id);
         $newStatus = $request->input('status');
         $oldStatus = $tax->status->value;
@@ -85,6 +105,10 @@ class TaxController extends Controller
 
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('tax.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $deleted = $this->delete->execute($id);
         return $deleted
                 ? Redirect::route('panel.settings.taxes')->with('success', 'Vergi bilgisi başarılı bir şekilde silindi')

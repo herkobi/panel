@@ -57,6 +57,10 @@ class RoleController extends Controller
      */
     public function index(): View
     {
+        if (!auth()->user()->can('role.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $roles = $this->getAll->execute();
         return view('admin.roles.roles.index', [
             'roles' => $roles
@@ -70,6 +74,10 @@ class RoleController extends Controller
      */
     public function create(): View
     {
+        if (!auth()->user()->can('role.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         return view('admin.roles.roles.create');
     }
 
@@ -81,6 +89,10 @@ class RoleController extends Controller
      */
     public function store(RoleCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('role.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde eklendi.')
@@ -95,6 +107,10 @@ class RoleController extends Controller
      */
     public function edit($id): View
     {
+        if (!auth()->user()->can('role.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $role = $this->getOne->execute($id);
         return view('admin.roles.roles.edit', [
             'role' => $role
@@ -110,6 +126,10 @@ class RoleController extends Controller
      */
     public function update(RoleUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('role.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->update->execute($id, $request->validated());
         return $updated
                 ? Redirect::route('panel.roles')->with('success', 'Yetki başarılı bir şekilde güncellendi')
@@ -124,6 +144,10 @@ class RoleController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('role.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $role = $this->getOne->execute($id);
 
         if (!$role) {
@@ -159,6 +183,10 @@ class RoleController extends Controller
      */
     public function permissions(RolePermissionCreateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('role.sync')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $synced = $this->syncpermissions->execute($id, $request);
         return $synced
                 ? Redirect::route('panel.roles')->with('success', __('role.created.permission.success.message'))
@@ -173,6 +201,10 @@ class RoleController extends Controller
      */
     public function detail($id): View
     {
+        if (!auth()->user()->can('role.sync')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $role = $this->getOne->execute($id);
         $rolePermissions = $this->detail->execute($role->id);
         $permissions = $this->permissions->execute();

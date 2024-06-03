@@ -39,6 +39,10 @@ class CountryController extends Controller
 
     public function index(GetAll $countries): View
     {
+        if (!auth()->user()->can('location.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $countries = $this->getAll->execute();
         return view('admin.settings.locations.country.index', [
             'countries' => $countries
@@ -47,11 +51,19 @@ class CountryController extends Controller
 
     public function create(): View
     {
+        if (!auth()->user()->can('location.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         return view('admin.settings.locations.country.create');
     }
 
     public function store(CountryCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('location.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.settings.locations.countries')->with('success', 'Ülke başarılı bir şekilde eklendi')
@@ -60,12 +72,20 @@ class CountryController extends Controller
 
     public function edit($id): View
     {
+        if (!auth()->user()->can('location.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $country = $this->getOne->execute($id);
         return view('admin.settings.locations.country.edit', compact('country'));
     }
 
     public function update(CountryUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('location.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $country = $this->getOne->execute($id);
         $newStatus = $request->input('status');
         $oldStatus = $country->status->value;
@@ -82,6 +102,10 @@ class CountryController extends Controller
 
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('location.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $country = $this->getOne->execute($id);
         if (!$country) {
             return Redirect::back()->with('error', 'Ülke bulunamadı');

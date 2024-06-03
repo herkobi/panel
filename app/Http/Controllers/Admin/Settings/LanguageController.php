@@ -38,17 +38,29 @@ class LanguageController extends Controller
 
     public function index(): View
     {
+        if (!auth()->user()->can('language.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $languages = $this->getAll->execute();
         return view('admin.settings.languages.index', compact('languages'));
     }
 
     public function create(): View
     {
+        if (!auth()->user()->can('language.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         return view('admin.settings.languages.create');
     }
 
     public function store(LanguageCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('language.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.settings.languages')->with('success', __('Dil başarılı bir şekilde eklendi.'))
@@ -57,12 +69,20 @@ class LanguageController extends Controller
 
     public function edit($id): View
     {
+        if (!auth()->user()->can('language.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $language = $this->getOne->execute($id);
         return view('admin.settings.languages.edit', compact('language'));
     }
 
     public function update(LanguageUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('language.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $language = $this->getOne->execute($id);
         $newStatus = $request->input('status');
         $oldStatus = $language->status->value;
@@ -79,6 +99,10 @@ class LanguageController extends Controller
 
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('language.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $language = $this->getOne->execute($id);
 
         if(!$language) {

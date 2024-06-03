@@ -6,6 +6,7 @@ use App\Actions\Admin\Gateways\Payments;
 use App\Actions\Admin\Gateways\Bac;
 use App\Actions\Admin\Gateways\CreditCards;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class GatewayController extends Controller
@@ -26,6 +27,10 @@ class GatewayController extends Controller
     }
     public function bac(): View
     {
+        if (!auth()->user()->can('gateway.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $gateways = $this->getBac->execute();
         $values = [];
         foreach ($gateways as $gateway) {
@@ -43,6 +48,10 @@ class GatewayController extends Controller
 
     public function cc(): View
     {
+        if (!auth()->user()->can('gateway.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $gateways = $this->getCreditCards->execute();
         $values = [];
         foreach ($gateways as $gateway) {

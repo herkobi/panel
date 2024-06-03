@@ -47,9 +47,6 @@ class UsersController extends Controller
      */
     public function index(): View
     {
-        /**
-         * Super Admin rolü dışında yöneticiler için tanımlanmış kullanıcılar çekiliyor.
-         */
         $users = $this->getAll->execute();
         return view('admin.users.index', [
             'users' => $users

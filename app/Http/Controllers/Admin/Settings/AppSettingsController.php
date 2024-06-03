@@ -27,11 +27,19 @@ class AppSettingsController extends Controller
 
     public function app(): View
     {
+        if (!auth()->user()->can('app.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         return view('admin.settings.app.index', $this->getAll->execute());
     }
 
     public function update(AppSettingsUpdateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('app.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->update->execute($request->validated(), 'app');
         return $updated
                 ? Redirect::back()->with('success', 'Uygulama bilgileri başarılı bir şekilde güncellendi.')

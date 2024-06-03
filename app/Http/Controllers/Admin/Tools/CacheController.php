@@ -37,6 +37,10 @@ class CacheController extends Controller
 
     public function index(): View
     {
+        if (!auth()->user()->can('tools.cache.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         return view('admin.tools.cache.index');
     }
 
@@ -47,6 +51,10 @@ class CacheController extends Controller
      */
     public function cache(): RedirectResponse
     {
+        if (!auth()->user()->can('tools.cache.cache')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $cleared = $this->clearCache->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Uygulama önbelliği başarılı bir şekilde temizlendi')
@@ -60,6 +68,10 @@ class CacheController extends Controller
      */
     public function optimize(): RedirectResponse
     {
+        if (!auth()->user()->can('tools.cache.optimize')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $cleared = $this->clearOptimize->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Uygulamaya, rota, yapılandırma ve görünüm önbelleği başarılı bir şekilde temizlendi')
@@ -73,6 +85,10 @@ class CacheController extends Controller
      */
     public function view(): RedirectResponse
     {
+        if (!auth()->user()->can('tools.cache.view')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $cleared = $this->clearView->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Görünüm önbelliği başarılı bir şekilde temizlendi')
@@ -86,6 +102,10 @@ class CacheController extends Controller
      */
     public function route(): RedirectResponse
     {
+        if (!auth()->user()->can('tools.cache.route')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $cleared = $this->clearRoute->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Rota önbelliği başarılı bir şekilde temizlendi')
@@ -99,6 +119,10 @@ class CacheController extends Controller
      */
     public function config(): RedirectResponse
     {
+        if (!auth()->user()->can('tools.cache.config')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $cleared = $this->clearConfig->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Yapılandırma önbelliği başarılı bir şekilde temizlendi')

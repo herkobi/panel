@@ -34,6 +34,10 @@ class PaytrController extends Controller
 
     public function edit($id): View
     {
+        if (!auth()->user()->can('gateway.cc.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $paytr = $this->getOne->execute($id);
         $values = json_decode($paytr->value, true);
         $payments = $this->payments->execute();
@@ -49,6 +53,10 @@ class PaytrController extends Controller
 
     public function update(PaytrUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('gateway.cc.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->update->execute($id, $request->validated());
         return $updated
                 ? Redirect::route('panel.gateways.cc')->with('success', 'Paytr ödeme bilgileri başarılı bir şekilde güncellendi')

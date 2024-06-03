@@ -43,6 +43,10 @@ class PermissionController extends Controller
 
     public function index(): View
     {
+        if (!auth()->user()->can('permission.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $permissions = $this->allPermissions->execute();
         return view('admin.roles.permissions.index', [
             'permissions' => $permissions
@@ -56,6 +60,10 @@ class PermissionController extends Controller
      */
     public function create(): View
     {
+        if (!auth()->user()->can('permission.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $permissions = $this->mainPermissions->execute();
         return view('admin.roles.permissions.create', [
             'permissions' => $permissions
@@ -70,6 +78,10 @@ class PermissionController extends Controller
      */
     public function store(PermissionCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('permission.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde eklendi.')
@@ -84,6 +96,10 @@ class PermissionController extends Controller
      */
     public function edit($id): View
     {
+        if (!auth()->user()->can('permission.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $permission = $this->getOne->execute($id);
         $mainPermissions = $this->mainPermissions->execute();
         return view('admin.roles.permissions.edit', [
@@ -101,6 +117,10 @@ class PermissionController extends Controller
      */
     public function update(PermissionUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('permission.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->update->execute($id, $request->validated());
         return $updated
                 ? Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde güncellendi')
@@ -115,6 +135,10 @@ class PermissionController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('permission.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $permission = $this->getOne->execute($id);
 
         if (!$permission) {

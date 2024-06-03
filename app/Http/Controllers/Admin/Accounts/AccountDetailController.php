@@ -16,7 +16,6 @@ use App\Http\Requests\Admin\Accounts\ResetPasswordRequest;
 use App\Http\Requests\Admin\Accounts\UpdateStatusRequest;
 use App\Http\Requests\Admin\Accounts\VerifyEmailRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 
@@ -52,7 +51,7 @@ class AccountDetailController extends Controller
     public function updateStatus(UpdateStatusRequest $request, $id): RedirectResponse
     {
         if (!auth()->user()->can('account.status.update')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $updated = $this->updateStatus->execute($id, $request->validated());
@@ -69,7 +68,7 @@ class AccountDetailController extends Controller
     public function changeEmail(ChangeEmailRequest $request, $id): RedirectResponse
     {
         if (!auth()->user()->can('account.email.update')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $updated = $this->changeEmail->execute($id, $request->validated());
@@ -86,7 +85,7 @@ class AccountDetailController extends Controller
     public function verifyEmail(VerifyEmailRequest $request, $id): RedirectResponse
     {
         if (!auth()->user()->can('account.email.send')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $verified = $this->verifyEmail->execute($id, $request->validated());
@@ -103,7 +102,7 @@ class AccountDetailController extends Controller
     public function checkEmail(CheckEmailRequest $request, $id): RedirectResponse
     {
         if (!auth()->user()->can('account.email.verified')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $checked = $this->checkEmail->execute($id, $request->validated());
@@ -120,7 +119,7 @@ class AccountDetailController extends Controller
     public function changePassword(ChangePasswordRequest $request, $id): RedirectResponse
     {
         if (!auth()->user()->can('account.password.change')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $changed = $this->changePassword->execute($id, $request->validated());
@@ -137,7 +136,7 @@ class AccountDetailController extends Controller
     public function resetPassword(ResetPasswordRequest $request, $id): RedirectResponse
     {
         if (!auth()->user()->can('account.password.reset')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $status = $this->resetPassword->execute($id, $request->validated());

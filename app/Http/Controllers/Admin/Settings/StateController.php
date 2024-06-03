@@ -39,6 +39,10 @@ class StateController extends Controller
 
     public function index($country): View
     {
+        if (!auth()->user()->can('location.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $states = $this->getAll->execute($country);
         $country = $this->getAll->getCountry($country);
         return view('admin.settings.locations.state.index', [
@@ -49,6 +53,10 @@ class StateController extends Controller
 
     public function create($country): View
     {
+        if (!auth()->user()->can('location.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $country = $this->getAll->getCountry($country);
         return view('admin.settings.locations.state.create',[
             'country' => $country
@@ -57,6 +65,10 @@ class StateController extends Controller
 
     public function store(StateCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('location.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.settings.locations.states', $request->country_id)->with('success', 'Bölge başarılı bir şekilde eklendi')
@@ -65,6 +77,10 @@ class StateController extends Controller
 
     public function edit($id): View
     {
+        if (!auth()->user()->can('location.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $state = $this->getOne->execute($id);
         return view('admin.settings.locations.state.edit', [
             'state' => $state
@@ -73,6 +89,10 @@ class StateController extends Controller
 
     public function update(StateUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('location.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->update->execute($id, $request->validated());
         $state = $this->getOne->execute($id);
         return $updated
@@ -82,6 +102,10 @@ class StateController extends Controller
 
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('location.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+        
         $state = $this->getOne->execute($id);
         $deleted = $this->delete->execute($id);
         return $deleted

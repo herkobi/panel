@@ -38,17 +38,29 @@ class CurrencyController extends Controller
 
     public function index(): View
     {
+        if (!auth()->user()->can('currency.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $currencies = $this->getAll->execute();
         return view('admin.settings.currencies.index', compact('currencies'));
     }
 
     public function create(): View
     {
+        if (!auth()->user()->can('currency.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         return view('admin.settings.currencies.create');
     }
 
     public function store(CurrencyCreateRequest $request): RedirectResponse
     {
+        if (!auth()->user()->can('currency.create')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $created = $this->create->execute($request->validated());
         return $created
                 ? Redirect::route('panel.settings.currencies')->with('success', 'Para birimi başarılı bir şekilde eklendi.')
@@ -57,12 +69,20 @@ class CurrencyController extends Controller
 
     public function edit($id): View
     {
+        if (!auth()->user()->can('currency.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $currency = $this->getOne->execute($id);
         return view('admin.settings.currencies.edit', compact('currency'));
     }
 
     public function update(CurrencyUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('currency.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $currency = $this->getOne->execute($id);
         $newStatus = $request->input('status');
         $oldStatus = $currency->status->value;
@@ -79,6 +99,10 @@ class CurrencyController extends Controller
 
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('currency.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $currency = $this->getOne->execute($id);
 
         if ($this->isDefault($currency)) {

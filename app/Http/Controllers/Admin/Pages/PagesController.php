@@ -40,7 +40,7 @@ class PagesController extends Controller
     {
 
         if (!auth()->user()->can('page.management')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $pages = $this->getAll->execute();
@@ -52,7 +52,7 @@ class PagesController extends Controller
     public function create(): View|RedirectResponse
     {
         if (!auth()->user()->can('page.create')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         return view('admin.pages.create');
@@ -60,9 +60,8 @@ class PagesController extends Controller
 
     public function store(PageCreateRequest $request): RedirectResponse
     {
-
         if (!auth()->user()->can('page.create')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $created = $this->create->execute($request->validated());
@@ -73,9 +72,8 @@ class PagesController extends Controller
 
     public function edit($id): View
     {
-
         if (!auth()->user()->can('page.update')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $page = $this->getOne->execute($id);
@@ -86,6 +84,10 @@ class PagesController extends Controller
 
     public function update(PageUpdateRequest $request, $id): RedirectResponse
     {
+        if (!auth()->user()->can('page.update')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
         $updated = $this->update->execute($id, $request->validated());
         return $updated
                 ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde güncellendi')
@@ -94,6 +96,9 @@ class PagesController extends Controller
 
     public function destroy($id): RedirectResponse
     {
+        if (!auth()->user()->can('page.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
 
         if (!auth()->user()->can('page.update')) {
             return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
