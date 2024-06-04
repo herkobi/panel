@@ -57,10 +57,12 @@
                                             <td>{{ $language->code }}</td>
                                             <td>{{ $language->iso_code }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.settings.language.edit', $language->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Düzenle">
-                                                    Düzenle
-                                                </a>
+                                                @if (auth()->user()->can('language.update'))
+                                                    <a href="{{ route('panel.settings.language.edit', $language->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm" title="Düzenle">
+                                                        Düzenle
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

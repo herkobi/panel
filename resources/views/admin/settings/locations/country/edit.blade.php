@@ -81,10 +81,10 @@
                             @if (config('panel.location') != $country->code)
                                 <div class="card-footer">
                                     <div class="btn-list">
-                                        @hasrole('Super Admin')
+                                        @if (auth()->user()->can('location.update'))
                                             <a href="#" class="btn btn-outline-danger me-auto" data-bs-toggle="modal"
                                                 data-bs-target="#modal-danger">Sil</a>
-                                        @endhasrole
+                                        @endif
                                         <button type="submit" class="btn btn-success">Güncelle</button>
                                     </div>
                                 </div>
@@ -99,47 +99,49 @@
             </div>
         </div>
     </div>
-    <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-status bg-danger"></div>
-                <div class="modal-body text-center py-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24"
-                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M12 9v4" />
-                        <path
-                            d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
-                        <path d="M12 16h.01" />
-                    </svg>
-                    <h3>Emin misiniz?</h3>
-                    <div class="text-secondary">Bu işlem geri alınamaz. Devam etmek istiyor musunuz?
+    @if (auth()->user()->can('location.update'))
+        <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-status bg-danger"></div>
+                    <div class="modal-body text-center py-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24"
+                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 9v4" />
+                            <path
+                                d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
+                            <path d="M12 16h.01" />
+                        </svg>
+                        <h3>Emin misiniz?</h3>
+                        <div class="text-secondary">Bu işlem geri alınamaz. Devam etmek istiyor musunuz?
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="w-100">
-                        <div class="row">
-                            <div class="col">
-                                <a href="#" class="btn w-100" data-bs-dismiss="modal">
-                                    İptal Et
-                                </a>
-                            </div>
-                            <div class="col">
-                                <form action="{{ route('panel.settings.locations.country.destroy', $country->id) }}"
-                                    method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger w-100" data-bs-dismiss="modal">
-                                        Evet, Devam Et
-                                    </button>
-                                </form>
+                    <div class="modal-footer">
+                        <div class="w-100">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="#" class="btn w-100" data-bs-dismiss="modal">
+                                        İptal Et
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <form action="{{ route('panel.settings.locations.country.destroy', $country->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger w-100" data-bs-dismiss="modal">
+                                            Evet, Devam Et
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 @endsection

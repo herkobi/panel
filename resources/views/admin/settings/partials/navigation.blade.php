@@ -115,20 +115,25 @@
         </div>
     @endif
     @if (
-        !request()->routeIs([
-            'panel.settings.currencies',
-            'panel.settings.currency.*',
-            'panel.settings.locations',
-            'panel.settings.locations.*',
-            'panel.settings.location.*',
-            'panel.settings.taxes',
-            'panel.settings.tax.*',
-            'panel.settings.languages',
-            'panel.settings.language.*',
-        ]))
+        (auth()->user()->can('gateway.management') ||
+            auth()->user()->can('tax.management') ||
+            auth()->user()->can('currency.management') ||
+            auth()->user()->can('location.management') ||
+            auth()->user()->can('language.management')) &&
+            !request()->routeIs([
+                'panel.settings.currencies',
+                'panel.settings.currency.*',
+                'panel.settings.locations',
+                'panel.settings.locations.*',
+                'panel.settings.location.*',
+                'panel.settings.taxes',
+                'panel.settings.tax.*',
+                'panel.settings.languages',
+                'panel.settings.language.*',
+            ]))
         <div class="dropdown-menu panel-dropdown shadow-none">
             <span class="dropdown-header">Tanımlamalar</span>
-            @if (!request()->routeIs(['panel.settings.payments', 'panel.gateways.*']))
+            @if (auth()->user()->can('gateway.management') || !request()->routeIs(['panel.settings.payments', 'panel.gateways.*']))
                 <a class="dropdown-item" href="{{ route('panel.settings.payments') }}" title="Ödeme Yöntemleri">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
                         height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -144,61 +149,69 @@
                     Ödeme Yöntemleri
                 </a>
             @endif
-            <a class="dropdown-item" href="{{ route('panel.settings.taxes') }}" title="Vergi Bilgileri">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
-                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M3 21l18 0" />
-                    <path d="M3 10l18 0" />
-                    <path d="M5 6l7 -3l7 3" />
-                    <path d="M4 10l0 11" />
-                    <path d="M20 10l0 11" />
-                    <path d="M8 14l0 3" />
-                    <path d="M12 14l0 3" />
-                    <path d="M16 14l0 3" />
-                </svg>
-                Vergi Bilgileri
-            </a>
-            <a class="dropdown-item" href="{{ route('panel.settings.currencies') }}" title="Para Birimleri">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
-                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
-                    <path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                    <path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" />
-                </svg>
-                Para Birimleri
-            </a>
-            <a class="dropdown-item" href="{{ route('panel.settings.locations.countries') }}"
-                title="Konum Bilgileri">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
-                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M12 18.5l-3 -1.5l-6 3v-13l6 -3l6 3l6 -3v7.5" />
-                    <path d="M9 4v13" />
-                    <path d="M15 7v5.5" />
-                    <path
-                        d="M21.121 20.121a3 3 0 1 0 -4.242 0c.418 .419 1.125 1.045 2.121 1.879c1.051 -.89 1.759 -1.516 2.121 -1.879z" />
-                    <path d="M19 18v.01" />
-                </svg>
-                Konum Bilgileri
-            </a>
-            <a class="dropdown-item" href="{{ route('panel.settings.languages') }}" title="Diller">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="icon dropdown-item-icon">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M4 5h7" />
-                    <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
-                    <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
-                    <path d="M12 20l4 -9l4 9" />
-                    <path d="M19.1 18h-6.2" />
-                </svg>
-                Diller
-            </a>
+            @if (auth()->user()->can('tax.management'))
+                <a class="dropdown-item" href="{{ route('panel.settings.taxes') }}" title="Vergi Bilgileri">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M3 21l18 0" />
+                        <path d="M3 10l18 0" />
+                        <path d="M5 6l7 -3l7 3" />
+                        <path d="M4 10l0 11" />
+                        <path d="M20 10l0 11" />
+                        <path d="M8 14l0 3" />
+                        <path d="M12 14l0 3" />
+                        <path d="M16 14l0 3" />
+                    </svg>
+                    Vergi Bilgileri
+                </a>
+            @endif
+            @if (auth()->user()->can('currency.management'))
+                <a class="dropdown-item" href="{{ route('panel.settings.currencies') }}" title="Para Birimleri">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
+                        <path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                        <path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" />
+                    </svg>
+                    Para Birimleri
+                </a>
+            @endif
+            @if (auth()->user()->can('location.management'))
+                <a class="dropdown-item" href="{{ route('panel.settings.locations.countries') }}"
+                    title="Konum Bilgileri">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 18.5l-3 -1.5l-6 3v-13l6 -3l6 3l6 -3v7.5" />
+                        <path d="M9 4v13" />
+                        <path d="M15 7v5.5" />
+                        <path
+                            d="M21.121 20.121a3 3 0 1 0 -4.242 0c.418 .419 1.125 1.045 2.121 1.879c1.051 -.89 1.759 -1.516 2.121 -1.879z" />
+                        <path d="M19 18v.01" />
+                    </svg>
+                    Konum Bilgileri
+                </a>
+            @endif
+            @if (auth()->user()->can('language.management'))
+                <a class="dropdown-item" href="{{ route('panel.settings.languages') }}" title="Diller">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="icon dropdown-item-icon">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M4 5h7" />
+                        <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+                        <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+                        <path d="M12 20l4 -9l4 9" />
+                        <path d="M19.1 18h-6.2" />
+                    </svg>
+                    Diller
+                </a>
+            @endif
         </div>
     @endif
 @endif

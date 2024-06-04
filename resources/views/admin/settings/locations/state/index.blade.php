@@ -54,10 +54,12 @@
                                             <td class="fw-bold">{{ $state->title }}</td>
                                             <td>{{ $state->country->title }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.settings.locations.state.edit', $state->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Düzenle">
-                                                    Düzenle
-                                                </a>
+                                                @if (auth()->user()->can('location.update'))
+                                                    <a href="{{ route('panel.settings.locations.state.edit', $state->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm" title="Düzenle">
+                                                        Düzenle
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

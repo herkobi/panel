@@ -53,14 +53,19 @@
                                             </td>
                                             <td class="fw-bold">{{ $country->title }}</td>
                                             <td>{{ $country->code }}</td>
-                                            <td><a href="{{ route('panel.settings.locations.states', $country->id) }}"
-                                                    class="btn btn-ghost-secondary btn-sm" title="Bölgeler">Bölgeler</a>
+                                            <td>
+                                                @if (auth()->user()->can('location.management'))
+                                                    <a href="{{ route('panel.settings.locations.states', $country->id) }}"
+                                                        class="btn btn-ghost-secondary btn-sm" title="Bölgeler">Bölgeler</a>
+                                                @endif
                                             </td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.settings.locations.country.edit', $country->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Düzenle">
-                                                    Düzenle
-                                                </a>
+                                                @if (auth()->user()->can('location.update'))
+                                                    <a href="{{ route('panel.settings.locations.country.edit', $country->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm" title="Düzenle">
+                                                        Düzenle
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

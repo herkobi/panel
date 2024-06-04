@@ -182,8 +182,7 @@
                                                 <div class="col">
                                                     @foreach (Helper::timeformats() as $format)
                                                         <label class="form-check">
-                                                            <input type="radio" name="timeformat"
-                                                                class="form-check-input"
+                                                            <input type="radio" name="timeformat" class="form-check-input"
                                                                 {{ $format == config('panel.timeformat') ? 'checked' : '' }}
                                                                 value="{{ $format }}">
                                                             <span
@@ -197,7 +196,9 @@
                                 </div>
                             </div>
                             <div class="card-footer text-end">
-                                <button type="submit" class="btn btn-primary">Güncelle</button>
+                                @if (auth()->user()->hasRole('Super Admin'))
+                                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                                @endif
                             </div>
                         </form>
                     </div>

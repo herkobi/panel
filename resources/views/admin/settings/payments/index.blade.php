@@ -41,10 +41,12 @@
                                             <td class="fw-bold">{{ $payment->title }}</td>
                                             <td>{{ $payment->desc }}</td>
                                             <td>
-                                                <a href="{{ route('panel.gateways.' . $payment->code) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Bilgiler">
-                                                    Bilgiler
-                                                </a>
+                                                @if (auth()->user()->can('gateway.update'))
+                                                    <a href="{{ route('panel.gateways.' . $payment->code) }}"
+                                                        class="btn btn-ghost-primary btn-sm" title="Bilgiler">
+                                                        Bilgiler
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

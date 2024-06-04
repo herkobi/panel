@@ -55,10 +55,12 @@
                                             <td>{{ $currency->symbol }}</td>
                                             <td>{{ $currency->code }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.settings.currency.edit', $currency->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Düzenle">
-                                                    Düzenle
-                                                </a>
+                                                @if (auth()->user()->can('currency.update'))
+                                                    <a href="{{ route('panel.settings.currency.edit', $currency->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm" title="Düzenle">
+                                                        Düzenle
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

@@ -74,9 +74,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer text-end">
-                                <button type="submit" id="updateButton" class="btn btn-primary">Güncelle</button>
-                            </div>
+                            @if (auth()->user()->can('app.update'))
+                                <div class="card-footer text-end">
+                                    <button type="submit" id="updateButton" class="btn btn-primary">Güncelle</button>
+                                </div>
+                            @endif
                         </form>
                     </div>
                 </div>
