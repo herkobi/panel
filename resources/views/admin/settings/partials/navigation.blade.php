@@ -1,5 +1,5 @@
 @if (auth()->user()->hasRole('Super Admin'))
-    <div class="dropdown-menu panel-dropdown shadow-none">
+    <div class="dropdown-menu panel-dropdown shadow-none pb-0">
         <span class="dropdown-header">Ayarlar</span>
         <a class="dropdown-item {{ request()->routeIs('panel.settings.system') ? 'active' : '' }}"
             href="{{ route('panel.settings.system') }}" title="Sistem Ayarları">
@@ -28,48 +28,58 @@
         @endif
     </div>
 @else
-    <div class="dropdown-menu panel-dropdown shadow-none">
-        <span class="dropdown-header">Ayarlar</span>
-        <a class="dropdown-item {{ request()->routeIs('panel.settings.app') ? 'active' : '' }}"
-            href="{{ route('panel.settings.app') }}" title="Uygulama Ayarları">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24" height="24"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path
-                    d="M19.875 6.27a2.225 2.225 0 0 1 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" />
-                <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-            </svg>
-            Uygulama Ayarları
-        </a>
-        @if (!request()->routeIs(['panel.users', 'panel.user.*']))
-            <a class="dropdown-item" href="{{ route('panel.users') }}" title="Kullanıcılar">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24" height="24"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                    <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
-                    <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
-                </svg>
-                Kullanıcılar
-            </a>
-        @endif
-        @if (!request()->routeIs(['panel.pages', 'panel.page.*']))
-            <a class="dropdown-item" href="{{ route('panel.pages') }}" title="Sayfalar">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24" height="24"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18" />
-                    <path d="M13 8l2 0" />
-                    <path d="M13 12l2 0" />
-                </svg>
-                Sayfalar
-            </a>
-        @endif
-    </div>
-    @if (!request()->routeIs(['panel.roles', 'panel.role.*', 'panel.permissions', 'panel.permission.*']))
+    @if (auth()->user()->can('app.management') ||
+            auth()->user()->can('users.management') ||
+            auth()->user()->can('page.management'))
+        <div class="dropdown-menu panel-dropdown shadow-none pb-0">
+            @if (auth()->user()->can('app.management'))
+                <span class="dropdown-header">Ayarlar</span>
+                <a class="dropdown-item {{ request()->routeIs('panel.settings.app') ? 'active' : '' }}"
+                    href="{{ route('panel.settings.app') }}" title="Uygulama Ayarları">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M19.875 6.27a2.225 2.225 0 0 1 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" />
+                        <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                    </svg>
+                    Uygulama Ayarları
+                </a>
+            @endif
+            @if (auth()->user()->hasRole('Super Admin') || auth()->user()->can('users.management'))
+                @if (!request()->routeIs(['panel.users', 'panel.user.*']))
+                    <a class="dropdown-item" href="{{ route('panel.users') }}" title="Kullanıcılar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
+                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                            <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+                            <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+                        </svg>
+                        Kullanıcılar
+                    </a>
+                @endif
+            @endif
+            @if (auth()->user()->can('page.management') && !request()->routeIs(['panel.pages', 'panel.page.*']))
+                <a class="dropdown-item" href="{{ route('panel.pages') }}" title="Sayfalar">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18" />
+                        <path d="M13 8l2 0" />
+                        <path d="M13 12l2 0" />
+                    </svg>
+                    Sayfalar
+                </a>
+            @endif
+        </div>
+    @endif
+    @if (auth()->user()->can('role.management') &&
+            !request()->routeIs(['panel.roles', 'panel.role.*', 'panel.permissions', 'panel.permission.*']))
         <div class="dropdown-menu panel-dropdown shadow-none">
             <span class="dropdown-header">Yetki ve İzinler</span>
             <a class="dropdown-item" href="{{ route('panel.roles') }}" title="Yetkiler">
@@ -89,17 +99,19 @@
                 </svg>
                 Yetkiler
             </a>
-            <a class="dropdown-item" href="{{ route('panel.permissions') }}" title="İzinler">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24" height="24"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M6 21v-2a4 4 0 0 1 4 -4h2" />
-                    <path d="M22 16c0 4 -2.5 6 -3.5 6s-3.5 -2 -3.5 -6c1 0 2.5 -.5 3.5 -1.5c1 1 2.5 1.5 3.5 1.5z" />
-                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                </svg>
-                İzinler
-            </a>
+            @if (auth()->user()->can('permission.management'))
+                <a class="dropdown-item" href="{{ route('panel.permissions') }}" title="İzinler">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M6 21v-2a4 4 0 0 1 4 -4h2" />
+                        <path d="M22 16c0 4 -2.5 6 -3.5 6s-3.5 -2 -3.5 -6c1 0 2.5 -.5 3.5 -1.5c1 1 2.5 1.5 3.5 1.5z" />
+                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                    </svg>
+                    İzinler
+                </a>
+            @endif
         </div>
     @endif
     @if (
