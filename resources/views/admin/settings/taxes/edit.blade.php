@@ -125,10 +125,10 @@
                             @if (config('panel.tax') != $tax->code)
                                 <div class="card-footer">
                                     <div class="btn-list">
-                                        @hasrole('Super Admin')
+                                        @if (auth()->user()->can('tax.delete'))
                                             <a href="#" class="btn btn-outline-danger me-auto" data-bs-toggle="modal"
                                                 data-bs-target="#modal-danger">Sil</a>
-                                        @endhasrole
+                                        @endif
                                         <button type="submit" class="btn btn-success">Güncelle</button>
                                     </div>
                                 </div>

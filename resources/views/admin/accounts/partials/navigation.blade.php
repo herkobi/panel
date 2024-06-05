@@ -1,4 +1,4 @@
-<div class="dropdown-menu panel-dropdown shadow-none">
+<div class="dropdown-menu panel-dropdown shadow-none pb-0">
     <span class="dropdown-header">{{ __('admin/accounts/accounts.navigation.title') }}</span>
     <a class="dropdown-item {{ request()->routeIs('panel.accounts') ? 'active' : '' }}"
         href="{{ route('panel.accounts') }}" title="{{ __('admin/accounts/accounts.navigation.accounts') }}">

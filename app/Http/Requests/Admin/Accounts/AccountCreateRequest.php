@@ -55,12 +55,6 @@ class AccountCreateRequest extends FormRequest
             'surname.max' => 'Lütfen soyismi daha kısa giriniz',
 
             /**
-             * Title Messages
-             */
-            'title.string' => 'Lütfen geçerli bir isim giriniz',
-            'title.max' => 'Lütfen ismi daha kısa giriniz',
-
-            /**
              * E-mail Messages
              */
             'email.string' => 'Lütfen geçerli bir e-posta adresi giriniz',

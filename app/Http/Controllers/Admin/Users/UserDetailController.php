@@ -44,14 +44,14 @@ class UserDetailController extends Controller
      */
     public function updateStatus(UpdateStatusRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('user.status.update')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        if (auth()->user()->hasRole('Super Admin') || auth()->user()->can('user.status.update')) {
+            $updated = $this->updateStatus->execute($id, $request->validated());
+            return $updated
+                ? Redirect::back()->with('success', 'Kullanıcı durumu başarılı bir şekilde güncellendi.')
+                : Redirect::back()->with('error', 'Hata; Lütfen geçerli bir durum seçiniz');
         }
 
-        $updated = $this->updateStatus->execute($id, $request->validated());
-        return $updated
-            ? Redirect::back()->with('success', 'Kullanıcı durumu başarılı bir şekilde güncellendi.')
-            : Redirect::back()->with('error', 'Hata; Lütfen geçerli bir durum seçiniz');
+        return Redirect::back()->with('error', __('admin/global.permission.error'));
     }
 
     /**
@@ -61,14 +61,14 @@ class UserDetailController extends Controller
      */
     public function changeEmail(ChangeEmailRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('user.email.update')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        if (auth()->user()->hasRole('Super Admin') || auth()->user()->can('user.email.update')) {
+            $updated = $this->changeEmail->execute($id, $request->validated());
+            return $updated
+                ? Redirect::back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.')
+                : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
         }
 
-        $updated = $this->changeEmail->execute($id, $request->validated());
-        return $updated
-            ? Redirect::back()->with('success', 'Kullanıcı e-posta adresi değiştirilmiş ve onay linki gönderilmiştir.')
-            : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+        return Redirect::back()->with('error', __('admin/global.permission.error'));
     }
 
     /**
@@ -78,14 +78,14 @@ class UserDetailController extends Controller
      */
     public function verifyEmail(VerifyEmailRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('user.email.send')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        if (auth()->user()->hasRole('Super Admin') || auth()->user()->can('user.email.send')) {
+            $verified = $this->verifyEmail->execute($id, $request->validated());
+            return $verified
+                ? Redirect::back()->with('success', 'Kullanıcıya e-posta adresi onay linki gönderilmiştir.')
+                : Redirect::back()->with('error', 'Onay linki gönderilirken bir sorun oluştu, lütfen tekrar deneyiniz.');
         }
 
-        $verified = $this->verifyEmail->execute($id, $request->validated());
-        return $verified
-            ? Redirect::back()->with('success', 'Kullanıcıya e-posta adresi onay linki gönderilmiştir.')
-            : Redirect::back()->with('error', 'Onay linki gönderilirken bir sorun oluştu, lütfen tekrar deneyiniz.');
+        return Redirect::back()->with('error', __('admin/global.permission.error'));
     }
 
     /**
@@ -95,14 +95,14 @@ class UserDetailController extends Controller
      */
     public function checkEmail(CheckEmailRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('user.email.verified')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        if (auth()->user()->hasRole('Super Admin') || !auth()->user()->can('user.email.verified')) {
+            $checked = $this->checkEmail->execute($id, $request->validated());
+            return $checked
+                ? Redirect::back()->with('success', 'Kullanıcı e-posta adresi başarılı bir şekilde onaylandı.')
+                : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
         }
 
-        $checked = $this->checkEmail->execute($id, $request->validated());
-        return $checked
-            ? Redirect::back()->with('success', 'Kullanıcı e-posta adresi başarılı bir şekilde onaylandı.')
-            : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+        return Redirect::back()->with('error', __('admin/global.permission.error'));
     }
 
     /**
@@ -112,13 +112,13 @@ class UserDetailController extends Controller
      */
     public function changePassword(ChangePasswordRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('user.password.change')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        if (auth()->user()->hasRole('Super Admin') || !auth()->user()->can('user.password.change')) {
+            $changed = $this->changePassword->execute($id, $request->validated());
+            return $changed
+                ? Redirect::back()->with('success', 'Kullanıcı şifresi başarılı bir şekilde değiştirildi.')
+                : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
         }
-
-        $changed = $this->changePassword->execute($id, $request->validated());
-        return $changed
-            ? Redirect::back()->with('success', 'Kullanıcı şifresi başarılı bir şekilde değiştirildi.')
-            : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+        
+        return Redirect::back()->with('error', __('admin/global.permission.error'));
     }
 }

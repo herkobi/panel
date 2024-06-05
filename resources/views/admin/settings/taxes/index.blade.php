@@ -57,10 +57,12 @@
                                             <td>%{{ $tax->value }}</td>
                                             <td>{{ $tax->country->title }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.settings.tax.edit', $tax->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Düzenle">
-                                                    Düzenle
-                                                </a>
+                                                @if (auth()->user()->can('tax.update'))
+                                                    <a href="{{ route('panel.settings.tax.edit', $tax->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm" title="Düzenle">
+                                                        Düzenle
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

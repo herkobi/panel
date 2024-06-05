@@ -70,7 +70,7 @@ class PagesController extends Controller
                 : Redirect::back()->with('error', 'Sayfa eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
-    public function edit($id): View
+    public function edit($id): View|RedirectResponse
     {
         if (!auth()->user()->can('page.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
