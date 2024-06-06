@@ -61,9 +61,11 @@
                                         <div>
                                             <h4 class="alert-title">Bilgilendirme</h4>
                                             <div class="text-secondary">Kullanıcı e-posta adresini onaylamamış.
-                                                Kullanıcıya e-posta onay linkini tekrar göndermek için <a href="#"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modal-verifyEmail">tıklayınız.</a>
+                                                @if (auth()->user()->can('account.email.update'))
+                                                    Kullanıcıya e-posta onay linkini tekrar göndermek için <a href="#"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modal-verifyEmail">tıklayınız.</a>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -117,20 +119,6 @@
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="#tabs-roles-permissions" class="nav-link" data-bs-toggle="tab"
-                                        aria-selected="false" role="tab">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon me-2">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path
-                                                d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
-                                            <path d="M4 14l8 -3l8 3" />
-                                        </svg>
-                                        Yetki ve İzinler
-                                    </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
                                     <a href="#tabs-auth-logs" class="nav-link" data-bs-toggle="tab" aria-selected="false"
                                         role="tab">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -146,6 +134,23 @@
                                         Oturum Kayıtları
                                     </a>
                                 </li>
+                                @if (auth()->user()->can('account.permission'))
+                                    <li class="nav-item" role="presentation">
+                                        <a href="#tabs-roles-permissions" class="nav-link" data-bs-toggle="tab"
+                                            aria-selected="false" role="tab">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon me-2">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path
+                                                    d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
+                                                <path d="M4 14l8 -3l8 3" />
+                                            </svg>
+                                            Yetki ve İzinler
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                         <div class="card-body">
@@ -176,9 +181,6 @@
                                     <div class="card-footer d-flex align-items-center pb-1 text-end w-100">
                                         {{ $activities->links() }}
                                     </div>
-                                </div>
-                                <div class="tab-pane" id="tabs-roles-permissions" role="tabpanel">
-                                    <h4>Tanımlı Yetki ve İzinler</h4>
                                 </div>
                                 <div class="tab-pane" id="tabs-auth-logs" role="tabpanel">
                                     <h4>Oturum Kayıtları</h4>
@@ -212,6 +214,13 @@
                                         {{ $authLogs->links() }}
                                     </div>
                                 </div>
+                                @if (auth()->user()->can('account.permission'))
+                                    <div class="tab-pane" id="tabs-roles-permissions" role="tabpanel">
+                                        <h4>Tanımlı Yetki ve İzinler</h4>
+                                        @if (auth()->user()->can('account.permission.update'))
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -234,41 +243,47 @@
                                 </div>
                             @endforeach
                         </div>
-                        <div class="card-footer py-2 text-end">
-                            <button type="button" id="changeStatusBtn" class="btn btn-sm btn-success"
-                                data-bs-toggle="modal" data-bs-target="#modal-updateStatus">Durumu
-                                Güncelle</button>
-                        </div>
+                        @if (auth()->user()->can('account.status.update'))
+                            <div class="card-footer py-2 text-end">
+                                <button type="button" id="changeStatusBtn" class="btn btn-sm btn-success"
+                                    data-bs-toggle="modal" data-bs-target="#modal-updateStatus">Durumu
+                                    Güncelle</button>
+                            </div>
+                        @endif
                     </div>
                     <div class="dropdown-menu panel-dropdown shadow-none">
                         <span class="dropdown-header">Kullanıcı İşlemleri</span>
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                            data-bs-target="#modal-changeEmail" title="E-posta Adresini Değiştir">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="icon dropdown-item-icon">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 19h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v5.5" />
-                                <path d="M16 19h6" />
-                                <path d="M19 16v6" />
-                                <path d="M3 7l9 6l9 -6" />
-                            </svg>
-                            E-posta Adresini Değiştir
-                        </a>
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                            data-bs-target="#modal-verifyEmail" title="E-posta Onay Linki Gönder">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="icon dropdown-item-icon">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M13 19h-8a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v6" />
-                                <path d="M3 7l9 6l9 -6" />
-                                <path d="M16 22l5 -5" />
-                                <path d="M21 21.5v-4.5h-4.5" />
-                            </svg>
-                            E-posta Onay Linki Gönder
-                        </a>
-                        @if (!$user->hasVerifiedEmail())
+                        @if (auth()->user()->can('account.email.update'))
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#modal-changeEmail" title="E-posta Adresini Değiştir">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="icon dropdown-item-icon">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 19h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v5.5" />
+                                    <path d="M16 19h6" />
+                                    <path d="M19 16v6" />
+                                    <path d="M3 7l9 6l9 -6" />
+                                </svg>
+                                E-posta Adresini Değiştir
+                            </a>
+                        @endif
+                        @if (auth()->user()->can('account.email.send'))
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#modal-verifyEmail" title="E-posta Onay Linki Gönder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="icon dropdown-item-icon">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M13 19h-8a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v6" />
+                                    <path d="M3 7l9 6l9 -6" />
+                                    <path d="M16 22l5 -5" />
+                                    <path d="M21 21.5v-4.5h-4.5" />
+                                </svg>
+                                E-posta Onay Linki Gönder
+                            </a>
+                        @endif
+                        @if (auth()->user()->can('account.email.verified') && !$user->hasVerifiedEmail())
                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                 data-bs-target="#modal-checkEmail" title="E-posta Onay Linki Gönder">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -282,21 +297,24 @@
                                 E-posta Adresini Onayla
                             </a>
                         @endif
-                        <div class="dropdown-divider my-0"></div>
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                            data-bs-target="#modal-changePassword" title="Şifre Değiştir">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="icon dropdown-item-icon">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M14 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                <path d="M12.5 11.5l-4 4l1.5 1.5" />
-                                <path d="M12 15l-1.5 -1.5" />
-                                <path d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
-                            </svg>
-                            Şifre Değiştir
-                        </a>
-                        @if ($user->status == AccountStatus::ACTIVE)
+                        @if (auth()->user()->can('account.password.update'))
+                            <div class="dropdown-divider my-0"></div>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#modal-changePassword" title="Şifre Değiştir">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="icon dropdown-item-icon">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M14 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                    <path d="M12.5 11.5l-4 4l1.5 1.5" />
+                                    <path d="M12 15l-1.5 -1.5" />
+                                    <path
+                                        d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                                </svg>
+                                Şifre Değiştir
+                            </a>
+                        @endif
+                        @if (auth()->user()->can('account.password.reset') && $user->status == AccountStatus::ACTIVE)
                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                 data-bs-target="#modal-resetPassword" title="Şifre Yenileme Linki Gönder">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -317,337 +335,124 @@
             </div>
         </div>
     </div>
-    <div class="modal modal-blur fade" id="modal-updateStatus" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                <div class="modal-status bg-warning"></div>
-                <form action="{{ route('panel.account.update.status', $user->id) }}" method="POST">
-                    @csrf
-                    <div class="modal-body py-4">
-                        <div class="text-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg" width="24"
-                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                                <path d="M9 12l2 2l4 -4" />
-                            </svg>
-                            <h3>Dikkat</h3>
-                        </div>
-                        <div class="text-secondary mb-3">Kullanıcı durumunu değiştirmek üzeresiniz. Bu durumda kullanıcının
-                            panele erişimini kısıtlayabilir veya yasaklarsınız.</div>
-                        <div class="mb-3">
-                            <label for="currentStatus" class="form-label">Kullanıcının Mevcut Durumu</label>
-                            <input type="text" name="currentStatus" id="currentStatus" class="form-control"
-                                value="{{ AccountStatus::getTitle($user->status->value) }} Hesap" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="selectedStatus" class="form-label">Kullanıcının Yeni Durumu</label>
-                            <input type="hidden" name="selectedStatus" id="selectedStatus" class="form-control">
-                            <input type="text" id="selectedStatusName" class="form-control" readonly>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="d-flex align-items center justify-content between w-100">
-                            <button type="button" class="btn" data-bs-dismiss="modal">
-                                Kapat
-                            </button>
-                            <button type="submit" class="btn btn-warning ms-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+    @if (auth()->user()->can('account.status.update'))
+        <div class="modal modal-blur fade" id="modal-updateStatus" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                    <div class="modal-status bg-warning"></div>
+                    <form action="{{ route('panel.account.update.status', $user->id) }}" method="POST">
+                        @csrf
+                        <div class="modal-body py-4">
+                            <div class="text-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                    <path d="M16 5l3 3" />
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                    <path d="M9 12l2 2l4 -4" />
                                 </svg>
-                                Hesap Durumunu Değiştir
-                            </button>
+                                <h3>Dikkat</h3>
+                            </div>
+                            <div class="text-secondary mb-3">Kullanıcı durumunu değiştirmek üzeresiniz. Bu durumda
+                                kullanıcının
+                                panele erişimini kısıtlayabilir veya yasaklarsınız.</div>
+                            <div class="mb-3">
+                                <label for="currentStatus" class="form-label">Kullanıcının Mevcut Durumu</label>
+                                <input type="text" name="currentStatus" id="currentStatus" class="form-control"
+                                    value="{{ AccountStatus::getTitle($user->status->value) }} Hesap" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="selectedStatus" class="form-label">Kullanıcının Yeni Durumu</label>
+                                <input type="hidden" name="selectedStatus" id="selectedStatus" class="form-control">
+                                <input type="text" id="selectedStatusName" class="form-control" readonly>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <div class="d-flex align-items center justify-content between w-100">
+                                <button type="button" class="btn" data-bs-dismiss="modal">
+                                    Kapat
+                                </button>
+                                <button type="submit" class="btn btn-warning ms-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                        <path d="M16 5l3 3" />
+                                    </svg>
+                                    Hesap Durumunu Değiştir
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="modal modal-blur fade" id="modal-changeEmail" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Kullanıcı Bilgileri</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('panel.account.change.email', $user->id) }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()))
-                            <div class="alert alert-info shadow-none mb-5" role="alert">
-                                <div class="d-flex">
-                                    <div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M12 9v4"></path>
-                                            <path
-                                                d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z">
-                                            </path>
-                                            <path d="M12 16h.01"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h4 class="alert-title">Bilgilendirme</h4>
-                                        <div class="text-secondary">Sisteminizde e-posta adreslerinin onay işlemi açıktır.
-                                            Yeni girdiğiniz e-posta adresine onaylaması için onay e-postası gönderilecektir.
+    @endif
+    @if (auth()->user()->can('account.email.update'))
+        <div class="modal modal-blur fade" id="modal-changeEmail" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Kullanıcı Bilgileri</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('panel.account.change.email', $user->id) }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()))
+                                <div class="alert alert-info shadow-none mb-5" role="alert">
+                                    <div class="d-flex">
+                                        <div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon"
+                                                width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M12 9v4"></path>
+                                                <path
+                                                    d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z">
+                                                </path>
+                                                <path d="M12 16h.01"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="alert-title">Bilgilendirme</h4>
+                                            <div class="text-secondary">Sisteminizde e-posta adreslerinin onay işlemi
+                                                açıktır.
+                                                Yeni girdiğiniz e-posta adresine onaylaması için onay e-postası
+                                                gönderilecektir.
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Yeni E-posta Adresi</label>
-                                    <input type="email" class="form-control" name="email"
-                                        placeholder="Yeni E-posta Adresi" value="{{ $user->email }}">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Yeni E-posta Adresi Tekrar</label>
-                                    <input type="email" class="form-control" name="email_confirmation"
-                                        placeholder="Yeni E-posta Adresi Tekrar">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn" data-bs-dismiss="modal">
-                            İptal Et
-                        </button>
-                        <button type="submit" class="btn btn-primary ms-auto">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                <path d="M16 5l3 3" />
-                            </svg>
-                            E-posta Adresini Değiştir
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal modal-blur fade" id="modal-verifyEmail" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                <div class="modal-status bg-warning"></div>
-                <form action="{{ route('panel.account.verify.email', $user->id) }}" method="POST">
-                    @csrf
-                    <div class="modal-body py-4">
-                        <div class="text-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg" width="24"
-                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                                <path d="M9 12l2 2l4 -4" />
-                            </svg>
-                            <h3>Dikkat</h3>
-                        </div>
-                        <div class="text-secondary mb-3">Kullanıcı e-posta adresini onaylaması için onay
-                            e-postası göndermek üzeresiniz.</div>
-                        <label for="userVerifyEmail" class="form-label">Kullanıcı e-posta adresi</label>
-                        <input type="email" name="email" id="userVerifyEmail" class="form-control"
-                            value="{{ $user->email }}" readonly>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="d-flex align-items center justify-content between w-100">
-                            <button type="button" class="btn" data-bs-dismiss="modal">
-                                Kapat
-                            </button>
-                            <button type="submit" class="btn btn-warning ms-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                    <path d="M16 5l3 3" />
-                                </svg>
-                                E-posta Onay Linki Gönder
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal modal-blur fade" id="modal-checkEmail" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                <div class="modal-status bg-warning"></div>
-                <form action="{{ route('panel.account.check.email', $user->id) }}" method="POST">
-                    @csrf
-                    <div class="modal-body py-4">
-                        <div class="text-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg" width="24"
-                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                                <path d="M9 12l2 2l4 -4" />
-                            </svg>
-                            <h3>Dikkat</h3>
-                        </div>
-                        <div class="text-secondary mb-3">Kullanıcı e-posta adresini onaylayacaksınız.</div>
-                        <label for="userUnverifedEmail" class="form-label">Kullanıcı e-posta adresi</label>
-                        <input type="email" name="email" id="userUnverifedEmail" class="form-control"
-                            value="{{ $user->email }}" readonly>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="d-flex align-items-center justify-content-between w-100">
-                            <button type="button" class="btn" data-bs-dismiss="modal">
-                                Kapat
-                            </button>
-                            <button type="submit" class="btn btn-warning ms-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                    <path d="M16 5l3 3" />
-                                </svg>
-                                E-posta Adresini Onayla
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal modal-blur fade" id="modal-changePassword" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                <div class="modal-status bg-warning"></div>
-                <form action="{{ route('panel.account.change.password', $user->id) }}" method="POST">
-                    @csrf
-                    <div class="modal-body py-4">
-                        <div class="text-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg" width="24"
-                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                                <path d="M9 12l2 2l4 -4" />
-                            </svg>
-                            <h3>Dikkat</h3>
-                        </div>
-                        <div class="text-secondary mb-3">Kullanıcı şifresini değiştirmek üzeresiniz. Kullanıcıya yeni şifre
-                            ile bilgi e-postası gönderilecektir.
-                        </div>
-                        <fieldset id="passwordArea" class="form-fieldset">
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <label class="col-form-label required">Şifre</label>
-                                    <button type="button" onclick="generatePassword()"
-                                        class="btn btn-sm btn-link link-secondary randompassword rounded-none shadow-none">Şifre
-                                        Oluştur</button>
-                                </div>
-                                <div class="input-group input-group-flat">
-                                    <input type="password" id="password" name="password"
-                                        class="form-control @error('password') is-invalid @enderror"
-                                        placeholder="Şifreniz" autocomplete="off">
-                                    <span class="input-group-text" onclick="password_show_hide();"
-                                        data-bs-toggle="tooltip" aria-label="Şifreyi Göster"
-                                        data-bs-original-title="Şifreyi Göster">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-eye showpassword pointer">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                            <path
-                                                d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off hidepassword pointer d-none">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
-                                            <path
-                                                d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
-                                            <path d="M3 3l18 18" />
-                                        </svg>
-                                    </span>
-                                </div>
-                                <small class="form-hint">Kullanıcı şifresini giriniz</small>
-                                @error('password')
-                                    <div class="invalid-feedback" role="alert">{{ $message }}
+                            @endif
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Yeni E-posta Adresi</label>
+                                        <input type="email" class="form-control" name="email"
+                                            placeholder="Yeni E-posta Adresi" value="{{ $user->email }}">
                                     </div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <label class="col-form-label required">Şifre Onay</label>
                                 </div>
-                                <div class="input-group input-group-flat">
-                                    <input type="password" id="password_confirmation" name="password_confirmation"
-                                        class="form-control @error('password_confirmation') is-invalid @enderror"
-                                        placeholder="Şifreyi Tekrar Giriniz" autocomplete="off">
-                                    <span class="input-group-text" onclick="password_conf_show_hide();"
-                                        data-bs-toggle="tooltip" aria-label="Şifreyi Göster"
-                                        data-bs-original-title="Şifreyi Göster">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-eye showpassword_conf pointer">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                            <path
-                                                d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                        </svg>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off hidepassword_conf pointer d-none">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
-                                            <path
-                                                d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
-                                            <path d="M3 3l18 18" />
-                                        </svg>
-                                    </span>
-                                </div>
-                                <small class="form-hint">Kullanıcı şifresini tekrar giriniz</small>
-                                @error('password_confirmation')
-                                    <div class="invalid-feedback" role="alert">{{ $message }}
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Yeni E-posta Adresi Tekrar</label>
+                                        <input type="email" class="form-control" name="email_confirmation"
+                                            placeholder="Yeni E-posta Adresi Tekrar">
                                     </div>
-                                @enderror
+                                </div>
                             </div>
-                        </fieldset>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="d-flex align-items-center justify-content-between w-100">
+                        </div>
+                        <div class="modal-footer">
                             <button type="button" class="btn" data-bs-dismiss="modal">
-                                Kapat
+                                İptal Et
                             </button>
-                            <button type="submit" class="btn btn-warning ms-auto">
+                            <button type="submit" class="btn btn-primary ms-auto">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
@@ -657,62 +462,293 @@
                                     <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
                                     <path d="M16 5l3 3" />
                                 </svg>
-                                Kullanıcı Şifresini Değiştir
+                                E-posta Adresini Değiştir
                             </button>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="modal modal-blur fade" id="modal-resetPassword" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                <div class="modal-status bg-warning"></div>
-                <form action="{{ route('panel.account.reset.password', $user->id) }}" method="POST">
-                    @csrf
-                    <div class="modal-body py-4">
-                        <div class="text-center mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg" width="24"
-                                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                                <path d="M9 12l2 2l4 -4" />
-                            </svg>
-                            <h3>Dikkat</h3>
-                        </div>
-                        <div class="text-secondary mb-3">Kullanıcı şifresini yenilemesi için e-posta
-                            gönderiyorsunuz.</div>
-                        <label for="userVerifedEmail" class="form-label">Kullanıcı e-posta adresi</label>
-                        <input type="email" name="email" id="userVerifedEmail" class="form-control"
-                            value="{{ $user->email }}" readonly>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="d-flex align-items-center justify-content-between w-100">
-                            <button type="button" class="btn" data-bs-dismiss="modal">
-                                Kapat
-                            </button>
-                            <button type="submit" class="btn btn-warning ms-auto">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+    @endif
+    @if (auth()->user()->can('account.email.send'))
+        <div class="modal modal-blur fade" id="modal-verifyEmail" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                    <div class="modal-status bg-warning"></div>
+                    <form action="{{ route('panel.account.verify.email', $user->id) }}" method="POST">
+                        @csrf
+                        <div class="modal-body py-4">
+                            <div class="text-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                    <path d="M16 5l3 3" />
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                    <path d="M9 12l2 2l4 -4" />
                                 </svg>
-                                Şifre Yenileme Linki Gönder
-                            </button>
+                                <h3>Dikkat</h3>
+                            </div>
+                            <div class="text-secondary mb-3">Kullanıcı e-posta adresini onaylaması için onay
+                                e-postası göndermek üzeresiniz.</div>
+                            <label for="userVerifyEmail" class="form-label">Kullanıcı e-posta adresi</label>
+                            <input type="email" name="email" id="userVerifyEmail" class="form-control"
+                                value="{{ $user->email }}" readonly>
                         </div>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <div class="d-flex align-items center justify-content between w-100">
+                                <button type="button" class="btn" data-bs-dismiss="modal">
+                                    Kapat
+                                </button>
+                                <button type="submit" class="btn btn-warning ms-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                        <path d="M16 5l3 3" />
+                                    </svg>
+                                    E-posta Onay Linki Gönder
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
+    @if (auth()->user()->can('account.veerified'))
+        <div class="modal modal-blur fade" id="modal-checkEmail" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                    <div class="modal-status bg-warning"></div>
+                    <form action="{{ route('panel.account.check.email', $user->id) }}" method="POST">
+                        @csrf
+                        <div class="modal-body py-4">
+                            <div class="text-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                    <path d="M9 12l2 2l4 -4" />
+                                </svg>
+                                <h3>Dikkat</h3>
+                            </div>
+                            <div class="text-secondary mb-3">Kullanıcı e-posta adresini onaylayacaksınız.</div>
+                            <label for="userUnverifedEmail" class="form-label">Kullanıcı e-posta adresi</label>
+                            <input type="email" name="email" id="userUnverifedEmail" class="form-control"
+                                value="{{ $user->email }}" readonly>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                                <button type="button" class="btn" data-bs-dismiss="modal">
+                                    Kapat
+                                </button>
+                                <button type="submit" class="btn btn-warning ms-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                        <path d="M16 5l3 3" />
+                                    </svg>
+                                    E-posta Adresini Onayla
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+    @if (auth()->user()->can('account.password.update'))
+        <div class="modal modal-blur fade" id="modal-changePassword" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                    <div class="modal-status bg-warning"></div>
+                    <form action="{{ route('panel.account.change.password', $user->id) }}" method="POST">
+                        @csrf
+                        <div class="modal-body py-4">
+                            <div class="text-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                    <path d="M9 12l2 2l4 -4" />
+                                </svg>
+                                <h3>Dikkat</h3>
+                            </div>
+                            <div class="text-secondary mb-3">Kullanıcı şifresini değiştirmek üzeresiniz. Kullanıcıya yeni
+                                şifre
+                                ile bilgi e-postası gönderilecektir.
+                            </div>
+                            <fieldset id="passwordArea" class="form-fieldset">
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="col-form-label required">Şifre</label>
+                                        <button type="button" onclick="generatePassword()"
+                                            class="btn btn-sm btn-link link-secondary randompassword rounded-none shadow-none">Şifre
+                                            Oluştur</button>
+                                    </div>
+                                    <div class="input-group input-group-flat">
+                                        <input type="password" id="password" name="password"
+                                            class="form-control @error('password') is-invalid @enderror"
+                                            placeholder="Şifreniz" autocomplete="off">
+                                        <span class="input-group-text" onclick="password_show_hide();"
+                                            data-bs-toggle="tooltip" aria-label="Şifreyi Göster"
+                                            data-bs-original-title="Şifreyi Göster">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-eye showpassword pointer">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                <path
+                                                    d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off hidepassword pointer d-none">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+                                                <path
+                                                    d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
+                                                <path d="M3 3l18 18" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <small class="form-hint">Kullanıcı şifresini giriniz</small>
+                                    @error('password')
+                                        <div class="invalid-feedback" role="alert">{{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="col-form-label required">Şifre Onay</label>
+                                    </div>
+                                    <div class="input-group input-group-flat">
+                                        <input type="password" id="password_confirmation" name="password_confirmation"
+                                            class="form-control @error('password_confirmation') is-invalid @enderror"
+                                            placeholder="Şifreyi Tekrar Giriniz" autocomplete="off">
+                                        <span class="input-group-text" onclick="password_conf_show_hide();"
+                                            data-bs-toggle="tooltip" aria-label="Şifreyi Göster"
+                                            data-bs-original-title="Şifreyi Göster">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-eye showpassword_conf pointer">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                <path
+                                                    d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off hidepassword_conf pointer d-none">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+                                                <path
+                                                    d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
+                                                <path d="M3 3l18 18" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <small class="form-hint">Kullanıcı şifresini tekrar giriniz</small>
+                                    @error('password_confirmation')
+                                        <div class="invalid-feedback" role="alert">{{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                                <button type="button" class="btn" data-bs-dismiss="modal">
+                                    Kapat
+                                </button>
+                                <button type="submit" class="btn btn-warning ms-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                        <path d="M16 5l3 3" />
+                                    </svg>
+                                    Kullanıcı Şifresini Değiştir
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
+    @if (auth()->user()->can('account.password.reset'))
+        <div class="modal modal-blur fade" id="modal-resetPassword" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close rounded-0 shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                    <div class="modal-status bg-warning"></div>
+                    <form action="{{ route('panel.account.reset.password', $user->id) }}" method="POST">
+                        @csrf
+                        <div class="modal-body py-4">
+                            <div class="text-center mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-warning icon-lg"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                    <path d="M9 12l2 2l4 -4" />
+                                </svg>
+                                <h3>Dikkat</h3>
+                            </div>
+                            <div class="text-secondary mb-3">Kullanıcı şifresini yenilemesi için e-posta
+                                gönderiyorsunuz.</div>
+                            <label for="userVerifedEmail" class="form-label">Kullanıcı e-posta adresi</label>
+                            <input type="email" name="email" id="userVerifedEmail" class="form-control"
+                                value="{{ $user->email }}" readonly>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                                <button type="button" class="btn" data-bs-dismiss="modal">
+                                    Kapat
+                                </button>
+                                <button type="submit" class="btn btn-warning ms-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                        <path d="M16 5l3 3" />
+                                    </svg>
+                                    Şifre Yenileme Linki Gönder
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
 
 @section('js')

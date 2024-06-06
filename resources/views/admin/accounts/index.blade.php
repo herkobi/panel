@@ -58,11 +58,13 @@
                                                 </ul>
                                             </td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.account.detail', $user->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm"
-                                                    title="{{ __('admin/accounts/index.table.detail') }}">
-                                                    {{ __('admin/accounts/index.table.detail') }}
-                                                </a>
+                                                @if (auth()->user()->can('account.detail'))
+                                                    <a href="{{ route('panel.account.detail', $user->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm"
+                                                        title="{{ __('admin/accounts/index.table.detail') }}">
+                                                        {{ __('admin/accounts/index.table.detail') }}
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

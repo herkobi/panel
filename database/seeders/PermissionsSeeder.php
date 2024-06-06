@@ -349,12 +349,6 @@ class PermissionsSeeder extends Seeder
             ],
             [
                 'parent_id' => 11,
-                'name' => 'account.activity',
-                'desc' => 'Hesap İşlemlerini Gör',
-                'guard_name' => 'web'
-            ],
-            [
-                'parent_id' => 11,
                 'name' => 'account.permission',
                 'desc' => 'Hesap İzin ve Yetkilerini Gör',
                 'guard_name' => 'web'
@@ -363,12 +357,6 @@ class PermissionsSeeder extends Seeder
                 'parent_id' => 11,
                 'name' => 'account.permission.update',
                 'desc' => 'Hesap İzin ve Yetkilerini Güncelle',
-                'guard_name' => 'web'
-            ],
-            [
-                'parent_id' => 11,
-                'name' => 'account.autlogs',
-                'desc' => 'Hesap Oturum Kayıtlarını Gör',
                 'guard_name' => 'web'
             ],
             [
