@@ -37,10 +37,10 @@ class VerifyEmailRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'Lütfen e-posta adresini giriniz',
-            'email.string' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email.email' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email.max' => 'Lütfen daha kısa bir e-posta adresi giriniz',
+            'email.string' => __('admin/accounts/request.email.string'),
+            'email.required' => __('admin/accounts/request.email.required'),
+            'email.email' => __('admin/accounts/request.email.email'),
+            'email.max' => __('admin/accounts/request.email.max'),
         ];
     }
 

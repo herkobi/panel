@@ -40,8 +40,8 @@ class UpdateStatusRequest extends FormRequest
             /**
              * Status Messages
              */
-            'selectedStatus.required' => 'Lütfen durum seçiniz',
-            'selectedStatus.integer' => 'Lütfen geçerli bir durum seçiniz',
+            'selectedStatus.required' => __('admin/accounts/request.selectedStatus.required'),
+            'selectedStatus.integer' => __('admin/accounts/request.selectedStatus.integer'),
 
         ];
     }

@@ -19,6 +19,4 @@ return [
     'account.verify.email' => 'Onay E-postası İste',
     'account.send.email' => 'Bilgileri E-posta İle Gönder',
     'account.make.passive' => 'Kullanıcı Durumunu Pasif Yap',
-    'account.'
-
 ];

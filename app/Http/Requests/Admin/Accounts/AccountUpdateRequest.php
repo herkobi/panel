@@ -44,30 +44,30 @@ class AccountUpdateRequest extends FormRequest
             /**
              * Status Messages
              */
-            'status.required' => 'Lütfen durum giriniz',
-            'status.integer' => 'Lütfen geçerli bir durum giriniz',
+            'status.required' => __('admin/accounts/request.status.required'),
+            'status.integer' => __('admin/accounts/request.status.integer'),
 
             /**
              * Name Messages
              */
-            'name.required' => 'Lütfen isim giriniz',
-            'name.string' => 'Lütfen geçerli bir isim giriniz',
-            'name.max' => 'Lütfen ismi daha kısa giriniz',
+            'name.required' => __('admin/accounts/request.name.required'),
+            'name.string' => __('admin/accounts/request.name.string'),
+            'name.max' => __('admin/accounts/request.name.max'),
 
             /**
              * Desc Messages
              */
-            'surname.required' => 'Lütfen soyisim giriniz',
-            'surname.string' => 'Lütfen geçerli bir soyisim giriniz',
-            'surname.max' => 'Lütfen soyismi daha kısa giriniz',
+            'surname.required' => __('admin/accounts/request.surname.required'),
+            'surname.string' => __('admin/accounts/request.surname.string'),
+            'surname.max' => __('admin/accounts/request.surname.max'),
 
             /**
              * E-mail Messages
              */
-            'email.string' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email.required' => 'Lütfen e-posta adresi giriniz',
-            'email.email' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email.max' => 'Lütfen daha kısa bir e-posta adresi giriniz',
+            'email.string' => __('admin/accounts/request.email.string'),
+            'email.required' => __('admin/accounts/request.email.required'),
+            'email.email' => __('admin/accounts/request.email.email'),
+            'email.max' => __('admin/accounts/request.email.max'),
 
         ];
     }

@@ -36,7 +36,7 @@ class AccountPermissionsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'permission.required' => 'Lütfen en az bir tane izin giriniz'
+            'permission.required' => __('admin/accounts/request.permission.required')
         ];
     }
 

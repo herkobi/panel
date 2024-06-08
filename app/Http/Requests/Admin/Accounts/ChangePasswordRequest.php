@@ -39,8 +39,8 @@ class ChangePasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.required' => 'Lütfen şifre giriniz',
-            'password.string' => 'Lütfen geçerli bir şifre giriniz',
+            'password.required' => __('admin/accounts/request.password.required'),
+            'password.password' => __('admin/accounts/request.password.password'),
 
             'password_confirmation.required' => 'Lütfen şifreyi tekrar giriniz',
             'password_confirmation.string' => 'Lütfen geçerli bir şifre giriniz',

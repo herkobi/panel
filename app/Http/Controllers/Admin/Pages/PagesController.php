@@ -96,12 +96,12 @@ class PagesController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        if (!auth()->user()->can('page.delete')) {
+        if (!auth()->user()->can('page.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
-        if (!auth()->user()->can('page.update')) {
-            return Redirect::back()->with('error', 'Bu işlemi yapmak için izniniz bulunmamaktadır.');
+        if (!auth()->user()->can('page.delete')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
         $deleted = $this->delete->execute($id);

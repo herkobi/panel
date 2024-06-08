@@ -38,17 +38,17 @@ class ChangeEmailRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'Lütfen e-posta adresini giriniz',
-            'email.string' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email.email' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email.max' => 'Lütfen daha kısa bir e-posta adresi giriniz',
-            'email.unique' => 'Girmiş olduğunuz e-posta adresi ile kayıtlı bir kullanıcı bulunmaktadır.',
+            'email.string' => __('admin/accounts/request.email.string'),
+            'email.required' => __('admin/accounts/request.email.required'),
+            'email.email' => __('admin/accounts/request.email.email'),
+            'email.max' => __('admin/accounts/request.email.max'),
+            'email.unique' => __('admin/accounts/request.email.unique'),
 
-            'email_confirmation.required' => 'Lütfen e-posta adresini giriniz',
-            'email_confirmation.string' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email_confirmation.email' => 'Lütfen geçerli bir e-posta adresi giriniz',
-            'email_confirmation.max' => 'Lütfen daha kısa bir e-posta adresi giriniz',
-            'email_confirmation.same' => 'Girmiş olduğunuz e-posta adresi aynı değil. Lütfen aynı e-posta adresini giriniz.',
+            'email_confirmation.required' => __('admin/accounts/request.email_confirmation.required'),
+            'email_confirmation.string' => __('admin/accounts/request.email_confirmation.string'),
+            'email_confirmation.email' => __('admin/accounts/request.email_confirmation.email'),
+            'email_confirmation.max' => __('admin/accounts/request.email_confirmation.max'),
+            'email_confirmation.same' => __('admin/accounts/request.email_confirmation.same'),
         ];
     }
 
