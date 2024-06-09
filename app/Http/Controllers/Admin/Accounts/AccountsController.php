@@ -116,8 +116,8 @@ class AccountsController extends Controller
         }
 
         return $user
-                ? Redirect::route('panel.accounts')->with('success', __('admin.accounts.accounts.store.success'))
-                : Redirect::back()->with('error', __('admin.accounts.accounts.store.error'));
+                ? Redirect::route('panel.accounts')->with('success', __('admin/accounts/create.store.success'))
+                : Redirect::back()->with('error', __('admin/accounts/create.store.error'));
     }
 
 }

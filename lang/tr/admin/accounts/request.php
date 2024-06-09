@@ -53,5 +53,4 @@ return [
      * Permission Messages
      */
     'permission.required' => 'Lütfen en az bir tane izin giriniz',
-
 ];

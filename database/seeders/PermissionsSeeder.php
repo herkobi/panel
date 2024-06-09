@@ -217,25 +217,25 @@ class PermissionsSeeder extends Seeder
             ],
             [
                 'parent_id' => 5,
-                'name' => 'bac.create',
+                'name' => 'gateway.bac.create',
                 'desc' => 'EFT/Havale Ödeme Yöntemi Ekle',
                 'guard_name' => 'web'
             ],
             [
                 'parent_id' => 5,
-                'name' => 'bac.update',
+                'name' => 'gateway.bac.update',
                 'desc' => 'EFT/Havale Ödeme Yöntemi Güncelle',
                 'guard_name' => 'web'
             ],
             [
                 'parent_id' => 5,
-                'name' => 'bac.delete',
+                'name' => 'gateway.bac.delete',
                 'desc' => 'EFT/Havale Ödeme Yöntemi Sil',
                 'guard_name' => 'web'
             ],
             [
                 'parent_id' => 5,
-                'name' => 'cc.update',
+                'name' => 'gateway.cc.update',
                 'desc' => 'Kredi Kartı İle Ödeme Yöntemi Güncelle',
                 'guard_name' => 'web'
             ],

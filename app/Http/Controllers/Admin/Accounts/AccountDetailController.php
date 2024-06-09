@@ -56,8 +56,8 @@ class AccountDetailController extends Controller
 
         $updated = $this->updateStatus->execute($id, $request->validated());
         return $updated
-            ? Redirect::back()->with('success', __('admin/accounts/accounts.update.status.success'))
-            : Redirect::back()->with('error', __('admin/accounts/accounts.update.status.error'));
+            ? Redirect::back()->with('success', __('admin/accounts/detail.update.status.success'))
+            : Redirect::back()->with('error', __('admin/accounts/detail.update.status.error'));
     }
 
     /**
@@ -73,8 +73,8 @@ class AccountDetailController extends Controller
 
         $updated = $this->changeEmail->execute($id, $request->validated());
         return $updated
-            ? Redirect::back()->with('success', __('admin/accounts/accounts.change.email.success'))
-            : Redirect::back()->with('error', __('admin/accounts/accounts.change.email.error'));
+            ? Redirect::back()->with('success', __('admin/accounts/detail.change.email.success'))
+            : Redirect::back()->with('error', __('admin/accounts/detail.change.email.error'));
     }
 
     /**
@@ -90,8 +90,8 @@ class AccountDetailController extends Controller
 
         $verified = $this->verifyEmail->execute($id, $request->validated());
         return $verified
-            ? Redirect::back()->with('success', __('admin/accounts/accounts.verify.email.success'))
-            : Redirect::back()->with('error', __('admin/accounts/accounts.verify.email.error'));
+            ? Redirect::back()->with('success', __('admin/accounts/detail.verify.email.success'))
+            : Redirect::back()->with('error', __('admin/accounts/detail.verify.email.error'));
     }
 
     /**
@@ -107,8 +107,8 @@ class AccountDetailController extends Controller
 
         $checked = $this->checkEmail->execute($id, $request->validated());
         return $checked
-            ? Redirect::back()->with('success', __('admin/accounts/accounts.check.email.success'))
-            : Redirect::back()->with('error', __('admin/accounts/accounts.check.email.error'));
+            ? Redirect::back()->with('success', __('admin/accounts/detail.check.email.success'))
+            : Redirect::back()->with('error', __('admin/accounts/detail.check.email.error'));
     }
 
     /**
@@ -124,8 +124,8 @@ class AccountDetailController extends Controller
 
         $changed = $this->changePassword->execute($id, $request->validated());
         return $changed
-            ? Redirect::back()->with('success', __('admin/accounts/accounts.change.password.success'))
-            : Redirect::back()->with('error', __('admin/accounts/accounts.change.password.error'));
+            ? Redirect::back()->with('success', __('admin/accounts/detail.change.password.success'))
+            : Redirect::back()->with('error', __('admin/accounts/detail.change.password.error'));
     }
 
     /**
@@ -141,7 +141,7 @@ class AccountDetailController extends Controller
 
         $status = $this->resetPassword->execute($id, $request->validated());
         return $status === Password::RESET_LINK_SENT
-            ? Redirect::back()->with('success', __('admin/accounts/accounts.reset.password.success'))
-            : Redirect::back()->with('error', __('admin/accounts/accounts.reset.password.error'));
+            ? Redirect::back()->with('success', __('admin/accounts/detail.reset.password.success'))
+            : Redirect::back()->with('error', __('admin/accounts/detail.reset.password.error'));
     }
 }

@@ -2,8 +2,9 @@
 
 
 return [
-
     'page.title' => 'Yeni Hesap Ekle',
+
+    //Form
     'account.info' => 'Hesap Bilgileri',
     'account.role' => 'Hesap Yetkisi',
     'account.name' => 'Ad',
@@ -19,4 +20,8 @@ return [
     'account.verify.email' => 'Onay E-postası İste',
     'account.send.email' => 'Bilgileri E-posta İle Gönder',
     'account.make.passive' => 'Kullanıcı Durumunu Pasif Yap',
+
+    //Create Messages
+    'store.success' => 'Kullanıcı başarılı bir şekilde oluşturuldu',
+    'store.error' => 'Kullanıcı eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.',
 ];
