@@ -4,11 +4,11 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Ödeme Yöntemleri',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/settings/payments.main.title'),
                 ])
                 @include('admin.settings.payments.partials.page-buttons', [
-                    'first_button' => 'EFT/Havale Ödeme Yöntemleri',
+                    'first_button' => __('admin/gateways/bac.main.button'),
                     'first_link' => 'panel.gateways.bac',
                 ])
             </div>
@@ -24,7 +24,7 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">EFT/Havale Ödeme Bilgisi Ekle</h1>
+                            <h1 class="card-title">{{ __('admin/gateways/bac/create.page.title') }}</h1>
                         </div>
                         <form action="{{ route('panel.gateways.bac.create.store') }}" method="POST">
                             @csrf

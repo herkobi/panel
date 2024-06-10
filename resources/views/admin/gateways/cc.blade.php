@@ -4,11 +4,11 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Ödeme Yöntemleri',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/settings/payments.main.title'),
                 ])
                 @include('admin.settings.payments.partials.page-buttons', [
-                    'first_button' => 'Ödeme Yöntemleri',
+                    'first_button' => __('admin/settings/payments.main.button'),
                     'first_link' => 'panel.settings.payments',
                 ])
             </div>
@@ -24,15 +24,15 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">Kredi Kartı Ödeme Yöntemleri</h1>
+                            <h1 class="card-title">{{ __('admin/gateways/cc.page.title') }}</h1>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table">
                                 <thead>
                                     <tr>
-                                        <th class="w-5">Durum</th>
-                                        <th class="w-60">Ödeme Yöntemi</th>
-                                        <th class="w-20">Para Birimi</th>
+                                        <th class="w-5">{{ __('admin/gateways/cc.table.status') }}</th>
+                                        <th class="w-60">{{ __('admin/gateways/cc.table.cc') }}</th>
+                                        <th class="w-20">{{ __('admin/gateways/cc.table.currency') }}</th>
                                         <th class="w-15"></th>
                                     </tr>
                                 </thead>
@@ -54,12 +54,15 @@
                                             </td>
                                             <td>{{ $gateway->currency->title }}</td>
                                             <td class="text-center">
-                                                @foreach ($values as $value)
-                                                    <a href="{{ route('panel.gateways.' . $value['code'] . '.edit', $gateway->id) }}"
-                                                        class="btn btn-ghost-primary btn-sm" title="Düzenle">
-                                                        Düzenle
-                                                    </a>
-                                                @endforeach
+                                                @if (auth()->user()->can('gateway.cc.update'))
+                                                    @foreach ($values as $value)
+                                                        <a href="{{ route('panel.gateways.' . $value['code'] . '.edit', $gateway->id) }}"
+                                                            class="btn btn-ghost-primary btn-sm"
+                                                            title="{{ __('admin/gateways/bac.table.edit') }}">
+                                                            {{ __('admin/gateways/bac.table.edit') }}
+                                                        </a>
+                                                    @endforeach
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

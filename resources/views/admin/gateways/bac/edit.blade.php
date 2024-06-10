@@ -8,9 +8,9 @@
                     'title' => 'Ödeme Yöntemleri',
                 ])
                 @include('admin.settings.payments.partials.page-buttons', [
-                    'first_button' => 'EFT/Havale Ödeme Yöntemleri',
+                    'first_button' => __('admin/gateways/bac.main.button'),
                     'first_link' => 'panel.gateways.bac',
-                    'second_button' => 'Yeni Hesap Bilgisi Ekle',
+                    'second_button' => __('admin/gateways/bac.create.button'),
                     'second_link' => 'panel.gateways.bac.create',
                 ])
             </div>

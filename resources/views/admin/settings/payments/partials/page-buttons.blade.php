@@ -21,7 +21,7 @@
                 </span>
             @endif
         @endif
-        @if (auth()->user()->can('gateway.create'))
+        @if (auth()->user()->can('gateway.bac.create'))
             @if (isset($second_link))
                 <a href="{{ route($second_link) }}" class="btn btn-primary d-none d-sm-inline-block">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

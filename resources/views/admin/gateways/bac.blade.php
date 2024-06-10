@@ -4,13 +4,13 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Ödeme Yöntemleri',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/settings/payments.main.title'),
                 ])
                 @include('admin.settings.payments.partials.page-buttons', [
-                    'first_button' => 'Ödeme Yöntemleri',
+                    'first_button' => __('admin/settings/payments.main.button'),
                     'first_link' => 'panel.settings.payments',
-                    'second_button' => 'Yeni Hesap Bilgisi Ekle',
+                    'second_button' => __('admin/gateways/bac.create.button'),
                     'second_link' => 'panel.gateways.bac.create',
                 ])
             </div>
@@ -26,15 +26,15 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">EFT/Havale Ödeme Bilgileri</h1>
+                            <h1 class="card-title">{{ __('admin/gateways/bac.page.title') }}</h1>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table">
                                 <thead>
                                     <tr>
-                                        <th class="w-5">Durum</th>
-                                        <th class="w-60">Ödeme Yöntemi</th>
-                                        <th class="w-20">Para Birimi</th>
+                                        <th class="w-5">{{ __('admin/gateways/bac.table.status') }}</th>
+                                        <th class="w-60">{{ __('admin/gateways/bac.table.bac') }}</th>
+                                        <th class="w-20">{{ __('admin/gateways/bac.table.currency') }}</th>
                                         <th class="w-15"></th>
                                     </tr>
                                 </thead>
@@ -56,10 +56,13 @@
                                             </td>
                                             <td>{{ $gateway->currency->title }}</td>
                                             <td class="text-center">
-                                                <a href="{{ route('panel.gateways.bac.edit', $gateway->id) }}"
-                                                    class="btn btn-ghost-primary btn-sm" title="Düzenle">
-                                                    Düzenle
-                                                </a>
+                                                @if (auth()->user()->can('gateway.bac.update'))
+                                                    <a href="{{ route('panel.gateways.bac.edit', $gateway->id) }}"
+                                                        class="btn btn-ghost-primary btn-sm"
+                                                        title="{{ __('admin/gateways/bac.table.edit') }}">
+                                                        {{ __('admin/gateways/bac.table.edit') }}
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

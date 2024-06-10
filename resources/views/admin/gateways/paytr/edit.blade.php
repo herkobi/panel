@@ -4,11 +4,11 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Ödeme Yöntemleri',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/settings/payments.main.title'),
                 ])
                 @include('admin.settings.payments.partials.page-buttons', [
-                    'first_button' => 'Kredi Kartı Ödeme Yöntemleri',
+                    'first_button' => __('admin/gateways/cc.main.button'),
                     'first_link' => 'panel.gateways.cc',
                 ])
             </div>

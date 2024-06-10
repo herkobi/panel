@@ -4,11 +4,11 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Ödeme Yöntemleri',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/settings/payments.main.title'),
                 ])
                 @include('admin.settings.payments.partials.page-buttons', [
-                    'first_button' => 'Ödeme Yöntemleri',
+                    'first_button' => __('admin/settings/payments.main.button'),
                     'first_link' => 'panel.settings.payments',
                 ])
             </div>
@@ -24,15 +24,15 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">Ödeme Yöntemleri</h1>
+                            <h1 class="card-title">{{ __('admin/settings/payments.page.title') }}</h1>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-40">Ödeme Yöntemi</th>
-                                        <th class="w-40">Açıklama</th>
-                                        <th class="w-20">Bilgiler</th>
+                                        <th class="w-40">{{ __('admin/settings/payments.table.payments') }}</th>
+                                        <th class="w-40">{{ __('admin/settings/payments.table.desc') }}</th>
+                                        <th class="w-20">{{ __('admin/settings/payments.table.button') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -41,10 +41,11 @@
                                             <td class="fw-bold">{{ $payment->title }}</td>
                                             <td>{{ $payment->desc }}</td>
                                             <td>
-                                                @if (auth()->user()->can('gateway.update'))
+                                                @if (auth()->user()->can('gateway.management'))
                                                     <a href="{{ route('panel.gateways.' . $payment->code) }}"
-                                                        class="btn btn-ghost-primary btn-sm" title="Bilgiler">
-                                                        Bilgiler
+                                                        class="btn btn-ghost-primary btn-sm"
+                                                        title="{{ __('admin/settings/payments.table.button') }}">
+                                                        {{ __('admin/settings/payments.table.button') }}
                                                     </a>
                                                 @endif
                                             </td>

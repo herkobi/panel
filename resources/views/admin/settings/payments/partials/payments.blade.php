@@ -1,8 +1,9 @@
 <div class="dropdown-menu panel-dropdown shadow-none pb-0">
-    <span class="dropdown-header">Ödeme Yöntemleri</span>
+    <span class="dropdown-header"> {{ __('admin/settings/payments.navigation.title') }}
+    </span>
     @if (auth()->user()->can('gateway.management'))
         <a class="dropdown-item {{ request()->routeIs('panel.settings.payments') ? 'active' : '' }}"
-            href="{{ route('panel.settings.payments') }}" title="Ödeme Yöntemleri">
+            href="{{ route('panel.settings.payments') }}" title="{{ __('admin/settings/payments.navigation.title') }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24" height="24"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round">
@@ -14,7 +15,7 @@
                 <path d="M7.005 15h.005" />
                 <path d="M11 15h2" />
             </svg>
-            Ödeme Yöntemleri
+            {{ __('admin/settings/payments.navigation.payments') }}
         </a>
         <div class="dropdown-divider my-0"></div>
         @foreach ($payments as $payment)
