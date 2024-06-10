@@ -26,13 +26,14 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">EFT/Havale Ödeme Bilgisini Düzenle</h1>
+                            <h1 class="card-title">{{ __('admin/gateways/bac/update.page.title') }}</h1>
                         </div>
                         <form action="{{ route('panel.gateways.bac.update', $bac->id) }}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Durum</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/bac/update.form.status.label') }}</label>
                                     <div class="col">
                                         <div>
                                             @foreach (Status::cases() as $type)
@@ -51,36 +52,43 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Hesap Adı</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/bac/update.form.name.label') }}</label>
                                     <div class="col">
                                         <input type="text" name="title"
                                             class="form-control @error('title') is-invalid @enderror"
-                                            value="{{ $bac->title ? $bac->title : old('title') }}" placeholder="Hesap Adı">
+                                            value="{{ $bac->title ? $bac->title : old('title') }}"
+                                            placeholder="{{ __('admin/gateways/bac/update.form.name.placeholder') }}">
                                         @error('title')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Ödeme sistemi için bir isim giriniz. Örnek:
-                                            Eft/Havale Ödeme</small>
+                                        <small
+                                            class="form-hint">{{ __('admin/gateways/bac/update.form.name.helper') }}</small>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Açıklama</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/bac/update.form.desc.label') }}</label>
                                     <div class="col">
                                         <input type="text" name="desc"
                                             class="form-control @error('desc') is-invalid @enderror"
-                                            value="{{ $bac->desc ? $bac->desc : old('desc') }}" placeholder="Açıklama">
+                                            value="{{ $bac->desc ? $bac->desc : old('desc') }}"
+                                            placeholder="{{ __('admin/gateways/bac/update.form.desc.placeholder') }}">
                                         @error('desc')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Ödeme adımında gösterilecek açıklama metni</small>
+                                        <small
+                                            class="form-hint">{{ __('admin/gateways/bac/update.form.desc.helper') }}</small>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Para Birimi</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/bac/update.form.currency.label') }}</label>
                                     <div class="col">
                                         <select class="form-select shadow-none @error('currency_id') is-invalid @enderror"
                                             name="currency_id">
-                                            <option>Lütfen Seçiniz</option>
+                                            <option>{{ __('admin/gateways/bac/update.form.currency.placeholder') }}
+                                            </option>
                                             @foreach ($currencies as $key => $currency)
                                                 <option value="{{ $currency->id }}"
                                                     {{ $currency->id == $bac->currency_id ? 'selected' : '' }}>
@@ -90,92 +98,106 @@
                                         @error('currency_id')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Hesabın ait olduğu para birimini seçiniz.</small>
+                                        <small
+                                            class="form-hint">{{ __('admin/gateways/bac/update.form.currency.placeholder') }}</small>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label">Hesap Bilgileri</label>
+                                    <label
+                                        class="col-3 col-form-label">{{ __('admin/gateways/bac/update.form.bac.section') }}</label>
                                     <div class="col">
                                         <div class="mb-3 row">
-                                            <label class="col-form-label required">Hesap Adı</label>
+                                            <label
+                                                class="col-form-label required">{{ __('admin/gateways/bac/update.form.bac.account.label') }}</label>
                                             <div class="col">
                                                 <input type="text" name="account_name"
                                                     class="form-control @error('account_name') is-invalid @enderror"
                                                     value="{{ $values['account_name'] ? $values['account_name'] : old('account_name') }}"
-                                                    placeholder="Hesap Adı">
+                                                    placeholder="{{ __('admin/gateways/bac/update.form.bac.account.placeholder') }}">
                                                 @error('account_name')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Hesap sahibinin adını giriniz</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/bac/update.form.bac.account.helper') }}</small>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label class="col-form-label required">Banka</label>
+                                            <label
+                                                class="col-form-label required">{{ __('admin/gateways/bac/update.form.bac.bank.label') }}</label>
                                             <div class="col">
                                                 <input type="text" name="account_bank"
                                                     class="form-control @error('account_bank') is-invalid @enderror"
                                                     value="{{ $values['account_bank'] ? $values['account_bank'] : old('account_bank') }}"
-                                                    placeholder="Banka">
+                                                    placeholder="{{ __('admin/gateways/bac/update.form.bac.bank.placeholder') }}">
                                                 @error('account_bank')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Hesabın bulunduğu bankayı giriniz</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/bac/update.form.bac.bank.placeholder') }}</small>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
                                             <div class="col-md-4">
-                                                <label class="col-form-label">Şube Kodu</label>
+                                                <label
+                                                    class="col-form-label">{{ __('admin/gateways/bac/update.form.bac.branch.label') }}</label>
                                                 <div class="col">
                                                     <input type="text" name="account_code"
                                                         class="form-control @error('account_code') is-invalid @enderror"
                                                         value="{{ $values['account_code'] ? $values['account_code'] : old('account_code') }}"
-                                                        placeholder="Şube Kodu">
+                                                        placeholder="{{ __('admin/gateways/bac/update.form.bac.branch.placeholder') }}">
                                                     @error('account_code')
                                                         <span class="invalid-feedback"
                                                             role="alert">{{ $message }}</span>
                                                     @enderror
-                                                    <small class="form-hint">Hesaba ait şube kodunu giriniz</small>
+                                                    <small
+                                                        class="form-hint">{{ __('admin/gateways/bac/update.form.bac.account.helper') }}</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-8">
-                                                <label class="col-form-label">Hesap Numarası</label>
+                                                <label
+                                                    class="col-form-label">{{ __('admin/gateways/bac/update.form.bac.number.label') }}</label>
                                                 <div class="col">
                                                     <input type="text" name="account_number"
                                                         class="form-control @error('account_number') is-invalid @enderror"
                                                         value="{{ $values['account_number'] ? $values['account_number'] : old('account_number') }}"
-                                                        placeholder="Hesap Numarası">
+                                                        placeholder="{{ __('admin/gateways/bac/update.form.bac.number.placeholder') }}">
                                                     @error('account_number')
                                                         <span class="invalid-feedback"
                                                             role="alert">{{ $message }}</span>
                                                     @enderror
-                                                    <small class="form-hint">Hesap numarasını giriniz</small>
+                                                    <small
+                                                        class="form-hint">{{ __('admin/gateways/bac/update.form.bac.number.helper') }}</small>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label class="col-form-label">IBAN Numarası</label>
+                                            <label
+                                                class="col-form-label">{{ __('admin/gateways/bac/update.form.bac.iban.label') }}</label>
                                             <div class="col">
                                                 <input type="text" name="account_iban"
                                                     class="form-control @error('account_iban') is-invalid @enderror"
                                                     value="{{ $values['account_iban'] ? $values['account_iban'] : old('account_iban') }}"
-                                                    placeholder="IBAN Numarası">
+                                                    placeholder="{{ __('admin/gateways/bac/update.form.bac.iban.placeholder') }}">
                                                 @error('account_iban')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Hesaba ait IBAN numarasını giriniz</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/bac/update.form.bac.iban.helper') }}</small>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label class="col-form-label">SWIFT Kodu</label>
+                                            <label
+                                                class="col-form-label">{{ __('admin/gateways/bac/update.form.bac.swift.label') }}</label>
                                             <div class="col">
                                                 <input type="text" name="account_swift"
                                                     class="form-control @error('account_swift') is-invalid @enderror"
                                                     value="{{ $values['account_swift'] ? $values['account_swift'] : old('account_swift') }}"
-                                                    placeholder="SWIFT Kodu">
+                                                    placeholder="{{ __('admin/gateways/bac/update.form.bac.swift.placeholder') }}">
                                                 @error('account_swift')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Hesaba ait SWIFT kodunu giriniz</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/bac/update.form.bac.swift.helper') }}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -183,11 +205,12 @@
                             </div>
                             <div class="card-footer">
                                 <div class="btn-list">
-                                    @hasrole('Super Admin')
+                                    @if (auth()->user()->can('gateway.bac.delete'))
                                         <a href="#" class="btn btn-outline-danger me-auto" data-bs-toggle="modal"
-                                            data-bs-target="#modal-danger">Sil</a>
-                                    @endhasrole
-                                    <button type="submit" class="btn btn-success">Güncelle</button>
+                                            data-bs-target="#modal-danger">{{ __('admin/gateways/bac/update.form.delete.button') }}</a>
+                                    @endif
+                                    <button type="submit"
+                                        class="btn btn-success">{{ __('admin/gateways/bac/update.form.update.button') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -196,46 +219,47 @@
             </div>
         </div>
     </div>
-    <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-status bg-danger"></div>
-                <div class="modal-body text-center py-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24"
-                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M12 9v4" />
-                        <path
-                            d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
-                        <path d="M12 16h.01" />
-                    </svg>
-                    <h3>Emin misiniz?</h3>
-                    <div class="text-secondary">Bu işlem geri alınamaz. Devam etmek istiyor musunuz?
+    @if (auth()->user()->can('gateway.bac.delete'))
+        <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-status bg-danger"></div>
+                    <div class="modal-body text-center py-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24"
+                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 9v4" />
+                            <path
+                                d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
+                            <path d="M12 16h.01" />
+                        </svg>
+                        <h3>{{ __('admin/global.modal.sure') }}</h3>
+                        <div class="text-secondary">{{ __('admin/global.modal.not.reserved') }}</div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="w-100">
-                        <div class="row">
-                            <div class="col">
-                                <a href="#" class="btn w-100" data-bs-dismiss="modal">
-                                    İptal Et
-                                </a>
-                            </div>
-                            <div class="col">
-                                <form action="{{ route('panel.gateways.bac.destroy', $bac->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger w-100" data-bs-dismiss="modal">
-                                        Evet, Devam Et
-                                    </button>
-                                </form>
+                    <div class="modal-footer">
+                        <div class="w-100">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="#" class="btn w-100" data-bs-dismiss="modal">
+                                        {{ __('admin/global.modal.cancel.button') }}
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <form action="{{ route('panel.gateways.bac.destroy', $bac->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger w-100" data-bs-dismiss="modal">
+                                            {{ __('admin/global.modal.confirm.button') }}
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 @endsection

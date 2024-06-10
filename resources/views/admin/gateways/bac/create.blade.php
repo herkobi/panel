@@ -31,7 +31,7 @@
                             <div class="card-body">
                                 <div class="mb-3 row">
                                     <label
-                                        class="col-3 col-form-label required">{{ __('admin/gateways/bac/create.form.account.status.label') }}</label>
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/bac/create.form.status.label') }}</label>
                                     <div class="col">
                                         <div>
                                             @foreach (Status::cases() as $type)

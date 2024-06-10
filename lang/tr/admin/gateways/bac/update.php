@@ -3,7 +3,7 @@
 
 return [
     'page.title' => 'EFT/Havale Ödeme Bilgisini Düzenle',
-    'form.account.status.label' => 'Durum',
+    'form.status.label' => 'Durum',
     'form.name.label' => 'Hesap Adı',
     'form.name.placeholder' => 'Hesap Adı',
     'form.name.helper' => 'Ödeme sistemi için bir isim giriniz. Örnek: Eft/Havale Ödeme',
@@ -32,4 +32,6 @@ return [
     'form.bac.swift.label' => 'Swift Kodu',
     'form.bac.swift.placeholder' => 'Swift Kodu',
     'form.bac.swift.helper' => 'Swift kodunu giriniz',
+    'form.delete.button' => 'Sil',
+    'form.update.button' => 'Güncelle'
 ];

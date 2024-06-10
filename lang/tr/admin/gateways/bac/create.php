@@ -3,7 +3,7 @@
 
 return [
     'page.title' => 'EFT/Havale Ödeme Bilgisi Ekle',
-    'form.account.status.label' => 'Durum',
+    'form.status.label' => 'Durum',
     'form.name.label' => 'Hesap Adı',
     'form.name.placeholder' => 'Hesap Adı',
     'form.name.helper' => 'Ödeme sistemi için bir isim giriniz. Örnek: Eft/Havale Ödeme',

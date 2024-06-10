@@ -24,7 +24,7 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">Paytr Bilgilerini Düzenle</h1>
+                            <h1 class="card-title">{{ __('admin/gateways/cc/update.page.title') }}</h1>
                         </div>
                         <form action="{{ route('panel.gateways.paytr.update', $paytr->id) }}" method="POST">
                             @csrf
