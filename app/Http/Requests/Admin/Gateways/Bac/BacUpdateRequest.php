@@ -49,52 +49,52 @@ class BacUpdateRequest extends FormRequest
             /**
              * Status Messages
              */
-            'status.required' => 'Lütfen durum seçiniz',
-            'status.integer' => 'Lütfen geçerli bir durum seçiniz',
+            'status.required' => __('admin/gateways/bac/request.status.required'),
+            'status.integer' => __('admin/gateways/bac/request.status.integer'),
 
             /**
              * Title Messages
              */
-            'title.required' => 'Lütfen ödeme sistemi adını giriniz',
-            'title.string' => 'Lütfen geçerli bir ödeme sistemi adı giriniz',
-            'title.max' => 'Lütfen daha kısa ödeme sistemi adı giriniz',
+            'title.required' => __('admin/gateways/bac/request.title.required'),
+            'title.string' => __('admin/gateways/bac/request.title.string'),
+            'title.max' => __('admin/gateways/bac/request.title.max'),
 
             /**
              * Currency Messages
              */
-            'currency_id.exists' => 'Lütfen para birimi seçiniz',
-            'currency_id.numeric' => 'Lütfen geçerli bir para birimi seçiniz',
+            'currency_id.exists' => __('admin/gateways/bac/request.currency_id.exists'),
+            'currency_id.numeric' => __('admin/gateways/bac/request.currency_id.numeric'),
 
             /**
              * Account Name Messages
              */
-            'account_name.required' => 'Lütfen hesap adını giriniz',
-            'account_name.string' => 'Lütfen geçerli bir hesap adı giriniz',
-            'account_name.max' => 'Lütfen daha kısa hesap adı giriniz',
+            'account_name.required' => __('admin/gateways/bac/request.account_name.required'),
+            'account_name.string' => __('admin/gateways/bac/request.account_name.string'),
+            'account_name.max' => __('admin/gateways/bac/request.account_name.max'),
 
             /**
              * Account Bank Messages
              */
-            'account_bank.required' => 'Lütfen banka adını giriniz',
-            'account_bank.string' => 'Lütfen geçerli bir banka adı giriniz',
-            'account_bank.max' => 'Lütfen daha kısa banka adı giriniz',
+            'account_bank.required' => __('admin/gateways/bac/request.account_bank.required'),
+            'account_bank.string' => __('admin/gateways/bac/request.account_bank.string'),
+            'account_bank.max' => __('admin/gateways/bac/request.account_bank.max'),
 
             /**
              * Account Branch Messages
              */
-            'account_code.numeric' => 'Lütfen şube kodunu giriniz',
-            'account_code.required_with' => 'Lütfen daha kısa şube kodu giriniz',
+            'account_code.numeric' => __('admin/gateways/bac/request.account_code.numeric'),
+            'account_code.required_with' => __('admin/gateways/bac/request.account_code.required_with'),
 
             /**
              * Account Number Messages
              */
-            'account_number.numeric' => 'Lütfen hesap numarasını sadece rakam olarak giriniz',
-            'account_number.required_with' => 'Lütfen hesap numarasını giriniz',
+            'account_number.numeric' => __('admin/gateways/bac/request.account_number.numeric'),
+            'account_number.required_with' => __('admin/gateways/bac/request.account_number.required_with'),
 
             /**
              * Account IBAN Messages
              */
-            'account_iban.required_without_all' => 'Lütfen IBAN numarasını giriniz',
+            'account_iban.required_without_all' => __('admin/gateways/bac/request.account_iban.required_without_all'),
         ];
     }
 

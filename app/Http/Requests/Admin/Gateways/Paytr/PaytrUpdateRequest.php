@@ -49,53 +49,53 @@ class PaytrUpdateRequest extends FormRequest
             /**
              * Status Messages
              */
-            'status.required' => 'Lütfen durum giriniz',
-            'status.integer' => 'Lütfen geçerli bir durum giriniz',
+            'status.required' => __('admin/gateways/paytr/request.status.required'),
+            'status.integer' => __('admin/gateways/paytr/request.status.integer'),
 
             /**
              * Title Messages
              */
-            'title.required' => 'Lütfen başlık giriniz',
-            'title.string' => 'Lütfen geçerli bir başlık giriniz',
-            'title.max' => 'Lütfen daha kısa başlık giriniz',
+            'title.required' => __('admin/gateways/paytr/reques.title.required'),
+            'title.string' => __('admin/gateways/paytr/reques.title.string'),
+            'title.max' => __('admin/gateways/paytr/reques.title.max'),
 
             /**
              * Currency Messages
              */
-            'currency_id.exists' => 'Lütfen geçerli para birimi giriniz',
-            'currency_id.numeric' => 'Lütfen para birimi giriniz',
+            'currency_id.exists' => __('admin/gateways/paytr/reques.currency_id.exists'),
+            'currency_id.numeric' => __('admin/gateways/paytr/reques.currency_id.numeric'),
 
             /**
              * Logo Messages
              */
-            'logo.image' => 'Lütfen resim yükleyiniz',
-            'logo.max' => 'Lütfen logonuzun boyutunu düşürünüz',
-            'logo.mimes' => 'Lütfen jpg,jpeg veya png formatında resim yükleyiniz',
+            'logo.image' => __('admin/gateways/paytr/reques.logo.image'),
+            'logo.max' => __('admin/gateways/paytr/reques.logo.max'),
+            'logo.mimes' => __('admin/gateways/paytr/reques.logo.mimes'),
 
             /**
              * Account ID Messages
              */
-            'merchant_id.required' => 'Lütfen mağaza kodunu giriniz',
+            'merchant_id.required' => __('admin/gateways/paytr/reques.merchant_id.required'),
 
             /**
              * Account Key Messages
              */
-            'merchant_key.required' => 'Lütfen mağaza anahtarını giriniz',
+            'merchant_key.required' => __('admin/gateways/paytr/reques.merchant_key.required'),
 
             /**
              * Security Code Messages
              */
-            'merchant_salt.required' => 'Lütfen güvenlik kodunu giriniz',
+            'merchant_salt.required' => __('admin/gateways/paytr/reques.merchant_salt.required'),
 
             /**
              * Success Return URL Messages
              */
-            'merchant_ok_url.required' => 'Lütfen başarılı dönüş url\'sini giriniz',
+            'merchant_ok_url.required' => __('admin/gateways/paytr/reques.merchant_ok_url.required'),
 
             /**
              * Error Return URL Messages
              */
-            'merchant_fail_url.required' => 'Lütfen hata dönüş url\'sini giriniz',
+            'merchant_fail_url.required' => __('admin/gateways/paytr/reques.merchant_fail_url.required'),
 
         ];
     }
