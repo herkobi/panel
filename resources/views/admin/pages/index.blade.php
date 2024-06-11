@@ -4,13 +4,13 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Ayarlar',
-                    'title' => 'Sayfalar & Sözleşmeler',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/pages/pages.main.title'),
                 ])
                 @include('admin.pages.partials.page-buttons', [
-                    'first_button' => 'Sayfalar',
+                    'first_button' => __('admin/pages/pages.main.button'),
                     'first_link' => 'panel.pages',
-                    'second_button' => 'Yeni Sayfa Ekle',
+                    'second_button' => __('admin/pages/pages.create.button'),
                     'second_link' => 'panel.page.create',
                 ])
             </div>
