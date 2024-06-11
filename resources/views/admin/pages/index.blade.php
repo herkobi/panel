@@ -26,14 +26,14 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">Sayfalar</h1>
+                            <h1 class="card-title">{{ __('admin/pages/index.page.title') }}</h1>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-5">Durum</th>
-                                        <th class="w-80">Sayfa Adı</th>
+                                        <th class="w-5">{{ __('admin/pages/index.table.status') }}</th>
+                                        <th class="w-80">{{ __('admin/pages/index.table.page') }}</th>
                                         <th class="w-15"></th>
                                     </tr>
                                 </thead>
@@ -53,8 +53,9 @@
                                             <td class="text-center">
                                                 @if (auth()->user()->can('page.update'))
                                                     <a href="{{ route('panel.page.edit', $page->id) }}"
+                                                        title="{{ __('admin/pages/index.table.button') }}"
                                                         class="btn btn-ghost-primary btn-sm">
-                                                        Düzenle
+                                                        {{ __('admin/pages/index.table.button') }}
                                                     </a>
                                                 @endif
                                             </td>

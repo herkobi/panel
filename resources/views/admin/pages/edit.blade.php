@@ -4,13 +4,13 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Ayarlar',
-                    'title' => 'Sayfalar & Sözleşmeler',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/pages/pages.main.title'),
                 ])
                 @include('admin.pages.partials.page-buttons', [
-                    'first_button' => 'Sayfalar',
+                    'first_button' => __('admin/pages/pages.main.button'),
                     'first_link' => 'panel.pages',
-                    'second_button' => 'Yeni Sayfa Ekle',
+                    'second_button' => __('admin/pages/pages.create.button'),
                     'second_link' => 'panel.page.create',
                 ])
             </div>
@@ -26,13 +26,14 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">Sayfa Bilgilerini Güncelle</h1>
+                            <h1 class="card-title">{{ __('admin/pages/update.page.title') }}</h1>
                         </div>
                         <form action="{{ route('panel.page.update', $page->id) }}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Durum</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/pages/update.form.status.label') }}</label>
                                     <div class="col">
                                         <div>
                                             @foreach (Status::cases() as $type)
@@ -51,27 +52,29 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Sayfa Adı</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/pages/update.form.title.label') }}</label>
                                     <div class="col">
                                         <input type="text" name="title"
                                             class="form-control @error('title') is-invalid @enderror"
                                             value="{{ $page->title ? $page->title : old('title') }}"
-                                            placeholder="Sayfa Adı">
+                                            placeholder="{{ __('admin/pages/update.form.title.placeholder') }}">
                                         @error('title')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Sayfanızın adını giriniz.</small>
+                                        <small class="form-hint">{{ __('admin/pages/update.form.title.helper') }}</small>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Sayfa İçeriği</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/pages/update.form.text.label') }}</label>
                                     <div class="col">
                                         <textarea name="text" class="form-control @error('text') is-invalid @enderror" rows="10"
-                                            placeholder="Sayfa İçeriği">{{ $page->text ? $page->text : old('text') }}</textarea>
+                                            placeholder="{{ __('admin/pages/update.form.text.placeholder') }}">{{ $page->text ? $page->text : old('text') }}</textarea>
                                         @error('text')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Sayfanızın içeriğini giriniz</small>
+                                        <small class="form-hint">{{ __('admin/pages/update.form.text.helper') }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -79,13 +82,15 @@
                                 <div class="card-footer">
                                     <div class="btn-list">
                                         <a href="#" class="btn btn-outline-danger me-auto" data-bs-toggle="modal"
-                                            data-bs-target="#modal-danger">Sil</a>
-                                        <button type="submit" class="btn btn-success">Güncelle</button>
+                                            data-bs-target="#modal-danger">{{ __('admin/pages/update.form.delete.button') }}</a>
+                                        <button type="submit"
+                                            class="btn btn-success">{{ __('admin/pages/update.form.update.button') }}</button>
                                     </div>
                                 </div>
                             @else
                                 <div class="card-footer text-end">
-                                    <button type="submit" class="btn btn-success">Güncelle</button>
+                                    <button type="submit"
+                                        class="btn btn-success">{{ __('admin/pages/update.form.update.button') }}</button>
                                 </div>
                             @endif
                         </form>
@@ -109,8 +114,8 @@
                             d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
                         <path d="M12 16h.01" />
                     </svg>
-                    <h3>Emin misiniz?</h3>
-                    <div class="text-secondary">Bu işlem geri alınamaz. Devam etmek istiyor musunuz?
+                    <h3>{{ __('admin/global.modal.sure') }}</h3>
+                    <div class="text-secondary">{{ __('admin/global.modal.not.reserved') }}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -118,7 +123,7 @@
                         <div class="row">
                             <div class="col">
                                 <a href="#" class="btn w-100" data-bs-dismiss="modal">
-                                    İptal Et
+                                    {{ __('admin/global.modal.cancel.button') }}
                                 </a>
                             </div>
                             <div class="col">
@@ -126,7 +131,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger w-100" data-bs-dismiss="modal">
-                                        Evet, Devam Et
+                                        {{ __('admin/global.modal.confirm.button') }}
                                     </button>
                                 </form>
                             </div>

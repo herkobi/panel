@@ -66,8 +66,8 @@ class PagesController extends Controller
 
         $created = $this->create->execute($request->validated());
         return $created
-                ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde oluşturuldu')
-                : Redirect::back()->with('error', 'Sayfa eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
+                ? Redirect::route('panel.pages')->with('success', __('admin/pages/create.store.success'))
+                : Redirect::back()->with('error', __('admin/pages/create.store.error'));
     }
 
     public function edit($id): View|RedirectResponse
@@ -90,8 +90,8 @@ class PagesController extends Controller
 
         $updated = $this->update->execute($id, $request->validated());
         return $updated
-                ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde güncellendi')
-                : Redirect::back()->with('error', 'Sayfa güncellenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
+                ? Redirect::route('panel.pages')->with('success', __('admin/pages/update.update.success'))
+                : Redirect::back()->with('error', __('admin/pages/update.update.error'));
     }
 
     public function destroy($id): RedirectResponse
@@ -106,8 +106,8 @@ class PagesController extends Controller
 
         $deleted = $this->delete->execute($id);
         return $deleted
-                ? Redirect::route('panel.pages')->with('success', 'Sayfanız başarılı bir şekilde silindi')
-                : Redirect::back()->with('error', 'Sayfa silinirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
+                ? Redirect::route('panel.pages')->with('success', __('admin/pages/update.delete.success'))
+                : Redirect::back()->with('error', __('admin/pages/update.delete.error'));
     }
 
 }

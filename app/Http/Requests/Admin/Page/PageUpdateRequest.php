@@ -27,7 +27,7 @@ class PageUpdateRequest extends FormRequest
         return [
             'status' => ['required', new Enum(Status::class)],
             'title' => ['required', 'string', 'max:255', Rule::unique('pages', 'title')->ignore($this->page, 'id')],
-            'text' => ['max:255']
+            'text' => ['required']
         ];
     }
 
@@ -43,21 +43,21 @@ class PageUpdateRequest extends FormRequest
             /**
              * Status Messages
              */
-            'status.required' => 'Lütfen durum giriniz',
-            'status.integer' => 'Lütfen geçerli bir durum giriniz',
+            'status.required' => __('admin/pages/request.status.required'),
+            'status.integer' => __('admin/pages/request.status.integer'),
 
             /**
              * Title Messages
              */
-            'title.required' => 'Lütfen sayfa adını giriniz',
-            'title.string' => 'Lütfen geçerli bir sayfa adı giriniz',
-            'title.max' => 'Lütfen sayfa adını daha kısa giriniz',
-            'title.unique' => 'Bu isimde kayıtlı sayfa bulunmaktadır',
+            'title.required' => __('admin/pages/request.title.required'),
+            'title.string' => __('admin/pages/request.title.string'),
+            'title.max' => __('admin/pages/request.title.max'),
+            'title.unique' => __('admin/pages/request.title.unique'),
 
             /**
              * Desc Messages
              */
-            'text.required' => 'Lütfen içerik giriniz',
+            'text.required' => __('admin/pages/request.text.required'),
 
         ];
     }
