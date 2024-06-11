@@ -32,4 +32,8 @@ return [
     'form.bac.swift.label' => 'Swift Kodu',
     'form.bac.swift.placeholder' => 'Swift Kodu',
     'form.bac.swift.helper' => 'Swift kodunu giriniz',
+
+    'store.success' => 'Hesap bilgileri başarılı bir şekilde kayıt edildi',
+    'store.error' => 'Hesap bilgisi eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.',
+
 ];

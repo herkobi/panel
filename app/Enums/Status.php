@@ -15,8 +15,8 @@ enum Status: int
     public static function title($title): string
     {
         return match ($title) {
-            self::ACTIVE => "Aktif",
-            self::PASSIVE => "Taslak",
+            self::ACTIVE => __('admin/global.active'),
+            self::PASSIVE => __('admin/global.passive'),
         };
     }
 
@@ -38,9 +38,9 @@ enum Status: int
     {
         switch ($type) {
             case self::ACTIVE->value:
-                return "Aktif";
+                return __('admin/global.active');
             case self::PASSIVE->value:
-                return "Taslak";
+                return __('admin/global.passive');
             default:
                 throw new \Exception('Invalid type');
         }

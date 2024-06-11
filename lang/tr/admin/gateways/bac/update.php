@@ -3,6 +3,7 @@
 
 return [
     'page.title' => 'EFT/Havale Ödeme Bilgisini Düzenle',
+    
     'form.status.label' => 'Durum',
     'form.name.label' => 'Hesap Adı',
     'form.name.placeholder' => 'Hesap Adı',
@@ -33,5 +34,10 @@ return [
     'form.bac.swift.placeholder' => 'Swift Kodu',
     'form.bac.swift.helper' => 'Swift kodunu giriniz',
     'form.delete.button' => 'Sil',
-    'form.update.button' => 'Güncelle'
+    'form.update.button' => 'Güncelle',
+
+    'update.success' => 'Hesap bilgileri başarılı bir şekilde güncellendi',
+    'update.error' => 'Güncelleme yapılırken bir sorun oluştu, lütfen tekrar deneyiniz.',
+    'delete.success' => 'Hesap bilgileri başarılı bir şekilde silindi',
+    'delete.error' => 'Silme işlemi gerçekleşirken bir sorun oluştu, lütfen tekrar deneyiniz.'
 ];

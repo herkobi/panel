@@ -65,8 +65,8 @@ class BacController extends Controller
 
         $created = $this->create->execute($request->validated());
         return $created
-                ? Redirect::route('panel.gateways.bac')->with('success', 'Hesap bilgileri başarılı bir şekilde kayıt edildi')
-                : Redirect::back()->with('error', 'Hesap bilgisi eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
+                ? Redirect::route('panel.gateways.bac')->with('success', __('admin/gateways/bac/create.store.success'))
+                : Redirect::back()->with('error', __('admin/gateways/bac/create.store.error'));
     }
 
     public function edit($id): View|RedirectResponse
@@ -96,8 +96,8 @@ class BacController extends Controller
 
         $updated = $this->update->execute($id, $request->validated());
         return $updated
-                ? Redirect::route('panel.gateways.bac')->with('success', 'Hesap bilgileri başarılı bir şekilde güncellendi')
-                : Redirect::back()->with('error', 'Güncelleme yapılırken bir sorun oluştu, lütfen tekrar deneyiniz.');
+                ? Redirect::route('panel.gateways.bac')->with('success', __('admin/gateways/bac/update.update.success'))
+                : Redirect::back()->with('error', __('admin/gateways/bac/update.update.error'));
     }
 
     public function destroy($id): RedirectResponse
@@ -108,7 +108,7 @@ class BacController extends Controller
 
         $deleted = $this->delete->execute($id);
         return $deleted
-                ? Redirect::route('panel.gateways.bac')->with('success', 'Hesap bilgileri başarılı bir şekilde silindi')
-                : Redirect::back()->with('error', 'Silme işlemi gerçekleşirken bir sorun oluştu, lütfen tekrar deneyiniz.');
+                ? Redirect::route('panel.gateways.bac')->with('success', __('admin/gateways/bac/update.delete.success'))
+                : Redirect::back()->with('error', __('admin/gateways/bac/update.delete.error'));
     }
 }

@@ -20,10 +20,10 @@ enum AccountStatus: int
     public static function title($title): string
     {
         return match ($title) {
-            self::ACTIVE => "Aktif",
-            self::DRAFT => "Duraklatılmış",
-            self::PASSIVE => "Dondurulmuş",
-            self::DELETED => "Silinmiş",
+            self::ACTIVE => __('admin/global.account.active'),
+            self::DRAFT => __('admin/global.account.draft'),
+            self::PASSIVE => __('admin/global.account.passive'),
+            self::DELETED => __('admin/global.account.deleted'),
         };
     }
 
@@ -47,13 +47,13 @@ enum AccountStatus: int
     {
         switch ($type) {
             case self::ACTIVE->value:
-                return "Aktif";
+                return __('admin/global.account.active');
             case self::DRAFT->value:
-                return "Duraklatılmış";
+                return __('admin/global.account.draft');
             case self::PASSIVE->value:
-                return "Dondurulmuş";
+                return __('admin/global.account.passive');
             case self::DELETED->value:
-                return "Silinmiş";
+                return __('admin/global.account.deleted');
             default:
                 throw new \Exception('Invalid type');
         }
