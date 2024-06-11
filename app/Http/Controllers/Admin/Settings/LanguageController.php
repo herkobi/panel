@@ -38,7 +38,7 @@ class LanguageController extends Controller
 
     public function index(): View|RedirectResponse
     {
-        if (!auth()->user()->can('language.management')) {
+        if (!auth()->user()?->can('language.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -48,7 +48,7 @@ class LanguageController extends Controller
 
     public function create(): View|RedirectResponse
     {
-        if (!auth()->user()->can('language.create')) {
+        if (!auth()->user()?->can('language.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -57,7 +57,7 @@ class LanguageController extends Controller
 
     public function store(LanguageCreateRequest $request): RedirectResponse
     {
-        if (!auth()->user()->can('language.create')) {
+        if (!auth()->user()?->can('language.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -69,7 +69,7 @@ class LanguageController extends Controller
 
     public function edit($id): View|RedirectResponse
     {
-        if (!auth()->user()->can('language.update')) {
+        if (!auth()->user()?->can('language.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -79,7 +79,7 @@ class LanguageController extends Controller
 
     public function update(LanguageUpdateRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('language.update')) {
+        if (!auth()->user()?->can('language.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -99,7 +99,7 @@ class LanguageController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        if (!auth()->user()->can('language.delete')) {
+        if (!auth()->user()?->can('language.delete')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 

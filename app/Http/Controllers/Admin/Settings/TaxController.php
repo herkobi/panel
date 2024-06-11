@@ -42,7 +42,7 @@ class TaxController extends Controller
 
     public function index(): View|RedirectResponse
     {
-        if (!auth()->user()->can('tax.management')) {
+        if (!auth()->user()?->can('tax.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -52,7 +52,7 @@ class TaxController extends Controller
 
     public function create(): View|RedirectResponse
     {
-        if (!auth()->user()->can('tax.create')) {
+        if (!auth()->user()?->can('tax.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -62,7 +62,7 @@ class TaxController extends Controller
 
     public function store(TaxCreateRequest $request): RedirectResponse
     {
-        if (!auth()->user()->can('tax.create')) {
+        if (!auth()->user()?->can('tax.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -74,7 +74,7 @@ class TaxController extends Controller
 
     public function edit($id): View|RedirectResponse
     {
-        if (!auth()->user()->can('tax.update')) {
+        if (!auth()->user()?->can('tax.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -85,7 +85,7 @@ class TaxController extends Controller
 
     public function update(TaxUpdateRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('tax.update')) {
+        if (!auth()->user()?->can('tax.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -105,7 +105,7 @@ class TaxController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        if (!auth()->user()->can('tax.delete')) {
+        if (!auth()->user()?->can('tax.delete')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 

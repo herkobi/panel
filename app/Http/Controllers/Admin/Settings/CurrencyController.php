@@ -38,7 +38,7 @@ class CurrencyController extends Controller
 
     public function index(): View|RedirectResponse
     {
-        if (!auth()->user()->can('currency.management')) {
+        if (!auth()->user()?->can('currency.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -48,7 +48,7 @@ class CurrencyController extends Controller
 
     public function create(): View|RedirectResponse
     {
-        if (!auth()->user()->can('currency.create')) {
+        if (!auth()->user()?->can('currency.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -57,7 +57,7 @@ class CurrencyController extends Controller
 
     public function store(CurrencyCreateRequest $request): RedirectResponse
     {
-        if (!auth()->user()->can('currency.create')) {
+        if (!auth()->user()?->can('currency.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -69,7 +69,7 @@ class CurrencyController extends Controller
 
     public function edit($id): View|RedirectResponse
     {
-        if (!auth()->user()->can('currency.update')) {
+        if (!auth()->user()?->can('currency.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -79,7 +79,7 @@ class CurrencyController extends Controller
 
     public function update(CurrencyUpdateRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('currency.update')) {
+        if (!auth()->user()?->can('currency.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -99,7 +99,7 @@ class CurrencyController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        if (!auth()->user()->can('currency.delete')) {
+        if (!auth()->user()?->can('currency.delete')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 

@@ -39,7 +39,7 @@ class CountryController extends Controller
 
     public function index(GetAll $countries): View|RedirectResponse
     {
-        if (!auth()->user()->can('location.management')) {
+        if (!auth()->user()?->can('location.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -51,7 +51,7 @@ class CountryController extends Controller
 
     public function create(): View|RedirectResponse
     {
-        if (!auth()->user()->can('location.create')) {
+        if (!auth()->user()?->can('location.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -60,7 +60,7 @@ class CountryController extends Controller
 
     public function store(CountryCreateRequest $request): RedirectResponse
     {
-        if (!auth()->user()->can('location.create')) {
+        if (!auth()->user()?->can('location.create')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -72,7 +72,7 @@ class CountryController extends Controller
 
     public function edit($id): View|RedirectResponse
     {
-        if (!auth()->user()->can('location.update')) {
+        if (!auth()->user()?->can('location.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -82,7 +82,7 @@ class CountryController extends Controller
 
     public function update(CountryUpdateRequest $request, $id): RedirectResponse
     {
-        if (!auth()->user()->can('location.update')) {
+        if (!auth()->user()?->can('location.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -102,7 +102,7 @@ class CountryController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        if (!auth()->user()->can('location.delete')) {
+        if (!auth()->user()?->can('location.delete')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 

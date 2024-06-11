@@ -20,7 +20,7 @@ class PaymentController extends Controller
 
     public function index(): View|RedirectResponse
     {
-        if (!auth()->user()->can('gateway.management')) {
+        if (!auth()->user()?->can('gateway.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 

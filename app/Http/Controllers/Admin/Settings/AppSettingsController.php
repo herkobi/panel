@@ -27,7 +27,7 @@ class AppSettingsController extends Controller
 
     public function app(): View|RedirectResponse
     {
-        if (!auth()->user()->can('app.management')) {
+        if (!auth()->user()?->can('app.management')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
@@ -36,7 +36,7 @@ class AppSettingsController extends Controller
 
     public function update(AppSettingsUpdateRequest $request): RedirectResponse
     {
-        if (!auth()->user()->can('app.update')) {
+        if (!auth()->user()?->can('app.update')) {
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
