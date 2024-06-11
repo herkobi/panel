@@ -24,13 +24,14 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">{{ __('admin/gateways/cc/update.page.title') }}</h1>
+                            <h1 class="card-title">{{ __('admin/gateways/paytr/update.page.title') }}</h1>
                         </div>
                         <form action="{{ route('panel.gateways.paytr.update', $paytr->id) }}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Durum</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/paytr/update.form.status.label') }}</label>
                                     <div class="col">
                                         <div>
                                             @foreach (Status::cases() as $type)
@@ -49,37 +50,43 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Hesap Adı</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/paytr/update.form.name.label') }}</label>
                                     <div class="col">
                                         <input type="text" name="title"
                                             class="form-control @error('title') is-invalid @enderror"
                                             value="{{ $paytr->title ? $paytr->title : old('title') }}"
-                                            placeholder="Hesap Adı">
+                                            placeholder="{{ __('admin/gateways/paytr/update.form.name.placeholder') }}">
                                         @error('title')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Ödeme sistemi için bir isim giriniz. Örnek:
-                                            Eft/Havale Ödeme</small>
+                                        <small
+                                            class="form-hint">{{ __('admin/gateways/paytr/update.form.name.helper') }}</small>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Açıklama</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/paytr/update.form.desc.label') }}</label>
                                     <div class="col">
                                         <input type="text" name="desc"
                                             class="form-control @error('desc') is-invalid @enderror"
-                                            value="{{ $paytr->desc ? $paytr->desc : old('desc') }}" placeholder="Açıklama">
+                                            value="{{ $paytr->desc ? $paytr->desc : old('desc') }}"
+                                            placeholder="{{ __('admin/gateways/paytr/update.form.desc.placeholder') }}">
                                         @error('desc')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Ödeme adımında gösterilecek açıklama metni</small>
+                                        <small
+                                            class="form-hint">{{ __('admin/gateways/paytr/update.form.desc.helper') }}</small>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label required">Para Birimi</label>
+                                    <label
+                                        class="col-3 col-form-label required">{{ __('admin/gateways/paytr/update.form.currency.label') }}</label>
                                     <div class="col">
                                         <select class="form-select shadow-none @error('currency_id') is-invalid @enderror"
                                             name="currency_id">
-                                            <option>Lütfen Seçiniz</option>
+                                            <option>{{ __('admin/gateways/paytr/update.form.currency.placeholder') }}
+                                            </option>
                                             @foreach ($currencies as $currency)
                                                 <option value="{{ $currency->id }}"
                                                     {{ $currency->id == $paytr->currency_id ? 'selected' : '' }}>
@@ -89,14 +96,17 @@
                                         @error('currency_id')
                                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                         @enderror
-                                        <small class="form-hint">Hesabın ait olduğu para birimini seçiniz.</small>
+                                        <small
+                                            class="form-hint">{{ __('admin/gateways/paytr/update.form.currency.helper') }}</small>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-3 col-form-label">Hesap Bilgileri</label>
+                                    <label
+                                        class="col-3 col-form-label">{{ __('admin/gateways/paytr/update.form.cc.section') }}</label>
                                     <div class="col">
                                         <div class="mb-3 row">
-                                            <label class="col-form-label required">Mağaza No</label>
+                                            <label
+                                                class="col-form-label required">{{ __('admin/gateways/paytr/update.form.cc.account.label') }}</label>
                                             <div class="col">
                                                 <input type="text" name="merchant_id"
                                                     class="form-control @error('merchant_id') is-invalid @enderror"
@@ -105,11 +115,13 @@
                                                 @error('merchant_id')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Mağazaya ait numarayı giriniz</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/paytr/update.form.cc.account.helper') }}</small>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label class="col-form-label required">Mağaza Parolası</label>
+                                            <label
+                                                class="col-form-label required">{{ __('admin/gateways/paytr/update.form.cc.key.label') }}</label>
                                             <div class="col">
                                                 <input type="text" name="merchant_key"
                                                     class="form-control @error('merchant_key') is-invalid @enderror"
@@ -118,11 +130,13 @@
                                                 @error('merchant_key')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Mağaza parolasını giriniz</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/paytr/update.form.cc.key.helper') }}</small>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label class="col-form-label required">Mağaza Gizli Anahtar</label>
+                                            <label
+                                                class="col-form-label required">{{ __('admin/gateways/paytr/update.form.cc.secret.label') }}</label>
                                             <div class="col">
                                                 <input type="text" name="merchant_salt"
                                                     class="form-control @error('merchant_salt') is-invalid @enderror"
@@ -131,11 +145,13 @@
                                                 @error('merchant_salt')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Mağaza gizli anahtar bilgisini giriniz</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/paytr/update.form.cc.secret.helper') }}</small>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label class="col-form-label required">Başarılı Dönüş Adresi</label>
+                                            <label
+                                                class="col-form-label required">{{ __('admin/gateways/paytr/update.form.cc.success.url') }}</label>
                                             <div class="col">
                                                 <input type="text" name="merchant_ok_url"
                                                     class="form-control @error('merchant_ok_url') is-invalid @enderror"
@@ -144,12 +160,13 @@
                                                 @error('merchant_ok_url')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Ödeme başarılı olduğunda gösterilecek
-                                                    sayfa</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/paytr/update.form.cc.success.url.helper') }}</small>
                                             </div>
                                         </div>
                                         <div class="mb-3 row">
-                                            <label class="col-form-label required">Hatalı Dönüş Adresi</label>
+                                            <label
+                                                class="col-form-label required">{{ __('admin/gateways/paytr/update.form.cc.wrong.url') }}</label>
                                             <div class="col">
                                                 <input type="text" name="merchant_fail_url"
                                                     class="form-control @error('merchant_fail_url') is-invalid @enderror"
@@ -158,14 +175,16 @@
                                                 @error('merchant_fail_url')
                                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                                 @enderror
-                                                <small class="form-hint">Ödeme hatalı olduğunda gösterilecek sayfa</small>
+                                                <small
+                                                    class="form-hint">{{ __('admin/gateways/paytr/update.form.cc.wrong.url.helper') }}</small>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer text-end">
-                                <button type="submit" class="btn btn-success">Güncelle</button>
+                                <button type="submit"
+                                    class="btn btn-success">{{ __('admin/gateways/paytr/update.form.cc.update.button') }}</button>
                             </div>
                         </form>
                     </div>
