@@ -25,7 +25,7 @@
                     <div class="col-12 col-md-9 d-flex flex-column">
                         <div class="card-body px-5">
                             <h2 class="profile-section-title border-bottom fw-normal pb-3 mb-5">Kişisel Bilgiler</h2>
-                            <form action="{{ route('panel.profile.update') }}" method="POST" class="form mb-5">
+                            <form action="{{ route('app.profile.update') }}" method="POST" class="form mb-5">
                                 @csrf
                                 <div class="row mb-3">
                                     <label class="col-3 col-form-label required">Ad Soyad</label>
@@ -144,7 +144,7 @@
                                     </div>
                                 </div>
                             </form>
-                            <form action="{{ route('panel.profile.password.update') }}" method="post">
+                            <form action="{{ route('app.profile.password.update') }}" method="post">
                                 @csrf
                                 <div class="row mb-3">
                                     <div class="col">
@@ -226,7 +226,7 @@
                     <h5 class="modal-title">Kullanıcı Bilgileri</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('panel.profile.email.update', $user->id) }}" method="POST">
+                <form action="{{ route('app.profile.email.update', $user->id) }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()))
