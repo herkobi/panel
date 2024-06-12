@@ -15,11 +15,18 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'userpanel'])->
         Route::get('/passive', 'passive')->name('passive');
     });
 
+    /**
+     * Profil Yönetimi
+     */
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'index')->name('profile');
+        Route::get('/profile/two-factor-authentication', 'twofactor')->name('profile.twofactor');
+        Route::get('/profile/activity', 'activity')->name('profile.activity');
+        Route::get('/profile/auth-logs', 'authlogs')->name('profile.authlogs');
+
+        Route::post('/profile/update', 'updateProfile')->name('profile.update');
+        Route::post('/profile/email', 'updateEmail')->name('profile.email.update');
+        Route::post('/profile/password', 'updatePassword')->name('profile.password.update');
     });
 
-    Route::controller(TwoFactorAuthenticationController::class)->group(function () {
-        Route::get('/two-factor-authentication', 'index')->name('twofactor');
-    });
 });
