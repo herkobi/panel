@@ -4,8 +4,8 @@
         <div class="container">
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
-                    'subtitle' => 'Herkobi',
-                    'title' => 'Profil Bilgileri',
+                    'subtitle' => config('panel.title'),
+                    'title' => __('admin/profile/profile.main.title'),
                 ])
             </div>
         </div>
@@ -16,7 +16,7 @@
                 <div class="row g-0">
                     <div class="col-12 col-md-3 border-end">
                         <div class="card-body">
-                            <h4 class="subheader">Profil Bilgileri</h4>
+                            <h4 class="subheader">{{ __('admin/profile/profile.page.title') }}</h4>
                             <div class="list-group list-group-transparent">
                                 @include('admin.profile.partials.navigation')
                             </div>

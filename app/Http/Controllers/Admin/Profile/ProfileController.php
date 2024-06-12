@@ -54,8 +54,8 @@ class ProfileController extends Controller
         $user = $this->getUser->execute(auth()->user()?->id);
         $updated = $this->updateProfile->execute($user->id, $request->validated());
         return $updated
-            ? Redirect::back()->with('success', 'Profil bilgilerini başarılı bir şekilde güncellendi.')
-            : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+            ? Redirect::back()->with('success', __('admin/profile/profile.profile.update.success'))
+            : Redirect::back()->with('error', __('admin/profile/profile.profile.update.error'));
     }
 
     public function updateEmail(EmailUpdateRequest $request): RedirectResponse
@@ -63,8 +63,8 @@ class ProfileController extends Controller
         $user = $this->getUser->execute(auth()->user()?->id);
         $updated = $this->updateEmail->execute($user->id, $request->validated());
         return $updated
-            ? Redirect::back()->with('success', 'E-posta adresiniz başarılı bir şekilde güncellendi.')
-            : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+            ? Redirect::back()->with('success', __('admin/profile/profile.email.update.success'))
+            : Redirect::back()->with('error', __('admin/profile/profile.email.update.error'));
     }
 
     public function updatePassword(PasswordUpdateRequest $request): RedirectResponse
@@ -72,8 +72,8 @@ class ProfileController extends Controller
         $user = $this->getUser->execute(auth()->user()?->id);
         $updated = $this->updatePassword->execute($user->id, $request->validated());
         return $updated
-            ? Redirect::back()->with('success', 'Şifreniz başarılı bir şekilde güncellendi.')
-            : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
+            ? Redirect::back()->with('success', __('admin/profile/profile.password.update.success'))
+            : Redirect::back()->with('error', __('admin/profile/profile.password.update.error'));
     }
 
     public function twofactor(): View
