@@ -11,14 +11,10 @@
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 
-<body class="auth">
-    <div class="wrapper align-items-center justify-content-center auth-wrapper">
+<body class="d-flex flex-column bg-white auth">
+    <div class="row g-0 flex-fill">
         @yield('content')
     </div>
-    <footer class="footer-area text-center pt-5 pb-3">
-        <a href="#" class="text-decoration-none text-muted small">Gizlilik Politikası</a> - <a href="#"
-            class="text-decoration-none text-muted small">Kullanım Sözleşmesi</a>
-    </footer>
     <script>
         /*
          * Show/Hide Password

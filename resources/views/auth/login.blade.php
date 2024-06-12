@@ -1,64 +1,98 @@
 @extends('layouts.auth')
 @section('content')
-<div class="card rounded-0 border-0 bg-white auth-card">
-    <div class="card-body px-4 py-4">
-        <div class="card-logo text-center mb-4">
-            <img src="{{asset('herkobi.png')}}" class="img-fluid" alt="Herkobi Panel">
-        </div>
-        <div class="card-text mb-3">
-            <span>Oturum açmak için aşağıdaki forma bilgilerinizi giriniz.</span>
-            @if(session('status'))
-            <div class="alert alert-success alert-dismissible fade show rounded-0 shadow-none my-2" role="alert">
-                {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="col-12 col-lg-6 col-xl-4 border-top-wide border-primary d-flex flex-column justify-content-center">
+        <div class="container container-tight my-5 px-lg-5">
+            <div class="mb-4">
+                <a href="{{ route('login') }}" class="navbar-brand navbar-brand-autodark">
+                    <img src="{{ asset('herkobi.png') }}" height="56" alt="Herkobi Panel">
+                </a>
             </div>
-            @endif
-        </div>
-        <div class="card-form">
-            <form method="POST" action="{{route('login')}}" autocomplete="off">
-                @csrf
-                <div class="mb-2">
-                    <div class="input-group">
-                        <span class="input-group-text rounded-0 shadow-none bg-white">
-                            <i class="ri-mail-check-line"></i>
-                        </span>
-                        <input type="email" id="emailaddress" placeholder="E-posta Adresiniz" class="form-control border-start-0 rounded-0 shadow-none @error('email') is-invalid @enderror" name="email" required autocomplete="off">
-                        @error('email')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
-                    </div>
-                </div>
-                <div class="mb-2">
-                    <div class="input-group">
-                        <span class="input-group-text rounded-0 shadow-none bg-white">
-                            <i class="ri-lock-password-line"></i>
-                        </span>
-                        <input type="password" id="password" placeholder="Şifreniz" class="form-control border-start-0 border-end-0 rounded-0 shadow-none @error('password') is-invalid @enderror" name="password" required autocomplete="off">
-                        <span class="input-group-text rounded-0 shadow-none bg-white" onclick="password_show_hide();">
-                            <i class="ri-eye-off-line showpassword"></i>
-                            <i class="ri-eye-line hidepassword d-none"></i>
-                        </span>
-                        @error('password')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
-                    </div>
-                </div>
-                <div class="mb-2">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <div class="form-check text-start mb-0">
-                            <input class="form-check-input rounded-0 shadow-none" name="remember" type="checkbox" id="remember" >
-                            <label class="form-check-label" for="remember">Beni Hatırla</label>
+            <h2 class="h3 mb-3">Oturum Aç</h2>
+            @if (session('status'))
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <div class="d-flex">
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
+                                <path d="M12 8v4"></path>
+                                <path d="M12 16h.01"></path>
+                            </svg>
                         </div>
-                        <a class="btn btn-link text-decoration-none shadow-none text-muted p-0 password-reset" title="Şifremi Unuttum" href="{{ route('password.request') }}">Şifremi Unuttum</a>
+                        <div>
+                            {{ session('status') }}
+                        </div>
+                    </div>
+                    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                </div>
+            @endif
+            <form action="{{ route('login') }}" method="POST" autocomplete="off">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label">E-posta Adresi</label>
+                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                        placeholder="E-posta Adresiniz" autocomplete="off" required>
+                    @error('email')
+                        <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">
+                        Şifre
+                        <span class="form-label-description">
+                            <a href="{{ route('password.request') }}" title="Şifremi Unuttum" class="small">Şifremi
+                                Unuttum</a>
+                        </span>
+                    </label>
+                    <div class="input-group input-group-flat">
+                        <input type="password" id="password" name="password"
+                            class="form-control @error('password') is-invalid @enderror" placeholder="Şifreniz"
+                            autocomplete="off" required>
+                        <span class="input-group-text" onclick="password_show_hide();" data-bs-toggle="tooltip"
+                            aria-label="Show password" data-bs-original-title="Show password">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-eye showpassword pointer">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path
+                                    d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off hidepassword pointer d-none">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+                                <path
+                                    d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
+                                <path d="M3 3l18 18" />
+                            </svg>
+                        </span>
+                        @error('password')
+                            <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-lg btn-primary w-100 rounded-0 shadow-none text-white">
-                        <i class="ri-check-double-line"></i>
-                        <span>Oturum Aç</span>
-                    </button>
+                <div class="mb-2">
+                    <label class="form-check">
+                        <input type="checkbox" name="remember" class="form-check-input" />
+                        <span class="form-check-label">Beni Hatırla</span>
+                    </label>
                 </div>
-                <div class="mb-3 text-center">
-                    <a class="btn btn-link text-decoration-none text-muted shadow-none" title="Üye Ol" href="{{ route('register') }}"><i class="ri-user-add-line"></i> Üye Ol</a>
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary w-100">Oturum Aç</button>
                 </div>
             </form>
+            <div class="text-center text-secondary mt-3">
+                <a href="{{ route('register') }}" title="Üye Ol" tabindex="-1">Üye Ol</a>
+            </div>
         </div>
     </div>
-</div>
+    <div class="col-12 col-lg-6 col-xl-8 d-none d-lg-block">
+        <div class="bg-cover h-100 min-vh-100" style="background-image: url({{ asset('auth.jpg') }})"></div>
+    </div>
 @endsection

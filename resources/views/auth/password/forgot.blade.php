@@ -1,45 +1,64 @@
-@extends('layouts.auth')
+@extends('layouts.auth-password')
 @section('content')
-<div class="card rounded-0 border-0 bg-white auth-card">
-    <div class="card-body px-4 py-4">
-        <div class="card-logo text-center mb-4">
-            <img src="{{asset('herkobi.png')}}" class="img-fluid" alt="Herkobi Panel">
-        </div>
-        <div class="card-text mb-3">
-            <span>Şifrenizi yenilemek için aşağıdaki forma e-posta adresinizi giriniz.</span>
-            @if (session('status'))
-            <div class="alert alert-success my-2" role="alert">
-                {{ session('status') }}
-            </div>
-            @endif
-        </div>
-        <div class="card-form">
-            <form method="POST" action="{{route('password.email')}}" autocomplete="off">
-                @csrf
-                <div class="mb-2">
-                    <div class="input-group">
-                        <span class="input-group-text rounded-0 shadow-none bg-white">
-                            <i class="ri-mail-check-line"></i>
-                        </span>
-                        <input type="email" id="emailaddress" placeholder="E-posta Adresiniz" class="form-control border-start-0 rounded-0 shadow-none @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="off">
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+    <div class="page page-center">
+        <div class="container container-tight py-4">
+            <div class="card card-md">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <img src="{{ asset('herkobi.png') }}" alt="Herkobi" height="56">
                     </div>
+                    <h2 class="h3 mb-3">Şifre Yenile</h2>
+                    <p class="text-muted mb-3">Şifrenizi yenilemek için aşağıdaki forma e-posta adresinizi giriniz.</p>
+                    @if (session('status'))
+                        <div class="alert alert-success alert-dismissible mb-3" role="alert">
+                            <div class="d-flex">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24"
+                                        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
+                                        <path d="M12 8v4"></path>
+                                        <path d="M12 16h.01"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    {{ session('status') }}
+                                </div>
+                            </div>
+                            <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                        </div>
+                    @endif
+                    <form class="form" action="{{ route('password.email') }}" method="POST" autocomplete="off">
+                        @csrf
+                        <div class="mb-2">
+                            <label class="form-label">E-posta Adresi</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+                                value="{{ $email ?? old('email') }}" placeholder="E-posta Adresiniz" autocomplete="off"
+                                required>
+                            @error('email')
+                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-footer">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
+                                    <path d="M3 7l9 6l9 -6" />
+                                </svg>
+                                Şifremi Sıfırla
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="mb-2">
-                    <button type="submit" class="btn btn-lg btn-primary w-100 rounded-0 shadow-none text-white">
-                        <i class="ri-check-double-line"></i>
-                        <span>Şifremi Yenile</span>
-                    </button>
-                </div>
-                <div class="mb-3 text-center">
-                    <a class="btn btn-link text-decoration-none shadow-none text-muted" title="Oturum Aç" href="{{ route('login') }}"><i class="ri-user-follow-line"></i> Oturum Aç</a>
-                </div>
-            </form>
+            </div>
+            <div class="text-center text-muted mt-3">
+                <a href="{{ route('login') }}">Oturum Aç</a>
+            </div>
         </div>
     </div>
-</div>
 @endsection

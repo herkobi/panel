@@ -2,32 +2,31 @@
 
 namespace App\Models;
 
-use App\Enums\UserStatus;
+use App\Enums\AccountStatus;
 use App\Enums\UserType;
-use App\Models\Usertag;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Haruncpi\LaravelUserActivity\Traits\Loggable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-
     protected $fillable = [
         'type',
         'status',
         'name',
+        'surname',
+        'title',
+        'about',
         'email',
         'email_verified_at',
         'password',
@@ -37,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'terms',
         'last_login_at',
         'last_login_ip',
+        'agent',
     ];
 
     /**
@@ -50,23 +50,23 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'email_verified_at' => 'datetime',
-        'last_login_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'status' => UserStatus::class,
-        'type' => UserType::class,
-        'settings' => 'array',
-    ];
-
-    public function usertags()
+    protected function casts(): array
     {
-        return $this->belongsToMany(Usertag::class)->withTimestamps();
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'last_login_at' => 'datetime',
+            'status' => AccountStatus::class,
+            'type' => UserType::class,
+            'settings' => 'array',
+            'agent' => 'array'
+        ];
     }
+
 }
