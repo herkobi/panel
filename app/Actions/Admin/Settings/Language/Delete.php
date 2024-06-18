@@ -29,5 +29,6 @@ class Delete
     {
         $language = $this->postService->delete($id);
         event(new Deleted($language));
+        return $language;
     }
 }

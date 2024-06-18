@@ -30,5 +30,6 @@ class Delete
         $page = $this->postService->getById($id);
         $this->postService->delete($id);
         event(new Deleted($page));
+        return $page;
     }
 }

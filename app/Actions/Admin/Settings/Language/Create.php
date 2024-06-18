@@ -29,5 +29,6 @@ class Create
     {
         $language = $this->postService->create($data);
         event(new Created($language));
+        return $language;
     }
 }

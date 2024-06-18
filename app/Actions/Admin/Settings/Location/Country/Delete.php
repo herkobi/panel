@@ -29,5 +29,6 @@ class Delete
     {
         $country = $this->postService->delete($id);
         event(new Deleted($country));
+        return $country;
     }
 }

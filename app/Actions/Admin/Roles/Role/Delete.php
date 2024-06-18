@@ -29,5 +29,6 @@ class Delete
     {
         $role = $this->postService->delete($id);
         event(new Deleted($role));
+        return $role;
     }
 }

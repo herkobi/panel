@@ -29,5 +29,6 @@ class Create
     {
         $state = $this->postService->create($data);
         event(new Created($state));
+        return $state;
     }
 }

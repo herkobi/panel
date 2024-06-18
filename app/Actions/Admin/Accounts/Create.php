@@ -27,8 +27,8 @@ class Create
      */
     public function execute(array $data)
     {
-        $user = $this->postService->create($data);
-        event(new Created($user));
-        return $user;
+        $account = $this->postService->create($data);
+        event(new Created($account));
+        return $account;
     }
 }

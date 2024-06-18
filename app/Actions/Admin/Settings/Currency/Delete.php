@@ -29,5 +29,6 @@ class Delete
     {
         $currency = $this->postService->delete($id);
         event(new Deleted($currency));
+        return $currency;
     }
 }

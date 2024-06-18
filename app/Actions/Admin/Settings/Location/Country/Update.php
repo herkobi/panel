@@ -29,8 +29,9 @@ class Update
     public function execute($id, array $data)
     {
         $oldTitle = $this->postService->getById($id);
-        $this->postService->update($id, $data);
+        $country = $this->postService->update($id, $data);
         $newTitle = $this->postService->getById($id);
         event(new Updated($oldTitle, $newTitle));
+        return $country;
     }
 }

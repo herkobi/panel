@@ -29,5 +29,6 @@ class Delete
     {
         $tax = $this->postService->delete($id);
         event(new Deleted($tax));
+        return $tax;
     }
 }

@@ -16,6 +16,10 @@ class Service extends BaseService
 
     protected function prepareData(array $data, string $action = 'create'): array
     {
+        if(($action === 'create') ||  ($action === 'update')) {
+            $data["slug"] = Str::slug($data["title"] ?? '', '-');
+        }
+
         return $data;
     }
 

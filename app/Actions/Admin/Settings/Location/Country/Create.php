@@ -29,5 +29,6 @@ class Create
     {
         $country = $this->postService->create($data);
         event(new Created($country));
+        return $country;
     }
 }
