@@ -33,6 +33,14 @@ Kullanıcı Adı: admin@admin.com
 Kullanıcı Adı: user@user.com
 Şifre: password
 
+### 15 Temmuz 2024 Beta 2
+
+-   Paket güncelleme,
+-   Role ve izin yönetimi düzenleme,
+-   User kullanımı için trait tanımlama
+-   Ön yüz için düzenleme
+-   Hata ve tasarım düzeltmeleri
+
 ### Yol Haritası
 
 -   Çeviriler tamamlanacak
