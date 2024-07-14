@@ -2,7 +2,6 @@
 
 namespace App\Events\Admin\Settings\Tax;
 
-use App\Models\Tax;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

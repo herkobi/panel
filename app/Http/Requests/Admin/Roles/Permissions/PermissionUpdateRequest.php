@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Admin\Roles\Permissions;
 
+use App\Enums\UserType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class PermissionUpdateRequest extends FormRequest
 {
@@ -23,9 +25,10 @@ class PermissionUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent_id' => ['integer', 'required'],
-            'name' => ['required', Rule::unique('permissions', 'name')->ignore($this->permission, 'id')],
-            'desc' => 'required',
+            'type' => ['required', 'integer', new Enum(UserType::class)],
+            'parent_id' => ['required', 'integer'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('permissions', 'name')->ignore($this->permission, 'id')],
+            'desc' => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -37,11 +40,14 @@ class PermissionUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'type.required' => 'Lütfen kullanıcı türü seçiniz',
             'parent_id.required' => 'Lütfen izin türünü giriniz',
             'parent_id.integer' => 'Lütfen geçerli bir izin türü giriniz',
             'name.required' => 'Lütfen izin kodunu giriniz',
             'name.unique' => 'Bu isimde girilmiş izin kodu bulunmaktadır',
+            'name.max' => 'Lütfen daha kısa isim giriniz',
             'desc.required' => 'Lütfen izin açıklamasını giriniz',
+            'desc.max' => 'Lütfen daha kısa açıklama giriniz',
         ];
     }
 }

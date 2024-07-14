@@ -2,7 +2,6 @@
 
 namespace App\Events\Admin\Roles\Permission;
 
-use App\Models\Permission;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

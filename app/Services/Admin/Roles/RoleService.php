@@ -56,21 +56,22 @@ class RoleService extends BaseService
         });
     }
 
-    public function permissions(): Collection
+    public function permissions(int $id): Collection
     {
-        return $this->permissionModel->with('children')->where('parent_id', 0)->get();
+        $role = $this->getById($id);
+        return $this->permissionModel->with('children')->where('parent_id', 0)->where('type', $role->type)->get();
     }
 
     public function syncPermissions(int $id, $request)
     {
-    $role = $this->getById($id);
-    $permissionIds = (array)$request->input('permission', []);
+        $role = $this->getById($id);
+        $permissionIds = (array)$request->input('permission', []);
 
-    // İzin ID'lerini `Permission` modellerine çevirin ve isimlerini alın
-    $permissionNames = $this->permissionModel->whereIn('id', $permissionIds)->pluck('name')->toArray();
+        // İzin ID'lerini `Permission` modellerine çevirin ve isimlerini alın
+        $permissionNames = $this->permissionModel->whereIn('id', $permissionIds)->pluck('name')->toArray();
 
-    // İzinleri role'a senkronize edin
-    return $role->syncPermissions($permissionNames);
+        // İzinleri role'a senkronize edin
+        return $role->syncPermissions($permissionNames);
     }
 
 }

@@ -9,7 +9,7 @@
                 ])
                 @include('admin.roles.roles.partials.page-buttons', [
                     'first_button' => 'İzinler',
-                    'first_link' => 'panel.permissions',
+                    'first_link' => 'panel.permissions.admin',
                 ])
             </div>
         </div>
@@ -31,6 +31,25 @@
                             <div class="card-body">
                                 <div class="mb-3 row">
                                     <label class="col-3 col-form-label required">İzin Türü</label>
+                                    <div class="col">
+                                        <div>
+                                            @foreach (UserType::cases() as $type)
+                                                <label class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="type"
+                                                        value="{{ $type->value }}"
+                                                        {{ 1 == $type->value ? 'checked' : '' }}>
+                                                    <span
+                                                        class="form-check-label">{{ UserType::getTitle($type->value) }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                        @error('type')
+                                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-3 col-form-label required">İzin Kapsamı</label>
                                     <div class="col">
                                         <div>
                                             <select name="parent_id" class="form-select">

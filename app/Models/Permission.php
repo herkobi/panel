@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserType;
 use App\Traits\HasDefaultPagination;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Permission\Models\Permission as PermissionModel;
@@ -17,6 +18,7 @@ class Permission extends PermissionModel
 
     protected $fillable = [
         'parent_id',
+        'type',
         'name',
         'desc',
         'guard_name'
@@ -27,6 +29,7 @@ class Permission extends PermissionModel
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'type' => UserType::class,
         ];
     }
 
@@ -40,7 +43,7 @@ class Permission extends PermissionModel
         return $this->hasMany(Permission::class, 'parent_id');
     }
 
-    protected static $logAttributes = ['name', 'text', 'guard_name'];
+    protected static $logAttributes = ['parent_id', 'type', 'name', 'desc'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -54,7 +57,7 @@ class Permission extends PermissionModel
     public function tapActivity(Activity $activity, string $eventName)
     {
         $userName = auth()->user()?->name .' '.auth()->user()?->surname ?? "Panel User";
-        $pageTitle = $this->title;
+        $pageTitle = $this->name;
 
         if ($eventName === 'created') {
             $activity->description = "{$userName}, {$pageTitle} isimli yeni izin ekledi.";

@@ -58,7 +58,6 @@ class PageUpdateRequest extends FormRequest
              * Desc Messages
              */
             'text.required' => __('admin/pages/request.text.required'),
-
         ];
     }
 

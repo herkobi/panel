@@ -2,7 +2,6 @@
 
 namespace App\Events\Admin\Settings\Location\Country;
 
-use App\Models\Country;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

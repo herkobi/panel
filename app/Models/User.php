@@ -6,8 +6,11 @@ use App\Enums\AccountStatus;
 use App\Enums\UserType;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
@@ -67,6 +70,47 @@ class User extends Authenticatable implements MustVerifyEmail
             'settings' => 'array',
             'agent' => 'array'
         ];
+    }
+
+    /**
+     * Get the user site.
+     */
+    public function site(): HasOne
+    {
+        return $this->hasOne(Site::class);
+    }
+
+    /**
+     * Get the user's menu.
+     */
+    public function menus(): HasMany
+    {
+        return $this->hasMany(Menu::class);
+    }
+    
+    /**
+     * Get the user place.
+     */
+    public function place(): HasOne
+    {
+        return $this->hasOne(Place::class);
+    }
+
+    /**
+     * İlişkili Dosyaların Silinmesi
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            $user->menus->each(function ($menu) {
+                $menu->delete();
+            });
+
+            // Klasörleri silme işlemi
+            Storage::deleteDirectory('public/site-' . $user->site->id);
+        });
     }
 
 }

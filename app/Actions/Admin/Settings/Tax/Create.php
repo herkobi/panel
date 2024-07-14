@@ -29,5 +29,6 @@ class Create
     {
         $tax = $this->postService->create($data);
         event(new Created($tax));
+        return $tax;
     }
 }

@@ -42,6 +42,12 @@
                                                 @if ($user->status->value == 1)
                                                     <span
                                                         class="badge bg-green text-green-fg">{{ AccountStatus::title($user->status) }}</span>
+                                                @elseif ($user->status->value == 2)
+                                                    <span
+                                                        class="badge bg-info text-info-fg">{{ AccountStatus::title($user->status) }}</span>
+                                                @elseif ($user->status->value == 3)
+                                                    <span
+                                                        class="badge bg-secondary text-secondary-fg">{{ AccountStatus::title($user->status) }}</span>
                                                 @else
                                                     <span
                                                         class="badge bg-red text-red-fg">{{ AccountStatus::title($user->status) }}</span>

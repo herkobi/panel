@@ -29,5 +29,6 @@ class Create
     {
         $permission = $this->postService->create($data);
         event(new Created($permission));
+        return $permission;
     }
 }

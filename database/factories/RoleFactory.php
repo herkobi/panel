@@ -58,4 +58,21 @@ class RoleFactory extends Factory
             ];
         });
     }
+
+    /**
+     * Define demo role.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function demoRole()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'name' => 'Demo',
+                'type' => UserType::USER,
+                'desc' => 'Kullanıcı rolü',
+                'guard_name' => 'web'
+            ];
+        });
+    }
 }

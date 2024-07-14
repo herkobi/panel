@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
-Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])->prefix('panel')->name('panel.')->group(function () {
+Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel', 'accountstatus'])->prefix('panel')->name('panel.')->group(function () {
 
     /**
      * Admin Başlangıç
@@ -292,7 +292,8 @@ Route::middleware(['auth', 'auth.session', 'system', 'verified', 'adminpanel'])-
      * İzin Yönetimi
      */
     Route::controller(PermissionController::class)->group(function(){
-        Route::get('/permissions', 'index')->name('permissions');
+        Route::get('/permissions', 'index')->name('permissions.admin');
+        Route::get('/permissions/user', 'user')->name('permissions.user');
         Route::get('/permission.create', 'create')->name('permission.create');
         Route::post('/permission/create/store', 'store')->name('permission.create.store');
         Route::get('/permission/edit/{permission}', 'edit')->name('permission.edit');

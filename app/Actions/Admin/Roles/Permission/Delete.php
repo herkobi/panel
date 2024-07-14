@@ -29,5 +29,6 @@ class Delete
     {
         $permission = $this->postService->delete($id);
         event(new Deleted($permission));
+        return $permission;
     }
 }

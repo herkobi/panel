@@ -29,5 +29,6 @@ class Create
     {
         $page = $this->postService->create($data);
         event(new Created($page));
+        return $page;
     }
 }

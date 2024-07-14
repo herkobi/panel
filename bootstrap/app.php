@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'adminpanel' => \App\Http\Middleware\Admin::class,
             'userpanel' => \App\Http\Middleware\User::class,
             'system' => \App\Http\Middleware\System::class,
+            'accountstatus' => \App\Http\Middleware\CheckAccountStatus::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
@@ -29,4 +30,5 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();

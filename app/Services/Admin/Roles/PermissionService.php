@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin\Roles;
 
+use App\Enums\UserType;
 use App\Services\Admin\BaseService;
 use App\Models\Permission;
 use Illuminate\Support\Collection;
@@ -23,9 +24,14 @@ class PermissionService extends BaseService
         return $data;
     }
 
-    public function allPermissions(): Collection
+    public function adminPermissions(): Collection
     {
-        return $this->model->with('children')->where('parent_id', 0)->get();
+        return $this->model->with('children')->where('parent_id', 0)->where('type', UserType::ADMIN)->get();
+    }
+
+    public function userPermissions(): Collection
+    {
+        return $this->model->with('children')->where('parent_id', 0)->where('type', UserType::USER)->get();
     }
 
     public function mainPermissions(): Collection

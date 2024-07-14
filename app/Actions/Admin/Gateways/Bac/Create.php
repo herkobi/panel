@@ -29,5 +29,6 @@ class Create
     {
         $bac = $this->postService->create($data); // Hesap bilgisini oluştur
         event(new Created($bac));
+        return $bac;
     }
 }

@@ -10,6 +10,7 @@
         "laravel/fortify": "^1.21",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
+        "maatwebsite/excel": "^3.1",
         "rap2hpoutre/laravel-log-viewer": "*",
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-health": "^1.28",

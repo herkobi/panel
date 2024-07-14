@@ -29,5 +29,6 @@ class Create
     {
         $role = $this->postService->create($data);
         event(new Created($role));
+        return $role;
     }
 }

@@ -27,7 +27,9 @@ class Delete
      */
     public function execute($id)
     {
-        $bac = $this->postService->delete($id); // Hesap Bilgisini sil
+        $bac = $this->postService->getById($id);
+        $this->postService->delete($id); // Hesap Bilgisini sil
         event(new Deleted($bac)); // Deleted olayını yayınla
+        return $bac;
     }
 }

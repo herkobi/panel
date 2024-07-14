@@ -27,7 +27,9 @@ class Delete
      */
     public function execute($id)
     {
-        $country = $this->postService->delete($id);
+        $country = $this->postService->getById($id);
+        $this->postService->delete($id);
         event(new Deleted($country));
+        return $country;
     }
 }

@@ -27,7 +27,9 @@ class Delete
      */
     public function execute($id)
     {
-        $currency = $this->postService->delete($id);
+        $currency = $this->postService->getById($id);
+        $this->postService->delete($id);
         event(new Deleted($currency));
+        return $currency;
     }
 }

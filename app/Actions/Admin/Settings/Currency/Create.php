@@ -29,5 +29,6 @@ class Create
     {
         $currency = $this->postService->create($data);
         event(new Created($currency));
+        return $currency;
     }
 }

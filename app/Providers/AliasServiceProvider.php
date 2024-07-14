@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Jenssegers\Agent\Facades\Agent;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AliasServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,7 @@ class AliasServiceProvider extends ServiceProvider
         $loader->alias('UserType', \App\Enums\UserType::class);
         $loader->alias('Carbon', Carbon::class);
         $loader->alias('Agent', Agent::class);
+        $loader->alias('Excel', Excel::class);
     }
 
     /**

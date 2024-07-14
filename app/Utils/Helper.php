@@ -2,8 +2,10 @@
 
 namespace App\Utils;
 
+use App\Models\Currency;
 use DateTimeZone;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class Helper
 {
@@ -82,6 +84,42 @@ class Helper
             'g:i:s a',
             'H:i',
         ];
+    }
+
+    /**
+     * Format a price according to the currency settings.
+     *
+     * @param float $amount
+     * @param string $currencyCode
+     * @return string
+     */
+    public static function formatPrice($amount, $currencyCode)
+    {
+        // Retrieve currency settings from the database
+        $currency = Currency::where('code', $currencyCode)->firstOrFail();
+
+        // Extract currency settings
+        $symbol = $currency->symbol;
+        $symbolLocation = $currency->symbol_location;
+        $thousandSep = $currency->thousand_sep;
+        $decimalSep = $currency->decimal_sep;
+        $decimalNumber = $currency->decimal_number;
+
+        // Format the amount
+        $formattedAmount = number_format($amount, $decimalNumber, $decimalSep, $thousandSep);
+
+        // Place the symbol according to the symbol_location setting
+        if ($symbolLocation == 'left') {
+            return $symbol . $formattedAmount;
+        } elseif ($symbolLocation == 'left_space') {
+            return $symbol . ' ' . $formattedAmount;
+        } elseif ($symbolLocation == 'right') {
+            return $formattedAmount . $symbol;
+        } elseif ($symbolLocation == 'right_space') {
+            return $formattedAmount . ' ' . $symbol;
+        }
+
+        return $formattedAmount;
     }
 
 }
