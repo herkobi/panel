@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('permissions', function (Blueprint $table) {
             $table->unsignedBigInteger('parent_id')->default(0)->after('id');
+            $table->tinyInteger('type')->default(1)->after('parent_id');
             $table->string('desc')->after('name');
         });
     }

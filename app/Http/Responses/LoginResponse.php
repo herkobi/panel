@@ -13,7 +13,7 @@ class LoginResponse implements LoginResponseContract
      * Kullanıcı türü ve durumuna göre yönlendirme
      *
      * Kullanıcı türü admin ise /panel/admin
-     * Kullanıcı türü user ise /panel url değerine yönlendirir.
+     * Kullanıcı türü user ise /app url değerine yönlendirir.
      *
      * Kullanıcı aktifse normal ekranı pasifse /passive urlsine yönlendirir
      *
@@ -22,12 +22,28 @@ class LoginResponse implements LoginResponseContract
      */
     public function toResponse($request)
     {
-        if (Auth::check() && Auth::user()->type == UserType::ADMIN) {
-            $home = Auth::user()->status == AccountStatus::PASSIVE ? '/panel/passive' : '/panel';
-        } else {
-            $home = Auth::user()->status == AccountStatus::PASSIVE ? '/app/passive' : '/app';
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            switch ($user->status) {
+                case AccountStatus::ACTIVE:
+                case AccountStatus::DRAFT:
+                    $home = $user->type == UserType::ADMIN ? '/panel' : '/app';
+                    break;
+                case AccountStatus::PASSIVE:
+                    $home = $user->type == UserType::ADMIN ? '/panel/passive' : '/app/passive';
+                    break;
+                case AccountStatus::DELETED:
+                    Auth::logout();
+                    return redirect('/login')->withErrors(['email' => 'Girmiş olduğunuz bilgilere ait hesap bulunmamaktadır..']);
+                default:
+                    Auth::logout();
+                    return redirect('/login')->withErrors(['email' => 'Girmiş olduğunuz bilgilere ait hesap bulunmamaktadır.']);
+            }
+
+            return redirect()->intended($home);
         }
 
-        return redirect()->intended($home);
+        return redirect('/login');
     }
 }

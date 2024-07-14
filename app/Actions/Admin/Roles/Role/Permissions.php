@@ -23,9 +23,9 @@ class Permissions
      *
      * @return mixed Yetki listesi
      */
-    public function execute()
+    public function execute(int $id)
     {
-        $roles = $this->postService->permissions();
+        $roles = $this->postService->permissions($id);
         return $roles;
     }
 }

@@ -27,7 +27,8 @@ class Delete
      */
     public function execute($id)
     {
-        $role = $this->postService->delete($id);
+        $role = $this->postService->getById($id);
+        $this->postService->delete($id);
         event(new Deleted($role));
         return $role;
     }

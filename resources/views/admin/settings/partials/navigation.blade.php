@@ -79,7 +79,13 @@
         </div>
     @endif
     @if (auth()->user()->can('role.management') &&
-            !request()->routeIs(['panel.roles', 'panel.role.*', 'panel.permissions', 'panel.permission.*']))
+            !request()->routeIs([
+                'panel.roles',
+                'panel.role.*',
+                'panel.permissions.admin',
+                'panel.permissions.user',
+                'panel.permission.*',
+            ]))
         <div class="dropdown-menu panel-dropdown shadow-none">
             <span class="dropdown-header">Yetki ve İzinler</span>
             <a class="dropdown-item" href="{{ route('panel.roles') }}" title="Yetkiler">
@@ -100,7 +106,17 @@
                 Yetkiler
             </a>
             @if (auth()->user()->can('permission.management'))
-                <a class="dropdown-item" href="{{ route('panel.permissions') }}" title="İzinler">
+                <a class="dropdown-item" href="{{ route('panel.permissions.user') }}" title="İzinler">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
+                        <path d="M4 14l8 -3l8 3" />
+                    </svg>
+                    Kullanıcı İzinleri
+                </a>
+                <a class="dropdown-item" href="{{ route('panel.permissions.admin') }}" title="İzinler">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon dropdown-item-icon" width="24"
                         height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -109,7 +125,7 @@
                         <path d="M22 16c0 4 -2.5 6 -3.5 6s-3.5 -2 -3.5 -6c1 0 2.5 -.5 3.5 -1.5c1 1 2.5 1.5 3.5 1.5z" />
                         <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
                     </svg>
-                    İzinler
+                    Yönetici İzinleri
                 </a>
             @endif
         </div>

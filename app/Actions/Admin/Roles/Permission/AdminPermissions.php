@@ -4,7 +4,7 @@ namespace App\Actions\Admin\Roles\Permission;
 
 use App\Services\Admin\Roles\PermissionService as Service;
 
-class AllPermissions
+class AdminPermissions
 {
     protected $postService;
 
@@ -25,7 +25,7 @@ class AllPermissions
      */
     public function execute()
     {
-        $permissions = $this->postService->allPermissions();
+        $permissions = $this->postService->adminPermissions();
         return $permissions;
     }
 }

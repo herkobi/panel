@@ -2,7 +2,6 @@
 
 namespace App\Events\Admin\Settings\Location\State;
 
-use App\Models\State;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

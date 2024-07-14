@@ -90,6 +90,4 @@ class AppService extends BaseService
         $favicon->storeAs('public/favicon', $favicon_name);
         $data['favicon'] = $favicon_name;
     }
-
-
 }

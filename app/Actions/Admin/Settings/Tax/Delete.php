@@ -27,7 +27,8 @@ class Delete
      */
     public function execute($id)
     {
-        $tax = $this->postService->delete($id);
+        $tax = $this->postService->getById($id);
+        $this->postService->delete($id);
         event(new Deleted($tax));
         return $tax;
     }

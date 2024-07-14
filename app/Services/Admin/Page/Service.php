@@ -19,7 +19,7 @@ class Service extends BaseService
         if(($action === 'create') ||  ($action === 'update')) {
             $data["slug"] = Str::slug($data["title"] ?? '', '-');
         }
-
+        
         return $data;
     }
 

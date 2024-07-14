@@ -82,7 +82,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * Define another language.
+     * Define normal user.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
@@ -95,7 +95,7 @@ class UserFactory extends Factory
                 'name' => 'Normal',
                 'surname' => 'User',
                 'title' => 'Kullanıcı',
-                'about' => 'Kullanıcı hesabı',
+                'about' => 'Normal kullanıcı hesabı',
                 'settings' => json_encode([
                     'language' => config('panel.language'),
                     'timezone' => config('panel.timezone'),
@@ -103,6 +103,134 @@ class UserFactory extends Factory
                     'timeformat' => config('panel.timeformat'),
                 ]),
                 'email' => 'user@user.com',
+                'email_verified_at' => now(),
+                'password' => static::$password ??= Hash::make('password'),
+                'remember_token' => Str::random(10),
+                'terms' => true,
+                'created_by' => 0,
+                'created_by_name' => 'Owner'
+            ];
+        });
+    }
+
+    /**
+     * Define draft user.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function draftUser()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => AccountStatus::DRAFT,
+                'type' => UserType::USER,
+                'name' => 'Draft',
+                'surname' => 'User',
+                'title' => 'Dondurulmuş',
+                'about' => 'Dondurulmuş hesap',
+                'settings' => json_encode([
+                    'language' => config('panel.language'),
+                    'timezone' => config('panel.timezone'),
+                    'dateformat' => config('panel.dateformat'),
+                    'timeformat' => config('panel.timeformat'),
+                ]),
+                'email' => 'draft@site.com',
+                'email_verified_at' => now(),
+                'password' => static::$password ??= Hash::make('password'),
+                'remember_token' => Str::random(10),
+                'terms' => true,
+                'created_by' => 0,
+                'created_by_name' => 'Owner'
+            ];
+        });
+    }
+
+    /**
+     * Define draft user.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function passiveUser()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => AccountStatus::PASSIVE,
+                'type' => UserType::USER,
+                'name' => 'Passive',
+                'surname' => 'User',
+                'title' => 'Duraklatılmış',
+                'about' => 'Duraklatılmış hesap',
+                'settings' => json_encode([
+                    'language' => config('panel.language'),
+                    'timezone' => config('panel.timezone'),
+                    'dateformat' => config('panel.dateformat'),
+                    'timeformat' => config('panel.timeformat'),
+                ]),
+                'email' => 'passive@user.com',
+                'email_verified_at' => now(),
+                'password' => static::$password ??= Hash::make('password'),
+                'remember_token' => Str::random(10),
+                'terms' => true,
+                'created_by' => 0,
+                'created_by_name' => 'Owner'
+            ];
+        });
+    }
+
+    /**
+     * Define deleted user.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function deletedUser()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => AccountStatus::DELETED,
+                'type' => UserType::USER,
+                'name' => 'Deleted',
+                'surname' => 'User',
+                'title' => 'Silinmiş',
+                'about' => 'Silinmiş hesap',
+                'settings' => json_encode([
+                    'language' => config('panel.language'),
+                    'timezone' => config('panel.timezone'),
+                    'dateformat' => config('panel.dateformat'),
+                    'timeformat' => config('panel.timeformat'),
+                ]),
+                'email' => 'deleted@user.com',
+                'email_verified_at' => now(),
+                'password' => static::$password ??= Hash::make('password'),
+                'remember_token' => Str::random(10),
+                'terms' => true,
+                'created_by' => 0,
+                'created_by_name' => 'Owner'
+            ];
+        });
+    }
+
+    /**
+     * Define demo user.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function demoUser()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => AccountStatus::ACTIVE,
+                'type' => UserType::USER,
+                'name' => 'Demo',
+                'surname' => 'User',
+                'title' => 'Demo',
+                'about' => 'Demo kullanıcı hesabı',
+                'settings' => json_encode([
+                    'language' => config('panel.language'),
+                    'timezone' => config('panel.timezone'),
+                    'dateformat' => config('panel.dateformat'),
+                    'timeformat' => config('panel.timeformat'),
+                ]),
+                'email' => 'demo@user.com',
                 'email_verified_at' => now(),
                 'password' => static::$password ??= Hash::make('password'),
                 'remember_token' => Str::random(10),

@@ -27,7 +27,8 @@ class Delete
      */
     public function execute($id)
     {
-        $language = $this->postService->delete($id);
+        $language = $this->postService->getById($id);
+        $this->postService->delete($id);
         event(new Deleted($language));
         return $language;
     }

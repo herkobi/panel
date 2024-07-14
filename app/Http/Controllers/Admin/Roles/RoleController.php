@@ -207,7 +207,7 @@ class RoleController extends Controller
 
         $role = $this->getOne->execute($id);
         $rolePermissions = $this->detail->execute($role->id);
-        $permissions = $this->permissions->execute();
+        $permissions = $this->permissions->execute($id);
         return view('admin.roles.roles.detail', [
             'role' => $role,
             'rolePermissions' => $rolePermissions,

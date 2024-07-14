@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin\Roles;
 use App\Http\Controllers\Controller;
 use App\Actions\Admin\Roles\Permission\Create;
 use App\Actions\Admin\Roles\Permission\Delete;
-use App\Actions\Admin\Roles\Permission\AllPermissions;
+use App\Actions\Admin\Roles\Permission\AdminPermissions;
+use App\Actions\Admin\Roles\Permission\UserPermissions;
 use App\Actions\Admin\Roles\Permission\GetOne;
 use App\Actions\Admin\Roles\Permission\MainPermissions;
 use App\Actions\Admin\Roles\Permission\Update;
@@ -18,7 +19,8 @@ use Illuminate\View\View;
 class PermissionController extends Controller
 {
 
-    private $allPermissions;
+    private $adminPermissions;
+    private $userPermissions;
     private $mainPermissions;
     private $getOne;
     private $create;
@@ -26,14 +28,16 @@ class PermissionController extends Controller
     private $delete;
 
     public function __construct(
-        AllPermissions $allPermissions,
+        AdminPermissions $adminPermissions,
+        UserPermissions $userPermissions,
         MainPermissions $mainPermissions,
         GetOne $getOne,
         Create $create,
         Update $update,
         Delete $delete
     ) {
-        $this->allPermissions = $allPermissions;
+        $this->adminPermissions = $adminPermissions;
+        $this->userPermissions = $userPermissions;
         $this->mainPermissions = $mainPermissions;
         $this->getOne = $getOne;
         $this->create = $create;
@@ -47,8 +51,20 @@ class PermissionController extends Controller
             return Redirect::back()->with('error', __('admin/global.permission.error'));
         }
 
-        $permissions = $this->allPermissions->execute();
+        $permissions = $this->adminPermissions->execute();
         return view('admin.roles.permissions.index', [
+            'permissions' => $permissions
+        ]);
+    }
+
+    public function user(): View|RedirectResponse
+    {
+        if (!auth()->user()->can('permission.management')) {
+            return Redirect::back()->with('error', __('admin/global.permission.error'));
+        }
+
+        $permissions = $this->userPermissions->execute();
+        return view('admin.roles.permissions.user', [
             'permissions' => $permissions
         ]);
     }
@@ -84,7 +100,7 @@ class PermissionController extends Controller
 
         $created = $this->create->execute($request->validated());
         return $created
-                ? Redirect::route('panel.permissions')->with('success', 'İzin başarılı bir şekilde eklendi.')
+                ? Redirect::back()->with('success', 'İzin başarılı bir şekilde eklendi.')
                 : Redirect::back()->with('error', 'İzin eklenirken bir sorun oluştu. Lütfen tekrar deneyiniz.');
     }
 
@@ -146,7 +162,7 @@ class PermissionController extends Controller
         }
 
         if (count($permission->roles) > 0) {
-            return Redirect::back()->with('error', 'Lütfen öncelikle izine tanımlı olduğu yetkileri kaldırınız');
+            return Redirect::back()->with('error', 'Lütfen öncelikle izne tanımlı olan yetkileri kaldırınız');
         }
 
         if (count($permission->children) > 0) {

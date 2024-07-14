@@ -2,7 +2,6 @@
 
 namespace App\Events\Admin\Roles\Role;
 
-use App\Models\Role;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

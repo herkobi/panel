@@ -5,11 +5,11 @@
             <div class="row g-2 align-items-center">
                 @include('admin.layout.page-header', [
                     'subtitle' => 'Herkobi',
-                    'title' => 'İzinler',
+                    'title' => 'Yönetici İzinleri',
                 ])
                 @include('admin.roles.permissions.partials.page-buttons', [
-                    'first_button' => 'İzinler',
-                    'first_link' => 'panel.permissions',
+                    'first_button' => 'Yönetici İzinleri',
+                    'first_link' => 'panel.permissions.admin',
                     'second_button' => 'Yeni İzin Ekle',
                     'second_link' => 'panel.permission.create',
                 ])
@@ -26,7 +26,7 @@
                 <div class="col-lg-9">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="card-title">Kullanıcı İzinleri</h1>
+                            <h1 class="card-title">Yönetici İzinleri</h1>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
