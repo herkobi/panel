@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Admin\Tools;
 
+use App\Actions\Admin\Cache\Cache;
+use App\Actions\Admin\Cache\Config;
+use App\Actions\Admin\Cache\Optimize;
+use App\Actions\Admin\Cache\Route;
+use App\Actions\Admin\Cache\View as CacheView;
 use App\Http\Controllers\Controller;
-use App\Actions\Admin\Tools\Cache\ClearCache;
-use App\Actions\Admin\Tools\Cache\ClearConfig;
-use App\Actions\Admin\Tools\Cache\ClearOptimize;
-use App\Actions\Admin\Tools\Cache\ClearRoute;
-use App\Actions\Admin\Tools\Cache\ClearView;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class CacheController extends Controller
 {
-
     private $clearCache;
     private $clearConfig;
     private $clearOptimize;
@@ -22,11 +22,11 @@ class CacheController extends Controller
     private $clearView;
 
     public function __construct(
-        ClearCache $clearCache,
-        ClearConfig $clearConfig,
-        ClearOptimize $clearOptimize,
-        ClearRoute $clearRoute,
-        ClearView $clearView,
+        Cache $clearCache,
+        Config $clearConfig,
+        Optimize $clearOptimize,
+        Route $clearRoute,
+        CacheView $clearView,
     ) {
         $this->clearCache = $clearCache;
         $this->clearConfig = $clearConfig;
@@ -35,13 +35,9 @@ class CacheController extends Controller
         $this->clearView = $clearView;
     }
 
-    public function index(): View|RedirectResponse
+    public function index(): View
     {
-        if (!auth()->user()->can('tools.cache.management')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
-        }
-
-        return view('admin.tools.cache.index');
+        return view('admin.tools.cache');
     }
 
     /**
@@ -51,10 +47,6 @@ class CacheController extends Controller
      */
     public function cache(): RedirectResponse
     {
-        if (!auth()->user()->can('tools.cache.cache')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
-        }
-
         $cleared = $this->clearCache->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Uygulama önbelliği başarılı bir şekilde temizlendi')
@@ -68,10 +60,6 @@ class CacheController extends Controller
      */
     public function optimize(): RedirectResponse
     {
-        if (!auth()->user()->can('tools.cache.optimize')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
-        }
-
         $cleared = $this->clearOptimize->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Uygulamaya, rota, yapılandırma ve görünüm önbelleği başarılı bir şekilde temizlendi')
@@ -85,10 +73,6 @@ class CacheController extends Controller
      */
     public function view(): RedirectResponse
     {
-        if (!auth()->user()->can('tools.cache.view')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
-        }
-
         $cleared = $this->clearView->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Görünüm önbelliği başarılı bir şekilde temizlendi')
@@ -102,10 +86,6 @@ class CacheController extends Controller
      */
     public function route(): RedirectResponse
     {
-        if (!auth()->user()->can('tools.cache.route')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
-        }
-
         $cleared = $this->clearRoute->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Rota önbelliği başarılı bir şekilde temizlendi')
@@ -119,10 +99,6 @@ class CacheController extends Controller
      */
     public function config(): RedirectResponse
     {
-        if (!auth()->user()->can('tools.cache.config')) {
-            return Redirect::back()->with('error', __('admin/global.permission.error'));
-        }
-
         $cleared = $this->clearConfig->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Yapılandırma önbelliği başarılı bir şekilde temizlendi')

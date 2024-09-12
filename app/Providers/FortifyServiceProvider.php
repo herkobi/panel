@@ -3,24 +3,18 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
-use App\Actions\Fortify\RedirectIfTwoFactorConfirmed;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Actions\Fortify\DisableTwoFactorAuthentication as ReallyDisableTwoFactorAuthentication;
+use App\Http\Responses\LoginResponse;
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use Laravel\Fortify\Contracts\TwoFactorLoginResponse as TwoFactorLoginResponseContract;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
-use App\Http\Responses\LoginResponse;
-use Laravel\Fortify\Actions\AttemptToAuthenticate;
-use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
-use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
-use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
-use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
-use Laravel\Fortify\Contracts\TwoFactorLoginResponse as TwoFactorLoginResponseContract;
-use Laravel\Fortify\Features;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -71,31 +65,17 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
-        Fortify::authenticateThrough(function(){
-            return array_filter([
-                config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
-                Features::enabled(Features::twoFactorAuthentication()) ? RedirectIfTwoFactorConfirmed::class : null,
-                AttemptToAuthenticate::class,
-                PrepareAuthenticatedSession::class,
-            ]);
-        });
-
-        $this->app->bind(DisableTwoFactorAuthentication::class, function(){
-            return new ReallyDisableTwoFactorAuthentication();
-        });
-
         RateLimiter::for('login', function (Request $request) {
-            $email = (string) $request->email;
-            return Limit::perMinute(5)->by($email.$request->ip());
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+
+            return Limit::perMinute(5)->by($throttleKey);
         });
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-        //active-draft-passive route
         $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
         $this->app->singleton(TwoFactorLoginResponseContract::class, LoginResponse::class);
-
     }
 }

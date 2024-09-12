@@ -4,19 +4,18 @@ namespace App\Models;
 
 use App\Enums\AccountStatus;
 use App\Enums\UserType;
+use App\Traits\HasDefaultPagination;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
-use Spatie\Permission\Traits\HasRoles;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, HasUuids, HasDefaultPagination;
+
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -28,18 +27,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'status',
         'name',
         'surname',
-        'title',
-        'about',
         'email',
         'email_verified_at',
         'password',
-        'settings',
-        'created_by',
-        'created_by_name',
         'terms',
         'last_login_at',
         'last_login_ip',
         'agent',
+        'created_by',
+        'created_by_name',
+        'terms'
     ];
 
     /**
@@ -67,50 +64,23 @@ class User extends Authenticatable implements MustVerifyEmail
             'last_login_at' => 'datetime',
             'status' => AccountStatus::class,
             'type' => UserType::class,
-            'settings' => 'array',
-            'agent' => 'array'
+            'agent' => 'array',
+            'terms' => 'boolean'
         ];
     }
 
-    /**
-     * Get the user site.
-     */
-    public function site(): HasOne
+    public function meta()
     {
-        return $this->hasOne(Site::class);
+        return $this->hasOne(UserMeta::class);
     }
 
-    /**
-     * Get the user's menu.
-     */
-    public function menus(): HasMany
+    public function authlogs()
     {
-        return $this->hasMany(Menu::class);
-    }
-    
-    /**
-     * Get the user place.
-     */
-    public function place(): HasOne
-    {
-        return $this->hasOne(Place::class);
+        return $this->hasMany(Authlog::class);
     }
 
-    /**
-     * İlişkili Dosyaların Silinmesi
-     */
-    protected static function boot()
+    public function activities()
     {
-        parent::boot();
-
-        static::deleting(function ($user) {
-            $user->menus->each(function ($menu) {
-                $menu->delete();
-            });
-
-            // Klasörleri silme işlemi
-            Storage::deleteDirectory('public/site-' . $user->site->id);
-        });
+        return $this->hasMany(Activity::class, 'user_id');
     }
-
 }

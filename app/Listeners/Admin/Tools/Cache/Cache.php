@@ -2,23 +2,41 @@
 
 namespace App\Listeners\Admin\Tools\Cache;
 
+use App\Models\Activity;
+use App\Services\LoggingService;
 use App\Events\Admin\Tools\Cache\Cache as Event;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Carbon;
+use App\Traits\LogActivity;
 
 class Cache
 {
+    use LogActivity;
+
+    protected $loggingService;
+    protected $activity;
+
+    public function __construct(LoggingService $loggingService, Activity $activity)
+    {
+        $this->loggingService = $loggingService;
+        $this->activity = $activity;
+    }
+
     public function handle(Event $event)
     {
-        $user = Auth::user();
-        $time = Carbon::now()->toDateTimeString();
-        $ipAddress = request()->ip();
+        $this->loggingService->logUserAction(
+            'cache.cleared',
+            $event->clearedBy,
+            null,
+            []
+        );
 
-        Log::info("Cache cleared by {$user->name}", [
-            'user_id' => $user->id,
-            'time' => $time,
-            'ip_address' => $ipAddress
+        Activity::create([
+            'message' => 'cache.cleared',
+            'log' => $this->logActivity(
+                ' user cleared cache.',
+                $event->clearedBy,
+                null,
+                []
+            ),
         ]);
     }
 }

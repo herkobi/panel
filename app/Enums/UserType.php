@@ -1,41 +1,31 @@
 <?php
 
-/**
- * Kullanıcı türlerini tanımlamak için kullanılan ENUM dosyası.
- * ADMIN: Yöneticileri tanımlamak için,
- * USER: Kullanıcıları tanımlamak için kullanılır.
- */
-
 namespace App\Enums;
 
 enum UserType: int
 {
-    case ADMIN = 1;
-    case USER = 2;
+    case SUPER = 1;
+    case ADMIN = 2;
+    case USER = 3;
+    case DEMO = 4;
 
-    /**
-     * İlgili alanlarda kullanılması için değerlere atanan başlık
-     */
-    public static function title($title): string
+    public function title(): string
     {
-        return match ($title) {
-            self::ADMIN => __('admin/global.user.type.admin'),
-            self::USER => __('admin/global.user.type.user'),
+        return match ($this) {
+            self::SUPER => 'SUPER ADMIN',
+            self::ADMIN => 'ADMIN',
+            self::USER => 'USER',
+            self::DEMO => 'DEMO',
         };
     }
 
-    /**
-     * Başlığa üstteki yapının dışında erişilmesini sağlar
-     */
-    public static function getTitle($type)
+    public static function fromValue(int $value): ?self
     {
-        switch ($type) {
-            case self::ADMIN->value:
-                return __('admin/global.user.type.admin');
-            case self::USER->value:
-                return __('admin/global.user.type.user');
-            default:
-                throw new \Exception('Invalid type');
+        foreach (self::cases() as $status) {
+            if ($status->value === $value) {
+                return $status;
+            }
         }
+        return null;
     }
 }

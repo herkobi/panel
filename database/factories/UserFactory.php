@@ -28,32 +28,19 @@ class UserFactory extends Factory
 
         return [
             'status' => AccountStatus::ACTIVE,
-            'type' => UserType::ADMIN,
+            'type' => UserType::SUPER,
             'name' => 'Super',
             'surname' => 'User',
-            'title' => 'Super',
-            'about' => 'En üst düzey yönetici hesabı',
-            'settings' => json_encode([
-                'language' => config('panel.language'),
-                'timezone' => config('panel.timezone'),
-                'dateformat' => config('panel.dateformat'),
-                'timeformat' => config('panel.timeformat'),
-            ]),
             'email' => 'super@super.com',
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'terms' => true,
             'created_by' => 0,
-            'created_by_name' => 'Owner'
+            'created_by_name' => 'Owner',
+            'terms' => true
         ];
     }
 
-    /**
-     * Define another language.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function adminUser()
     {
         return $this->state(function (array $attributes) {
@@ -62,21 +49,13 @@ class UserFactory extends Factory
                 'type' => UserType::ADMIN,
                 'name' => 'Admin',
                 'surname' => 'User',
-                'title' => 'Yönetici',
-                'about' => 'Ana yönetici hesabı',
-                'settings' => json_encode([
-                    'language' => config('panel.language'),
-                    'timezone' => config('panel.timezone'),
-                    'dateformat' => config('panel.dateformat'),
-                    'timeformat' => config('panel.timeformat'),
-                ]),
                 'email' => 'admin@admin.com',
                 'email_verified_at' => now(),
                 'password' => static::$password ??= Hash::make('password'),
                 'remember_token' => Str::random(10),
-                'terms' => true,
                 'created_by' => 0,
-                'created_by_name' => 'Owner'
+                'created_by_name' => 'Owner',
+                'terms' => true
             ];
         });
     }
@@ -94,21 +73,13 @@ class UserFactory extends Factory
                 'type' => UserType::USER,
                 'name' => 'Normal',
                 'surname' => 'User',
-                'title' => 'Kullanıcı',
-                'about' => 'Normal kullanıcı hesabı',
-                'settings' => json_encode([
-                    'language' => config('panel.language'),
-                    'timezone' => config('panel.timezone'),
-                    'dateformat' => config('panel.dateformat'),
-                    'timeformat' => config('panel.timeformat'),
-                ]),
                 'email' => 'user@user.com',
                 'email_verified_at' => now(),
                 'password' => static::$password ??= Hash::make('password'),
                 'remember_token' => Str::random(10),
-                'terms' => true,
                 'created_by' => 0,
-                'created_by_name' => 'Owner'
+                'created_by_name' => 'Owner',
+                'terms' => true
             ];
         });
     }
@@ -126,21 +97,13 @@ class UserFactory extends Factory
                 'type' => UserType::USER,
                 'name' => 'Draft',
                 'surname' => 'User',
-                'title' => 'Dondurulmuş',
-                'about' => 'Dondurulmuş hesap',
-                'settings' => json_encode([
-                    'language' => config('panel.language'),
-                    'timezone' => config('panel.timezone'),
-                    'dateformat' => config('panel.dateformat'),
-                    'timeformat' => config('panel.timeformat'),
-                ]),
                 'email' => 'draft@site.com',
                 'email_verified_at' => now(),
                 'password' => static::$password ??= Hash::make('password'),
                 'remember_token' => Str::random(10),
-                'terms' => true,
                 'created_by' => 0,
-                'created_by_name' => 'Owner'
+                'created_by_name' => 'Owner',
+                'terms' => true
             ];
         });
     }
@@ -158,21 +121,13 @@ class UserFactory extends Factory
                 'type' => UserType::USER,
                 'name' => 'Passive',
                 'surname' => 'User',
-                'title' => 'Duraklatılmış',
-                'about' => 'Duraklatılmış hesap',
-                'settings' => json_encode([
-                    'language' => config('panel.language'),
-                    'timezone' => config('panel.timezone'),
-                    'dateformat' => config('panel.dateformat'),
-                    'timeformat' => config('panel.timeformat'),
-                ]),
                 'email' => 'passive@user.com',
                 'email_verified_at' => now(),
                 'password' => static::$password ??= Hash::make('password'),
                 'remember_token' => Str::random(10),
-                'terms' => true,
                 'created_by' => 0,
-                'created_by_name' => 'Owner'
+                'created_by_name' => 'Owner',
+                'terms' => true
             ];
         });
     }
@@ -190,21 +145,13 @@ class UserFactory extends Factory
                 'type' => UserType::USER,
                 'name' => 'Deleted',
                 'surname' => 'User',
-                'title' => 'Silinmiş',
-                'about' => 'Silinmiş hesap',
-                'settings' => json_encode([
-                    'language' => config('panel.language'),
-                    'timezone' => config('panel.timezone'),
-                    'dateformat' => config('panel.dateformat'),
-                    'timeformat' => config('panel.timeformat'),
-                ]),
                 'email' => 'deleted@user.com',
                 'email_verified_at' => now(),
                 'password' => static::$password ??= Hash::make('password'),
                 'remember_token' => Str::random(10),
-                'terms' => true,
                 'created_by' => 0,
-                'created_by_name' => 'Owner'
+                'created_by_name' => 'Owner',
+                'terms' => true
             ];
         });
     }
@@ -219,22 +166,13 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'status' => AccountStatus::ACTIVE,
-                'type' => UserType::USER,
+                'type' => UserType::DEMO,
                 'name' => 'Demo',
                 'surname' => 'User',
-                'title' => 'Demo',
-                'about' => 'Demo kullanıcı hesabı',
-                'settings' => json_encode([
-                    'language' => config('panel.language'),
-                    'timezone' => config('panel.timezone'),
-                    'dateformat' => config('panel.dateformat'),
-                    'timeformat' => config('panel.timeformat'),
-                ]),
                 'email' => 'demo@user.com',
                 'email_verified_at' => now(),
                 'password' => static::$password ??= Hash::make('password'),
                 'remember_token' => Str::random(10),
-                'terms' => true,
                 'created_by' => 0,
                 'created_by_name' => 'Owner'
             ];

@@ -2,15 +2,16 @@
 
 namespace App\Actions\Fortify;
 
-use App\Enums\UserType;
 use App\Enums\AccountStatus;
-use App\Models\Role;
+use App\Enums\UserType;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Illuminate\Support\Str;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -23,7 +24,6 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['required', 'string', 'max:255'],
@@ -38,17 +38,6 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => ['required']
         ])->validate();
 
-        /**
-         * Genel sistem ayarları, userrole ve adminrole değerleri çıkarılarak kullanıcıya aktarılması için
-         * user_settings değişkenine atanıyor ve değer json formatına dönüştürülüyor.
-         */
-        $user_settings = json_encode([
-            'language' => config('panel.language'),
-            'timezone' => config('panel.timezone'),
-            'dateformat' => config('panel.dateformat'),
-            'timeformat' => config('panel.timeformat'),
-        ], JSON_UNESCAPED_SLASHES);
-
         $input['terms'] = $input['terms'] ? '1' : '0';
 
         $user = User::create([
@@ -57,19 +46,28 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'surname' => $input['surname'],
             'email' => $input['email'],
-            'email_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make($input['password']),
             'terms' => $input['terms'],
-            'settings' => $user_settings,
             'created_by' => 0,
             'created_by_name' => 'Owner'
         ]);
 
         /**
-         * Sistem ayarlarındaki kullanıcılara atanacak rol kayıt edilen kullanıcıya aktarılıyor.
+         * Kullanıcı klasörü oluşturuluyor.
          */
-        $role = Role::find(config('panel.userrole'));
-        $user->assignRole($role->id);
+        $folderName = 'user_' . Str::random(12);
+
+        if (!Storage::disk('public')->exists($folderName)) {
+            Storage::disk('public')->makeDirectory($folderName);
+        }
+
+        // User tablosuna user_folder bilgisini ekle
+        $user->meta()->create([
+            'title' => null,
+            'url' => null,
+            'phone' => null,
+            'user_folder' => $folderName
+        ]);
 
         return $user;
     }

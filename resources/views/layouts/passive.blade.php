@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf_token" content="{{ csrf_token() }}">
-    <title>{{ config('panel.title') }}</title>
-    <link rel="shortcut icon" href="{{ asset(config('panel.favicon')) }}" type="image/png">
+    <title>{{ Setting::get('title') }}</title>
+    <link rel="shortcut icon" href="{{ Setting::get('favicon') }}" type="image/png">
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @yield('css')
 </head>
@@ -18,7 +18,7 @@
             <div class="container container-tight py-4">
                 <div class="card-body">
                     <div class="text-center mb-4">
-                        <img src="{{ asset('herkobi.png') }}" alt="Herkobi" height="56">
+                        <img src="{{ Setting::get('logo') }}" alt="{{ Setting::get('title') }}" height="56">
                     </div>
                     <h2 class="h2 mb-3">Hesabınız Dondurulmuştur</h2>
                     <p class="text-muted mb-3">Hesabınız dondurulmuştur, lütfen iletişime geçiniz.</p>
