@@ -17,50 +17,98 @@
                             <h1 class="card-title">Genel Ayarlar</h1>
                         </div>
                     </div>
-                    <form method="POST" action="{{ route('panel.settings.general.update') }}" enctype="multipart/form-data">
-                        @csrf
-                        <div class="card-body">
-                            <div class="row">
+                    <div class="card-body">
+                        <div class="row">
+                            <form method="POST" action="{{ route('panel.settings.general.update') }}"
+                                enctype="multipart/form-data">
+                                @csrf
                                 <div class="col-lg-9 col-md-8">
                                     <div class="row mb-3">
                                         <label class="col-lg-2 col-md-3 col-form-label required">Uygulama Adı</label>
                                         <div class="col-lg-10 col-md-9">
-                                            <input type="text" name="title"
-                                                class="form-control @error('title') is-invalid @enderror"
-                                                aria-describedby="appName" placeholder="Uygulama Adını Giriniz"
-                                                value="{{ old('title', Setting::get('title')) }}">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white border-end-0 pe-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-h-1">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M19 18v-8l-2 2" />
+                                                        <path d="M4 6v12" />
+                                                        <path d="M12 6v12" />
+                                                        <path d="M11 18h2" />
+                                                        <path d="M3 18h2" />
+                                                        <path d="M4 12h8" />
+                                                        <path d="M3 6h2" />
+                                                        <path d="M11 6h2" />
+                                                    </svg>
+                                                </span>
+                                                <input type="text" name="title"
+                                                    class="form-control border-start-0 @error('title') is-invalid @enderror"
+                                                    aria-describedby="appName" placeholder="Uygulama Adını Giriniz"
+                                                    value="{{ old('title', Setting::get('title')) }}" required>
+                                            </div>
+                                            <small class="form-hint">Sayfa başlığında ve diğer alanlarda görülecek adı
+                                                giriniz.</small>
                                             @error('title')
                                                 <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                             @enderror
-                                            <small class="form-hint">Sayfa başlığında ve diğer alanlarda görülecek adı
-                                                giriniz.</small>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-lg-2 col-md-3 col-form-label required">Slogan</label>
                                         <div class="col-lg-10 col-md-9">
-                                            <input type="text" name="slogan"
-                                                class="form-control @error('slogan') is-invalid @enderror"
-                                                placeholder="Slogan" value="{{ old('slogan', Setting::get('slogan')) }}">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white border-end-0 pe-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-quote">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M10 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5" />
+                                                        <path
+                                                            d="M19 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5" />
+                                                    </svg>
+                                                </span>
+                                                <input type="text" name="slogan"
+                                                    class="form-control border-start-0 @error('slogan') is-invalid @enderror"
+                                                    placeholder="Slogan"
+                                                    value="{{ old('slogan', Setting::get('slogan')) }}">
+                                            </div>
+                                            <small class="form-hint">Varsa uygulama sloganınızı giriniz.</small>
                                             @error('slogan')
                                                 <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                             @enderror
-                                            <small class="form-hint">Varsa uygulama sloganınızı giriniz.</small>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-lg-2 col-md-3 col-form-label required">E-posta Adresi</label>
                                         <div class="col-lg-10 col-md-9">
-                                            <input type="text" name="email"
-                                                class="form-control @error('email') is-invalid @enderror"
-                                                aria-describedby="appEmail" placeholder="E-posta Adresi"
-                                                value="{{ old('email', Setting::get('email')) }}">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white border-end-0 pe-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-mail-forward">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M12 18h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7.5" />
+                                                        <path d="M3 6l9 6l9 -6" />
+                                                        <path d="M15 18h6" />
+                                                        <path d="M18 15l3 3l-3 3" />
+                                                    </svg>
+                                                </span>
+                                                <input type="text" name="email"
+                                                    class="form-control border-start-0 @error('email') is-invalid @enderror"
+                                                    aria-describedby="appEmail" placeholder="E-posta Adresi"
+                                                    value="{{ old('email', Setting::get('email')) }}" required>
+                                            </div>
+                                            <small class="form-hint">Sistem üzerindeki bildirimlerin
+                                                gönderileceği e-posta adresi.</small>
                                             @error('slogan')
                                                 <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                             @enderror
-                                            <small class="form-hint">Sistem üzerinden gönderilecek bildirimlerin
-                                                gideceği
-                                                e-posta adresi.</small>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -100,10 +148,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-md-4"></div>
-                            </div>
+                            </form>
+                            <div class="col-lg-3 col-md-4"></div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

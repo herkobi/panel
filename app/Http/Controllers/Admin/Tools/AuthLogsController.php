@@ -20,6 +20,7 @@ class AuthLogsController extends Controller
     public function index(): View|LengthAwarePaginator
     {
         $logs = $this->authLogs->usersAuthLogs();
+        dd($logs);
         return view('admin.tools.userauthlogs', [
             'logs' => $logs
         ]);

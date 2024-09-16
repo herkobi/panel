@@ -36,7 +36,7 @@
                         <div class="mb-3">
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="icon icon-tabler icons-tabler-outline icon-tabler-mail">
@@ -59,7 +59,7 @@
                         <div class="mb-3">
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="icon icon-tabler icons-tabler-outline icon-tabler-key">
@@ -75,7 +75,7 @@
                                 <span class="input-group-text bg-white" onclick="password_show_hide();"
                                     data-bs-toggle="tooltip" aria-label="Şifreyi Göster/Gizle"
                                     data-bs-original-title="Şifreyi Göster/Gizle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="icon icon-tabler icons-tabler-outline icon-tabler-eye hidepassword pointer d-none">
@@ -84,7 +84,7 @@
                                         <path
                                             d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                     </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off showpassword pointer">
@@ -104,7 +104,7 @@
                         <div class="mb-3">
                             <div class="input-group">
                                 <span class="input-group-text bg-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="currentColor"
                                         class="icon icon-tabler icons-tabler-filled icon-tabler-key">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -118,7 +118,7 @@
                                 <span class="input-group-text bg-white" onclick="password_conf_show_hide();"
                                     data-bs-toggle="tooltip" aria-label="Şifreyi Göster/Gizle"
                                     data-bs-original-title="Şifreyi Göster/Gizle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="icon icon-tabler icons-tabler-outline icon-tabler-eye hidepassword_conf pointer d-none">
@@ -127,7 +127,7 @@
                                         <path
                                             d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                     </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round"
                                         class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off showpassword_conf pointer">
@@ -146,7 +146,7 @@
                         </div>
                         <div class="form-footer">
                             <button type="submit" class="btn btn-danger w-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
                                     class="icon icon-tabler icons-tabler-outline icon-tabler-lock-password">

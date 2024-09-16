@@ -57,7 +57,8 @@
                                     <tr>
                                         <td>
                                             <div class="d-block fw-bold">
-                                                {{ $log->user->name . ' ' . $log->user->surname }}</div>
+                                                {{ $log->user->name . ' ' . $log->user->surname }}<br>{{ $log->email }}
+                                            </div>
                                         </td>
                                         <td>{{ $log->user->last_login_at }}<br>{{ $log->user->last_login_ip }}</td>
                                         <td>{{ Carbon::parse($log->user->last_login_at)->diffForHumans() }}</td>

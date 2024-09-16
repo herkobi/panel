@@ -19,7 +19,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="tooltip" data-bs-placement="right"
+                <a class="nav-link {{ request()->routeIs(['panel.accounts', 'panel.accounts.*', 'panel.account.*']) ? 'active' : '' }}"
+                    href="{{ route('panel.accounts') }}" data-bs-toggle="tooltip" data-bs-placement="right"
                     data-bs-title="Hesaplar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
@@ -29,20 +30,6 @@
                         <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                         <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
-                    </svg>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="tooltip" data-bs-placement="right"
-                    data-bs-title="Ödemeler">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
-                        stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-credit-card">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z" />
-                        <path d="M3 10l18 0" />
-                        <path d="M7 15l.01 0" />
-                        <path d="M11 15l2 0" />
                     </svg>
                 </a>
             </li>

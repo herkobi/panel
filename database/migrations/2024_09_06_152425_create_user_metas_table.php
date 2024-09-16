@@ -15,8 +15,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('title')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('url')->nullable();
             $table->string('user_folder')->nullable()->unique();
             $table->timestamps();
 

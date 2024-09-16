@@ -20,8 +20,6 @@ class UserMeta extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'phone',
-        'url',
         'user_folder',
     ];
 
@@ -45,6 +43,7 @@ class UserMeta extends Model
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'social' => 'array'
         ];
     }
 

@@ -13,7 +13,7 @@ class PageCreateRequest extends FormRequest
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'status' => ['required', new Enum(Status::class)],

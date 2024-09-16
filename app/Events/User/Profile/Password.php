@@ -2,19 +2,19 @@
 
 namespace App\Events\User\Profile;
 
-use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class Password
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
+    public $changedBy;
 
-    public function __construct(User $user)
+    public function __construct(Authenticatable $changedBy)
     {
-        $this->user = $user;
+        $this->changedBy = $changedBy;
     }
 }

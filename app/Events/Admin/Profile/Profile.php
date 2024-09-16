@@ -4,6 +4,7 @@ namespace App\Events\Admin\Profile;
 
 use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -11,10 +12,15 @@ class Profile
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
+    public $currentUser;
+    public $oldData;
+    public $newData;
 
-    public function __construct(User $user)
+
+    public function __construct(Authenticatable $currentUser, $oldData, $newData)
     {
-        $this->user = $user;
+        $this->currentUser = $currentUser;
+        $this->oldData = $oldData;
+        $this->newData = $newData;
     }
 }

@@ -22,11 +22,11 @@ class SettingsUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'slogan' => 'required|string|max:255',
-            'email' => 'required|email',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,ico|max:2048',
+            'title' => ['required', 'string', 'max:255'],
+            'slogan' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'favicon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,ico', 'max:2048'],
         ];
     }
 

@@ -1,0 +1,204 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: .90rem;
+    font-style: normal;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-variation-settings: "wdth"100;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f3f4f7), to(#f4f5f7)) no-repeat left center;
+    background: linear-gradient(#f3f4f7 0, #f4f5f7 100%) no-repeat left center;
+}
+
+@media (min-width: 1200px) {
+
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl {
+        max-width: 1140px;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-optical-sizing: auto;
+    font-variation-settings: "wdth"100;
+}
+
+h3 {
+    font-size: 1.1rem;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
+.form-control,
+.form-select,
+.input-group-flat:focus-within,
+.form-check-input:focus {
+    box-shadow: none !important;
+    font-size: .875rem;
+    line-height: 1.75;
+    border-radius: 4px;
+}
+
+.form-switch {
+    padding-left: 0;
+    font-weight: 600;
+}
+
+.form-switch .form-check-input {
+    width: 3em;
+    margin-left: 0;
+    float: right;
+    height: 1.25rem;
+    border-radius: 1rem;
+}
+
+.col-form-label {
+    font-weight: 600;
+}
+
+.input-group:focus-within .input-group-text,
+.input-group:focus-within .form-control {
+    border-color: #86b7fe;
+}
+
+.input-group-text.disabled {
+    background-color: var(--bs-secondary-bg);
+}
+
+.navbar-brand img {
+    width: 160px;
+}
+
+.mw-300 {
+    max-width: 300px;
+}
+
+main {
+    min-height: 600px;
+    height: 100%;
+}
+
+footer img {
+    width: 50px;
+}
+
+.page-title h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    line-height: 1;
+}
+
+.page-content h2 {
+    font-size: 1.15rem;
+}
+
+.page-content .page-menu {
+    background-color: #f8f9fa;
+    padding: .75rem;
+    box-shadow: var(--bs-box-shadow-sm) !important;
+    margin-bottom: 1.25rem;
+}
+
+.page-content .page-menu ul.nav li.nav-item {
+    margin-bottom: 0.25rem !important;
+}
+
+.page-content .page-menu ul.nav li.nav-item:last-child {
+    margin-bottom: 0 !important;
+}
+
+.page-content .page-menu ul.nav li.nav-item a.nav-link {
+    color: #0d6efd;
+    font-weight: 400;
+}
+
+.page-content .page-menu ul.nav li.nav-item a.nav-link:hover,
+.page-content .page-menu ul.nav li.nav-item a.active {
+    background-color: #fff;
+    color: #000;
+    box-shadow: var(--bs-box-shadow-sm) !important;
+}
+
+.page-content .profile-card {
+    background-color: #f8f9fa;
+    padding: .50rem;
+    border-radius: 4px;
+    box-shadow: var(--bs-box-shadow-sm) !important;
+}
+
+.profile-card .profile-info h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.profile-buttons {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    flex-wrap: wrap;
+}
+
+.profile-buttons .btn {
+    line-height: 1;
+    --bs-btn-font-size: .80rem;
+}
+
+.profile-buttons svg {
+    width: 18px;
+    height: 18px;
+}
+
+.profile-content .nav-tabs:first-child {
+    padding-left: 0.75rem;
+}
+
+.profile-content .tab-content {
+    padding: 1rem 0.75rem;
+}
+
+.profile-content .card {
+    border-radius: 4px !important;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #066fd1;
+    background-color: rgba(6, 111, 209, 0.04);
+}
+
+.datagrid {
+    position: relative;
+    width: 100%;
+}
+
+.datagrid-title {
+    font-size: .725rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    line-height: 1rem;
+    margin-bottom: .25rem;
+}

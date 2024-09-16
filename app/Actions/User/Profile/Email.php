@@ -4,9 +4,12 @@ namespace App\Actions\User\Profile;
 
 use App\Events\User\Profile\Email as Event;
 use App\Services\User\Profile\ProfileService as Service;
+use App\Traits\AuthUser;
 
 class Email
 {
+    use AuthUser;
+
     protected $postService;
 
     /**
@@ -17,6 +20,7 @@ class Email
     public function __construct(Service $postService)
     {
         $this->postService = $postService;
+        $this->initializeAuthUser();
     }
 
     /**
@@ -27,8 +31,10 @@ class Email
      */
     public function execute(string $id, array $data)
     {
-        $user = $this->postService->updateEmail($id, $data);
-        event(new Event($user));
-        return $user;
+        $oldMail = $this->postService->getById($id);
+        $this->postService->updateEmail($id, $data);
+        $newMail = $this->postService->getById($id);
+        event(new Event($this->user, $oldMail, $newMail));
+        return $newMail;
     }
 }

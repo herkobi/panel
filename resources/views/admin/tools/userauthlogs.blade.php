@@ -25,7 +25,6 @@
                                     <th class="w-30">Oturum Tarihi</th>
                                     <th class="w-15">Geçen Süre</th>
                                     <th class="w-15">Cihaz Bilgisi</th>
-                                    <th class="w-10"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,7 +56,8 @@
                                     @endphp
                                     <tr>
                                         <td>
-                                            <div class="d-block fw-bold">{{ $log->name . ' ' . $log->surname }}</div>
+                                            <div class="d-block fw-bold">
+                                                {{ $log->name . ' ' . $log->surname }}<br>{{ $log->email }}</div>
                                         </td>
                                         <td>{{ $log->last_login_at }}<br>{{ $log->last_login_ip }}</td>
                                         <td>{{ Carbon::parse($log->last_login_at)->diffForHumans() }}</td>
@@ -84,12 +84,6 @@
                                                         </div>
                                                     </div>">Cihaz
                                                 Bilgisi</button>
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="{{ route('panel.tools.log.detail', $log->id) }}"
-                                                class="btn btn-outline-primary btn-sm" title="Bilgiler">
-                                                Bilgiler
-                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
