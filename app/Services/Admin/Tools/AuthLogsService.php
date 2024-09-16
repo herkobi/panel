@@ -2,70 +2,31 @@
 
 namespace App\Services\Admin\Tools;
 
-use App\Enums\AccountStatus;
-use App\Enums\UserType;
-use App\Services\Admin\BaseService;
-use App\Models\User;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use App\Repositories\AuthLogsRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class AuthLogsService extends BaseService
+class AuthLogsService
 {
+    protected $repository;
 
-    public function __construct(User $model)
+    public function __construct(AuthLogsRepository $repository)
     {
-        $this->model = $model;
+        $this->repository = $repository;
     }
 
-    protected function prepareData(array $data, string $action = 'create'): array
+    public function userAuthLogs(string $id): LengthAwarePaginator
     {
-        return $data;
+        return $this->repository->userAuthLogs($id);
     }
 
-    public function getUser(int $id)
+    public function usersAuthLogs(): LengthAwarePaginator
     {
-        return $this->model::findOrFail($id);
+        return $this->repository->usersAuthLogs();
     }
 
-    /**
-     * Hesaplara ait işlemlerin kayıtlarını getirir.
-     *
-     * @return array
-     */
-    public function getAccountLogs(): Collection
+    public function adminsAuthLogs(): LengthAwarePaginator
     {
-        return $this->model->select('id', 'name', 'surname', 'title', 'last_login_ip', 'last_login_at', 'agent')
-            ->where('type', UserType::USER)
-            ->whereNotIn('status', [AccountStatus::DELETED])
-            ->whereNotNull('last_login_at')
-            ->get();
-    }
-
-    /**
-     * Kullanıcılara ait işlemlerin kayıtlarını getirir.
-     *
-     * @return array
-     */
-    public function getUserLogs(): Collection
-    {
-        return $this->model->select('id', 'name', 'surname', 'title', 'last_login_ip', 'last_login_at', 'agent')
-            ->where('type', UserType::ADMIN)
-            ->whereNotIn('status', [AccountStatus::DELETED])
-            ->whereNotNull('last_login_at')
-            ->where('id', '<>', User::role('Super Admin')->first()->id)
-            ->get();
-    }
-
-    /**
-     * Kullanıcıya ait oturum kayıtlarını getirir.
-     *
-     * @return array
-     */
-    public function authLogs(int $id): Collection
-    {
-        $user = $this->model->findOrFail($id);
-        $logs =  DB::table('auth_logs')->where('user_id', $user->id)->get();
-        return $logs;
+        return $this->repository->adminsAuthLogs();
     }
 
 }

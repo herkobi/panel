@@ -6,13 +6,15 @@ use Illuminate\Support\Str;
 
 trait Sluggable
 {
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     */
     public function generateSlug($string)
     {
+
+        /**
+         * Generate a unique slug
+         *
+         * @param string $string
+         * @return string
+         */
         $slug = Str::slug($string ?? '', '-');
         $count = 1;
 
@@ -24,11 +26,6 @@ trait Sluggable
         return $slug;
     }
 
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     */
     protected function slugExists($slug)
     {
         return static::where('slug', $slug)->exists();

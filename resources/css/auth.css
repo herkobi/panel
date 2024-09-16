@@ -1,0 +1,214 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: .90rem;
+    font-style: normal;
+    background-color: #fff;
+    font-variation-settings: "wdth"100;
+    margin: 0;
+    padding: 0;
+}
+
+.bg-image {
+    background-size: contain;
+    background-position: center right;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+@media screen and (max-width: 462px) {
+    .bg-image {
+        background-size: cover;
+    }
+}
+
+.bg-login {
+    background-image: url('/public/auth/login.jpg');
+}
+
+.bg-register {
+    background-image: url('/public/auth/register.jpg');
+    background-color: #fff;
+}
+
+.bg-forgot-password {
+    background-image: url('/public/auth/forgot-password.jpg');
+    background-color: #fff;
+}
+
+.bg-reset-password {
+    background-image: url('/public/auth/reset-password.jpg');
+    background-color: #fff;
+}
+
+.bg-confirm-password {
+    background-image: url('/public/auth/confirm-password.jpg');
+    background-color: #fff;
+}
+
+.bg-email-verify {
+    background-image: url('/public/auth/verify-email.jpg');
+    background-color: #fff;
+}
+
+.bg-2fa {
+    background-image: url('/public/auth/2fa.jpg');
+    background-color: #fff;
+}
+
+.auth-logo {
+    max-width: 60px;
+}
+
+.auth .login-card {
+    width: 340px;
+}
+
+.auth .register-card {
+    width: 460px;
+}
+
+.auth .form-title {
+    margin-bottom: 1.35rem;
+}
+
+.auth .form-title:after {
+    content: "";
+    background-color: #dc3545;
+    width: 45px;
+    height: 1px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.register-card .form-title:after {
+    background-color: #0d6efd;
+}
+
+/* Form check styles */
+.auth .form-check:not(.form-switch) {
+    display: block;
+    min-height: 1.25rem;
+    padding-left: 1.25rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.65;
+}
+
+.auth .form-check:not(.form-switch) .form-check-input {
+    margin-left: -1.25rem;
+    background-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Form control styles */
+.form-control,
+.form-select,
+.input-group-flat:focus-within,
+.form-check-input:focus {
+    box-shadow: none !important;
+    border-radius: 4px;
+}
+
+.form-control-sm {
+    min-height: calc(1.4285714286em + 1rem + var(--tblr-border-width) * 2) !important;
+}
+
+.form-select-sm {
+    padding: 0.125rem 0.25rem !important;
+    min-height: calc(1.4285714286em + 0.95rem + var(--tblr-border-width) * 2) !important;
+}
+
+/* Utility classes */
+.pointer:hover {
+    cursor: pointer;
+}
+
+.border-end-0 {
+    border-right: 0;
+}
+
+/* Auth specific styles */
+.auth svg {
+    width: 18px;
+    height: 18px;
+}
+
+.auth .input-group {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.auth .input-group:focus-within {
+    border-color: #86b7fe;
+    outline: 0;
+}
+
+.auth .input-group-text {
+    padding: .375rem;
+    line-height: 1;
+}
+
+.auth .input-group-text:first-child {
+    border-right: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.auth .input-group-text:not(:first-child):not(:last-child) {
+    border-left: 0;
+    border-radius: 0;
+}
+
+.auth .input-group-text:last-child {
+    border-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.auth .input-group>.form-control {
+    border-radius: 4px;
+    border-left: 0;
+}
+
+.auth .input-group:focus-within .input-group-text,
+.auth .input-group:focus-within .form-control {
+    border-color: #86b7fe;
+}
+
+.auth .input-group-text a:hover svg {
+    color: #dc3545;
+}
+
+.btn {
+    border-radius: 4px;
+}
+
+.auth .link {
+    text-decoration: none;
+}
+
+.auth .link:hover {
+    text-decoration: underline;
+}
+
+/* Invalid state styles */
+.auth .input-group .form-control.is-invalid {
+    border-color: #dc3545;
+    z-index: 1;
+}
+
+.auth .input-group .form-control.is-invalid~.input-group-text,
+.auth .input-group .form-control.is-invalid+.input-group-text {
+    border-color: #dc3545;
+}
+
+.auth .input-group:has(.form-control.is-invalid) .input-group-text {
+    border-color: #dc3545;
+}

@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Enums\AccountStatus;
+use App\Enums\Status;
+use App\Enums\UserType;
+use App\Facades\Setting;
 use Carbon\Carbon;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
-use Jenssegers\Agent\Facades\Agent;
-use Maatwebsite\Excel\Facades\Excel;
 
 class AliasServiceProvider extends ServiceProvider
 {
@@ -19,13 +21,11 @@ class AliasServiceProvider extends ServiceProvider
         $loader = AliasLoader::getInstance();
 
         // Add your aliases
-        $loader->alias('Helper', \App\Utils\Helper::class);
-        $loader->alias('Status', \App\Enums\Status::class);
-        $loader->alias('AccountStatus', \App\Enums\AccountStatus::class);
-        $loader->alias('UserType', \App\Enums\UserType::class);
+        $loader->alias('Status', Status::class);
+        $loader->alias('UserType', UserType::class);
+        $loader->alias('AccountStatus', AccountStatus::class);
         $loader->alias('Carbon', Carbon::class);
-        $loader->alias('Agent', Agent::class);
-        $loader->alias('Excel', Excel::class);
+        $loader->alias('Setting', Setting::class);
     }
 
     /**

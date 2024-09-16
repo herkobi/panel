@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Sistemde kullanılan yapıları aktif ve pasif olarak
- * tanımlamak için kullanılacak ENUM yapısı
- */
-
 namespace App\Enums;
 
 enum Status: int
@@ -15,8 +10,8 @@ enum Status: int
     public static function title($title): string
     {
         return match ($title) {
-            self::ACTIVE => __('admin/global.active'),
-            self::PASSIVE => __('admin/global.passive'),
+            self::ACTIVE => 'ACTIVE',
+            self::PASSIVE => 'PASSIVE',
         };
     }
 
@@ -38,9 +33,9 @@ enum Status: int
     {
         switch ($type) {
             case self::ACTIVE->value:
-                return __('admin/global.active');
+                return 'AKTİF';
             case self::PASSIVE->value:
-                return __('admin/global.passive');
+                return 'PASİF';
             default:
                 throw new \Exception('Invalid type');
         }

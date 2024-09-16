@@ -7,14 +7,10 @@
     "require": {
         "php": "^8.2",
         "jenssegers/agent": "^2.6",
-        "laravel/fortify": "^1.21",
-        "laravel/framework": "^11.0",
+        "laravel/fortify": "^1.24",
+        "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "maatwebsite/excel": "^3.1",
-        "rap2hpoutre/laravel-log-viewer": "*",
-        "spatie/laravel-activitylog": "^4.8",
-        "spatie/laravel-health": "^1.28",
-        "spatie/laravel-permission": "^6.4"
+        "rap2hpoutre/laravel-log-viewer": "^2.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -22,8 +18,7 @@
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
-        "phpunit/phpunit": "^11.0",
-        "spatie/laravel-ignition": "^2.4"
+        "phpunit/phpunit": "^11.0.1"
     },
     "autoload": {
         "psr-4": {

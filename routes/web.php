@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\FrontController;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(HomeController::class)->group(function () {
-    Route::get('/', 'index')->name('home');
+Route::controller(FrontController::class)->group( function() {
+    Route::get('/', 'index')->name('front');
 });
