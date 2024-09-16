@@ -4,9 +4,12 @@ namespace App\Actions\User\Profile;
 
 use App\Events\User\Profile\Profile as Event;
 use App\Services\User\Profile\ProfileService as Service;
+use App\Traits\AuthUser;
 
 class Profile
 {
+    use AuthUser;
+
     protected $postService;
 
     /**
@@ -17,6 +20,7 @@ class Profile
     public function __construct(Service $postService)
     {
         $this->postService = $postService;
+        $this->initializeAuthUser();
     }
 
     /**
@@ -27,8 +31,10 @@ class Profile
      */
     public function execute(string $id, array $data)
     {
-        $user = $this->postService->updateProfile($id, $data);
-        event(new Event($user));
-        return $user;
+        $oldData = $this->postService->withMeta($id);
+        $this->postService->updateProfile($id, $data);
+        $newData = $this->postService->withMeta($id);
+        event(new Event($this->user, $oldData, $newData));
+        return $newData;
     }
 }

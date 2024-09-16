@@ -44,7 +44,7 @@
                                         <td>{{ $user->name . ' ' . $user->surname }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('panel.settings.user.detail', $user->id) }}"
+                                            <a href="{{ $user->id === auth()->user()->id ? route('panel.profile') : route('panel.settings.user.detail', $user->id) }}"
                                                 class="btn btn-outline-primary btn-sm" title="Kullanıcı Bilgileri">
                                                 Bilgiler
                                             </a>

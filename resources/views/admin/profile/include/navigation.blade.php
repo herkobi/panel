@@ -4,13 +4,23 @@
             <span>Bilgilerim</span>
         </a>
     </li>
+    @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::twoFactorAuthentication()))
+        <li class="nav-item" role="presentation">
+            <a href="{{ route('panel.profile.twofactor') }}"
+                class="nav-link {{ request()->routeIs('panel.profile.twofactor') ? 'active' : '' }}">
+                <span>İki Faktörlü Doğrulama</span>
+            </a>
+        </li>
+    @endif
     <li class="nav-item" role="presentation">
-        <a href="#password" class="nav-link">
-            <span>Şifre Değiştir</span>
+        <a href="{{ route('panel.profile.activitylogs') }}"
+            class="nav-link {{ request()->routeIs('panel.profile.activitylogs') ? 'active' : '' }}">
+            <span>İşlem Kayıtları</span>
         </a>
     </li>
     <li class="nav-item" role="presentation">
-        <a href="#notifications-form" class="nav-link">
+        <a href="{{ route('panel.profile.authlogs') }}"
+            class="nav-link {{ request()->routeIs('panel.profile.authlogs') ? 'active' : '' }}">
             <span>Oturum Kayıtları</span>
         </a>
     </li>

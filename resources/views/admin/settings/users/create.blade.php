@@ -14,7 +14,7 @@
                 <div class="card h-100 border-0 mb-5">
                     <div class="card-header border-0 bg-white p-0 mb-3">
                         <div class="d-flex align-items-center justify-content-between w-100 border-bottom pb-2">
-                            <h1 class="card-title">Yönetici Hesapları</h1>
+                            <h1 class="card-title">Yönetici Hesabı Ekle</h1>
                             <a href="{{ route('panel.settings.users') }}" class="btn btn-primary btn-sm rounded-sm">Yönetici
                                 Hesapları</a>
                         </div>

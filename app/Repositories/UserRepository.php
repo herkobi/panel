@@ -23,19 +23,26 @@ class UserRepository extends BaseRepository
 
     public function getAllUsers(): Collection
     {
-        return User::whereIn('type', [UserType::SUPER->value, UserType::ADMIN->value])->get();
+        return User::where('type', UserType::ADMIN->value)->get();
     }
 
     public function getAccounts(): Collection
     {
-        return User::where('type', [UserType::USER])->get();
+        return User::where('type', UserType::USER->value)
+                   ->where('status', AccountStatus::ACTIVE->value)
+                   ->get();
+    }
+
+    public function withMeta(string $id): User
+    {
+        return User::with('meta')->findOrFail($id);
     }
 
     public function createUser(array $data): User
     {
         return DB::transaction(function () use ($data) {
             $user = $this->model::create([
-                'status' => isset($data['status']) ? AccountStatus::ACTIVE : AccountStatus::PASSIVE,
+                'status' => !isset($data['status']) ? AccountStatus::ACTIVE : AccountStatus::PASSIVE,
                 'type' => UserType::ADMIN,
                 'name' => $data['name'],
                 'surname' => $data['surname'],
@@ -55,8 +62,37 @@ class UserRepository extends BaseRepository
 
             $user->meta()->create([
                 'title' => $data['title'] ?? null,
-                'url' => '',
-                'phone' => '',
+                'user_folder' => $folderName
+            ]);
+
+            return $user;
+        });
+    }
+
+    public function createAccount(array $data): User
+    {
+        return DB::transaction(function () use ($data) {
+            $user = $this->model::create([
+                'status' => !isset($data['status']) ? AccountStatus::ACTIVE : AccountStatus::PASSIVE,
+                'type' => UserType::USER,
+                'name' => $data['name'],
+                'surname' => $data['surname'],
+                'email' => $data['email'],
+                'terms' => 1,
+                'password' => Hash::make($data['password']),
+                'email_verified_at' => isset($data['verifyemail']) ? Carbon::now()->toDateTimeString() : null,
+                'created_by' => Auth::id(),
+                'created_by_name' => Auth::user()->name . ' ' . Auth::user()->surname,
+            ]);
+
+            $folderName = 'user_' . Str::random(12);
+
+            if (!Storage::disk('public')->exists($folderName)) {
+                Storage::disk('public')->makeDirectory($folderName);
+            }
+
+            $user->meta()->create([
+                'title' => $data['title'] ?? null,
                 'user_folder' => $folderName
             ]);
 
@@ -70,7 +106,10 @@ class UserRepository extends BaseRepository
         $user->update([
             'name' => $data['name'],
             'surname' => $data['surname'],
-            'title' => $data['title']
+        ]);
+
+        $user->meta()->update([
+            'title' => $data['title'] ?? null,
         ]);
 
         return $user;

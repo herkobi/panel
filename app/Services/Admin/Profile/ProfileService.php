@@ -25,12 +25,17 @@ class ProfileService
         return $this->repository->getById($id);
     }
 
+    public function withMeta(string $id): User
+    {
+        return $this->repository->withMeta($id);
+    }
+
     public function updateProfile(string $id, array $data): User
     {
         return $this->repository->updateProfile($id, $data);
     }
 
-    public function updateEmail(string $id, array $data): ?User
+    public function updateEmail(string $id, array $data): User
     {
         $user = $this->repository->updateEmail($id, $data);
         if ($user) {
@@ -44,6 +49,11 @@ class ProfileService
         $user = $this->repository->updatePassword($id, $data);
         Mail::to($user->email)->send(new NewAdminEmail($user, $data['password']));
         return $user;
+    }
+
+    public function activityLogs(string $id): LengthAwarePaginator
+    {
+        return $this->repository->getUserActivity($id);
     }
 
     public function authLogs(string $id): LengthAwarePaginator

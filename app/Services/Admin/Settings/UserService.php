@@ -21,6 +21,11 @@ class UserService
         return $this->repository->getAllUsers();
     }
 
+    public function getAccounts(): Collection
+    {
+        return $this->repository->getAccounts();
+    }
+
     public function getUserById(string $id, bool $withoutGlobalScope = false): User|Model
     {
         return $this->repository->getById($id, $withoutGlobalScope);
@@ -29,6 +34,11 @@ class UserService
     public function createUser(array $data): User
     {
         return $this->repository->createUser($data);
+    }
+
+    public function createAccount(array $data): User
+    {
+        return $this->repository->createAccount($data);
     }
 
     public function updateProfile(string $id, array $data): User
