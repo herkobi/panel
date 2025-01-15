@@ -41,7 +41,7 @@ class NewAdminEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'vendor.email.new.admin.email',
+            view: 'vendor.email.newadminemail',
         );
     }
 }

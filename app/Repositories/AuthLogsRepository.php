@@ -14,8 +14,9 @@ class AuthLogsRepository extends BaseRepository
 
     public function userAuthLogs(string $id): LengthAwarePaginator
     {
-        $user = $this->getById($id);
-        return $user->authlogs()->orderBy('created_at', 'desc')->paginate(40);
+        return Authlog::where('user_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(40);
     }
 
     public function usersAuthLogs(): LengthAwarePaginator

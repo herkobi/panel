@@ -8,12 +8,12 @@
     <meta name="csrf_token" content="{{ csrf_token() }}">
     <title>{{ Setting::get('title') }}</title>
     <link rel="shortcut icon" href="{{ Setting::get('favicon') }}" type="image/png">
-    @vite(['resources/sass/auth.scss', 'resources/js/auth.js'])
+    @vite(['resources/sass/panel.scss', 'resources/js/panel.js'])
     @yield('css')
 </head>
 
-<body class="auth">
-    <div class="container">
+<body>
+    <div class="auth-wrapper">
         @yield('content')
     </div>
     <script>

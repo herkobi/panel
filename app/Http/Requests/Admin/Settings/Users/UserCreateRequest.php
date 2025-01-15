@@ -40,37 +40,22 @@ class UserCreateRequest extends FormRequest
     {
         return [
 
-            /**
-             * Name Messages
-             */
             'name.required' => 'Lütfen isim giriniz',
             'name.string' => 'Lütfen geçerli bir isim giriniz',
             'name.max' => 'Lütfen ismi daha kısa giriniz',
 
-            /**
-             * Desc Messages
-             */
             'surname.required' => 'Lütfen soyisim giriniz',
             'surname.string' => 'Lütfen geçerli bir soyisim giriniz',
             'surname.max' => 'Lütfen soyismi daha kısa giriniz',
 
-            /**
-             * Title Messages
-             */
             'title.string' => 'Lütfen geçerli bir isim giriniz',
             'title.max' => 'Lütfen ismi daha kısa giriniz',
 
-            /**
-             * E-mail Messages
-             */
             'email.string' => 'Lütfen geçerli bir e-posta adresi giriniz',
             'email.required' => 'Lütfen e-posta adresi giriniz',
             'email.email' => 'Lütfen geçerli bir e-posta adresi giriniz',
             'email.max' => 'Lütfen daha kısa bir e-posta adresi giriniz',
 
-            /**
-             * Password Messages
-             */
             'password.required' => 'Lütfen şifre giriniz',
             'password.password' => 'Lütfen uygun formatta şifre giriniz',
         ];

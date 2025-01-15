@@ -3,95 +3,95 @@
     @include('admin.include.header', [
         'title' => 'Ayarlar',
     ])
-    <div class="page-content flex-grow-1 d-flex flex-column shadow-sm">
-        <div class="row flex-grow-1">
-            <div class="col-20 col-lg-3 col-md-3">
-                <div class="page-menu rounded-2">
-                    @include('admin.settings.include.navigation')
+    @include('admin.settings.include.navigation')
+    <div class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    @include('admin.settings.users.include.usercard')
+                    @include('admin.settings.users.include.usermenu')
                 </div>
-            </div>
-            <div class="col-80 col-lg-9 col-md-9">
-                <div class="card h-100 border-0 mb-5">
-                    <div class="card-header border-0 bg-white p-0 mb-3">
-                        <div class="d-flex align-items-center justify-content-between w-100 border-bottom pb-2">
-                            <h1 class="card-title">Hesap Bilgileri</h1>
-                            <a href="{{ route('panel.settings.user.create') }}"
-                                class="btn btn-primary btn-sm rounded-sm">Yeni Kişi Ekle</a>
+                <div class="col-lg-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('panel.settings.user.detail', $user->id) }}"
+                                        title="Kullanıcı İşlemleri">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-activity me-2" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2" />
+                                        </svg>
+                                        Kullanıcı İşlemleri
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="true"
+                                        href="{{ route('panel.settings.user.authlogs', $user->id) }}"
+                                        title="Oturum Kayıtları">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-person-bounding-box me-2" viewBox="0 0 16 16">
+                                            <path
+                                                d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5" />
+                                            <path
+                                                d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                        </svg>
+                                        Oturum Kayıtları
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                    </div>
-                    <div class="card-body px-0">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                @include('admin.settings.users.include.profile-card')
-                                @include('admin.settings.users.include.profile-detail')
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="profile-content">
-                                    <div class="card">
-                                        <div class="card-header bg-white">
-                                            <ul class="nav nav-pills card-header-pills">
-                                                <li class="nav-item">
-                                                    <a class="nav-link"
-                                                        href="{{ route('panel.settings.user.detail', $user->id) }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="1" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="icon nav-link-icon">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M3 12h4l3 8l4 -16l3 8h4" />
-                                                        </svg>
-                                                        Kullanıcı İşlemleri
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link active"
-                                                        href="{{ route('panel.settings.user.authlogs', $user->id) }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="1" stroke-linecap="round"
-                                                            stroke-linejoin="round" class="icon nav-link-icon">
-                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M10 9a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                            <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
-                                                            <path d="M4 16v2a2 2 0 0 0 2 2h2" />
-                                                            <path d="M16 4h2a2 2 0 0 1 2 2v2" />
-                                                            <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
-                                                            <path d="M8 16a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2" />
-                                                        </svg>
-                                                        Oturum Kayıtları
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item ms-auto">
-                                                    @include('admin.settings.users.include.dropdown')
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table card-table table-vcenter text-nowrap datatable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>İşlem</th>
-                                                            <th>IP Adresi</th>
-                                                            <th>Cihaz Bilgisi</th>
-                                                            <th>İşlem Tarihi</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($logs as $authLog)
-                                                            <tr>
-                                                                <td>{{ $authLog->event_name }}</td>
-                                                                <td>{{ $authLog->ip_address }}</td>
-                                                                <td>{{ $authLog->user_agent }}</td>
-                                                                <td>{{ $authLog->created_at }}</td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-20">Oturum Tarihi</th>
+                                            <th class="w-20">Cihaz Bilgisi</th>
+                                            <th class="w-20">İşletim Sistemi</th>
+                                            <th class="w-20">Tarayıcı Bilgisi</th>
+                                            <th class="w-20">Geçen Süre</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($logs as $authLog)
+                                            @php
+                                                $agentData = json_decode($log->user->agent, true);
+                                                $userAgent = new Jenssegers\Agent\Agent();
+
+                                                // JSON verisinden cihaz bilgilerini alın
+                                                $device = $agentData['device'] ?? null;
+                                                $os = $agentData['os'] ?? null;
+                                                $os_version = $agentData['os_version'] ?? null;
+                                                $browser = $agentData['browser'] ?? null;
+                                                $browser_version = $agentData['browser_version'] ?? null;
+                                                $language = $agentData['language'] ?? null;
+
+                                                // Jenssegers/agent paketiyle cihaz türünü belirleyin
+                                                $userAgent->setUserAgent($device);
+
+                                                // Cihaz türüne göre farklı çıktılar yazdırın
+                                                $deviceType = 'Bilinmeyen';
+                                                if ($userAgent->isDesktop()) {
+                                                    $deviceType = 'Masaüstü Bilgisayar';
+                                                } elseif ($userAgent->isMobile()) {
+                                                    $deviceType = 'Akıllı Cep Telefonu';
+                                                } elseif ($userAgent->isTablet()) {
+                                                    $deviceType = 'Tablet Bilgisayar';
+                                                }
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $authLog->user->last_login_at }}<br>{{ $authLog->user->last_login_ip }}
+                                                </td>
+                                                <td>{{ $deviceType }}</td>
+                                                <td>{{ $os . ' ' . $os_version }}</td>
+                                                <td>{{ $browser . ' ' . $browser_version }} - {{ $language }}</td>
+                                                <td>{{ Carbon::parse($authLog->user->last_login_at)->diffForHumans() }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

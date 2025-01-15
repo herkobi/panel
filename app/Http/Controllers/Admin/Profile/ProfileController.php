@@ -76,17 +76,17 @@ class ProfileController extends Controller
 
     public function activitylogs(): View
     {
-        $activityLogs = $this->userService->activitylogs($this->user->id);
+        $user = $this->userService->activitylogs($this->user->id);
         return view('admin.profile.activitylogs', [
-            'activityLogs' => $activityLogs
+            'user' => $user
         ]);
     }
 
     public function authlogs(): View
     {
-        $authLogs = $this->userService->authLogs($this->user->id);
+        $user = $this->userService->authLogs($this->user->id);
         return view('admin.profile.authlogs', [
-            'authLogs' => $authLogs
+            'user' => $user
         ]);
     }
 

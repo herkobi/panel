@@ -3,224 +3,192 @@
     @include('admin.include.header', [
         'title' => 'Ayarlar',
     ])
-    <div class="page-content flex-grow-1 d-flex flex-column shadow-sm">
-        <div class="row flex-grow-1">
-            <div class="col-20 col-lg-3 col-md-3">
-                <div class="page-menu rounded-2">
-                    @include('admin.settings.include.navigation')
-                </div>
-            </div>
-            <div class="col-80 col-lg-9 col-md-9">
-                <div class="card h-100 border-0 mb-5">
-                    <div class="card-header border-0 bg-white p-0 mb-3">
-                        <div class="d-flex align-items-center justify-content-between w-100 border-bottom pb-2">
-                            <h1 class="card-title">Yönetici Hesabı Ekle</h1>
-                            <a href="{{ route('panel.settings.users') }}" class="btn btn-primary btn-sm rounded-sm">Yönetici
-                                Hesapları</a>
-                        </div>
-                    </div>
-                    <form action="{{ route('panel.settings.user.store') }}" method="post">
+    @include('admin.settings.include.navigation')
+    <div class="page-content">
+        <div class="container">
+            <div class="page-form row">
+                <div class="col-lg-10 offset-lg-1">
+                    <h3 class="form-title border-bottom mb-3 pb-3">Yeni Yönetici</h3>
+                    <form action="{{ route('panel.settings.user.store') }}" method="POST">
                         @csrf
-                        <div class="card-body border-0 bg-white px-0">
-                            <div class="row mb-3">
-                                <div class="col-lg-3 col-md-4"><span class="fw-bold">Kullanıcı Bilgileri</span></div>
-                                <div class="col-lg-9 col-md-8">
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <label for="userName" class="form-label">Ad</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text border-end-0 pe-0 bg-white">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-user">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
-                                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
-                                                    </svg>
-                                                </span>
-                                                <input type="text" id="userName" name="name"
-                                                    class="form-control border-start-0 @error('name') is-invalid @enderror"
-                                                    placeholder="Kullanıcı Adı" value="{{ old('name') }}" required>
-                                            </div>
-                                            @error('name')
-                                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                            @enderror
-                                            <small class="form-hint">Lütfen kullanıcının adını giriniz.</small>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="userSurname" class="form-label">Soyad</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text border-end-0 pe-0 bg-white">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
-                                                        <path d="M16 19h6"></path>
-                                                        <path d="M19 16v6"></path>
-                                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4"></path>
-                                                    </svg>
-                                                </span>
-                                                <input type="text" name="surname" id="userSurname"
-                                                    class="form-control border-start-0 @error('surname') is-invalid @enderror"
-                                                    placeholder="Kullanıcı Soyadı" value="{{ old('surname') }}" required>
-                                            </div>
-                                            @error('surname')
-                                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                            @enderror
-                                            <small class="form-hint">Lütfen kullanıcının soyadını giriniz.</small>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="userTitle" class="form-label">Görev</label>
+                        <div class="row mb-3">
+                            <label for="title" class="col-form-label col-lg-2 col-md-3">Ad Soyad</label>
+                            <div class="col-lg-10 col-md-9">
+                                <div class="row">
+                                    <div class="col-lg-6 mb-1">
                                         <div class="input-group">
-                                            <span class="input-group-text border-end-0 pe-0 bg-white">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-text-size">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M3 7v-2h13v2" />
-                                                    <path d="M10 5v14" />
-                                                    <path d="M12 19h-4" />
-                                                    <path d="M15 13v-1h6v1" />
-                                                    <path d="M18 12v7" />
-                                                    <path d="M17 19h2" />
-                                                </svg>
-                                            </span>
-                                            <input type="text" name="title" id="userTitle"
-                                                class="form-control border-start-0 @error('title') is-invalid @enderror"
-                                                placeholder="Kullanıcı Görevi" value="{{ old('title') }}">
-                                        </div>
-                                        @error('title')
-                                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                        @enderror
-                                        <small class="form-hint">Kullanıcının görevini giriniz.</small>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="userEmail" class="form-label">E-posta Adresi</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text border-end-0 pe-0 bg-white">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="icon icon-tabler icons-tabler-outline icon-tabler-mail">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <div class="input-group-text rounded-0 border-end-0 bg-white">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                                                     <path
-                                                        d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
-                                                    <path d="M3 7l9 6l9 -6" />
+                                                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z">
+                                                    </path>
                                                 </svg>
-                                            </span>
-                                            <input type="email" name="email" id="userEmail"
-                                                class="form-control border-start-0 @error('email') is-invalid @enderror"
-                                                placeholder="Kullanıcı E-posta Adresi" value="{{ old('email') }}">
+                                            </div>
+                                            <input type="text" name="name" id="name"
+                                                class="form-control rounded-0 border-start-0"
+                                                placeholder="Kullanıcı Adını Giriniz" value="{{ old('name') }}">
                                         </div>
-                                        @error('email')
-                                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                        @enderror
-                                        <small class="form-hint">Lütfen kullanıcının e-posta adresini giriniz.</small>
                                     </div>
-                                    <div class="mb-5">
-                                        <fieldset id="passwordArea" class="form-fieldset p-3 bg-info-subtle">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <label class="col-form-label required">Kullanıcı Şifresi</label>
-                                                <button type="button" onclick="generatePassword()"
-                                                    class="btn btn-sm btn-link link-secondary randompassword rounded-none shadow-none">Şifre
-                                                    Oluştur</button>
+                                    <div class="col-lg-6 mb-1">
+                                        <div class="input-group">
+                                            <div class="input-group-text rounded-0 border-end-0 bg-white">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4">
+                                                    </path>
+                                                    <path
+                                                        d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z">
+                                                    </path>
+                                                </svg>
                                             </div>
-                                            <div class="input-group">
-                                                <span class="input-group-text border-end-0 pe-0 bg-white">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-key">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path
-                                                            d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z" />
-                                                        <path d="M15 9h.01" />
-                                                    </svg>
-                                                </span>
-                                                <input type="password" id="password" name="password"
-                                                    class="form-control border-start-0 border-end-0 @error('password') is-invalid @enderror"
-                                                    placeholder="Şifreniz" autocomplete="off">
-                                                <span class="input-group-text border-start-0 ps-0 bg-white"
-                                                    onclick="password_show_hide();" data-bs-toggle="tooltip"
-                                                    aria-label="Şifreyi Göster" data-bs-original-title="Şifreyi Göster">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-eye showpassword pointer">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                        <path
-                                                            d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                                    </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off hidepassword pointer d-none">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
-                                                        <path
-                                                            d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
-                                                        <path d="M3 3l18 18" />
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                            @error('password')
-                                                <div class="invalid-feedback" role="alert">{{ $message }}
-                                                </div>
-                                            @enderror
-                                            <small class="form-hint">Kullanıcı şifresini giriniz</small>
-                                        </fieldset>
-                                    </div>
-                                    <div class="col-12">
-                                        <hr class="mt-0 mb-4">
+                                            <input type="text" name="surname" id="surname"
+                                                class="form-control rounded-0 border-start-0"
+                                                placeholder="Kullanıcı Soyadını Giriniz" value="{{ old('surname') }}">
+                                        </div>
                                     </div>
                                 </div>
+                                <span class="form-hint small">Kullanıcı ad soyadı giriniz</span>
+                                @error(['name', 'surname'])
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-3 col-md-4"><span class="fw-bold">Hesap İşlemleri</span></div>
-                                <div class="col-lg-9 col-md-8">
-                                    @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()))
-                                        <div class="form-check form-switch border-bottom pb-2 mb-2">
-                                            <label class="form-check-label" for="checkVerifyEmail">Onay E-postası
-                                                Gönder</label>
-                                            <input class="form-check-input" type="checkbox" name="verifyemail"
-                                                role="switch" id="checkVerifyEmail">
+                        </div>
+                        <div class="row mb-3">
+                            <label for="title" class="col-form-label col-lg-2 col-md-3">Görev</label>
+                            <div class="col-lg-10 col-md-9">
+                                <div class="input-group">
+                                    <div class="input-group-text rounded-0 border-end-0 bg-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-blockquote-left" viewBox="0 0 16 16">
+                                            <path
+                                                d="M2.5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1zm5 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm-5 3a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1zm.79-5.373q.168-.117.444-.275L3.524 6q-.183.111-.452.287-.27.176-.51.428a2.4 2.4 0 0 0-.398.562Q2 7.587 2 7.969q0 .54.217.873.217.328.72.328.322 0 .504-.211a.7.7 0 0 0 .188-.463q0-.345-.211-.521-.205-.182-.568-.182h-.282q.036-.305.123-.498a1.4 1.4 0 0 1 .252-.37 2 2 0 0 1 .346-.298zm2.167 0q.17-.117.445-.275L5.692 6q-.183.111-.452.287-.27.176-.51.428a2.4 2.4 0 0 0-.398.562q-.165.31-.164.692 0 .54.217.873.217.328.72.328.322 0 .504-.211a.7.7 0 0 0 .188-.463q0-.345-.211-.521-.205-.182-.568-.182h-.282a1.8 1.8 0 0 1 .118-.492q.087-.194.257-.375a2 2 0 0 1 .346-.3z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <input type="text" name="title" id="title"
+                                        class="form-control rounded-0 border-start-0" placeholder="Görev Giriniz"
+                                        value="{{ old('title') }}">
+                                </div>
+                                <span class="form-hint small">Kullanıcı görevi giriniz</span>
+                                @error('title')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="email" class="col-form-label col-lg-2 col-md-3">E-posta Adresi</label>
+                            <div class="col-lg-10 col-md-9">
+                                <div class="input-group">
+                                    <div class="input-group-text rounded-0 border-end-0 bg-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <input type="email" name="email" id="email"
+                                        class="form-control rounded-0 border-start-0" placeholder="E-posta Adresi Giriniz"
+                                        value="{{ old('email') }}">
+                                </div>
+                                <span class="form-hint small">E-posta adresini giriniz</span>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-lg-10 col-mg-9 offset-lg-2 offset-md-3">
+                                <div class="bg-light p-3">
+                                    <div class="d-flex align-items-center justify-content-between w-100">
+                                        <label for="password" class="col-form-label pt-0">Şifre</label>
+                                        <button type="button" onclick="generatePassword()"
+                                            class="btn btn-sm btn-link link-secondary randompassword text-decoration-none rounded-none shadow-none">Şifre
+                                            Oluştur</button>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-text rounded-0 border-end-0 bg-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-key-fill" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2M2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2">
+                                                </path>
+                                            </svg>
                                         </div>
-                                    @endif
-                                    <div class="form-check form-switch border-bottom pb-2 mb-2">
-                                        <label class="form-check-label" for="sendEmail">Bilgileri E-posta Adresine
-                                            Gönder</label>
-                                        <input class="form-check-input" type="checkbox" name="sendemail" role="switch"
-                                            id="sendEmail">
+                                        <input type="password" name="password" id="password"
+                                            class="form-control rounded-0 border-start-0 border-end-0"
+                                            placeholder="Şifre Giriniz" autocomplete="off">
+                                        <div class="input-group-text rounded-0 border-start-0 bg-white"
+                                            onclick="password_show_hide();" data-bs-toggle="tooltip"
+                                            aria-label="Şifreyi Göster" data-bs-original-title="Şifreyi Göster">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-eye-slash showpassword pointer"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z">
+                                                </path>
+                                                <path
+                                                    d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829">
+                                                </path>
+                                                <path
+                                                    d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z">
+                                                </path>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-eye hidepassword pointer d-none"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z">
+                                                </path>
+                                                <path
+                                                    d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0">
+                                                </path>
+                                            </svg>
+                                        </div>
                                     </div>
-                                    <div class="form-check form-switch">
-                                        <label class="form-check-label" for="status">Kullanıcı Durumunu Pasif
-                                            Yap</label>
-                                        <input class="form-check-input" type="checkbox" name="status" role="switch"
-                                            id="status">
-                                    </div>
+                                    <span class="form-hint small">Kullanıcı şifresi giriniz</span>
+                                    @error('password')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-9 offset-lg-3 col-md-9 offset-md-3">
-                                <button type="submit" class="btn btn-primary w-100">
+                        <div class="row mb-5">
+                            <div class="col-lg-10 col-mg-9 offset-lg-2 offset-md-3">
+                                <h5 class="border-bottom mb-3 pb-2">Hesap İşlemleri</h5>
+                                <div class="form-check form-switch border-bottom pb-2 mb-2">
+                                    <label class="form-check-label" for="checkVerifyEmail">Onay E-postası
+                                        Gönder</label>
+                                    <input class="form-check-input" type="checkbox" name="verifyemail" role="switch"
+                                        id="checkVerifyEmail">
+                                </div>
+                                <div class="form-check form-switch border-bottom pb-2 mb-2">
+                                    <label class="form-check-label" for="sendEmail">Bilgileri E-posta Adresine
+                                        Gönder</label>
+                                    <input class="form-check-input" type="checkbox" name="sendemail" role="switch"
+                                        id="sendEmail">
+                                </div>
+                                <div class="form-check form-switch">
+                                    <label class="form-check-label" for="status">Kullanıcı Durumunu Pasif
+                                        Yap</label>
+                                    <input class="form-check-input" type="checkbox" name="status" role="switch"
+                                        id="status">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-lg-10 col-mg-9 offset-lg-2 offset-md-3">
+                                <button type="submit" class="btn rounded-1 px-5">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z">
+                                        fill="currentColor" class="bi bi-floppy" viewBox="0 0 20 20">
+                                        <path d="M11 2H9v3h2z"></path>
+                                        <path
+                                            d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z">
                                         </path>
-                                        <path d="M16 5l3 3"></path>
                                     </svg>
-                                    Kullanıcıyı Kaydet
+                                    KAYDET
                                 </button>
                             </div>
                         </div>

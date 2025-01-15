@@ -2,7 +2,7 @@
 
 namespace App\Actions\User\Profile;
 
-use App\Events\User\Profile\Profile as Event;
+use App\Events\User\Account\Profile\Profile as Event;
 use App\Services\User\Profile\ProfileService as Service;
 use App\Traits\AuthUser;
 

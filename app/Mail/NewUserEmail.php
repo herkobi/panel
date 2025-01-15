@@ -41,7 +41,7 @@ class NewUserEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'vendor.email.new.user.email',
+            view: 'vendor.email.newuseremail',
         );
     }
 }

@@ -1,4 +1,121 @@
 <!DOCTYPE html>
+<html lang="tr" class="h-100">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf_token" content="{{ csrf_token() }}">
+    <title>{{ Setting::get('title') }}</title>
+    <link rel="shortcut icon" href="{{ Setting::get('favicon') }}" type="image/png">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @yield('css')
+</head>
+
+<body>
+    @include('user.include.sidebar')
+    <div class="page-wrapper">
+        <div class="page-content">
+            @yield('content')
+        </div>
+    </div>
+    @yield('js')
+
+    @if (Session::has('success'))
+        <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Başarılı!</h1>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{ Session::get('success') }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @if (Session::has('success'))
+                    var successModal = new bootstrap.Modal(document.getElementById('modal-success'));
+                    successModal.show();
+                @endif
+            });
+        </script>
+    @endif
+    @if (Session::has('error') || $errors->any())
+        <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Hata!</h1>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($errors->any())
+                            <div class="text-secondary">
+                                <ul class="list-unstyled">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @else
+                            <div class="text-secondary">{{ Session::get('error') }}</div>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @if (Session::has('error') || $errors->any())
+                    var errorModal = new bootstrap.Modal(document.getElementById('modal-danger'));
+                    errorModal.show();
+                @endif
+            });
+        </script>
+    @endif
+    @if (Session::has('warning'))
+        <div class="modal modal-blur fade" id="modal-warning" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Uyarı!</h1>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-secondary">{{ Session::get('warning') }}</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var warningModal = new bootstrap.Modal(document.getElementById('modal-warning'));
+                warningModal.show();
+            });
+        </script>
+    @endif
+</body>
+
+</html>
+
+
+{{-- <!DOCTYPE html>
 <html lang="tr">
 
 <head>
@@ -30,6 +147,10 @@
                                 href="{{ route('app.home') }}" title="{{ Setting::get('title') }}">Ana Sayfa</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('app.account.*') ? 'active' : '' }}"
+                                title="Hesabım" href="{{ route('app.account.plans') }}">Hesabım</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('app.profile') ? 'active' : '' }}"
                                 title="Bilgilerim" href="{{ route('app.profile') }}">Bilgilerim</a>
                         </li>
@@ -40,10 +161,10 @@
                                 @csrf
                                 <a href="{{ route('logout') }}" title="Oturumu Kapat" class="nav-link"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
                                         stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-logout">
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-logout m-n4">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path
                                             d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
@@ -86,6 +207,96 @@
         </div>
     </footer>
     @yield('js')
+
+    @if (Session::has('success'))
+        <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Başarılı!</h1>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{ Session::get('success') }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @if (Session::has('success'))
+                    var successModal = new bootstrap.Modal(document.getElementById('modal-success'));
+                    successModal.show();
+                @endif
+            });
+        </script>
+    @endif
+    @if (Session::has('error') || $errors->any())
+        <div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Hata!</h1>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($errors->any())
+                            <div class="text-secondary">
+                                <ul class="list-unstyled">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @else
+                            <div class="text-secondary">{{ Session::get('error') }}</div>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @if (Session::has('error') || $errors->any())
+                    var errorModal = new bootstrap.Modal(document.getElementById('modal-danger'));
+                    errorModal.show();
+                @endif
+            });
+        </script>
+    @endif
+    @if (Session::has('warning'))
+        <div class="modal modal-blur fade" id="modal-warning" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Uyarı!</h1>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-secondary">{{ Session::get('warning') }}</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var warningModal = new bootstrap.Modal(document.getElementById('modal-warning'));
+                warningModal.show();
+            });
+        </script>
+    @endif
 </body>
 
-</html>
+</html> --}}

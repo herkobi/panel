@@ -8,6 +8,8 @@ use App\Traits\HasDefaultPagination;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -31,13 +33,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'email_verified_at',
         'password',
-        'terms',
         'last_login_at',
         'last_login_ip',
         'agent',
         'created_by',
-        'created_by_name',
-        'terms'
+        'created_by_name'
     ];
 
     /**
@@ -65,22 +65,21 @@ class User extends Authenticatable implements MustVerifyEmail
             'last_login_at' => 'datetime',
             'status' => AccountStatus::class,
             'type' => UserType::class,
-            'agent' => 'array',
-            'terms' => 'boolean'
+            'agent' => 'array'
         ];
     }
 
-    public function meta()
+    public function meta(): HasOne
     {
         return $this->hasOne(UserMeta::class);
     }
 
-    public function authlogs()
+    public function authlogs(): HasMany
     {
         return $this->hasMany(Authlog::class);
     }
 
-    public function activities()
+    public function activities(): HasMany
     {
         return $this->hasMany(Activity::class, 'user_id');
     }

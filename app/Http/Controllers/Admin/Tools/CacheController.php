@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Tools;
 
 use App\Actions\Admin\Cache\Cache;
 use App\Actions\Admin\Cache\Config;
+use App\Actions\Admin\Cache\Event as EventClear;
 use App\Actions\Admin\Cache\Optimize;
 use App\Actions\Admin\Cache\Route;
 use App\Actions\Admin\Cache\View as CacheView;
@@ -15,11 +16,12 @@ use Illuminate\View\View;
 
 class CacheController extends Controller
 {
-    private $clearCache;
-    private $clearConfig;
-    private $clearOptimize;
-    private $clearRoute;
+    protected $clearCache;
+    protected $clearConfig;
+    protected $clearOptimize;
+    protected $clearRoute;
     private $clearView;
+    protected $eventClear;
 
     public function __construct(
         Cache $clearCache,
@@ -27,12 +29,14 @@ class CacheController extends Controller
         Optimize $clearOptimize,
         Route $clearRoute,
         CacheView $clearView,
+        EventClear $eventClear
     ) {
         $this->clearCache = $clearCache;
         $this->clearConfig = $clearConfig;
         $this->clearOptimize = $clearOptimize;
         $this->clearRoute = $clearRoute;
         $this->clearView = $clearView;
+        $this->eventClear = $eventClear;
     }
 
     public function index(): View
@@ -102,6 +106,19 @@ class CacheController extends Controller
         $cleared = $this->clearConfig->execute();
         return $cleared === 0
             ? Redirect::back()->with('success', 'Yapılandırma önbelliği başarılı bir şekilde temizlendi')
+            : Redirect::back()->with('error', 'Önbellek temizlenirken bir hata oluştu. Lütfen tekrar deneyiniz.');
+    }
+
+    /**
+     * Etkinlik önbelleğini temizler.
+     * Etkinlik önbelleği, olay dinleyicilerinde yapılan değişikliklerin devreye girmesi ve uygulamanın sağlıklı çalışması için güncellenmelidir.
+     * Bu komutu, geliştirme sırasında sık sık yapmanız gerekebilir.
+     */
+    public function event(): RedirectResponse
+    {
+        $cleared = $this->eventClear->execute();
+        return $cleared === 0
+            ? Redirect::back()->with('success', 'Etkinlik önbelliği başarılı bir şekilde temizlendi')
             : Redirect::back()->with('error', 'Önbellek temizlenirken bir hata oluştu. Lütfen tekrar deneyiniz.');
     }
 }

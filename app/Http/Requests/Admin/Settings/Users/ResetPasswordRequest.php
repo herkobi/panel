@@ -36,9 +36,9 @@ class ResetPasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.string' => __('admin/accounts/request.email.string'),
-            'email.required' => __('admin/accounts/request.email.required'),
-            'email.email' => __('admin/accounts/request.email.email'),
+            'email.required' => 'Lütfen e-posta adresini giriniz',
+            'email.string' => 'Lütfen geçerli bir e-posta adresi giriniz',
+            'email.email' => 'Lütfen geçerli bir e-posta adresi giriniz',
         ];
     }
 

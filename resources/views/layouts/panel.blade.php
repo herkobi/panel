@@ -12,12 +12,10 @@
     @yield('css')
 </head>
 
-<body class="d-flex flex-column h-100">
-    <div class="sidebar-area">
-        @include('admin.include.sidebar')
-    </div>
-    <div class="page flex-grow-1 d-flex flex-column">
-        <div class="container-fluid d-flex flex-column flex-grow-1">
+<body>
+    @include('admin.include.sidebar')
+    <div class="page-wrapper">
+        <div class="page-content">
             @yield('content')
         </div>
     </div>
@@ -28,7 +26,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Başarılı</h5>
+                        <h1 class="modal-title fs-5">Başarılı!</h1>
                         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -36,7 +34,7 @@
                         <p>{{ Session::get('success') }}</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Kapat</button>
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
                     </div>
                 </div>
             </div>
@@ -55,7 +53,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Hata</h5>
+                        <h1 class="modal-title fs-5">Hata!</h1>
                         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -73,7 +71,7 @@
                         @endif
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Kapat</button>
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
                     </div>
                 </div>
             </div>
@@ -84,6 +82,31 @@
                     var errorModal = new bootstrap.Modal(document.getElementById('modal-danger'));
                     errorModal.show();
                 @endif
+            });
+        </script>
+    @endif
+    @if (Session::has('warning'))
+        <div class="modal modal-blur fade" id="modal-warning" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Uyarı!</h1>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-secondary">{{ Session::get('warning') }}</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var warningModal = new bootstrap.Modal(document.getElementById('modal-warning'));
+                warningModal.show();
             });
         </script>
     @endif

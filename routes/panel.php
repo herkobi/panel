@@ -9,13 +9,16 @@ use App\Http\Controllers\Admin\Settings\{
     UsersController
 };
 use App\Http\Controllers\Admin\Tools\{
+    ActivitiesController,
     AuthLogsController,
-    CacheController
+    CacheController,
+    CountryController,
+    LanguageController
 };
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'auth.session', 'verified', 'adminpanel', 'accountstatus'])->prefix('panel')->name('panel.')->group(function () {
+Route::middleware(['auth', 'auth.session', 'verified', 'panel:admin', 'userstatus', 'system.settings'])->prefix('panel')->name('panel.')->group(function () {
 
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('home');
@@ -47,6 +50,27 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminpanel', 'accountsta
     });
 
     Route::prefix('tools')->name('tools.')->group( function() {
+
+        Route::prefix('config')->name('config.')->group(function() {
+            Route::controller(CountryController::class)->group( function() {
+                Route::get('/countries', 'index')->name('countries');
+                Route::get('/country/create', 'create')->name('country.create');
+                Route::post('/country/store', 'store')->name('country.store');
+                Route::get('/country/edit/{country}', 'edit')->name('country.edit');
+                Route::post('/country/update/{country}', 'update')->name('country.update');
+                Route::delete('/country/delete/{country}', 'destroy')->name('country.delete');
+            });
+
+            Route::controller(LanguageController::class)->group( function() {
+                Route::get('/languages', 'index')->name('languages');
+                Route::get('/language/create', 'create')->name('language.create');
+                Route::post('/language/store', 'store')->name('language.store');
+                Route::get('/language/edit/{language}', 'edit')->name('language.edit');
+                Route::post('/language/update/{language}', 'update')->name('language.update');
+                Route::delete('/language/delete/{language}', 'destroy')->name('language.delete');
+            });
+        });
+
         Route::controller(CacheController::class)->group( function() {
             Route::get('/cache', 'index')->name('cache');
             Route::post('/cache-clear', 'cache')->name('cache.clear');
@@ -54,11 +78,18 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminpanel', 'accountsta
             Route::post('/view-clear', 'view')->name('view.clear');
             Route::post('/route-clear', 'route')->name('route.clear');
             Route::post('/config-clear', 'config')->name('config.clear');
+            Route::post('/event-clear', 'event')->name('event.clear');
+        });
+
+        Route::controller(ActivitiesController::class)->group( function() {
+            Route::get('/users-activities', 'users')->name('users.activities');
+            Route::get('/admins-activities', 'admins')->name('admins.activities');
+            Route::get('/passwords-activities', 'passwords')->name('passwords.activities');
         });
 
         Route::controller(AuthLogsController::class)->group( function() {
-            Route::get('/user-auth-logs', 'index')->name('user.authLogs');
-            Route::get('/admin-auth-logs', 'admins')->name('admin.authLogs');
+            Route::get('/users-auth-logs', 'users')->name('users.authLogs');
+            Route::get('/admin-auth-logs', 'admins')->name('admins.authLogs');
         });
 
         Route::controller(LogViewerController::class)->group( function() {
@@ -69,7 +100,9 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminpanel', 'accountsta
     Route::prefix('settings')->name('settings.')->group( function() {
         Route::controller(SettingsController::class)->group( function() {
             Route::get('/general', 'index')->name('general');
-            Route::post('/general/update', 'update')->name('general.update');
+            Route::post('/general/update', 'updateGeneral')->name('general.update');
+            Route::get('/system', 'system')->name('system');
+            Route::post('/system/update', 'updateSystem')->name('system.update');
         });
 
         Route::controller(PagesController::class)->group( function() {
@@ -93,7 +126,6 @@ Route::middleware(['auth', 'auth.session', 'verified', 'adminpanel', 'accountsta
             Route::post('/user/change-email/{user}', 'changeEmail')->name('user.change.email');
             Route::post('/user/verify-email/{user}', 'verifyEmail')->name('user.verify.email');
             Route::post('/user/check-email/{user}', 'checkEmail')->name('user.check.email');
-            Route::post('/user/change-password/{user}', 'changePassword')->name('user.change.password');
             Route::post('/user/reset-password/{user}', 'resetPassword')->name('user.reset.password');
         });
     });

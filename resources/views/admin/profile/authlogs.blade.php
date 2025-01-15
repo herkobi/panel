@@ -3,41 +3,37 @@
     @include('admin.include.header', [
         'title' => 'Profil Bilgileri',
     ])
-    <div class="page-content flex-grow-1 d-flex flex-column shadow-sm">
-        <div class="row flex-grow-1">
-            <div class="col-20 col-lg-3 col-md-3">
-                <div class="page-menu rounded-2">
-                    @include('admin.profile.include.navigation')
+    <div class="page-content mt-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    @include('admin.profile.include.sidebar')
                 </div>
-            </div>
-            <div class="col-80 col-lg-9 col-md-9">
-                <div class="card h-100 border-0 mb-5">
-                    <div class="card-header border-0 bg-white p-0 mb-3">
-                        <div class="d-flex align-items-center justify-content-between w-100 border-bottom pb-2">
-                            <h1 class="card-title">Oturum Kayıtları</h1>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table card-table table-vcenter text-nowrap datatable">
-                            <thead>
-                                <tr>
-                                    <th>İşlem</th>
-                                    <th>IP Adresi</th>
-                                    <th>Cihaz Bilgisi</th>
-                                    <th>İşlem Tarihi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($authLogs as $authLog)
+                <div class="col-lg-9">
+                    <div class="page-form">
+                        <h3 class="form-title border-bottom mb-3 pb-3">Oturum Kayıtları</h3>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
                                     <tr>
-                                        <td>{{ $authLog->event_name }}</td>
-                                        <td>{{ $authLog->ip_address }}</td>
-                                        <td>{{ $authLog->user_agent }}</td>
-                                        <td>{{ $authLog->created_at }}</td>
+                                        <th>İşlem</th>
+                                        <th>IP Adresi</th>
+                                        <th>Cihaz Bilgisi</th>
+                                        <th>İşlem Tarihi</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($user->authlogs as $log)
+                                        <tr>
+                                            <td>{{ $log->event_name }}</td>
+                                            <td>{{ $log->ip_address }}</td>
+                                            <td>{{ $log->user_agent }}</td>
+                                            <td>{{ $log->created_at }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

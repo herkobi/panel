@@ -13,6 +13,8 @@ class Page extends Model
 {
     use HasFactory, HasUuids, Sluggable, HasDefaultPagination;
 
+    protected $tables = "pages";
+
     protected $fillable = [
         'status',
         'title',

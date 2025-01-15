@@ -3,7 +3,9 @@
 namespace App\Actions\Fortify;
 
 use App\Enums\AccountStatus;
+use App\Enums\Status;
 use App\Enums\UserType;
+use App\Models\Agreement;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +26,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        Validator::make($input, [
+        $validationRules = [
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['required', 'string', 'max:255'],
             'email' => [
@@ -35,10 +37,9 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
-            'terms' => ['required']
-        ])->validate();
+        ];
 
-        $input['terms'] = $input['terms'] ? '1' : '0';
+        Validator::make($input, $validationRules)->validate();
 
         $user = User::create([
             'status' => AccountStatus::ACTIVE,
@@ -47,7 +48,6 @@ class CreateNewUser implements CreatesNewUsers
             'surname' => $input['surname'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-            'terms' => $input['terms'],
             'created_by' => 0,
             'created_by_name' => 'Owner'
         ]);
@@ -64,8 +64,6 @@ class CreateNewUser implements CreatesNewUsers
         // User tablosuna user_folder bilgisini ekle
         $user->meta()->create([
             'title' => null,
-            'url' => null,
-            'phone' => null,
             'user_folder' => $folderName
         ]);
 

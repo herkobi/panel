@@ -2,9 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Status;
-use App\Models\Page;
-use App\Models\Setting;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\UserMeta;
@@ -19,6 +16,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $this->call([
+            SettingsTableSeeder::class,
+            ContentTablesSeeder::class,
+            CountriesSeeder::class,
+            LanguagesSeeder::class
+        ]);
+
         //Süper Yönetici Hesabı ve Rolü
         $super = User::factory()->create();
         //Yönetici Hesabı ve Rolü
@@ -33,7 +38,7 @@ class DatabaseSeeder extends Seeder
         /**
          * Kullanıcı klasörü oluşturuluyor.
          */
-        $userTypes = ['super', 'admin', 'normal', 'draft', 'passive', 'deleted', 'demo'];
+        $userTypes = ['normal', 'draft', 'passive', 'deleted', 'demo'];
 
         foreach ($userTypes as $type) {
             $folderName = 'user_' . Str::random(12);
@@ -47,10 +52,5 @@ class DatabaseSeeder extends Seeder
                 'user_folder' => $folderName
             ]);
         }
-
-        $this->call([
-            SettingsTableSeeder::class,
-            PagesTableSeeder::class,
-        ]);
     }
 }
