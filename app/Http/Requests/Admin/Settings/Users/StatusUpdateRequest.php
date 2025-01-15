@@ -24,7 +24,7 @@ class StatusUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', 'integer', new Enum(AccountStatus::class)],
+            'status' => ['required', new Enum(AccountStatus::class)],
         ];
     }
 
@@ -36,13 +36,8 @@ class StatusUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-
-            /**
-             * Status Messages
-             */
             'status.required' => 'Lütfen durum seçiniz',
-            'status.integer' => 'Lütfen geçerli bir durum seçiniz',
-
+            'status.enum' => 'Lütfen geçerli bir durum seçiniz',
         ];
     }
 }

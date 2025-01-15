@@ -23,11 +23,11 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'key' => 'logo',
-                'value' => 'herkobi-favicon.png'
+                'value' => 'herkobi.png'
             ],
             [
                 'key' => 'favicon',
-                'value' => 'herkobi-favicon.png'
+                'value' => 'favicon.png'
             ],
             [
                 'key' => 'email',

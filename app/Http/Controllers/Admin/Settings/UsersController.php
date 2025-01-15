@@ -9,11 +9,9 @@ use App\Actions\Admin\Settings\User\StatusUpdate;
 use App\Actions\Admin\Settings\User\ChangeEmail;
 use App\Actions\Admin\Settings\User\VerifyEmail;
 use App\Actions\Admin\Settings\User\CheckEmail;
-use App\Actions\Admin\Settings\User\ChangePassword;
 use App\Actions\Admin\Settings\User\ResetPassword;
 use App\Http\Requests\Admin\Settings\Users\VerifyEmailRequest;
 use App\Http\Requests\Admin\Settings\Users\ChangeEmailRequest;
-use App\Http\Requests\Admin\Settings\Users\ChangePasswordRequest;
 use App\Http\Requests\Admin\Settings\Users\CheckEmailRequest;
 use App\Http\Requests\Admin\Settings\Users\ResetPasswordRequest;
 use App\Http\Requests\Admin\Settings\Users\StatusUpdateRequest;
@@ -24,7 +22,6 @@ use App\Services\Admin\Tools\AuthLogsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -51,7 +48,6 @@ class UsersController extends Controller
         ChangeEmail $changeEmail,
         VerifyEmail $verifyEmail,
         CheckEmail $checkEmail,
-        ChangePassword $changePassword,
         ResetPassword $resetPassword,
     ) {
         $this->userService = $userService;
@@ -62,7 +58,6 @@ class UsersController extends Controller
         $this->changeEmail = $changeEmail;
         $this->verifyEmail = $verifyEmail;
         $this->checkEmail = $checkEmail;
-        $this->changePassword = $changePassword;
         $this->resetPassword = $resetPassword;
     }
     public function index(): View
@@ -75,11 +70,10 @@ class UsersController extends Controller
 
     public function detail(string $id): View
     {
-        $user = $this->userService->getUserById($id);
-        $activities = $this->userService->getUserActivity($id);
+        $user = $this->userService->getUserActivity($id);
         return view('admin.settings.users.detail', [
             'user' => $user,
-            'activities' => $activities
+            'activities' => $user->activities
         ]);
     }
 
@@ -152,14 +146,6 @@ class UsersController extends Controller
         $checked = $this->checkEmail->execute($id, $request->validated());
         return $checked
             ? Redirect::back()->with('success', 'Kullanıcı e-posta adresi başarılı bir şekilde onaylandı.')
-            : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
-    }
-
-    public function changePassword(ChangePasswordRequest $request, $id): RedirectResponse
-    {
-        $changed = $this->changePassword->execute($id, $request->validated());
-        return $changed
-            ? Redirect::back()->with('success', 'Kullanıcı şifresi başarılı bir şekilde değiştirildi.')
             : Redirect::back()->with('error', 'Hata; Lütfen daha sonra tekrar deneyiniz');
     }
 

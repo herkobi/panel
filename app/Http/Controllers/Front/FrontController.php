@@ -8,6 +8,12 @@ use Illuminate\View\View;
 
 class FrontController extends Controller
 {
+
+    protected $agreementService;
+
+    public function __construct() {
+    }
+
     public function index(): View
     {
         return view('front.index');

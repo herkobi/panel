@@ -71,11 +71,6 @@ class UserService
         return $this->repository->checkEmail($id, $data);
     }
 
-    public function changePassword(string $id, array $data): User
-    {
-        return $this->repository->updatePassword($id, $data);
-    }
-
     public function resetPassword(string $id, array $data): array
     {
         return $this->repository->resetPassword($id, $data);
@@ -83,6 +78,11 @@ class UserService
 
     public function getUserActivity(string $id)
     {
-        return $this->repository->getUserActivity($id);
+        return $this->repository->withActivities($id);
+    }
+
+    public function getUserAuthLogs(string $id)
+    {
+        return $this->repository->withAuthLogs($id);
     }
 }

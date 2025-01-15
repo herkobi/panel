@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Enums\AccountStatus;
+use App\Enums\AgreementVersionStatus;
 use App\Enums\Status;
 use App\Enums\UserType;
 use App\Facades\Setting;
+use App\Utils\Helper;
 use Carbon\Carbon;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +28,7 @@ class AliasServiceProvider extends ServiceProvider
         $loader->alias('AccountStatus', AccountStatus::class);
         $loader->alias('Carbon', Carbon::class);
         $loader->alias('Setting', Setting::class);
+        $loader->alias('Helper', Helper::class);
     }
 
     /**

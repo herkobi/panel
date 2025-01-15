@@ -17,10 +17,10 @@ class AuthLogsController extends Controller
         $this->authLogs = $authLogs;
     }
 
-    public function index(): View|LengthAwarePaginator
+    public function users(): View|LengthAwarePaginator
     {
         $logs = $this->authLogs->usersAuthLogs();
-        return view('admin.tools.userauthlogs', [
+        return view('admin.tools.usersAuthlogs', [
             'logs' => $logs
         ]);
     }
@@ -28,7 +28,7 @@ class AuthLogsController extends Controller
     public function admins(): View|LengthAwarePaginator
     {
         $logs = $this->authLogs->adminsAuthLogs();
-        return view('admin.tools.adminauthlogs', [
+        return view('admin.tools.adminsAuthlogs', [
             'logs' => $logs
         ]);
     }

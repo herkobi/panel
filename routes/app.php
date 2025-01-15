@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\User\DashboardController;
-use App\Http\Controllers\User\Profile\ProfileController;
+use App\Http\Controllers\User\Account\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'auth.session', 'verified', 'userpanel', 'accountstatus'])->prefix('app')->name('app.')->group(function () {
+Route::middleware(['auth', 'auth.session', 'verified', 'panel:user', 'userstatus', 'system.settings'])->prefix('app')->name('app.')->group(function () {
 
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('home');

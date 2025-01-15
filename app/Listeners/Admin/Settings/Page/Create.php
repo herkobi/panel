@@ -5,7 +5,6 @@ namespace App\Listeners\Admin\Settings\Page;
 use App\Events\Admin\Settings\Page\Create as Event;
 use App\Models\Activity;
 use App\Services\LoggingService;
-use App\Traits\AuthUser;
 use App\Traits\LogActivity;
 
 class Create

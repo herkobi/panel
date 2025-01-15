@@ -68,9 +68,11 @@ class SettingService
     public function getFullPath($key)
     {
         $filePath = $this->get($key);
-        if ($filePath && Storage::exists("public/$filePath")) {
-            return Storage::url($filePath);
+        $fullPath = "public/{$key}/{$filePath}";  // public/logo/herkobi.png şeklinde oluştur
+
+        if ($filePath && Storage::exists($fullPath)) {
+            return Storage::url("{$key}/{$filePath}");
         }
-        return asset('herkobi-favicon.png');
+        return asset('herkobi.png');
     }
 }

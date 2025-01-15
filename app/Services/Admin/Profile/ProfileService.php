@@ -51,13 +51,13 @@ class ProfileService
         return $user;
     }
 
-    public function activityLogs(string $id): LengthAwarePaginator
+    public function activityLogs(string $id): User
     {
-        return $this->repository->getUserActivity($id);
+        return $this->repository->withActivities($id);
     }
 
-    public function authLogs(string $id): LengthAwarePaginator
+    public function authLogs(string $id): User
     {
-        return $this->authLogs->userAuthLogs($id);
+        return $this->repository->withAuthLogs($id);
     }
 }

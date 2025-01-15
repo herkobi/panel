@@ -19,9 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'adminpanel' => \App\Http\Middleware\Admin::class,
-            'userpanel' => \App\Http\Middleware\User::class,
-            'accountstatus' => \App\Http\Middleware\CheckAccountStatus::class,
+            'panel' => \App\Http\Middleware\PanelAccess::class,
+            'userstatus' => \App\Http\Middleware\UserStatusCheck::class,
+            'system.settings' => \App\Http\Middleware\SystemSettings::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

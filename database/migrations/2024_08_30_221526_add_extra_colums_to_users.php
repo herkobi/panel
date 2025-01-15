@@ -20,7 +20,6 @@ return new class extends Migration
             $table->text('agent')->nullable()->after('last_login_ip');
             $table->uuid('created_by')->default(0)->after('agent');
             $table->string('created_by_name')->default('Owner')->after('created_by');
-            $table->boolean('terms')->after('created_by_name')->default(true);
         });
     }
 
