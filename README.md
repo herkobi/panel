@@ -1,66 +1,246 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Herkobi Panel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Laravel ile backend sistem geliştirmek isteyenler için, **kullanıcı ve etkinlik yönetimini hazır sunan** başlangıç altyapısı.
 
-## About Laravel
+Herkobi Panel; kimlik doğrulama, üye/kullanıcı yönetimi, rol-yetki, ayarlar, etkinlik kaydı ve admin/üye ayrımı gibi her projede tekrar tekrar yazılan parçaları **tek bir tutarlı iskelet** hâlinde sunar. İndir, kendi iş mantığını üstüne yaz, kullan.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**MIT lisanslı, ücretsiz.**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Neler hazır geliyor?
 
-## Learning Laravel
+- **Kimlik doğrulama (Fortify)** — Giriş, kayıt, e-posta doğrulama, parola sıfırlama, parola onayı, **2FA / TOTP** (QR + kurtarma kodları).
+- **Çift alan mimarisi**
+  - `/panel` → Admin kullanıcılar (`user_type:admin`)
+  - `/app` → Üye kullanıcılar (`user_type:member`)
+- **Üye yönetimi** — Admin panelinden üye oluşturma, durum değiştirme, e-posta doğrulama / değiştirme, üye detayları.
+- **Rol ve yetki** — Spatie Permission ile rol CRUD ve granular yetki kontrolü; tüm panel/app rotalarında `permission:...` middleware desteği.
+- **Profil paketi (her iki alan için)**
+  - Profil bilgileri ve e-posta güncelleme (throttle korumalı)
+  - Güvenlik (parola değişikliği, 2FA)
+  - Aktif oturumlar (görüntüleme + uzaktan sonlandırma)
+  - Bildirimler (okunma durumu)
+  - Görünüm tercihi (light/dark/system)
+- **Hesap (App alanı)** — Üyenin firma/iletişim bilgileri yönetimi.
+- **Etkinlik kaydı** — `spatie/laravel-activitylog` ile model değişiklikleri ve önemli aksiyonlar; panelden listelenebilir.
+- **Giriş kaydı** — `yadahan/laravel-authentication-log` ile her oturumun cihaz/IP/konum izi; yeni cihaz bildirimi hazır listener'la.
+- **Tanımlamalar (definitions)** — Ülke, şehir, ilçe, dil, para birimi, vergi için CRUD + soft-delete + geri yükleme.
+- **Önbellek araçları** — Panel üzerinden tip bazlı cache temizleme.
+- **Çoklu dil** — Türkçe (`tr`, varsayılan) ve İngilizce (`en`) eş güncel tutulur.
+- **Karanlık mod** — `next-themes` üzerinden.
+- **Olay odaklı (event-driven)** — Yan etkiler (log, bildirim, e-posta, kuyruk işi) controller/servisten **değil**, `event → listener` zincirinden akar. Hâlihazırda 23 event, 24 listener tanımlı.
+- **Modern frontend** — React 19 + TypeScript + Inertia.js v3 + Tailwind v4 + shadcn/ui; **Wayfinder** ile uçtan uca tip güvenli rota fonksiyonları.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Teknoloji yığını
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Backend**
 
-## Laravel Sponsors
+- Laravel 13.7 (PHP 8.3+)
+- Laravel Fortify · Wayfinder · Tinker
+- Spatie Laravel Permission · Spatie Activity Log
+- Yadahan Authentication Log
+- Pest 4 + Pest Browser
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**Frontend**
 
-### Premium Partners
+- React 19 + TypeScript (strict)
+- Inertia.js v3
+- Tailwind CSS v4 (config dosyası yok, `resources/css/app.css` girişi)
+- shadcn/ui + Base UI primitives
+- Lucide React (ikonlar)
+- Vite 8 + babel-plugin-react-compiler
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+**Veritabanı / Çalışma zamanı**
 
-## Contributing
+- Varsayılan: **MySQL** (SQLite / MariaDB / PostgreSQL / SQL Server'a geçilebilir)
+- **UUID** birincil anahtarlar (`HasUuids` tüm modellerde)
+- `User` modelinde **soft delete**
+- Queue · Cache · Session · sürücüsü: `database`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Sistem gereksinimleri
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- PHP **8.3+**
+- Composer 2.x
+- Node.js **20+** ve npm
+- Bir veritabanı — varsayılan **MySQL** (yerelde MySQL servisi çalışıyor olmalı; `.env`'de `DB_*` değerleri ayarlanır). SQLite'a geçilecekse `DB_CONNECTION=sqlite` yeterli.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Kurulum
 
-## License
+```bash
+git clone <repo-url> herkobi-panel
+cd herkobi-panel
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Bağımlılıklar + .env + key + migrate + npm install + build
+composer setup
+```
+
+`composer setup` yapılan işler:
+
+1. `composer install`
+2. `.env` yoksa `.env.example`'dan kopyalanır
+3. `php artisan key:generate`
+4. `php artisan migrate --force`
+5. `npm install`
+6. `npm run build`
+
+Ardından geliştirme sunucusunu başlatın:
+
+```bash
+composer dev
+```
+
+Bu komut `php artisan serve`, `php artisan queue:listen` ve `npm run dev`'i **concurrently** ile aynı anda çalıştırır.
+
+---
+
+## Sık kullanılan komutlar
+
+```bash
+# Geliştirme (Laravel + queue + Vite)
+composer dev
+
+# Tek seferlik build
+npm run build
+
+# Rota değişikliğinden sonra mutlaka çalıştırın
+php artisan wayfinder:generate --with-form --no-interaction
+
+# Kod kalitesi
+composer lint           # Pint formatla
+composer lint:check     # Pint sadece kontrol
+npm run lint            # ESLint --fix
+npm run lint:check
+npm run format          # Prettier --write
+npm run types:check     # tsc --noEmit
+
+# Test
+composer test                              # config:clear + lint + pest
+php artisan test --filter=TestName         # tek test
+
+# Tam CI parite kontrolü (push öncesi)
+composer ci:check
+```
+
+---
+
+## Mimari notlar
+
+### Bağımlılık yönü
+
+Üst katman alttakine bağımlı olabilir; tersi **yasak**:
+
+```
+Enum → Migration → Model → Service → Event → Listener →
+Notification → Job → Request → Controller → Resource →
+Page/UI → Middleware → Seeder → Permission
+```
+
+### Olay odaklı yan etki kuralı
+
+Controller ince kalır, servisler iş kuralını taşır. Her yan etki — aktivite kaydı, bildirim, e-posta, kuyruk işi — **`event() → listener` zinciri** üzerinden akar; controller veya servisten doğrudan tetiklenmez.
+
+### Inertia paylaşımlı `auth` sözleşmesi
+
+Tek bir paylaşımlı prop vardır: `auth`, ve `auth.type: 'app' | 'panel'` ile ayrılır.
+
+- App alanı React kodunda → `useAppAuth()`
+- Panel alanı React kodunda → `usePanelAuth()`
+
+`usePage().props.auth`'u doğrudan okumayın; `AppUser` ve `PanelUser` tiplerini karıştırmayın.
+
+### Özel middleware
+
+| Middleware | Görev |
+|---|---|
+| `active_user` | Pasif kullanıcının erişimini engeller |
+| `user_type:admin\|member` | Alan ayrımını uygular |
+| `write_access` | Yazma yetkisi olmayan kullanıcıları yalnızca okumaya kısıtlar |
+| `HandleInertiaRequests` | Paylaşımlı `auth` prop'unu üretir |
+| `SetSecurityHeaders` | Güvenlik başlıkları |
+
+### Modeller
+
+- Tüm modeller `HasUuids` kullanır — birincil ve yabancı anahtarlar **UUID string**.
+- `User` modeli `SoftDeletes` — adminler hard-delete edemez.
+- PHP 8.3 attribute'ları: `#[Fillable([...])]`, `#[Hidden([...])]`, `#[Scope]`.
+- Her PHP dosyası `declare(strict_types=1);` ile başlar.
+
+---
+
+## Klasör yapısı
+
+```
+app/
+  Actions/Fortify/      Fortify aksiyonları
+  Enums/                Status, UserStatus, UserType
+  Events/{Panel,App,Auth}
+  Http/Controllers/{Panel,App}
+  Http/Middleware/      Özel middleware
+  Listeners/{Panel,App,Auth}
+  Models/               UUID + HasUuids
+  Notifications/{Panel,App,Auth}
+  Services/{Panel,App,Support}
+resources/
+  css/app.css           Tailwind v4 girişi
+  js/
+    actions/            Wayfinder action fonksiyonları (üretilen)
+    routes/             Wayfinder route helper'ları (üretilen)
+    components/ui/      shadcn/ui (elle düzenlenmez)
+    components/{app,panel}/
+    hooks/              useAppAuth, usePanelAuth, vb.
+    layouts/{app,panel,auth}/
+    pages/{app,panel,auth}/
+    types/
+routes/
+  panel.php             /panel — admin
+  app.php               /app — üye
+  web.php               public + dashboard yönlendirme
+lang/{tr,en}/           Çeviriler (eş güncel tutulur)
+```
+
+---
+
+## Test
+
+Testler — uygulama varsayılanından bağımsız olarak — **SQLite `:memory:`** üzerinde, `sync` queue ve `array` cache/session ile koşar (bkz. [phpunit.xml](phpunit.xml)). DB'ye dokunan feature testlerinde `RefreshDatabase` kullanın.
+
+```bash
+composer test           # Pint + Pest
+composer ci:check       # lint + format + types + test (CI'la birebir)
+```
+
+---
+
+## Bilinmesi gerekenler
+
+- Her rota değişikliğinden sonra `php artisan wayfinder:generate` çalıştırın; frontend hardcoded URL kullanmaz.
+- Yetkilendirme bugün **middleware tabanlı**dır; ihtiyaç çıkarsa Policy eklenir.
+- Yeni e-posta işleri için: kuyruğa alınan bir **Job**, içinden bir **Mailable** dispatch eder. Görünümler `resources/views/mail/` altına gelir.
+- shadcn/ui primitive'leri üretilmiştir ve ESLint/Prettier dışındadır — elle düzenlemeyin, regenerate edin.
+
+---
+
+## Katkı
+
+PR'lara açıktır. Göndermeden önce lütfen şunu çalıştırın:
+
+```bash
+composer ci:check
+```
+
+Yeşil değilse merge edilmez. Türkçe ve İngilizce çeviri dosyalarını eş güncel tutun.
+
+---
+
+## Lisans
+
+[MIT](LICENSE) © Herkobi
+
+Bu proje **özgürce** indirilebilir, değiştirilebilir, ticari ve kişisel projelerde kullanılabilir. Tek koşul lisans dosyasının dağıtımda korunmasıdır.

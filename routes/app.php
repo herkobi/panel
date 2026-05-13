@@ -1,25 +1,50 @@
 <?php
 
-use App\Http\Controllers\User\DashboardController;
-use App\Http\Controllers\User\Account\Profile\ProfileController;
+declare(strict_types=1);
+
+use App\Http\Controllers\App\Account\AccountController;
+use App\Http\Controllers\App\DashboardController;
+use App\Http\Controllers\App\Profile\NotificationsController;
+use App\Http\Controllers\App\Profile\PreferencesController;
+use App\Http\Controllers\App\Profile\ProfileController;
+use App\Http\Controllers\App\Profile\SecurityController;
+use App\Http\Controllers\App\Profile\SessionsController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'auth.session', 'verified', 'panel:user', 'userstatus', 'system.settings'])->prefix('app')->name('app.')->group(function () {
+Route::middleware(['auth', 'verified', 'user_type:member', 'active_user', 'write_access'])->group(function () {
 
     Route::controller(DashboardController::class)->group(function () {
-        Route::get('/', 'index')->name('home');
-        Route::get('/passive', 'passive')->name('passive');
+        Route::get('/', 'index')->name('dashboard');
     });
 
-    Route::controller(ProfileController::class)->group( function() {
-        Route::get('/profile', 'index')->name('profile');
-        Route::post('/profile/update/{user}', 'update')->name('profile.update');
-        Route::post('/profile/email-update/{user}', 'mailUpdate')->name('profile.email.update');
-        Route::post('/profile/password-update/{user}', 'passwordUpdate')->name('profile.password.update');
+    Route::controller(AccountController::class)->group(function () {
+        Route::get('account', 'index')->name('account');
+        Route::patch('account', 'update')->name('account.update');
+    });
 
-        Route::get('/profile/activity-logs', 'activitylogs')->name('profile.activitylogs');
-        Route::get('/profile/auth-logs', 'authlogs')->name('profile.authlogs');
+    Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', 'edit')->name('edit');
+        Route::patch('/', 'update')->name('update');
+        Route::put('email', 'updateEmail')->middleware('throttle:6,1')->name('email.update');
 
-        Route::get('/profile/2fa', 'twofactor')->name('profile.twofactor');
+        Route::controller(SecurityController::class)->group(function () {
+            Route::get('security', 'edit')->name('security');
+            Route::put('password', 'update')->middleware('throttle:6,1')->name('password.update');
+        });
+
+        Route::controller(NotificationsController::class)->group(function () {
+            Route::get('notifications', 'index')->name('notifications');
+            Route::patch('notifications/{notification}/read', 'markAsRead')->name('notifications.read');
+        });
+
+        Route::controller(SessionsController::class)->group(function () {
+            Route::get('sessions', 'index')->name('sessions');
+            Route::delete('sessions/{session}', 'destroy')->name('sessions.destroy');
+        });
+
+        Route::controller(PreferencesController::class)->prefix('appearance')->name('appearance.')->group(function () {
+            Route::get('/', 'edit')->name('edit');
+            Route::put('/', 'update')->name('update');
+        });
     });
 });

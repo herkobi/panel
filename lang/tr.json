@@ -1,0 +1,5 @@
+{
+    "The provided password was incorrect.": "Girilen şifre hatalı.",
+    "The provided two factor authentication code was invalid.": "Girilen iki aşamalı doğrulama kodu hatalı.",
+    "The provided two factor recovery code was invalid.": "Girilen iki aşamalı doğrulama kurtarma kodu hatalı."
+}

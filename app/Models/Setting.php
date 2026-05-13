@@ -1,27 +1,50 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use App\Traits\HasDefaultPagination;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
+#[Fillable([
+    'key',
+    'value',
+    'group',
+])]
 class Setting extends Model
 {
-    use HasFactory, HasDefaultPagination, HasUuids;
-    protected $table = 'settings';
+    use HasFactory, HasUuids;
 
-    protected $fillable = [
-        'key',
-        'value'
-    ];
+    public const CACHE_KEY = 'panel.settings';
 
-    protected function casts(): array
+    protected static function booted(): void
     {
-        return [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+        static::saved(fn () => static::flushCache());
+        static::deleted(fn () => static::flushCache());
+    }
+
+    public static function flushCache(): void
+    {
+        Cache::forget(self::CACHE_KEY);
+    }
+
+    /**
+     * @return array<string, string|null>
+     */
+    public static function allCached(): array
+    {
+        return Cache::rememberForever(
+            self::CACHE_KEY,
+            fn () => static::query()->pluck('value', 'key')->all()
+        );
+    }
+
+    public static function get(string $key, ?string $default = null): ?string
+    {
+        return static::allCached()[$key] ?? $default;
     }
 }

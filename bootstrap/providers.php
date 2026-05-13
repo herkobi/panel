@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+use App\Providers\AppServiceProvider;
+use App\Providers\FortifyServiceProvider;
+
 return [
-    App\Providers\AliasServiceProvider::class,
-    App\Providers\AppServiceProvider::class,
-    App\Providers\FortifyServiceProvider::class,
-    Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
+    AppServiceProvider::class,
+    FortifyServiceProvider::class,
 ];

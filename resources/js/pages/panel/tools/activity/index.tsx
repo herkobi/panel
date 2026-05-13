@@ -1,0 +1,378 @@
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import {
+    Activity as ActivityIcon,
+    ChevronDownIcon,
+    RotateCcw,
+    Search,
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button, buttonVariants } from '@/components/ui/button';
+import {
+    Empty,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from '@/components/ui/empty';
+import { Input } from '@/components/ui/input';
+
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import { dashboard } from '@/routes';
+import { activity } from '@/routes/panel/tools';
+import type {
+    Activity,
+    ActivityFilters,
+    ActivitySubjectTypeOption,
+} from '@/types/activity';
+import type { Paginated, PaginationLink } from '@/types/pagination';
+
+type ActivityPaginator = Paginated<Activity> & {
+    links: PaginationLink[];
+};
+
+type PageProps = {
+    activities: ActivityPaginator;
+    filters: ActivityFilters;
+    users: { id: string; name: string }[];
+    subject_types: ActivitySubjectTypeOption[];
+};
+
+function getEventVariant(
+    event: string | null,
+): 'default' | 'secondary' | 'destructive' | 'outline' {
+    switch (event) {
+        case 'created':
+            return 'default';
+        case 'updated':
+            return 'secondary';
+        case 'deleted':
+            return 'destructive';
+        default:
+            return 'outline';
+    }
+}
+
+function getEventLabel(event: string | null): string {
+    switch (event) {
+        case 'created':
+            return 'Oluşturuldu';
+        case 'updated':
+            return 'Güncellendi';
+        case 'deleted':
+            return 'Silindi';
+        default:
+            return event ?? '-';
+    }
+}
+
+function getPaginationLabel(label: string): string {
+    return label.replaceAll('&laquo;', '').replaceAll('&raquo;', '').trim();
+}
+
+function isPreviousPaginationLink(label: string): boolean {
+    const normalized = getPaginationLabel(label).toLowerCase();
+
+    return normalized.includes('previous') || normalized.includes('önceki');
+}
+
+function isNextPaginationLink(label: string): boolean {
+    const normalized = getPaginationLabel(label).toLowerCase();
+
+    return normalized.includes('next') || normalized.includes('sonraki');
+}
+
+export default function ActivityIndex() {
+    const { activities, filters, users, subject_types } =
+        usePage<PageProps>().props;
+
+    const form = useForm<ActivityFilters>({
+        user_id: filters.user_id,
+        subject_type: filters.subject_type,
+        causer_id: filters.causer_id,
+        from: filters.from,
+        to: filters.to,
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        form.get(activity({ query: form.data }).url);
+    };
+
+    const handleReset = () => {
+        form.reset();
+        form.get(activity().url);
+    };
+
+    return (
+        <>
+            <Head title="Etkinlik Kayıtları" />
+
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
+                <form
+                    onSubmit={handleSubmit}
+                    className="grid grid-cols-1 items-end gap-3 sm:grid-cols-2 lg:grid-cols-5"
+                >
+                    <div className="flex flex-col gap-1.5">
+                        <label
+                            htmlFor="causer_id"
+                            className="text-sm font-medium"
+                        >
+                            Kullanıcı
+                        </label>
+                        <div className="relative w-full">
+                            <select
+                                id="causer_id"
+                                value={form.data.causer_id}
+                                onChange={(e) =>
+                                    form.setData('causer_id', e.target.value)
+                                }
+                                className="h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-transparent px-3 py-2 pr-9 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed dark:bg-input/30 dark:hover:bg-input/50"
+                            >
+                                <option value="">Tümü</option>
+                                {users.map((user) => (
+                                    <option key={user.id} value={user.id}>
+                                        {user.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-muted-foreground opacity-50 select-none" />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <label
+                            htmlFor="subject_type"
+                            className="text-sm font-medium"
+                        >
+                            Kayıt Türü
+                        </label>
+                        <div className="relative w-full">
+                            <select
+                                id="subject_type"
+                                value={form.data.subject_type}
+                                onChange={(e) =>
+                                    form.setData('subject_type', e.target.value)
+                                }
+                                className="h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-transparent px-3 py-2 pr-9 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed dark:bg-input/30 dark:hover:bg-input/50"
+                            >
+                                <option value="">Tümü</option>
+                                {subject_types.map((type) => (
+                                    <option key={type.value} value={type.value}>
+                                        {type.label}
+                                    </option>
+                                ))}
+                            </select>
+                            <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-muted-foreground opacity-50 select-none" />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <label htmlFor="from" className="text-sm font-medium">
+                            Başlangıç Tarihi
+                        </label>
+                        <Input
+                            id="from"
+                            type="date"
+                            value={form.data.from}
+                            onChange={(e) =>
+                                form.setData('from', e.target.value)
+                            }
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <label htmlFor="to" className="text-sm font-medium">
+                            Bitiş Tarihi
+                        </label>
+                        <Input
+                            id="to"
+                            type="date"
+                            value={form.data.to}
+                            onChange={(e) => form.setData('to', e.target.value)}
+                        />
+                    </div>
+
+                    <div className="flex gap-2">
+                        <Button type="submit" disabled={form.processing}>
+                            <Search className="size-4" />
+                            Filtrele
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleReset}
+                        >
+                            <RotateCcw className="size-4" />
+                            Sıfırla
+                        </Button>
+                    </div>
+                </form>
+
+                {activities.data.length === 0 ? (
+                    <Empty>
+                        <EmptyHeader>
+                            <EmptyMedia variant="icon">
+                                <ActivityIcon className="size-6" />
+                            </EmptyMedia>
+                            <EmptyTitle>Kayıt Bulunamadı</EmptyTitle>
+                            <EmptyDescription>
+                                Seçili filtrelere uygun etkinlik kaydı
+                                bulunmuyor.
+                            </EmptyDescription>
+                        </EmptyHeader>
+                    </Empty>
+                ) : (
+                    <>
+                        <div className="relative overflow-hidden rounded-xl border">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Tarih</TableHead>
+                                        <TableHead>Kullanıcı</TableHead>
+                                        <TableHead>Olay</TableHead>
+                                        <TableHead>Kayıt Türü</TableHead>
+                                        <TableHead>Açıklama</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {activities.data.map((item) => (
+                                        <TableRow key={item.id}>
+                                            <TableCell>
+                                                {item.created_at
+                                                    ? new Date(
+                                                          item.created_at,
+                                                      ).toLocaleString('tr-TR')
+                                                    : '-'}
+                                            </TableCell>
+                                            <TableCell>
+                                                {item.causer?.name ?? '-'}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    variant={getEventVariant(
+                                                        item.event,
+                                                    )}
+                                                >
+                                                    {getEventLabel(item.event)}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                {item.subject_label ?? '-'}
+                                            </TableCell>
+                                            <TableCell className="max-w-xs truncate">
+                                                {item.description ?? '-'}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <div className="text-sm text-muted-foreground">
+                                Toplam{' '}
+                                {activities.meta?.total ??
+                                    activities.total ??
+                                    0}{' '}
+                                kayıt
+                            </div>
+                            <div className="flex items-center gap-1">
+                                {activities.links.map((link, index) => {
+                                    if (isPreviousPaginationLink(link.label)) {
+                                        return (
+                                            <Link
+                                                key={index}
+                                                href={link.url ?? '#'}
+                                                className={cn(
+                                                    buttonVariants({
+                                                        variant: 'ghost',
+                                                        size: 'sm',
+                                                    }),
+                                                    !link.url &&
+                                                        'pointer-events-none opacity-50',
+                                                )}
+                                            >
+                                                Önceki
+                                            </Link>
+                                        );
+                                    }
+
+                                    if (isNextPaginationLink(link.label)) {
+                                        return (
+                                            <Link
+                                                key={index}
+                                                href={link.url ?? '#'}
+                                                className={cn(
+                                                    buttonVariants({
+                                                        variant: 'ghost',
+                                                        size: 'sm',
+                                                    }),
+                                                    !link.url &&
+                                                        'pointer-events-none opacity-50',
+                                                )}
+                                            >
+                                                Sonraki
+                                            </Link>
+                                        );
+                                    }
+
+                                    const label = getPaginationLabel(
+                                        link.label,
+                                    );
+
+                                    if (label === '...') {
+                                        return (
+                                            <span
+                                                key={index}
+                                                className="flex size-9 items-center justify-center text-sm text-muted-foreground"
+                                            >
+                                                ...
+                                            </span>
+                                        );
+                                    }
+
+                                    return (
+                                        <Link
+                                            key={index}
+                                            href={link.url ?? '#'}
+                                            className={cn(
+                                                buttonVariants({
+                                                    variant: link.active
+                                                        ? 'outline'
+                                                        : 'ghost',
+                                                    size: 'icon',
+                                                }),
+                                                'size-8 text-xs',
+                                                !link.url &&
+                                                    'pointer-events-none opacity-50',
+                                            )}
+                                        >
+                                            {label}
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
+        </>
+    );
+}
+
+ActivityIndex.layout = {
+    breadcrumbs: [
+        {
+            title: 'Etkinlik Kayıtları',
+            href: dashboard(),
+        },
+    ],
+};

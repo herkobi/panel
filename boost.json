@@ -1,0 +1,16 @@
+{
+    "agents": [
+        "claude_code",
+        "codex",
+        "gemini"
+    ],
+    "cloud": false,
+    "skills": [
+        "fortify-development",
+        "laravel-best-practices",
+        "wayfinder-development",
+        "pest-testing",
+        "inertia-react-development",
+        "tailwindcss-development"
+    ]
+}

@@ -1,31 +1,61 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enums;
 
-enum UserType: int
+enum UserType: string
 {
-    case SUPER = 1;
-    case ADMIN = 2;
-    case USER = 3;
-    case DEMO = 4;
+    case Admin = 'admin';
+    case Member = 'member';
 
-    public function title(): string
+    /**
+     * Get human-readable label.
+     */
+    public function label(): string
     {
         return match ($this) {
-            self::SUPER => 'SUPER ADMIN',
-            self::ADMIN => 'ADMIN',
-            self::USER => 'USER',
-            self::DEMO => 'DEMO',
+            self::Admin => 'Yönetici',
+            self::Member => 'Üye',
         };
     }
 
-    public static function fromValue(int $value): ?self
+    /**
+     * Get badge variant for UI display.
+     */
+    public function badge(): string
     {
-        foreach (self::cases() as $status) {
-            if ($status->value === $value) {
-                return $status;
-            }
-        }
-        return null;
+        return match ($this) {
+            self::Admin => 'destructive',
+            self::Member => 'default',
+        };
+    }
+
+    /**
+     * Check if user type is admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this === self::Admin;
+    }
+
+    /**
+     * Check if user type is member.
+     */
+    public function isMember(): bool
+    {
+        return $this === self::Member;
+    }
+
+    /**
+     * Get all available options for forms.
+     *
+     * @return array<string, string>
+     */
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->mapWithKeys(fn ($case) => [$case->value => $case->label()])
+            ->toArray();
     }
 }

@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use App\Listeners\Admin\Tools\PasswordResetRequest;
-use App\Services\SettingService;
-use Illuminate\Auth\Events\PasswordResetLinkSent;
-use Illuminate\Support\Facades\Event;
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,9 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('setting', function ($app) {
-            return $app->make(SettingService::class);
-        });
+        //
     }
 
     /**
@@ -25,6 +27,49 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(PasswordResetLinkSent::class, PasswordResetRequest::class);
+        $this->configureDefaults();
+        $this->configureUserPreferences();
+    }
+
+    /**
+     * Configure default behaviors for production-ready applications.
+     */
+    protected function configureDefaults(): void
+    {
+        Date::use(CarbonImmutable::class);
+
+        DB::prohibitDestructiveCommands(
+            app()->isProduction(),
+        );
+
+        Password::defaults(fn (): ?Password => app()->isProduction()
+            ? Password::min(12)
+                ->mixedCase()
+                ->letters()
+                ->numbers()
+                ->symbols()
+                ->uncompromised()
+            : null,
+        );
+    }
+
+    protected function configureUserPreferences(): void
+    {
+        // View render edilmeden önce (Inertia dahil) ayarları uygula
+        view()->composer('*', function () {
+            if (Auth::check()) {
+                // Session'dan al, yoksa config'deki varsayılanı kullan
+                $locale = session('locale', config('app.locale'));
+                $timezone = session('timezone', config('app.timezone'));
+
+                // Sistem ayarlarını çalışma zamanında güncelle
+                app()->setLocale($locale);
+                config(['app.timezone' => $timezone]);
+                date_default_timezone_set($timezone);
+
+                // Carbon için immutable desteğini ve yerelleştirmeyi koru[cite: 2]
+                Carbon::setLocale($locale);
+            }
+        });
     }
 }

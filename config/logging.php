@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -54,7 +56,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', env('LOG_STACK', 'single')),
+            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
 
@@ -76,7 +78,7 @@ return [
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => env('LOG_SLACK_USERNAME', 'Laravel Log'),
+            'username' => env('LOG_SLACK_USERNAME', env('APP_NAME', 'Laravel')),
             'emoji' => env('LOG_SLACK_EMOJI', ':boom:'),
             'level' => env('LOG_LEVEL', 'critical'),
             'replace_placeholders' => true,
@@ -98,10 +100,10 @@ return [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
             'handler' => StreamHandler::class,
-            'formatter' => env('LOG_STDERR_FORMATTER'),
-            'with' => [
+            'handler_with' => [
                 'stream' => 'php://stderr',
             ],
+            'formatter' => env('LOG_STDERR_FORMATTER'),
             'processors' => [PsrLogMessageProcessor::class],
         ],
 
