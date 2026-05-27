@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\HasSortOrder;
+use App\Concerns\HasStatus;
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,13 +24,12 @@ use Illuminate\Support\Str;
 ])]
 class Country extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasSortOrder, HasStatus, HasUuids, SoftDeletes;
 
     protected function casts(): array
     {
         return [
             'status' => Status::class,
-            'sort_order' => 'integer',
         ];
     }
 
@@ -43,12 +42,6 @@ class Country extends Model
     {
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value);
-    }
-
-    #[Scope]
-    protected function active(Builder $query): void
-    {
-        $query->where('status', Status::Active->value);
     }
 
     public function cities(): HasMany

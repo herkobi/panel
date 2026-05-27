@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Panel\Settings\General;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Panel\Settings\General\UpdateSettingsRequest;
+use App\Http\Requests\Panel\Settings\General\UploadSettingAssetRequest;
 use App\Http\Resources\Panel\Tools\Definitions\CountryResource;
 use App\Http\Resources\Panel\Tools\Definitions\CurrencyResource;
 use App\Http\Resources\Panel\Tools\Definitions\LanguageResource;
@@ -17,6 +18,8 @@ use App\Models\Tax;
 use App\Services\Panel\Settings\General\SettingsService;
 use DateTimeZone;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,5 +51,29 @@ class SettingsController extends Controller
 
         return back()
             ->with('toast', ['type' => 'success', 'message' => __('Ayarlar güncellendi.')]);
+    }
+
+    public function uploadAsset(UploadSettingAssetRequest $request, SettingsService $service): RedirectResponse
+    {
+        $service->setAsset(
+            $request->validated('key'),
+            $request->file('file'),
+            $request->user(),
+        );
+
+        return back()
+            ->with('toast', ['type' => 'success', 'message' => __('Görsel güncellendi.')]);
+    }
+
+    public function destroyAsset(Request $request, SettingsService $service): RedirectResponse
+    {
+        $validated = $request->validate([
+            'key' => ['required', 'string', Rule::in(array_keys(SettingsService::FILE_KEYS))],
+        ]);
+
+        $service->removeAsset($validated['key'], $request->user());
+
+        return back()
+            ->with('toast', ['type' => 'success', 'message' => __('Görsel kaldırıldı.')]);
     }
 }

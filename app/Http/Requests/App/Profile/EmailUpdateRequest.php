@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\App\Profile;
 
-use App\Concerns\App\Profile\ProfileValidationRules;
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class EmailUpdateRequest extends FormRequest
 {
-    use ProfileValidationRules;
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,7 +20,11 @@ class EmailUpdateRequest extends FormRequest
     {
         return [
             'email' => [
-                ...$this->emailRules($this->user()->id),
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique(User::class)->ignore($this->user()->id),
                 Rule::notIn([(string) $this->user()->email]),
             ],
         ];

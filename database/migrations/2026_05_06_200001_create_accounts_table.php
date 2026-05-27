@@ -13,37 +13,24 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Merkezi sahiplik varlığı: member kullanıcılar ve member verileri buna bağlanır.
         Schema::create('accounts', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            // Kullanıcı ile birebir ilişki
-            $table->foreignUuid('user_id')
-                ->unique()
-                ->constrained()
-                ->cascadeOnDelete();
-
-            // Ünvan ve Adres Bilgileri[cite: 17]
+            // E-posta doğrulamasında üretilen benzersiz kod; ünvan sonradan girilir.
+            $table->string('code', 16)->unique();
             $table->string('title')->nullable();
-            $table->text('address')->nullable();
-            $table->string('postal_code', 16)->nullable();
-
-            // Lokasyon İlişkileri (String yerine UUID Referansları)
-            $table->foreignUuid('country_id')
-                ->nullable()
-                ->constrained('countries')
-                ->nullOnDelete();
-
-            $table->foreignUuid('city_id')
-                ->nullable()
-                ->constrained('cities')
-                ->nullOnDelete();
-
-            $table->foreignUuid('district_id')
-                ->nullable()
-                ->constrained('districts')
-                ->nullOnDelete();
 
             $table->timestamps();
+        });
+
+        // Kullanıcılar bir Account'a bağlanır (admin'ler için null).
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignUuid('account_id')
+                ->nullable()
+                ->after('media_directory')
+                ->constrained('accounts')
+                ->nullOnDelete();
         });
     }
 
@@ -52,6 +39,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('account_id');
+        });
+
         Schema::dropIfExists('accounts');
     }
 };

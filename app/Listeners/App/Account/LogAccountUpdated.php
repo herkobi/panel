@@ -11,7 +11,7 @@ class LogAccountUpdated
     public function handle(AccountUpdatedEvent $event): void
     {
         $userName = $event->updatedBy->name;
-        $accountName = $event->account->name ?? 'hesabı';
+        $accountName = $event->account->title ?? 'hesabı';
 
         activity('account')
             ->performedOn($event->account)

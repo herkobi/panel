@@ -53,11 +53,11 @@ app/
     Middleware/             # Custom middleware (see below)
     Requests/               # Form requests (Panel/* and App/*)
     Resources/              # API resources (Panel/* and App/*)
-  Jobs/                     # Queueable jobs (empty currently)
+  Jobs/                     # Queueable jobs (1: Auth/DetectNewDeviceLogin — device detection, not mail)
   Listeners/                # Event listeners (Panel, App, Auth namespaces)
-  Mail/                     # Mailables (empty currently)
+  Mail/                     # Mailables (rendered by notifications' toMail())
   Models/                   # Eloquent models (10 files)
-  Notifications/            # Auth notifications (3 files)
+  Notifications/            # ShouldQueue notifications (Auth, App/Panel Profile, Members, Settings/User)
   Services/                 # Business logic (Panel/* namespaces)
 bootstrap/
 config/                     # Standard Laravel config
@@ -180,12 +180,12 @@ Uygulama olay odaklı mimariyi takip eder. İş mantığı ve yan etkiler şu ş
 
 Kural: Yan etkiler (bildirim, e-posta, kuyruk işi) doğrudan controller veya servis içinde gerçekleştirilmez; mutlaka bir event → listener zinciri üzerinden yürütülür.
 
-Currently, the application has:
-- **23 Events** — definitions CRUD events, profile/settings/cache events
-- **24 Listeners** — mostly activity log listeners for definitions
-- **0 Jobs** — none created yet; should be created when email sending is needed
-- **3 Notifications** — Auth notifications (password reset, email verify, password reset completed)
-- **0 Mailables** — none created yet; should be created when mail templates are needed
+Currently, the application has (approximate, grows over time):
+- **~74 Events** — definitions CRUD events, profile/settings/members/cache/auth events
+- **~109 Listeners** — activity log listeners plus `Send{X}` notification listeners
+- **1 Job** — `Auth/DetectNewDeviceLogin` (device detection); routine mail goes through notifications, not jobs
+- **~22 Notifications** — all `ShouldQueue`; Auth, App/Panel Profile, Members, Settings/User. Each handles in-app (`database`) and/or mail (`toMail()` → Mailable)
+- **12 Mailables** — rendered by the notifications' `toMail()`
 - **0 Policies** — authorization is handled via middleware currently
 
 ## Coding Standards
@@ -489,9 +489,9 @@ const { user } = usePanelAuth();
 5. **Fortify views enabled** — Inertia handles the frontend, but Fortify view routes are active.
 6. **Authentication log** — Every login is tracked via `yadahan/laravel-authentication-log`.
 7. **Activity log** — Key actions are logged via `spatie/laravel-activitylog`.
-8. **Event-driven side effects** — Every database change must trigger an activity log entry. If a notification is needed, create a notification record. If email is needed, create a job and send mail via a Mailable with views in `resources/views/mail/`.
+8. **Event-driven side effects** — Every database change must trigger an activity log entry via a listener. For user-facing alerts/email, a `Send{X}` listener calls `$notifiable->notify(new {X}Notification(...))`; the `ShouldQueue` notification handles both the in-app record (`toArray()`/`database`) and the queued mail (`toMail()` → Mailable, views in `resources/views/mail/`). Do not dispatch a Job for routine mail.
 9. **No policies exist yet** — Authorization is currently middleware-based.
-10. **No jobs or mailables exist yet** — These should be created when async work or email is required.
+10. **Jobs are the exception, not the rule** — Routine mail flows through notifications. Add a Job only for work needing an independent lifecycle (custom queue/retry/batch); today only `Auth/DetectNewDeviceLogin` exists.
 
 ## Goal
 

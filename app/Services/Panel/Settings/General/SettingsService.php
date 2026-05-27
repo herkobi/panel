@@ -19,7 +19,7 @@ class SettingsService
 
     public const GROUP_DEFAULTS = 'defaults';
 
-    public const PANEL_DIRECTORY = 'panel';
+    public const ADMIN_DIRECTORY = 'media';
 
     public const KEYS = [
         'app_name' => self::GROUP_GENERAL,
@@ -87,6 +87,45 @@ class SettingsService
     }
 
     /**
+     * Bir marka görselini (logo/favicon) anında yükler ve eskisini siler.
+     */
+    public function setAsset(string $key, UploadedFile $file, User $causer): void
+    {
+        $current = Setting::allCached();
+
+        $path = $this->files->storePublicImage(
+            $file,
+            self::ADMIN_DIRECTORY,
+            $current[$key] ?? null,
+            self::FILE_KEYS[$key],
+        );
+
+        Setting::updateOrCreate(
+            ['key' => $key],
+            ['value' => $path, 'group' => self::KEYS[$key]],
+        );
+
+        SettingsUpdatedEvent::dispatch($causer);
+    }
+
+    /**
+     * Bir marka görselini anında siler ve ayarı null'a çeker.
+     */
+    public function removeAsset(string $key, User $causer): void
+    {
+        $current = Setting::allCached();
+
+        $this->files->deletePublicFile($current[$key] ?? null);
+
+        Setting::updateOrCreate(
+            ['key' => $key],
+            ['value' => null, 'group' => self::KEYS[$key]],
+        );
+
+        SettingsUpdatedEvent::dispatch($causer);
+    }
+
+    /**
      * @param  array<string, mixed>  $values
      * @return array<string, string|null>
      */
@@ -103,7 +142,7 @@ class SettingsService
 
             $values[$key] = $this->files->storePublicImage(
                 $values[$key],
-                self::PANEL_DIRECTORY,
+                self::ADMIN_DIRECTORY,
                 $current[$key] ?? null,
                 $prefix,
             );

@@ -6,9 +6,13 @@ namespace App\Notifications\Auth;
 
 use App\Mail\Auth\VerifyEmailMail;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class VerifyEmailNotification extends VerifyEmail
+class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * @return array<int, string>
      */

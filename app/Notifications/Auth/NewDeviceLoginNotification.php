@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Notifications\Auth;
 
-use App\Jobs\Auth\SendNewDeviceLoginMail;
-use App\Models\User;
+use App\Mail\Auth\NewDeviceLoginMail;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NewDeviceLoginNotification extends Notification
+class NewDeviceLoginNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
+
     public function __construct(
         public readonly string $ipAddress,
         public readonly ?string $userAgent,
@@ -21,17 +24,16 @@ class NewDeviceLoginNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail', 'database'];
     }
 
-    public function dispatchMail(User $user): void
+    public function toMail(object $notifiable): NewDeviceLoginMail
     {
-        SendNewDeviceLoginMail::dispatch(
-            $user,
-            $this->ipAddress,
-            $this->userAgent,
-            $this->loginAt,
-        );
+        return (new NewDeviceLoginMail(
+            ipAddress: $this->ipAddress,
+            userAgent: $this->userAgent,
+            loginAt: $this->loginAt,
+        ))->to($notifiable->email);
     }
 
     /**

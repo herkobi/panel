@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Notifications\Auth;
 
 use App\Mail\Auth\PasswordResetCompletedMail;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class PasswordResetCompletedNotification extends Notification
+class PasswordResetCompletedNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * @return array<int, string>
      */

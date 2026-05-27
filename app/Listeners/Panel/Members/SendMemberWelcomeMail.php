@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Listeners\Panel\Members;
 
 use App\Events\Panel\Members\MemberCreatedEvent;
-use App\Jobs\Panel\Members\SendMemberWelcomeMail as SendMemberWelcomeMailJob;
+use App\Notifications\Panel\Members\MemberWelcomeNotification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\URL;
 
@@ -25,11 +25,10 @@ class SendMemberWelcomeMail
             ],
         );
 
-        SendMemberWelcomeMailJob::dispatch(
-            $event->user,
+        $event->user->notify(new MemberWelcomeNotification(
             $welcomeUrl,
             $expireMinutes,
             ! $event->emailVerified,
-        );
+        ));
     }
 }

@@ -86,7 +86,7 @@ test('admin can update general settings and upload branding images', function ()
     foreach (['logo_path', 'logo_dark_path', 'favicon_path'] as $key) {
         $path = Setting::query()->where('key', $key)->value('value');
 
-        expect($path)->toBeString()->toStartWith('panel/');
+        expect($path)->toBeString()->toStartWith('media/');
         Storage::disk('public')->assertExists($path);
     }
 
@@ -95,6 +95,58 @@ test('admin can update general settings and upload branding images', function ()
         'event' => 'updated',
         'causer_id' => $admin->id,
     ]);
+});
+
+test('admin can upload a branding asset immediately', function () {
+    Storage::fake('public');
+
+    $admin = User::factory()->admin()->create();
+
+    $this->actingAs($admin)
+        ->post(route('panel.settings.general.asset.upload'), [
+            'key' => 'logo_path',
+            'file' => UploadedFile::fake()->image('logo.png'),
+        ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect();
+
+    $path = Setting::get('logo_path');
+
+    expect($path)->toBeString()->toStartWith('media/');
+    Storage::disk('public')->assertExists($path);
+});
+
+test('admin can remove a branding asset immediately', function () {
+    Storage::fake('public');
+
+    $admin = User::factory()->admin()->create();
+
+    Setting::updateOrCreate(
+        ['key' => 'logo_path'],
+        ['value' => 'media/logo-existing.png', 'group' => 'branding'],
+    );
+    Storage::disk('public')->put('media/logo-existing.png', 'binary');
+
+    $this->actingAs($admin)
+        ->delete(route('panel.settings.general.asset.destroy'), [
+            'key' => 'logo_path',
+        ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect();
+
+    expect(Setting::get('logo_path'))->toBeNull();
+    Storage::disk('public')->assertMissing('media/logo-existing.png');
+});
+
+test('asset upload rejects unknown keys', function () {
+    $admin = User::factory()->admin()->create();
+
+    $this->actingAs($admin)
+        ->post(route('panel.settings.general.asset.upload'), [
+            'key' => 'app_name',
+            'file' => UploadedFile::fake()->image('x.png'),
+        ])
+        ->assertSessionHasErrors('key');
 });
 
 test('branding uploads are limited to jpg jpeg and png', function () {

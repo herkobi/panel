@@ -48,7 +48,9 @@ This split is mirrored everywhere: `app/Http/Controllers/Panel/*` vs `App/*`, `R
 
 **Inertia shared auth contract** — there is exactly ONE shared prop `auth`, discriminated by `auth.type: 'app' | 'panel'`. Types in [resources/js/types/auth.ts](resources/js/types/auth.ts). In React components NEVER read `usePage().props.auth` directly — use `useAppAuth()` in app-area code and `usePanelAuth()` in panel-area code. Never mix `AppUser` and `PanelUser`. Never introduce a second shared prop like `appAuth`/`panelAuth`.
 
-**Event-driven side effects (hard rule).** Controllers stay thin; services hold business rules. Any side effect (activity log, notification, email, queued job) MUST flow through an `event() → listener` chain — never directly from a controller/service. Today: 23 events, 24 listeners, 3 notifications, 0 jobs, 0 mailables, 0 policies (authorization is middleware-based).
+**Event-driven side effects (hard rule).** Controllers stay thin; services hold business rules. Any side effect (activity log, notification, email) MUST flow through an `event() → listener` chain — never directly from a controller/service. Roughly: ~74 events, ~109 listeners, ~22 notifications, 12 mailables, 1 job, 0 policies (authorization is middleware-based).
+
+**Notification/email standard.** A `Send{X}` listener stays thin and calls `$notifiable->notify(new {X}Notification(...))` (building any URL/token first and passing it to the notification). The `{X}Notification implements ShouldQueue`, declares `via=['mail','database']` (or a subset), returns the Mailable from `toMail()`, and writes the in-app record via `toArray()`. The Notification is the single orchestration point for both in-app and (queued) mail — **do not** dispatch a Job from a listener for routine mail. Reach for a Job only when the mail needs an independent lifecycle (custom queue/retry/batch); the only Job today is `Auth/DetectNewDeviceLogin` (device detection, not mail).
 
 **Dependency direction (upper may depend on lower; never reverse):**
 `Enum → Migration → Model → Service → Event → Listener → Notification → Job → Request → Controller → Resource → Page/UI → Middleware → Seeder → Permission`
@@ -66,6 +68,6 @@ This split is mirrored everywhere: `app/Http/Controllers/Panel/*` vs `App/*`, `R
 ## Project rules worth knowing
 
 - Run `php artisan wayfinder:generate` after adding/modifying routes.
-- New email work → create a Job (queued) that dispatches a Mailable with views in `resources/views/mail/`. None exist yet.
+- New email/notification work → create a `ShouldQueue` Notification whose `toMail()` returns a Mailable (views in `resources/views/mail/`), triggered from a `Send{X}` listener via `notify()`. See the Notification/email standard above. Avoid wrapping routine mail in a Job.
 - Authorization today is middleware-based; introduce Policies only when middleware no longer fits.
 - See [komutlar.md](komutlar.md), [kurallar.md](kurallar.md), and [todo.md](todo.md) for project-specific Turkish notes on commands, rules, and pending work.

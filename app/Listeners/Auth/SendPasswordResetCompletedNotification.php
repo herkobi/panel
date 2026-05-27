@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Listeners\Auth;
 
-use App\Jobs\Auth\SendPasswordResetCompletedMail;
 use App\Models\User;
+use App\Notifications\Auth\PasswordResetCompletedNotification;
 use Illuminate\Auth\Events\PasswordReset;
 
 class SendPasswordResetCompletedNotification
@@ -18,6 +18,6 @@ class SendPasswordResetCompletedNotification
             return;
         }
 
-        SendPasswordResetCompletedMail::dispatch($user);
+        $user->notify(new PasswordResetCompletedNotification);
     }
 }

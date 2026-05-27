@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\App\Profile;
 
-use App\Concerns\Common\PasswordValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class PasswordUpdateRequest extends FormRequest
 {
-    use PasswordValidationRules;
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -20,8 +18,8 @@ class PasswordUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'current_password' => $this->currentPasswordRules(),
-            'password' => $this->passwordRules(),
+            'current_password' => ['required', 'string', 'current_password'],
+            'password' => ['required', 'string', Password::default(), 'confirmed'],
         ];
     }
 }

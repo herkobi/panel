@@ -1,27 +1,13 @@
-import { Form, Head } from '@inertiajs/react';
-import {
-    Clock3,
-    Coins,
-    Globe2,
-    ImageIcon,
-    Languages,
-    Percent,
-    Save,
-    UploadCloud,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
-import type { ChangeEvent, ReactNode } from 'react';
+import { Form, Head, router } from '@inertiajs/react';
+import { Clock3, Coins, Globe2, Languages, Percent, Save } from 'lucide-react';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 
 import SettingsController from '@/actions/App/Http/Controllers/Panel/Settings/General/SettingsController';
+import ImageUpload from '@/components/image-upload';
 import InputError from '@/components/input-error';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Field,
-    FieldDescription,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
     NativeSelect,
@@ -119,109 +105,6 @@ function SelectField({
     );
 }
 
-function AssetUpload({
-    id,
-    name,
-    title,
-    description,
-    currentUrl,
-    currentPath,
-    error,
-    previewClassName = 'object-contain',
-}: {
-    id: string;
-    name: string;
-    title: string;
-    description: string;
-    currentUrl?: string | null;
-    currentPath?: string | null;
-    error?: string;
-    previewClassName?: string;
-}) {
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [fileName, setFileName] = useState<string | null>(null);
-    const [objectUrl, setObjectUrl] = useState<string | null>(null);
-    const displayUrl = previewUrl ?? currentUrl ?? null;
-
-    useEffect(() => {
-        return () => {
-            if (objectUrl) {
-                URL.revokeObjectURL(objectUrl);
-            }
-        };
-    }, [objectUrl]);
-
-    function handleChange(event: ChangeEvent<HTMLInputElement>) {
-        const file = event.target.files?.[0] ?? null;
-
-        if (!file) {
-            setFileName(null);
-            setPreviewUrl(null);
-
-            return;
-        }
-
-        if (objectUrl) {
-            URL.revokeObjectURL(objectUrl);
-        }
-
-        const nextUrl = URL.createObjectURL(file);
-
-        setObjectUrl(nextUrl);
-        setPreviewUrl(nextUrl);
-        setFileName(file.name);
-    }
-
-    return (
-        <Field data-invalid={Boolean(error)} className="gap-3">
-            <div className="flex min-w-0 flex-col gap-4 rounded-md border border-dashed p-4 sm:flex-row sm:items-center">
-                <div className="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted sm:size-28">
-                    {displayUrl ? (
-                        <img
-                            src={displayUrl}
-                            alt={title}
-                            className={`size-full ${previewClassName}`}
-                        />
-                    ) : (
-                        <ImageIcon className="text-muted-foreground" />
-                    )}
-                </div>
-
-                <div className="flex min-w-0 flex-1 flex-col gap-3">
-                    <div className="min-w-0">
-                        <FieldLabel htmlFor={id}>{title}</FieldLabel>
-                        <FieldDescription>{description}</FieldDescription>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                        <Button asChild variant="outline" size="sm">
-                            <label htmlFor={id} className="cursor-pointer">
-                                <UploadCloud data-icon="inline-start" />
-                                Dosya seç
-                            </label>
-                        </Button>
-                        <Input
-                            id={id}
-                            name={name}
-                            type="file"
-                            accept=".jpg,.jpeg,.png,image/jpeg,image/png"
-                            aria-invalid={Boolean(error)}
-                            onChange={handleChange}
-                            className="sr-only"
-                        />
-                        <Badge variant="outline">JPG / JPEG / PNG</Badge>
-                    </div>
-
-                    <div className="min-w-0 truncate text-xs text-muted-foreground">
-                        {fileName ?? currentPath ?? 'Dosya yüklenmedi'}
-                    </div>
-                    <InputError message={error} />
-                </div>
-            </div>
-        </Field>
-    );
-}
-
 export default function Settings({
     settings,
     countries,
@@ -230,6 +113,41 @@ export default function Settings({
     languages,
     timezones,
 }: Props) {
+    const [assetErrors, setAssetErrors] = useState<Record<string, string>>({});
+    const [processingKey, setProcessingKey] = useState<string | null>(null);
+
+    function uploadAsset(key: string, file: File) {
+        router.post(
+            SettingsController.uploadAsset().url,
+            { key, file },
+            {
+                forceFormData: true,
+                preserveScroll: true,
+                only: ['settings'],
+                onStart: () => setProcessingKey(key),
+                onFinish: () => setProcessingKey(null),
+                onSuccess: () =>
+                    setAssetErrors((prev) => ({ ...prev, [key]: '' })),
+                onError: (errors) =>
+                    setAssetErrors((prev) => ({
+                        ...prev,
+                        [key]:
+                            errors.file ?? errors.key ?? 'Görsel yüklenemedi.',
+                    })),
+            },
+        );
+    }
+
+    function removeAsset(key: string) {
+        router.delete(SettingsController.destroyAsset().url, {
+            data: { key },
+            preserveScroll: true,
+            only: ['settings'],
+            onStart: () => setProcessingKey(key),
+            onFinish: () => setProcessingKey(null),
+        });
+    }
+
     return (
         <>
             <Head title="Ayarlar" />
@@ -310,33 +228,51 @@ export default function Settings({
                                 </div>
 
                                 <div className="flex flex-col gap-4">
-                                    <AssetUpload
-                                        id="logo_path"
-                                        name="logo_path"
+                                    <ImageUpload
                                         title="Logo"
                                         description="Açık tema ve genel kullanım."
                                         currentUrl={settings.logo_url}
-                                        currentPath={settings.logo_path}
-                                        error={errors.logo_path}
+                                        error={assetErrors.logo_path}
+                                        processing={
+                                            processingKey === 'logo_path'
+                                        }
+                                        onUpload={(file) =>
+                                            uploadAsset('logo_path', file)
+                                        }
+                                        onRemove={() =>
+                                            removeAsset('logo_path')
+                                        }
                                     />
-                                    <AssetUpload
-                                        id="logo_dark_path"
-                                        name="logo_dark_path"
+                                    <ImageUpload
                                         title="Logo dark"
                                         description="Koyu tema kullanımı."
                                         currentUrl={settings.logo_dark_url}
-                                        currentPath={settings.logo_dark_path}
-                                        error={errors.logo_dark_path}
+                                        error={assetErrors.logo_dark_path}
+                                        processing={
+                                            processingKey === 'logo_dark_path'
+                                        }
+                                        onUpload={(file) =>
+                                            uploadAsset('logo_dark_path', file)
+                                        }
+                                        onRemove={() =>
+                                            removeAsset('logo_dark_path')
+                                        }
                                     />
-                                    <AssetUpload
-                                        id="favicon_path"
-                                        name="favicon_path"
+                                    <ImageUpload
                                         title="Favicon"
                                         description="Tarayıcı sekmesi ikonu."
                                         currentUrl={settings.favicon_url}
-                                        currentPath={settings.favicon_path}
-                                        error={errors.favicon_path}
+                                        error={assetErrors.favicon_path}
+                                        processing={
+                                            processingKey === 'favicon_path'
+                                        }
                                         previewClassName="object-cover"
+                                        onUpload={(file) =>
+                                            uploadAsset('favicon_path', file)
+                                        }
+                                        onRemove={() =>
+                                            removeAsset('favicon_path')
+                                        }
                                     />
                                 </div>
                             </FieldGroup>

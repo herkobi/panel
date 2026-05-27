@@ -10,11 +10,16 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\District;
 use App\Models\User;
+use App\Services\Account\AccountProvisioner;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class AccountService
 {
+    public function __construct(
+        private readonly AccountProvisioner $provisioner,
+    ) {}
+
     /**
      * @return array{countries: Collection, cities: Collection, districts: Collection}
      */
@@ -54,7 +59,9 @@ class AccountService
      */
     public function updateForUser(User $user, array $data): Account
     {
-        $account = $user->account()->firstOrCreate();
+        $account = $this->provisioner->ensureForUser($user);
+
+        abort_if($account === null, 403);
 
         return $this->update($account, $user, $data);
     }
@@ -65,18 +72,19 @@ class AccountService
     public function update(Account $account, User $updatedBy, array $data): Account
     {
         return DB::transaction(function () use ($account, $updatedBy, $data) {
-            $attributes = [
+            $account->update([
                 'title' => $data['title'] ?? null,
+            ]);
+
+            $account->address()->updateOrCreate([], [
                 'address' => $data['address'] ?? null,
                 'postal_code' => $data['postal_code'] ?? null,
                 'district_id' => $data['district_id'] ?? null,
                 'city_id' => $data['city_id'] ?? null,
                 'country_id' => $data['country_id'] ?? null,
-            ];
+            ]);
 
-            $account->update($attributes);
-
-            AccountUpdatedEvent::dispatch($account->refresh(), $updatedBy);
+            AccountUpdatedEvent::dispatch($account->refresh()->load('address'), $updatedBy);
 
             return $account;
         });

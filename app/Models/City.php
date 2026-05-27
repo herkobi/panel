@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\HasSortOrder;
+use App\Concerns\HasStatus;
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -25,25 +27,18 @@ use Illuminate\Support\Str;
 ])]
 class City extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasSortOrder, HasStatus, HasUuids, SoftDeletes;
 
     protected function casts(): array
     {
         return [
             'status' => Status::class,
-            'sort_order' => 'integer',
         ];
     }
 
     public function setCodeAttribute(string $value): void
     {
         $this->attributes['code'] = Str::upper($value);
-    }
-
-    #[Scope]
-    protected function active(Builder $query): void
-    {
-        $query->where('status', Status::Active->value);
     }
 
     #[Scope]

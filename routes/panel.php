@@ -123,6 +123,8 @@ Route::middleware(['auth', 'verified', 'user_type:admin', 'active_user', 'write_
         Route::controller(SettingsController::class)->prefix('general')->name('general.')->group(function () {
             Route::get('/', 'edit')->name('edit');
             Route::post('/', 'update')->name('update');
+            Route::post('/asset', 'uploadAsset')->name('asset.upload');
+            Route::delete('/asset', 'destroyAsset')->name('asset.destroy');
         });
 
         Route::controller(UsersController::class)->prefix('users')->name('users.')->group(function () {

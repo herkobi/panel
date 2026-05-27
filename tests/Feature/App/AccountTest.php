@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Account;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\District;
@@ -41,9 +40,13 @@ test('member can update account information', function () {
         ->assertSessionHasNoErrors()
         ->assertRedirect();
 
-    $this->assertDatabaseHas('accounts', [
-        'user_id' => $user->id,
-        'title' => 'Test Firma',
+    $account = $user->fresh()->account;
+
+    expect($account)->not->toBeNull()
+        ->and($account->title)->toBe('Test Firma');
+
+    $this->assertDatabaseHas('addresses', [
+        'account_id' => $account->id,
         'country_id' => $country->id,
         'city_id' => $city->id,
         'district_id' => $district->id,
@@ -72,7 +75,7 @@ test('account update creates account when missing', function () {
         ->assertSessionHasNoErrors()
         ->assertRedirect();
 
-    expect(Account::query()->where('user_id', $user->id)->exists())->toBeTrue();
+    expect($user->fresh()->account)->not->toBeNull();
 });
 
 test('district must belong to selected city', function () {

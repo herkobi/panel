@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use App\Enums\UserStatus;
-use App\Mail\Panel\Members\MemberEmailChangeRequestedMail;
-use App\Mail\Panel\Members\MemberEmailVerifiedMail;
-use App\Mail\Panel\Members\MemberStatusUpdatedMail;
-use App\Mail\Panel\Members\MemberWelcomeMail;
 use App\Models\User;
+use App\Notifications\Panel\Members\MemberEmailChangeRequestedNotification;
+use App\Notifications\Panel\Members\MemberEmailVerifiedNotification;
+use App\Notifications\Panel\Members\MemberStatusUpdatedNotification;
+use App\Notifications\Panel\Members\MemberWelcomeNotification;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -74,7 +74,7 @@ test('panel member detail rejects admin users', function () {
 });
 
 test('panel admin can create a member and send welcome mail', function () {
-    Mail::fake();
+    Notification::fake();
 
     $viewer = User::factory()->admin()->create();
 
@@ -96,11 +96,11 @@ test('panel admin can create a member and send welcome mail', function () {
         ->and($created->status)->toBe(UserStatus::Active)
         ->and($created->email_verified_at)->not->toBeNull();
 
-    Mail::assertSent(
-        MemberWelcomeMail::class,
-        fn (MemberWelcomeMail $mail): bool => $mail->hasTo($created->email)
-            && $mail->verifiesEmail === false
-            && str_contains($mail->welcomeUrl, 'token='),
+    Notification::assertSentTo(
+        $created,
+        MemberWelcomeNotification::class,
+        fn (MemberWelcomeNotification $notification): bool => $notification->verifiesEmail === false
+            && str_contains($notification->welcomeUrl, 'token='),
     );
 
     $this->assertDatabaseHas('activity_log', [
@@ -111,7 +111,7 @@ test('panel admin can create a member and send welcome mail', function () {
 });
 
 test('panel member welcome link verifies email before password reset when needed', function () {
-    Mail::fake();
+    Notification::fake();
 
     $viewer = User::factory()->admin()->create();
 
@@ -132,13 +132,13 @@ test('panel member welcome link verifies email before password reset when needed
 
     $welcomeUrl = null;
 
-    Mail::assertSent(
-        MemberWelcomeMail::class,
-        function (MemberWelcomeMail $mail) use (&$welcomeUrl, $created): bool {
-            $welcomeUrl = $mail->welcomeUrl;
+    Notification::assertSentTo(
+        $created,
+        MemberWelcomeNotification::class,
+        function (MemberWelcomeNotification $notification) use (&$welcomeUrl): bool {
+            $welcomeUrl = $notification->welcomeUrl;
 
-            return $mail->hasTo($created->email)
-                && $mail->verifiesEmail === true;
+            return $notification->verifiesEmail === true;
         },
     );
 
@@ -160,7 +160,7 @@ test('panel member welcome link verifies email before password reset when needed
 });
 
 test('panel admin can verify a member email address', function () {
-    Mail::fake();
+    Notification::fake();
 
     $viewer = User::factory()->admin()->create();
     $member = User::factory()->member()->unverified()->create();
@@ -171,10 +171,7 @@ test('panel admin can verify a member email address', function () {
 
     expect($member->fresh()->email_verified_at)->not->toBeNull();
 
-    Mail::assertSent(
-        MemberEmailVerifiedMail::class,
-        fn (MemberEmailVerifiedMail $mail): bool => $mail->hasTo($member->email),
-    );
+    Notification::assertSentTo($member, MemberEmailVerifiedNotification::class);
 
     $this->assertDatabaseHas('activity_log', [
         'subject_id' => $member->id,
@@ -185,7 +182,7 @@ test('panel admin can verify a member email address', function () {
 
 test('panel admin can request a member email change and close sessions', function () {
     config(['session.driver' => 'database']);
-    Mail::fake();
+    Notification::fake();
 
     $viewer = User::factory()->admin()->create();
     $member = User::factory()->member()->create();
@@ -218,11 +215,11 @@ test('panel admin can request a member email change and close sessions', functio
 
     expect($authentication->fresh()->logout_at)->not->toBeNull();
 
-    Mail::assertSent(
-        MemberEmailChangeRequestedMail::class,
-        fn (MemberEmailChangeRequestedMail $mail): bool => $mail->hasTo($newEmail)
-            && $mail->email === $newEmail
-            && str_contains($mail->confirmationUrl, 'email='),
+    Notification::assertSentTo(
+        $member,
+        MemberEmailChangeRequestedNotification::class,
+        fn (MemberEmailChangeRequestedNotification $notification): bool => $notification->email === $newEmail
+            && str_contains($notification->confirmationUrl, 'email='),
     );
 
     $this->assertDatabaseHas('activity_log', [
@@ -284,7 +281,7 @@ test('panel member email change can be confirmed with a signed link', function (
 });
 
 test('panel admin can update a member status', function () {
-    Mail::fake();
+    Notification::fake();
 
     $viewer = User::factory()->admin()->create();
     $member = User::factory()->member()->create();
@@ -297,10 +294,10 @@ test('panel admin can update a member status', function () {
 
     expect($member->fresh()->status)->toBe(UserStatus::Passive);
 
-    Mail::assertSent(
-        MemberStatusUpdatedMail::class,
-        fn (MemberStatusUpdatedMail $mail): bool => $mail->hasTo($member->email)
-            && $mail->status === UserStatus::Passive,
+    Notification::assertSentTo(
+        $member,
+        MemberStatusUpdatedNotification::class,
+        fn (MemberStatusUpdatedNotification $notification): bool => $notification->status === UserStatus::Passive,
     );
 
     $this->assertDatabaseHas('activity_log', [

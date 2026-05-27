@@ -7,7 +7,6 @@ namespace Database\Seeders;
 use App\Enums\Status;
 use App\Enums\UserStatus;
 use App\Enums\UserType;
-use App\Models\Account;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Currency;
@@ -15,6 +14,7 @@ use App\Models\District;
 use App\Models\Language;
 use App\Models\Tax;
 use App\Models\User;
+use App\Services\Account\AccountProvisioner;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -149,18 +149,15 @@ class DatabaseSeeder extends Seeder
         $admin->syncRoles(['Super Admin']);
         $secondAdmin->syncRoles(['Admin']);
 
-        foreach ([$admin, $secondAdmin, $member] as $user) {
-            Account::query()->updateOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'title' => $user->name,
-                    'address' => 'Örnek adres',
-                    'postal_code' => '34000',
-                    'country_id' => $country->id,
-                    'city_id' => $city->id,
-                    'district_id' => $district->id,
-                ],
-            );
-        }
+        // Account yalnızca member için oluşur (admin'ler ortak paneli kullanır, account_id null).
+        $account = app(AccountProvisioner::class)->ensureForUser($member);
+        $account->update(['title' => $member->name]);
+        $account->address()->updateOrCreate([], [
+            'address' => 'Örnek adres',
+            'postal_code' => '34000',
+            'country_id' => $country->id,
+            'city_id' => $city->id,
+            'district_id' => $district->id,
+        ]);
     }
 }

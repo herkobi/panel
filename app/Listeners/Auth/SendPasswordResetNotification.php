@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Listeners\Auth;
 
 use App\Events\Auth\PasswordResetNotificationRequestedEvent;
-use App\Jobs\Auth\SendPasswordResetMail;
+use App\Notifications\Auth\ResetPasswordNotification;
 
 class SendPasswordResetNotification
 {
     public function handle(PasswordResetNotificationRequestedEvent $event): void
     {
-        SendPasswordResetMail::dispatch($event->user, $event->token);
+        $event->user->notify(new ResetPasswordNotification($event->token));
     }
 }

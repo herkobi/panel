@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Listeners\Panel\Members;
 
 use App\Events\Panel\Members\MemberEmailChangeRequestedEvent;
-use App\Jobs\Panel\Members\SendMemberEmailChangeRequestedMail as SendMemberEmailChangeRequestedMailJob;
+use App\Notifications\Panel\Members\MemberEmailChangeRequestedNotification;
 use Illuminate\Support\Facades\URL;
 
 class SendMemberEmailChangeRequestedMail
@@ -21,10 +21,9 @@ class SendMemberEmailChangeRequestedMail
             ],
         );
 
-        SendMemberEmailChangeRequestedMailJob::dispatch(
-            $event->user,
+        $event->user->notify(new MemberEmailChangeRequestedNotification(
             $event->email,
             $confirmationUrl,
-        );
+        ));
     }
 }

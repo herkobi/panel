@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Listeners\Auth;
 
 use App\Events\Auth\EmailVerificationNotificationRequestedEvent;
-use App\Jobs\Auth\SendEmailVerificationMail;
+use App\Notifications\Auth\VerifyEmailNotification;
 
 class SendEmailVerificationNotification
 {
     public function handle(EmailVerificationNotificationRequestedEvent $event): void
     {
-        SendEmailVerificationMail::dispatch($event->user);
+        $event->user->notify(new VerifyEmailNotification);
     }
 }

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\HasStatus;
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class Tax extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasStatus, HasUuids, SoftDeletes;
 
     protected function casts(): array
     {
@@ -28,11 +27,5 @@ class Tax extends Model
             'rate' => 'decimal:2',
             'status' => Status::class,
         ];
-    }
-
-    #[Scope]
-    protected function active(Builder $query): void
-    {
-        $query->where('status', Status::Active->value);
     }
 }

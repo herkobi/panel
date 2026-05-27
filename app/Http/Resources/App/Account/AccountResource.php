@@ -20,13 +20,15 @@ class AccountResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'code' => $this->code,
             'title' => $this->title,
-            'address' => $this->address,
-            'postal_code' => $this->postal_code,
-            'district_id' => $this->district_id,
-            'city_id' => $this->city_id,
-            'country_id' => $this->country_id,
+            'address' => $this->address ? [
+                'address' => $this->address->address,
+                'postal_code' => $this->address->postal_code,
+                'district_id' => $this->address->district_id,
+                'city_id' => $this->address->city_id,
+                'country_id' => $this->address->country_id,
+            ] : null,
         ];
     }
 }

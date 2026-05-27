@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Listeners\Panel\Profile;
 
 use App\Events\Panel\Profile\ProfileUpdatedEvent;
-use App\Jobs\Panel\Profile\SendEmailVerificationMail;
+use App\Notifications\Auth\VerifyEmailNotification;
 
 class SendEmailVerificationNotification
 {
@@ -15,6 +15,6 @@ class SendEmailVerificationNotification
             return;
         }
 
-        SendEmailVerificationMail::dispatch($event->updatedBy);
+        $event->updatedBy->notify(new VerifyEmailNotification);
     }
 }

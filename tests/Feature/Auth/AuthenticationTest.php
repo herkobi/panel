@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Mail\Auth\NewDeviceLoginMail;
 use App\Models\User;
 use App\Notifications\Auth\NewDeviceLoginNotification;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Features;
 
@@ -36,7 +35,7 @@ test('users can authenticate using the login screen', function () {
 });
 
 test('new device login creates auth notification and activity', function () {
-    Mail::fake();
+    Notification::fake();
 
     $user = User::factory()->create([
         'created_at' => now()->subMinutes(5),
@@ -50,15 +49,12 @@ test('new device login creates auth notification and activity', function () {
         ])
         ->assertRedirect(route('dashboard', absolute: false));
 
-    $notification = $user->notifications()->first();
-
-    expect($notification)->not->toBeNull();
-    expect($notification?->type)->toBe(NewDeviceLoginNotification::class);
-    expect($notification?->data)->toMatchArray([
-        'type' => 'auth.new_device_login',
-        'ip_address' => '127.0.0.1',
-        'user_agent' => 'Feature Test Browser',
-    ]);
+    Notification::assertSentTo(
+        $user,
+        NewDeviceLoginNotification::class,
+        fn (NewDeviceLoginNotification $notification): bool => $notification->ipAddress === '127.0.0.1'
+            && $notification->userAgent === 'Feature Test Browser',
+    );
 
     $this->assertDatabaseHas('activity_log', [
         'log_name' => 'auth',
@@ -66,8 +62,6 @@ test('new device login creates auth notification and activity', function () {
         'subject_id' => $user->id,
         'causer_id' => $user->id,
     ]);
-
-    Mail::assertSent(NewDeviceLoginMail::class);
 });
 
 test('known device login does not create new device notification', function () {

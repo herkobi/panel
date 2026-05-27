@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Listeners\Panel\Settings\User;
 
 use App\Events\Panel\Settings\User\UserEmailChangeRequestedEvent;
-use App\Jobs\Panel\Settings\User\SendUserEmailChangeRequestedMail as SendUserEmailChangeRequestedMailJob;
+use App\Notifications\Panel\Settings\User\UserEmailChangeRequestedNotification;
 use Illuminate\Support\Facades\URL;
 
 class SendUserEmailChangeRequestedMail
@@ -21,10 +21,9 @@ class SendUserEmailChangeRequestedMail
             ],
         );
 
-        SendUserEmailChangeRequestedMailJob::dispatch(
-            $event->user,
+        $event->user->notify(new UserEmailChangeRequestedNotification(
             $event->email,
             $confirmationUrl,
-        );
+        ));
     }
 }

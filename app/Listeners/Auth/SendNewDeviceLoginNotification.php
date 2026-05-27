@@ -18,6 +18,5 @@ class SendNewDeviceLoginNotification
         );
 
         $event->user->notify($notification);
-        $notification->dispatchMail($event->user);
     }
 }

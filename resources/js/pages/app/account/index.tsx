@@ -56,12 +56,13 @@ export default function Account({
     districts,
 }: Props) {
     const currentAccount = account.data;
+    const currentAddress = currentAccount?.address ?? null;
     const [countryId, setCountryId] = useState(
-        currentAccount?.country_id ?? '',
+        currentAddress?.country_id ?? '',
     );
-    const [cityId, setCityId] = useState(currentAccount?.city_id ?? '');
+    const [cityId, setCityId] = useState(currentAddress?.city_id ?? '');
     const [districtId, setDistrictId] = useState(
-        currentAccount?.district_id ?? '',
+        currentAddress?.district_id ?? '',
     );
 
     const selectedCountry = useMemo(
@@ -129,7 +130,7 @@ export default function Account({
                                 <Textarea
                                     id="address"
                                     name="address"
-                                    defaultValue={currentAccount?.address ?? ''}
+                                    defaultValue={currentAddress?.address ?? ''}
                                     rows={4}
                                 />
                                 <InputError message={errors.address} />
@@ -141,7 +142,7 @@ export default function Account({
                                     id="postal_code"
                                     name="postal_code"
                                     defaultValue={
-                                        currentAccount?.postal_code ?? ''
+                                        currentAddress?.postal_code ?? ''
                                     }
                                 />
                                 <InputError message={errors.postal_code} />

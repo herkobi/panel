@@ -21,12 +21,13 @@ class AccountController extends Controller
     public function index(Request $request, AccountService $service): Response
     {
         $user = $request->user();
-        $account = $user->account;
+        $account = $user->account?->load('address');
+        $address = $account?->address;
 
         $countryId = $request->string('country_id')->toString()
-            ?: ($account?->country_id);
+            ?: ($address?->country_id);
         $cityId = $request->string('city_id')->toString()
-            ?: ($account?->city_id);
+            ?: ($address?->city_id);
 
         $locationOptions = $service->locationOptions(
             $countryId ?: null,

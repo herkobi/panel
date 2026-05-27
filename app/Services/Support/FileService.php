@@ -13,6 +13,8 @@ class FileService
 {
     public const PUBLIC_DISK = 'public';
 
+    public const PRIVATE_DISK = 'private';
+
     public function storePublicImage(
         UploadedFile $file,
         string $directory,
@@ -48,6 +50,43 @@ class FileService
         }
 
         return Storage::disk(self::PUBLIC_DISK)->url($path);
+    }
+
+    public function storePrivateFile(
+        UploadedFile $file,
+        string $directory,
+        ?string $oldPath = null,
+        ?string $prefix = null,
+    ): string {
+        $filename = Str::slug($prefix ?: 'file')
+            .'-'.Str::uuid()->toString()
+            .'.'.$file->extension();
+
+        $path = $file->storeAs($directory, $filename, self::PRIVATE_DISK);
+
+        if ($oldPath !== null && $oldPath !== $path) {
+            $this->deletePrivateFile($oldPath);
+        }
+
+        return $path;
+    }
+
+    public function deletePrivateFile(?string $path): void
+    {
+        if ($path === null || $path === '') {
+            return;
+        }
+
+        Storage::disk(self::PRIVATE_DISK)->delete($path);
+    }
+
+    public function privateExists(?string $path): bool
+    {
+        if ($path === null || $path === '') {
+            return false;
+        }
+
+        return Storage::disk(self::PRIVATE_DISK)->exists($path);
     }
 
     public function ensureUserMediaCode(User $user): string

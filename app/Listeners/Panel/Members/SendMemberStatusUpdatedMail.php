@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Listeners\Panel\Members;
 
 use App\Events\Panel\Members\MemberStatusUpdatedEvent;
-use App\Jobs\Panel\Members\SendMemberStatusUpdatedMail as SendMemberStatusUpdatedMailJob;
+use App\Notifications\Panel\Members\MemberStatusUpdatedNotification;
 
 class SendMemberStatusUpdatedMail
 {
     public function handle(MemberStatusUpdatedEvent $event): void
     {
-        SendMemberStatusUpdatedMailJob::dispatch($event->user, $event->newStatus);
+        $event->user->notify(new MemberStatusUpdatedNotification($event->newStatus));
     }
 }

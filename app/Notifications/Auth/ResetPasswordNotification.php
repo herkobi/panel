@@ -6,9 +6,13 @@ namespace App\Notifications\Auth;
 
 use App\Mail\Auth\ResetPasswordMail;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ResetPasswordNotification extends ResetPassword
+class ResetPasswordNotification extends ResetPassword implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * @return array<int, string>
      */
