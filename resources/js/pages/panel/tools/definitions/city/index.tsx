@@ -2,9 +2,11 @@ import { Form, Head, Link, router } from '@inertiajs/react';
 import { Archive, MapPinned, Pencil, Plus, Save, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
+import { ConfirmDelete } from '@/components/confirm-delete';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -25,7 +27,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index as countryIndex } from '@/routes/panel/tools/definitions/countries';
 import {
@@ -36,7 +37,7 @@ import {
     update as cityUpdate,
 } from '@/routes/panel/tools/definitions/countries/cities';
 import { index as districtIndex } from '@/routes/panel/tools/definitions/countries/cities/districts';
-import type { City, Country, Paginated, PaginationLink, Status } from '@/types';
+import type { City, Country, Paginated, Status } from '@/types';
 
 type Props = {
     cities: Paginated<City>;
@@ -111,44 +112,6 @@ function CitySaveButton({ processing }: { processing?: boolean }) {
     );
 }
 
-function CityPagination({ cities }: { cities: Paginated<City> }) {
-    const links = cities.links.filter(
-        (link: PaginationLink) => link.url !== null || link.active,
-    );
-
-    if (links.length <= 1) {
-        return null;
-    }
-
-    return (
-        <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-sm text-muted-foreground">
-                Toplam {cities.meta?.total ?? cities.total ?? 0} kayıt
-            </div>
-            <div className="flex flex-wrap items-center gap-1">
-                {links.map((link) => (
-                    <Link
-                        key={`${link.label}-${link.url ?? 'current'}`}
-                        href={link.url ?? '#'}
-                        className={cn(
-                            buttonVariants({
-                                variant: link.active ? 'outline' : 'ghost',
-                                size: 'sm',
-                            }),
-                            !link.url && 'pointer-events-none opacity-50',
-                        )}
-                    >
-                        {link.label
-                            .replace('&laquo;', 'Önceki')
-                            .replace('&raquo;', 'Sonraki')
-                            .trim()}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
-}
-
 export default function CityIndex({ cities, country }: Props) {
     const parent = country.data;
 
@@ -191,7 +154,7 @@ export default function CityIndex({ cities, country }: Props) {
                                 <Form
                                     {...cityStore.form(parent)}
                                     options={{ preserveScroll: true }}
-                                    className="flex flex-col gap-5 px-4"
+                                    className="flex flex-1 min-h-0 flex-col gap-5 overflow-y-auto px-4 pb-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
@@ -199,25 +162,27 @@ export default function CityIndex({ cities, country }: Props) {
                                                 <input
                                                     type="hidden"
                                                     name="status"
-                                                    value="active"
+                                                    value="passive"
                                                 />
-                                                <CityField
-                                                    name="code"
-                                                    label="Kod"
-                                                    error={errors.code}
-                                                />
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <CityField
+                                                        name="sort_order"
+                                                        label="Sıra No"
+                                                        type="number"
+                                                        min={0}
+                                                        required={false}
+                                                        error={errors.sort_order}
+                                                    />
+                                                    <CityField
+                                                        name="code"
+                                                        label="Kod"
+                                                        error={errors.code}
+                                                    />
+                                                </div>
                                                 <CityField
                                                     name="name"
                                                     label="Ad"
                                                     error={errors.name}
-                                                />
-                                                <CityField
-                                                    name="sort_order"
-                                                    label="Sıra"
-                                                    type="number"
-                                                    min={0}
-                                                    required={false}
-                                                    error={errors.sort_order}
                                                 />
                                             </FieldGroup>
                                             <div className="flex justify-end">
@@ -238,11 +203,9 @@ export default function CityIndex({ cities, country }: Props) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Aktif</TableHead>
+                                <TableHead>Sıra No</TableHead>
                                 <TableHead>Kod</TableHead>
                                 <TableHead>Ad</TableHead>
-                                <TableHead className="text-right">
-                                    Sıra
-                                </TableHead>
                                 <TableHead className="text-right">
                                     İşlem
                                 </TableHead>
@@ -260,13 +223,11 @@ export default function CityIndex({ cities, country }: Props) {
                                                 url={cityStatus(routeArgs).url}
                                             />
                                         </TableCell>
+                                        <TableCell>{city.sort_order}</TableCell>
                                         <TableCell className="font-medium">
                                             {city.code}
                                         </TableCell>
                                         <TableCell>{city.name}</TableCell>
-                                        <TableCell className="text-right">
-                                            {city.sort_order}
-                                        </TableCell>
                                         <TableCell>
                                             <div className="flex justify-end gap-2">
                                                 <Button
@@ -309,7 +270,7 @@ export default function CityIndex({ cities, country }: Props) {
                                                                 düzenleyin.
                                                             </SheetDescription>
                                                         </SheetHeader>
-                                                        <div className="flex flex-col gap-6 px-4">
+                                                        <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-4">
                                                             <Form
                                                                 {...cityUpdate.form(
                                                                     routeArgs,
@@ -325,23 +286,35 @@ export default function CityIndex({ cities, country }: Props) {
                                                                 }) => (
                                                                     <>
                                                                         <FieldGroup>
-                                                                            <input
-                                                                                type="hidden"
-                                                                                name="status"
-                                                                                value={
-                                                                                    city.status
-                                                                                }
-                                                                            />
-                                                                            <CityField
-                                                                                name="code"
-                                                                                label="Kod"
-                                                                                defaultValue={
-                                                                                    city.code
-                                                                                }
-                                                                                error={
-                                                                                    errors.code
-                                                                                }
-                                                                            />
+                                                                            <div className="grid grid-cols-2 gap-3">
+                                                                                <CityField
+                                                                                    name="sort_order"
+                                                                                    label="Sıra No"
+                                                                                    type="number"
+                                                                                    min={
+                                                                                        0
+                                                                                    }
+                                                                                    required={
+                                                                                        false
+                                                                                    }
+                                                                                    defaultValue={
+                                                                                        city.sort_order
+                                                                                    }
+                                                                                    error={
+                                                                                        errors.sort_order
+                                                                                    }
+                                                                                />
+                                                                                <CityField
+                                                                                    name="code"
+                                                                                    label="Kod"
+                                                                                    defaultValue={
+                                                                                        city.code
+                                                                                    }
+                                                                                    error={
+                                                                                        errors.code
+                                                                                    }
+                                                                                />
+                                                                            </div>
                                                                             <CityField
                                                                                 name="name"
                                                                                 label="Ad"
@@ -350,23 +323,6 @@ export default function CityIndex({ cities, country }: Props) {
                                                                                 }
                                                                                 error={
                                                                                     errors.name
-                                                                                }
-                                                                            />
-                                                                            <CityField
-                                                                                name="sort_order"
-                                                                                label="Sıra"
-                                                                                type="number"
-                                                                                min={
-                                                                                    0
-                                                                                }
-                                                                                required={
-                                                                                    false
-                                                                                }
-                                                                                defaultValue={
-                                                                                    city.sort_order
-                                                                                }
-                                                                                error={
-                                                                                    errors.sort_order
                                                                                 }
                                                                             />
                                                                         </FieldGroup>
@@ -396,31 +352,21 @@ export default function CityIndex({ cities, country }: Props) {
                                                                         alınabilir.
                                                                     </p>
                                                                 </div>
-                                                                <Form
-                                                                    {...cityDestroy.form(
-                                                                        routeArgs,
-                                                                    )}
-                                                                    options={{
-                                                                        preserveScroll: true,
-                                                                    }}
-                                                                    className="flex justify-end"
-                                                                >
-                                                                    {({
-                                                                        processing,
-                                                                    }) => (
-                                                                        <Button
-                                                                            type="submit"
-                                                                            variant="destructive"
-                                                                            disabled={
-                                                                                processing
-                                                                            }
-                                                                        >
+                                                                <div className="flex justify-end">
+                                                                    <ConfirmDelete
+                                                                        action={cityDestroy(
+                                                                            routeArgs,
+                                                                        )}
+                                                                        title={`${city.name} şehri silinsin mi?`}
+                                                                        description="Silinen şehir, silinenler sayfasından geri alınabilir."
+                                                                    >
+                                                                        <Button variant="destructive">
                                                                             <Trash2 data-icon="inline-start" />
                                                                             Kaydı
                                                                             sil
                                                                         </Button>
-                                                                    )}
-                                                                </Form>
+                                                                    </ConfirmDelete>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </SheetContent>
@@ -445,7 +391,7 @@ export default function CityIndex({ cities, country }: Props) {
                     </Table>
                 </div>
 
-                <CityPagination cities={cities} />
+                <DataPagination paginator={cities} showRange={false} />
             </div>
         </>
     );

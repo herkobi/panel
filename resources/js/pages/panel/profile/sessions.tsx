@@ -1,6 +1,7 @@
-import { Form, Head } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { Globe2, LogIn, MonitorCheck, Power } from 'lucide-react';
 import { destroy } from '@/actions/App/Http/Controllers/Panel/Profile/SessionsController';
+import { ConfirmDelete } from '@/components/confirm-delete';
 import Heading from '@/components/heading';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -152,24 +153,20 @@ export default function Sessions({
 
                                     {!session.is_current && (
                                         <ItemActions className="ml-auto">
-                                            <Form
-                                                {...destroy.form(session.id)}
-                                                options={{
-                                                    preserveScroll: true,
-                                                }}
+                                            <ConfirmDelete
+                                                action={destroy(session.id)}
+                                                title="Oturum kapatılsın mı?"
+                                                description="Bu cihazdaki oturum sonlandırılacak."
+                                                confirmLabel="Oturumu kapat"
                                             >
-                                                {({ processing }) => (
-                                                    <Button
-                                                        type="submit"
-                                                        size="sm"
-                                                        variant="outline"
-                                                        disabled={processing}
-                                                    >
-                                                        <Power />
-                                                        Oturumu kapat
-                                                    </Button>
-                                                )}
-                                            </Form>
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                >
+                                                    <Power />
+                                                    Oturumu kapat
+                                                </Button>
+                                            </ConfirmDelete>
                                         </ItemActions>
                                     )}
                                 </Item>

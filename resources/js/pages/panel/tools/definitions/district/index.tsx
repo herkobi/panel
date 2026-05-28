@@ -2,9 +2,11 @@ import { Form, Head, Link, router } from '@inertiajs/react';
 import { Archive, Pencil, Plus, Save, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
+import { ConfirmDelete } from '@/components/confirm-delete';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -25,7 +27,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index as cityIndex } from '@/routes/panel/tools/definitions/countries/cities';
 import {
@@ -35,14 +36,7 @@ import {
     store as districtStore,
     update as districtUpdate,
 } from '@/routes/panel/tools/definitions/countries/cities/districts';
-import type {
-    City,
-    Country,
-    District,
-    Paginated,
-    PaginationLink,
-    Status,
-} from '@/types';
+import type { City, Country, District, Paginated, Status } from '@/types';
 
 type Props = {
     districts: Paginated<District>;
@@ -124,44 +118,6 @@ function DistrictSaveButton({ processing }: { processing?: boolean }) {
     );
 }
 
-function DistrictPagination({ districts }: { districts: Paginated<District> }) {
-    const links = districts.links.filter(
-        (link: PaginationLink) => link.url !== null || link.active,
-    );
-
-    if (links.length <= 1) {
-        return null;
-    }
-
-    return (
-        <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-sm text-muted-foreground">
-                Toplam {districts.meta?.total ?? districts.total ?? 0} kayıt
-            </div>
-            <div className="flex flex-wrap items-center gap-1">
-                {links.map((link) => (
-                    <Link
-                        key={`${link.label}-${link.url ?? 'current'}`}
-                        href={link.url ?? '#'}
-                        className={cn(
-                            buttonVariants({
-                                variant: link.active ? 'outline' : 'ghost',
-                                size: 'sm',
-                            }),
-                            !link.url && 'pointer-events-none opacity-50',
-                        )}
-                    >
-                        {link.label
-                            .replace('&laquo;', 'Önceki')
-                            .replace('&raquo;', 'Sonraki')
-                            .trim()}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
-}
-
 export default function DistrictIndex({ districts, country, city }: Props) {
     const parentCountry = country.data;
     const parentCity = city.data;
@@ -208,7 +164,7 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                 <Form
                                     {...districtStore.form(parentArgs)}
                                     options={{ preserveScroll: true }}
-                                    className="flex flex-col gap-5 px-4"
+                                    className="flex flex-1 min-h-0 flex-col gap-5 overflow-y-auto px-4 pb-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
@@ -216,21 +172,23 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                                 <input
                                                     type="hidden"
                                                     name="status"
-                                                    value="active"
+                                                    value="passive"
                                                 />
-                                                <DistrictField
-                                                    name="name"
-                                                    label="Ad"
-                                                    error={errors.name}
-                                                />
-                                                <DistrictField
-                                                    name="sort_order"
-                                                    label="Sıra"
-                                                    type="number"
-                                                    min={0}
-                                                    required={false}
-                                                    error={errors.sort_order}
-                                                />
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <DistrictField
+                                                        name="sort_order"
+                                                        label="Sıra No"
+                                                        type="number"
+                                                        min={0}
+                                                        required={false}
+                                                        error={errors.sort_order}
+                                                    />
+                                                    <DistrictField
+                                                        name="name"
+                                                        label="Ad"
+                                                        error={errors.name}
+                                                    />
+                                                </div>
                                             </FieldGroup>
                                             <div className="flex justify-end">
                                                 <DistrictSaveButton
@@ -250,10 +208,8 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Aktif</TableHead>
+                                <TableHead>Sıra No</TableHead>
                                 <TableHead>Ad</TableHead>
-                                <TableHead className="text-right">
-                                    Sıra
-                                </TableHead>
                                 <TableHead className="text-right">
                                     İşlem
                                 </TableHead>
@@ -277,11 +233,11 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                                 }
                                             />
                                         </TableCell>
+                                        <TableCell>
+                                            {district.sort_order}
+                                        </TableCell>
                                         <TableCell className="font-medium">
                                             {district.name}
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            {district.sort_order}
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <Sheet>
@@ -307,7 +263,7 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                                             kaydını düzenleyin.
                                                         </SheetDescription>
                                                     </SheetHeader>
-                                                    <div className="flex flex-col gap-6 px-4">
+                                                    <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-4">
                                                         <Form
                                                             {...districtUpdate.form(
                                                                 routeArgs,
@@ -323,40 +279,35 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                                             }) => (
                                                                 <>
                                                                     <FieldGroup>
-                                                                        <input
-                                                                            type="hidden"
-                                                                            name="status"
-                                                                            value={
-                                                                                district.status
-                                                                            }
-                                                                        />
-                                                                        <DistrictField
-                                                                            name="name"
-                                                                            label="Ad"
-                                                                            defaultValue={
-                                                                                district.name
-                                                                            }
-                                                                            error={
-                                                                                errors.name
-                                                                            }
-                                                                        />
-                                                                        <DistrictField
-                                                                            name="sort_order"
-                                                                            label="Sıra"
-                                                                            type="number"
-                                                                            min={
-                                                                                0
-                                                                            }
-                                                                            required={
-                                                                                false
-                                                                            }
-                                                                            defaultValue={
-                                                                                district.sort_order
-                                                                            }
-                                                                            error={
-                                                                                errors.sort_order
-                                                                            }
-                                                                        />
+                                                                        <div className="grid grid-cols-2 gap-3">
+                                                                            <DistrictField
+                                                                                name="sort_order"
+                                                                                label="Sıra No"
+                                                                                type="number"
+                                                                                min={
+                                                                                    0
+                                                                                }
+                                                                                required={
+                                                                                    false
+                                                                                }
+                                                                                defaultValue={
+                                                                                    district.sort_order
+                                                                                }
+                                                                                error={
+                                                                                    errors.sort_order
+                                                                                }
+                                                                            />
+                                                                            <DistrictField
+                                                                                name="name"
+                                                                                label="Ad"
+                                                                                defaultValue={
+                                                                                    district.name
+                                                                                }
+                                                                                error={
+                                                                                    errors.name
+                                                                                }
+                                                                            />
+                                                                        </div>
                                                                     </FieldGroup>
                                                                     <div className="flex justify-end">
                                                                         <DistrictSaveButton
@@ -383,31 +334,21 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                                                     alınabilir.
                                                                 </p>
                                                             </div>
-                                                            <Form
-                                                                {...districtDestroy.form(
-                                                                    routeArgs,
-                                                                )}
-                                                                options={{
-                                                                    preserveScroll: true,
-                                                                }}
-                                                                className="flex justify-end"
-                                                            >
-                                                                {({
-                                                                    processing,
-                                                                }) => (
-                                                                    <Button
-                                                                        type="submit"
-                                                                        variant="destructive"
-                                                                        disabled={
-                                                                            processing
-                                                                        }
-                                                                    >
+                                                            <div className="flex justify-end">
+                                                                <ConfirmDelete
+                                                                    action={districtDestroy(
+                                                                        routeArgs,
+                                                                    )}
+                                                                    title={`${district.name} ilçesi silinsin mi?`}
+                                                                    description="Silinen ilçe, silinenler sayfasından geri alınabilir."
+                                                                >
+                                                                    <Button variant="destructive">
                                                                         <Trash2 data-icon="inline-start" />
                                                                         Kaydı
                                                                         sil
                                                                     </Button>
-                                                                )}
-                                                            </Form>
+                                                                </ConfirmDelete>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </SheetContent>
@@ -431,7 +372,7 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                     </Table>
                 </div>
 
-                <DistrictPagination districts={districts} />
+                <DataPagination paginator={districts} showRange={false} />
             </div>
         </>
     );

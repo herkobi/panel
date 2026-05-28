@@ -1,9 +1,10 @@
-import { Form, Head, Link } from '@inertiajs/react';
+import { Form, Head } from '@inertiajs/react';
 import { Bell, CheckCircle2 } from 'lucide-react';
 import { markAsRead } from '@/actions/App/Http/Controllers/App/Profile/NotificationsController';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     Empty,
     EmptyDescription,
@@ -22,15 +23,10 @@ import {
 } from '@/components/ui/item';
 import { cn } from '@/lib/utils';
 import { notifications } from '@/routes/app/profile';
-import type { NotificationItem, Paginated, PaginationLink } from '@/types';
+import type { NotificationItem, Paginated } from '@/types';
 
 type NotificationsProps = {
-    notifications?: Paginated<NotificationItem> & {
-        meta?: {
-            total?: number;
-            links?: PaginationLink[];
-        };
-    };
+    notifications?: Paginated<NotificationItem>;
 };
 
 function getNotificationText(
@@ -42,41 +38,10 @@ function getNotificationText(
     return typeof value === 'string' ? value : '-';
 }
 
-function getPaginationLinks(
-    notifications?: NotificationsProps['notifications'],
-): PaginationLink[] {
-    if (Array.isArray(notifications?.links)) {
-        return notifications.links;
-    }
-
-    if (Array.isArray(notifications?.meta?.links)) {
-        return notifications.meta.links;
-    }
-
-    return [];
-}
-
-function getPaginationLabel(label: string): string {
-    return label.replaceAll('&laquo;', '').replaceAll('&raquo;', '').trim();
-}
-
-function isPreviousPageLabel(label: string): boolean {
-    const normalized = getPaginationLabel(label).toLowerCase();
-
-    return normalized.includes('previous') || normalized.includes('önceki');
-}
-
-function isNextPageLabel(label: string): boolean {
-    const normalized = getPaginationLabel(label).toLowerCase();
-
-    return normalized.includes('next') || normalized.includes('sonraki');
-}
-
 export default function Notifications({
     notifications: items,
 }: NotificationsProps) {
     const notificationItems = items?.data ?? [];
-    const paginationLinks = getPaginationLinks(items);
 
     return (
         <>
@@ -188,81 +153,13 @@ export default function Notifications({
                             ))}
                         </ItemGroup>
 
-                        <div className="flex items-center justify-between">
-                            <div className="text-sm text-muted-foreground">
-                                Toplam {items?.meta?.total ?? 0} bildirim
-                            </div>
-                            <div className="flex items-center gap-1">
-                                {paginationLinks.map((link, index) => {
-                                    if (isPreviousPageLabel(link.label)) {
-                                        return (
-                                            <Link
-                                                key={index}
-                                                href={link.url ?? '#'}
-                                                className={cn(
-                                                    buttonVariants({
-                                                        variant: 'ghost',
-                                                        size: 'sm',
-                                                    }),
-                                                    !link.url &&
-                                                        'pointer-events-none opacity-50',
-                                                )}
-                                            >
-                                                {getPaginationLabel(link.label)}
-                                            </Link>
-                                        );
-                                    }
-
-                                    if (isNextPageLabel(link.label)) {
-                                        return (
-                                            <Link
-                                                key={index}
-                                                href={link.url ?? '#'}
-                                                className={cn(
-                                                    buttonVariants({
-                                                        variant: 'ghost',
-                                                        size: 'sm',
-                                                    }),
-                                                    !link.url &&
-                                                        'pointer-events-none opacity-50',
-                                                )}
-                                            >
-                                                {getPaginationLabel(link.label)}
-                                            </Link>
-                                        );
-                                    }
-
-                                    if (link.label === '...') {
-                                        return (
-                                            <span
-                                                key={index}
-                                                className="flex size-8 items-center justify-center text-sm text-muted-foreground"
-                                            >
-                                                ...
-                                            </span>
-                                        );
-                                    }
-
-                                    return (
-                                        <Link
-                                            key={index}
-                                            href={link.url ?? '#'}
-                                            className={cn(
-                                                buttonVariants({
-                                                    variant: link.active
-                                                        ? 'outline'
-                                                        : 'ghost',
-                                                    size: 'icon',
-                                                }),
-                                                'size-8 text-xs',
-                                            )}
-                                        >
-                                            {getPaginationLabel(link.label)}
-                                        </Link>
-                                    );
-                                })}
-                            </div>
-                        </div>
+                        {items && (
+                            <DataPagination
+                                paginator={items}
+                                label="bildirim"
+                                showRange={false}
+                            />
+                        )}
                     </div>
                 )}
             </div>

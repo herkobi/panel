@@ -1,9 +1,10 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { Eye, RotateCcw, Search, Users } from 'lucide-react';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     Empty,
     EmptyDescription,
@@ -20,27 +21,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index, show } from '@/routes/panel/members';
-import type { Paginated, PaginationLink, PanelUser } from '@/types';
-
-type UsersPaginator = Omit<Paginated<PanelUser>, 'links' | 'meta'> & {
-    links:
-        | PaginationLink[]
-        | {
-              first: string | null;
-              last: string | null;
-              prev: string | null;
-              next: string | null;
-          };
-    meta?: Paginated<PanelUser>['meta'] & {
-        links?: PaginationLink[];
-    };
-};
+import type { Paginated, PanelUser } from '@/types';
 
 type Props = {
-    users: UsersPaginator;
+    users: Paginated<PanelUser>;
     filters: {
         q?: string;
     };
@@ -92,37 +78,7 @@ function statusVariant(
     }
 }
 
-function paginationLinks(users: UsersPaginator): PaginationLink[] {
-    if (Array.isArray(users.links)) {
-        return users.links;
-    }
-
-    return users.meta?.links ?? [];
-}
-
-function paginationLabel(label: string): string {
-    return label.replace('&laquo;', '').replace('&raquo;', '').trim();
-}
-
-function isPreviousPaginationLink(label: string): boolean {
-    return (
-        label.includes('Previous') ||
-        label.includes('Önceki') ||
-        label.includes('&laquo;')
-    );
-}
-
-function isNextPaginationLink(label: string): boolean {
-    return (
-        label.includes('Next') ||
-        label.includes('Sonraki') ||
-        label.includes('&raquo;')
-    );
-}
-
 export default function Members({ users, filters }: Props) {
-    const pageLinks = paginationLinks(users);
-
     return (
         <>
             <Head title="Üyeler" />
@@ -262,90 +218,7 @@ export default function Members({ users, filters }: Props) {
                                 </Table>
                             </div>
 
-                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <div className="text-sm text-muted-foreground">
-                                    {users.meta?.from ?? 0}-
-                                    {users.meta?.to ?? 0} arası gösteriliyor.
-                                    Toplam {users.meta?.total ?? 0} kayıt.
-                                </div>
-                                <div className="flex flex-wrap items-center gap-1">
-                                    {pageLinks.map((link, index) => {
-                                        if (
-                                            isPreviousPaginationLink(link.label)
-                                        ) {
-                                            return (
-                                                <Link
-                                                    key={index}
-                                                    href={link.url ?? '#'}
-                                                    className={cn(
-                                                        buttonVariants({
-                                                            variant: 'ghost',
-                                                            size: 'sm',
-                                                        }),
-                                                        !link.url &&
-                                                            'pointer-events-none opacity-50',
-                                                    )}
-                                                >
-                                                    Önceki
-                                                </Link>
-                                            );
-                                        }
-
-                                        if (isNextPaginationLink(link.label)) {
-                                            return (
-                                                <Link
-                                                    key={index}
-                                                    href={link.url ?? '#'}
-                                                    className={cn(
-                                                        buttonVariants({
-                                                            variant: 'ghost',
-                                                            size: 'sm',
-                                                        }),
-                                                        !link.url &&
-                                                            'pointer-events-none opacity-50',
-                                                    )}
-                                                >
-                                                    Sonraki
-                                                </Link>
-                                            );
-                                        }
-
-                                        const label = paginationLabel(
-                                            link.label,
-                                        );
-
-                                        if (label === '...') {
-                                            return (
-                                                <span
-                                                    key={index}
-                                                    className="flex size-8 items-center justify-center text-sm text-muted-foreground"
-                                                >
-                                                    ...
-                                                </span>
-                                            );
-                                        }
-
-                                        return (
-                                            <Link
-                                                key={index}
-                                                href={link.url ?? '#'}
-                                                className={cn(
-                                                    buttonVariants({
-                                                        variant: link.active
-                                                            ? 'outline'
-                                                            : 'ghost',
-                                                        size: 'icon-sm',
-                                                    }),
-                                                    !link.url &&
-                                                        'pointer-events-none opacity-50',
-                                                )}
-                                            >
-                                                {label}
-                                            </Link>
-                                        );
-                                    })}
-                                </div>
-                            </div>
+                            <DataPagination paginator={users} />
                         </>
                     )}
                 </div>

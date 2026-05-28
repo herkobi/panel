@@ -43,6 +43,8 @@ createInertiaApp({
                 return [PanelLayout, PanelUsersLayout];
             case name.startsWith('panel/settings/roles/'):
                 return [PanelLayout, PanelRolesLayout];
+            case name.startsWith('panel/settings/permissions/'):
+                return [PanelLayout, PanelRolesLayout];
             case name.startsWith('panel/tools/activity/'):
                 return [PanelLayout, PanelActivityLayout];
             case name.startsWith('panel/tools/cache/'):

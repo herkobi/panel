@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services\Panel\Tools\Definitions;
 
+use App\Exceptions\DefinitionGuardException;
 use App\Models\Setting;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Validation\ValidationException;
 
 class DefinitionGuard
 {
@@ -17,9 +17,9 @@ class DefinitionGuard
             return;
         }
 
-        throw ValidationException::withMessages([
-            'definition' => "{$label} varsayılan olarak seçili olduğu için pasifleştirilemez veya silinemez.",
-        ]);
+        throw new DefinitionGuardException(
+            "{$label} varsayılan olarak seçili olduğu için pasifleştirilemez veya silinemez.",
+        );
     }
 
     public function ensureNoChildren(Model $model, string $relation, string $label): void
@@ -38,8 +38,8 @@ class DefinitionGuard
             return;
         }
 
-        throw ValidationException::withMessages([
-            'definition' => "{$label} bağlı kayıtları olduğu için silinemez.",
-        ]);
+        throw new DefinitionGuardException(
+            "{$label} bağlı kayıtları olduğu için silinemez.",
+        );
     }
 }

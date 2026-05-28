@@ -48,6 +48,8 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Türk Lirası',
                 'symbol' => '₺',
                 'decimal_places' => 2,
+                'thousands_separator' => '.',
+                'decimal_separator' => ',',
                 'status' => Status::Active,
                 'sort_order' => 1,
             ],
@@ -59,6 +61,8 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Amerikan Doları',
                 'symbol' => '$',
                 'decimal_places' => 2,
+                'thousands_separator' => ',',
+                'decimal_separator' => '.',
                 'status' => Status::Active,
                 'sort_order' => 2,
             ],
@@ -90,6 +94,7 @@ class DatabaseSeeder extends Seeder
             [
                 'rate' => 20,
                 'status' => Status::Active,
+                'sort_order' => 1,
             ],
         );
 
@@ -98,6 +103,7 @@ class DatabaseSeeder extends Seeder
             [
                 'rate' => 10,
                 'status' => Status::Active,
+                'sort_order' => 2,
             ],
         );
 

@@ -1,8 +1,10 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { RotateCcw, Trash2 } from 'lucide-react';
 
+import { ConfirmDelete } from '@/components/confirm-delete';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -11,59 +13,16 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import {
     forceDelete as currencyForceDelete,
     index as currencyIndex,
     restore as currencyRestore,
 } from '@/routes/panel/tools/definitions/currencies';
-import type { Currency, Paginated, PaginationLink } from '@/types';
+import type { Currency, Paginated } from '@/types';
 
 type Props = {
     currencies: Paginated<Currency>;
 };
-
-function CurrencyDeletedPagination({
-    currencies,
-}: {
-    currencies: Paginated<Currency>;
-}) {
-    const links = currencies.links.filter(
-        (link: PaginationLink) => link.url !== null || link.active,
-    );
-
-    if (links.length <= 1) {
-        return null;
-    }
-
-    return (
-        <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-sm text-muted-foreground">
-                Toplam {currencies.meta?.total ?? currencies.total ?? 0} kayıt
-            </div>
-            <div className="flex flex-wrap items-center gap-1">
-                {links.map((link) => (
-                    <Link
-                        key={`${link.label}-${link.url ?? 'current'}`}
-                        href={link.url ?? '#'}
-                        className={cn(
-                            buttonVariants({
-                                variant: link.active ? 'outline' : 'ghost',
-                                size: 'sm',
-                            }),
-                            !link.url && 'pointer-events-none opacity-50',
-                        )}
-                    >
-                        {link.label
-                            .replace('&laquo;', 'Önceki')
-                            .replace('&raquo;', 'Sonraki')
-                            .trim()}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
-}
 
 export default function CurrencyDeleted({ currencies }: Props) {
     return (
@@ -124,26 +83,22 @@ export default function CurrencyDeleted({ currencies }: Props) {
                                                     </Button>
                                                 )}
                                             </Form>
-                                            <Form
-                                                {...currencyForceDelete.form(
+                                            <ConfirmDelete
+                                                action={currencyForceDelete(
                                                     currency.id,
                                                 )}
-                                                options={{
-                                                    preserveScroll: true,
-                                                }}
+                                                title={`${currency.name} kalıcı silinsin mi?`}
+                                                description="Bu işlem geri alınamaz; kayıt veritabanından tamamen kaldırılır."
+                                                confirmLabel="Kalıcı sil"
                                             >
-                                                {({ processing }) => (
-                                                    <Button
-                                                        type="submit"
-                                                        variant="destructive"
-                                                        size="sm"
-                                                        disabled={processing}
-                                                    >
-                                                        <Trash2 data-icon="inline-start" />
-                                                        Kalıcı sil
-                                                    </Button>
-                                                )}
-                                            </Form>
+                                                <Button
+                                                    variant="destructive"
+                                                    size="sm"
+                                                >
+                                                    <Trash2 data-icon="inline-start" />
+                                                    Kalıcı sil
+                                                </Button>
+                                            </ConfirmDelete>
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -163,7 +118,7 @@ export default function CurrencyDeleted({ currencies }: Props) {
                     </Table>
                 </div>
 
-                <CurrencyDeletedPagination currencies={currencies} />
+                <DataPagination paginator={currencies} showRange={false} />
             </div>
         </>
     );

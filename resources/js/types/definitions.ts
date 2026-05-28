@@ -6,6 +6,8 @@ export type Currency = {
     name: string;
     symbol: string;
     decimal_places: number;
+    thousands_separator: string;
+    decimal_separator: string;
     status: Status;
     sort_order: number;
     deleted_at?: string | null;
@@ -55,5 +57,6 @@ export type Tax = {
     name: string;
     rate: string | number;
     status: Status;
+    sort_order: number;
     deleted_at?: string | null;
 };

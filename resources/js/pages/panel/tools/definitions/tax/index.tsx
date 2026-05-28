@@ -2,10 +2,12 @@ import { Form, Head, Link, router } from '@inertiajs/react';
 import { Archive, Pencil, Plus, Save, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
+import { ConfirmDelete } from '@/components/confirm-delete';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -26,7 +28,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import {
     deleted as taxDeleted,
@@ -35,7 +36,7 @@ import {
     store as taxStore,
     update as taxUpdate,
 } from '@/routes/panel/tools/definitions/taxes';
-import type { Paginated, PaginationLink, Status, Tax } from '@/types';
+import type { Paginated, Status, Tax } from '@/types';
 
 type Props = {
     taxes: Paginated<Tax>;
@@ -113,44 +114,6 @@ function TaxSaveButton({ processing }: { processing?: boolean }) {
     );
 }
 
-function TaxPagination({ taxes }: { taxes: Paginated<Tax> }) {
-    const links = taxes.links.filter(
-        (link: PaginationLink) => link.url !== null || link.active,
-    );
-
-    if (links.length <= 1) {
-        return null;
-    }
-
-    return (
-        <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-sm text-muted-foreground">
-                Toplam {taxes.meta?.total ?? taxes.total ?? 0} kayıt
-            </div>
-            <div className="flex flex-wrap items-center gap-1">
-                {links.map((link) => (
-                    <Link
-                        key={`${link.label}-${link.url ?? 'current'}`}
-                        href={link.url ?? '#'}
-                        className={cn(
-                            buttonVariants({
-                                variant: link.active ? 'outline' : 'ghost',
-                                size: 'sm',
-                            }),
-                            !link.url && 'pointer-events-none opacity-50',
-                        )}
-                    >
-                        {link.label
-                            .replace('&laquo;', 'Önceki')
-                            .replace('&raquo;', 'Sonraki')
-                            .trim()}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
-}
-
 export default function TaxIndex({ taxes, defaults }: Props) {
     return (
         <>
@@ -187,7 +150,7 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                                 <Form
                                     {...taxStore.form()}
                                     options={{ preserveScroll: true }}
-                                    className="flex flex-col gap-5 px-4"
+                                    className="flex flex-1 min-h-0 flex-col gap-5 overflow-y-auto px-4 pb-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
@@ -195,7 +158,15 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                                                 <input
                                                     type="hidden"
                                                     name="status"
-                                                    value="active"
+                                                    value="passive"
+                                                />
+                                                <TaxField
+                                                    name="sort_order"
+                                                    label="Sıra No"
+                                                    type="number"
+                                                    min={0}
+                                                    required={false}
+                                                    error={errors.sort_order}
                                                 />
                                                 <TaxField
                                                     name="name"
@@ -229,6 +200,7 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Aktif</TableHead>
+                                <TableHead>Sıra No</TableHead>
                                 <TableHead>Ad</TableHead>
                                 <TableHead>Oran</TableHead>
                                 <TableHead className="text-right">
@@ -245,6 +217,7 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                                             url={taxStatus(tax.id).url}
                                         />
                                     </TableCell>
+                                    <TableCell>{tax.sort_order}</TableCell>
                                     <TableCell className="font-medium">
                                         <div className="flex items-center gap-2">
                                             <span>{tax.name}</span>
@@ -281,7 +254,7 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                                                         düzenleyin.
                                                     </SheetDescription>
                                                 </SheetHeader>
-                                                <div className="flex flex-col gap-6 px-4">
+                                                <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-4">
                                                     <Form
                                                         {...taxUpdate.form(
                                                             tax.id,
@@ -297,11 +270,19 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                                                         }) => (
                                                             <>
                                                                 <FieldGroup>
-                                                                    <input
-                                                                        type="hidden"
-                                                                        name="status"
-                                                                        value={
-                                                                            tax.status
+                                                                    <TaxField
+                                                                        name="sort_order"
+                                                                        label="Sıra No"
+                                                                        type="number"
+                                                                        min={0}
+                                                                        required={
+                                                                            false
+                                                                        }
+                                                                        defaultValue={
+                                                                            tax.sort_order
+                                                                        }
+                                                                        error={
+                                                                            errors.sort_order
                                                                         }
                                                                     />
                                                                     <TaxField
@@ -352,30 +333,20 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                                                                 alınabilir.
                                                             </p>
                                                         </div>
-                                                        <Form
-                                                            {...taxDestroy.form(
-                                                                tax.id,
-                                                            )}
-                                                            options={{
-                                                                preserveScroll: true,
-                                                            }}
-                                                            className="flex justify-end"
-                                                        >
-                                                            {({
-                                                                processing,
-                                                            }) => (
-                                                                <Button
-                                                                    type="submit"
-                                                                    variant="destructive"
-                                                                    disabled={
-                                                                        processing
-                                                                    }
-                                                                >
+                                                        <div className="flex justify-end">
+                                                            <ConfirmDelete
+                                                                action={taxDestroy(
+                                                                    tax.id,
+                                                                )}
+                                                                title={`${tax.name} vergi oranı silinsin mi?`}
+                                                                description="Silinen vergi oranı, silinenler sayfasından geri alınabilir."
+                                                            >
+                                                                <Button variant="destructive">
                                                                     <Trash2 data-icon="inline-start" />
                                                                     Kaydı sil
                                                                 </Button>
-                                                            )}
-                                                        </Form>
+                                                            </ConfirmDelete>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </SheetContent>
@@ -398,7 +369,7 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                     </Table>
                 </div>
 
-                <TaxPagination taxes={taxes} />
+                <DataPagination paginator={taxes} showRange={false} />
             </div>
         </>
     );

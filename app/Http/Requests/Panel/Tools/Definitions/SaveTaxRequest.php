@@ -24,6 +24,7 @@ class SaveTaxRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'status' => [Rule::enum(Status::class)],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
         ];
     }
 }

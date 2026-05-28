@@ -1,8 +1,10 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { RotateCcw, Trash2 } from 'lucide-react';
 
+import { ConfirmDelete } from '@/components/confirm-delete';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -11,56 +13,17 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import {
     forceDelete as cityForceDelete,
     index as cityIndex,
     restore as cityRestore,
 } from '@/routes/panel/tools/definitions/countries/cities';
-import type { City, Country, Paginated, PaginationLink } from '@/types';
+import type { City, Country, Paginated } from '@/types';
 
 type Props = {
     cities: Paginated<City>;
     country: { data: Country };
 };
-
-function CityDeletedPagination({ cities }: { cities: Paginated<City> }) {
-    const links = cities.links.filter(
-        (link: PaginationLink) => link.url !== null || link.active,
-    );
-
-    if (links.length <= 1) {
-        return null;
-    }
-
-    return (
-        <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-sm text-muted-foreground">
-                Toplam {cities.meta?.total ?? cities.total ?? 0} kayıt
-            </div>
-            <div className="flex flex-wrap items-center gap-1">
-                {links.map((link) => (
-                    <Link
-                        key={`${link.label}-${link.url ?? 'current'}`}
-                        href={link.url ?? '#'}
-                        className={cn(
-                            buttonVariants({
-                                variant: link.active ? 'outline' : 'ghost',
-                                size: 'sm',
-                            }),
-                            !link.url && 'pointer-events-none opacity-50',
-                        )}
-                    >
-                        {link.label
-                            .replace('&laquo;', 'Önceki')
-                            .replace('&raquo;', 'Sonraki')
-                            .trim()}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
-}
 
 export default function CityDeleted({ cities, country }: Props) {
     const parent = country.data;
@@ -129,28 +92,22 @@ export default function CityDeleted({ cities, country }: Props) {
                                                         </Button>
                                                     )}
                                                 </Form>
-                                                <Form
-                                                    {...cityForceDelete.form(
+                                                <ConfirmDelete
+                                                    action={cityForceDelete(
                                                         routeArgs,
                                                     )}
-                                                    options={{
-                                                        preserveScroll: true,
-                                                    }}
+                                                    title={`${city.name} kalıcı silinsin mi?`}
+                                                    description="Bu işlem geri alınamaz; kayıt veritabanından tamamen kaldırılır."
+                                                    confirmLabel="Kalıcı sil"
                                                 >
-                                                    {({ processing }) => (
-                                                        <Button
-                                                            type="submit"
-                                                            variant="destructive"
-                                                            size="sm"
-                                                            disabled={
-                                                                processing
-                                                            }
-                                                        >
-                                                            <Trash2 data-icon="inline-start" />
-                                                            Kalıcı sil
-                                                        </Button>
-                                                    )}
-                                                </Form>
+                                                    <Button
+                                                        variant="destructive"
+                                                        size="sm"
+                                                    >
+                                                        <Trash2 data-icon="inline-start" />
+                                                        Kalıcı sil
+                                                    </Button>
+                                                </ConfirmDelete>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -171,7 +128,7 @@ export default function CityDeleted({ cities, country }: Props) {
                     </Table>
                 </div>
 
-                <CityDeletedPagination cities={cities} />
+                <DataPagination paginator={cities} showRange={false} />
             </div>
         </>
     );

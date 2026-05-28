@@ -23,6 +23,7 @@ class TaxResource extends JsonResource
             'name' => $this->name,
             'rate' => $this->rate,
             'status' => $this->status,
+            'sort_order' => $this->sort_order,
             'created_at' => $this->created_at,
             'deleted_at' => $this->deleted_at,
         ];

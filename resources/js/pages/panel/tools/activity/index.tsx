@@ -1,13 +1,14 @@
 import type { PageProps as InertiaPageProps } from '@inertiajs/core';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import {
     Activity as ActivityIcon,
     ChevronDownIcon,
     RotateCcw,
     Search,
 } from 'lucide-react';
+import { DataPagination } from '@/components/data-pagination';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     Empty,
     EmptyDescription,
@@ -25,7 +26,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { activity } from '@/routes/panel/tools';
 import type {
@@ -33,14 +33,10 @@ import type {
     ActivityFilters,
     ActivitySubjectTypeOption,
 } from '@/types/activity';
-import type { Paginated, PaginationLink } from '@/types/pagination';
-
-type ActivityPaginator = Paginated<Activity> & {
-    links: PaginationLink[];
-};
+import type { Paginated } from '@/types/pagination';
 
 type PageProps = InertiaPageProps & {
-    activities: ActivityPaginator;
+    activities: Paginated<Activity>;
     filters: ActivityFilters;
     users: { id: string; name: string }[];
     subject_types: ActivitySubjectTypeOption[];
@@ -72,22 +68,6 @@ function getEventLabel(event: string | null): string {
         default:
             return event ?? '-';
     }
-}
-
-function getPaginationLabel(label: string): string {
-    return label.replaceAll('&laquo;', '').replaceAll('&raquo;', '').trim();
-}
-
-function isPreviousPaginationLink(label: string): boolean {
-    const normalized = getPaginationLabel(label).toLowerCase();
-
-    return normalized.includes('previous') || normalized.includes('önceki');
-}
-
-function isNextPaginationLink(label: string): boolean {
-    const normalized = getPaginationLabel(label).toLowerCase();
-
-    return normalized.includes('next') || normalized.includes('sonraki');
 }
 
 export default function ActivityIndex() {
@@ -277,91 +257,7 @@ export default function ActivityIndex() {
                             </Table>
                         </div>
 
-                        <div className="flex items-center justify-between">
-                            <div className="text-sm text-muted-foreground">
-                                Toplam{' '}
-                                {activities.meta?.total ??
-                                    activities.total ??
-                                    0}{' '}
-                                kayıt
-                            </div>
-                            <div className="flex items-center gap-1">
-                                {activities.links.map((link, index) => {
-                                    if (isPreviousPaginationLink(link.label)) {
-                                        return (
-                                            <Link
-                                                key={index}
-                                                href={link.url ?? '#'}
-                                                className={cn(
-                                                    buttonVariants({
-                                                        variant: 'ghost',
-                                                        size: 'sm',
-                                                    }),
-                                                    !link.url &&
-                                                        'pointer-events-none opacity-50',
-                                                )}
-                                            >
-                                                Önceki
-                                            </Link>
-                                        );
-                                    }
-
-                                    if (isNextPaginationLink(link.label)) {
-                                        return (
-                                            <Link
-                                                key={index}
-                                                href={link.url ?? '#'}
-                                                className={cn(
-                                                    buttonVariants({
-                                                        variant: 'ghost',
-                                                        size: 'sm',
-                                                    }),
-                                                    !link.url &&
-                                                        'pointer-events-none opacity-50',
-                                                )}
-                                            >
-                                                Sonraki
-                                            </Link>
-                                        );
-                                    }
-
-                                    const label = getPaginationLabel(
-                                        link.label,
-                                    );
-
-                                    if (label === '...') {
-                                        return (
-                                            <span
-                                                key={index}
-                                                className="flex size-9 items-center justify-center text-sm text-muted-foreground"
-                                            >
-                                                ...
-                                            </span>
-                                        );
-                                    }
-
-                                    return (
-                                        <Link
-                                            key={index}
-                                            href={link.url ?? '#'}
-                                            className={cn(
-                                                buttonVariants({
-                                                    variant: link.active
-                                                        ? 'outline'
-                                                        : 'ghost',
-                                                    size: 'icon',
-                                                }),
-                                                'size-8 text-xs',
-                                                !link.url &&
-                                                    'pointer-events-none opacity-50',
-                                            )}
-                                        >
-                                            {label}
-                                        </Link>
-                                    );
-                                })}
-                            </div>
-                        </div>
+                        <DataPagination paginator={activities} />
                     </>
                 )}
             </div>

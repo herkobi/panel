@@ -19,6 +19,8 @@ use Illuminate\Support\Str;
     'name',
     'symbol',
     'decimal_places',
+    'thousands_separator',
+    'decimal_separator',
     'status',
     'sort_order',
 ])]

@@ -24,6 +24,8 @@ class CurrencyResource extends JsonResource
             'name' => $this->name,
             'symbol' => $this->symbol,
             'decimal_places' => $this->decimal_places,
+            'thousands_separator' => $this->thousands_separator,
+            'decimal_separator' => $this->decimal_separator,
             'status' => $this->status,
             'sort_order' => $this->sort_order,
             'created_at' => $this->created_at,

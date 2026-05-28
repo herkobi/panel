@@ -2,10 +2,12 @@ import { Form, Head, Link, router } from '@inertiajs/react';
 import { Archive, MapPinned, Pencil, Plus, Save, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
+import { ConfirmDelete } from '@/components/confirm-delete';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -26,7 +28,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import {
     deleted as countryDeleted,
@@ -36,7 +37,7 @@ import {
     update as countryUpdate,
 } from '@/routes/panel/tools/definitions/countries';
 import { index as cityIndex } from '@/routes/panel/tools/definitions/countries/cities';
-import type { Country, Paginated, PaginationLink, Status } from '@/types';
+import type { Country, Paginated, Status } from '@/types';
 
 type Props = {
     countries: Paginated<Country>;
@@ -113,44 +114,6 @@ function CountrySaveButton({ processing }: { processing?: boolean }) {
     );
 }
 
-function CountryPagination({ countries }: { countries: Paginated<Country> }) {
-    const links = countries.links.filter(
-        (link: PaginationLink) => link.url !== null || link.active,
-    );
-
-    if (links.length <= 1) {
-        return null;
-    }
-
-    return (
-        <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-sm text-muted-foreground">
-                Toplam {countries.meta?.total ?? countries.total ?? 0} kayıt
-            </div>
-            <div className="flex flex-wrap items-center gap-1">
-                {links.map((link) => (
-                    <Link
-                        key={`${link.label}-${link.url ?? 'current'}`}
-                        href={link.url ?? '#'}
-                        className={cn(
-                            buttonVariants({
-                                variant: link.active ? 'outline' : 'ghost',
-                                size: 'sm',
-                            }),
-                            !link.url && 'pointer-events-none opacity-50',
-                        )}
-                    >
-                        {link.label
-                            .replace('&laquo;', 'Önceki')
-                            .replace('&raquo;', 'Sonraki')
-                            .trim()}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
-}
-
 export default function CountryIndex({ countries, defaults }: Props) {
     return (
         <>
@@ -187,7 +150,7 @@ export default function CountryIndex({ countries, defaults }: Props) {
                                 <Form
                                     {...countryStore.form()}
                                     options={{ preserveScroll: true }}
-                                    className="flex flex-col gap-5 px-4"
+                                    className="flex flex-1 min-h-0 flex-col gap-5 overflow-y-auto px-4 pb-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
@@ -195,25 +158,27 @@ export default function CountryIndex({ countries, defaults }: Props) {
                                                 <input
                                                     type="hidden"
                                                     name="status"
-                                                    value="active"
+                                                    value="passive"
                                                 />
-                                                <CountryField
-                                                    name="code"
-                                                    label="Kod"
-                                                    error={errors.code}
-                                                />
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <CountryField
+                                                        name="sort_order"
+                                                        label="Sıra No"
+                                                        type="number"
+                                                        min={0}
+                                                        required={false}
+                                                        error={errors.sort_order}
+                                                    />
+                                                    <CountryField
+                                                        name="code"
+                                                        label="Kod"
+                                                        error={errors.code}
+                                                    />
+                                                </div>
                                                 <CountryField
                                                     name="name"
                                                     label="Ad"
                                                     error={errors.name}
-                                                />
-                                                <CountryField
-                                                    name="sort_order"
-                                                    label="Sıra"
-                                                    type="number"
-                                                    min={0}
-                                                    required={false}
-                                                    error={errors.sort_order}
                                                 />
                                             </FieldGroup>
                                             <div className="flex justify-end">
@@ -234,11 +199,9 @@ export default function CountryIndex({ countries, defaults }: Props) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Aktif</TableHead>
+                                <TableHead>Sıra No</TableHead>
                                 <TableHead>Kod</TableHead>
                                 <TableHead>Ad</TableHead>
-                                <TableHead className="text-right">
-                                    Sıra
-                                </TableHead>
                                 <TableHead className="text-right">
                                     İşlem
                                 </TableHead>
@@ -253,6 +216,7 @@ export default function CountryIndex({ countries, defaults }: Props) {
                                             url={countryStatus(country.id).url}
                                         />
                                     </TableCell>
+                                    <TableCell>{country.sort_order}</TableCell>
                                     <TableCell className="font-medium">
                                         {country.code}
                                     </TableCell>
@@ -266,9 +230,6 @@ export default function CountryIndex({ countries, defaults }: Props) {
                                                 </Badge>
                                             ) : null}
                                         </div>
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {country.sort_order}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex justify-end gap-2">
@@ -309,7 +270,7 @@ export default function CountryIndex({ countries, defaults }: Props) {
                                                             kaydını düzenleyin.
                                                         </SheetDescription>
                                                     </SheetHeader>
-                                                    <div className="flex flex-col gap-6 px-4">
+                                                    <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-4">
                                                         <Form
                                                             {...countryUpdate.form(
                                                                 country.id,
@@ -325,23 +286,35 @@ export default function CountryIndex({ countries, defaults }: Props) {
                                                             }) => (
                                                                 <>
                                                                     <FieldGroup>
-                                                                        <input
-                                                                            type="hidden"
-                                                                            name="status"
-                                                                            value={
-                                                                                country.status
-                                                                            }
-                                                                        />
-                                                                        <CountryField
-                                                                            name="code"
-                                                                            label="Kod"
-                                                                            defaultValue={
-                                                                                country.code
-                                                                            }
-                                                                            error={
-                                                                                errors.code
-                                                                            }
-                                                                        />
+                                                                        <div className="grid grid-cols-2 gap-3">
+                                                                            <CountryField
+                                                                                name="sort_order"
+                                                                                label="Sıra No"
+                                                                                type="number"
+                                                                                min={
+                                                                                    0
+                                                                                }
+                                                                                required={
+                                                                                    false
+                                                                                }
+                                                                                defaultValue={
+                                                                                    country.sort_order
+                                                                                }
+                                                                                error={
+                                                                                    errors.sort_order
+                                                                                }
+                                                                            />
+                                                                            <CountryField
+                                                                                name="code"
+                                                                                label="Kod"
+                                                                                defaultValue={
+                                                                                    country.code
+                                                                                }
+                                                                                error={
+                                                                                    errors.code
+                                                                                }
+                                                                            />
+                                                                        </div>
                                                                         <CountryField
                                                                             name="name"
                                                                             label="Ad"
@@ -350,23 +323,6 @@ export default function CountryIndex({ countries, defaults }: Props) {
                                                                             }
                                                                             error={
                                                                                 errors.name
-                                                                            }
-                                                                        />
-                                                                        <CountryField
-                                                                            name="sort_order"
-                                                                            label="Sıra"
-                                                                            type="number"
-                                                                            min={
-                                                                                0
-                                                                            }
-                                                                            required={
-                                                                                false
-                                                                            }
-                                                                            defaultValue={
-                                                                                country.sort_order
-                                                                            }
-                                                                            error={
-                                                                                errors.sort_order
                                                                             }
                                                                         />
                                                                     </FieldGroup>
@@ -395,31 +351,21 @@ export default function CountryIndex({ countries, defaults }: Props) {
                                                                     alınabilir.
                                                                 </p>
                                                             </div>
-                                                            <Form
-                                                                {...countryDestroy.form(
-                                                                    country.id,
-                                                                )}
-                                                                options={{
-                                                                    preserveScroll: true,
-                                                                }}
-                                                                className="flex justify-end"
-                                                            >
-                                                                {({
-                                                                    processing,
-                                                                }) => (
-                                                                    <Button
-                                                                        type="submit"
-                                                                        variant="destructive"
-                                                                        disabled={
-                                                                            processing
-                                                                        }
-                                                                    >
+                                                            <div className="flex justify-end">
+                                                                <ConfirmDelete
+                                                                    action={countryDestroy(
+                                                                        country.id,
+                                                                    )}
+                                                                    title={`${country.name} ülkesi silinsin mi?`}
+                                                                    description="Silinen ülke, silinenler sayfasından geri alınabilir."
+                                                                >
+                                                                    <Button variant="destructive">
                                                                         <Trash2 data-icon="inline-start" />
                                                                         Kaydı
                                                                         sil
                                                                     </Button>
-                                                                )}
-                                                            </Form>
+                                                                </ConfirmDelete>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </SheetContent>
@@ -443,7 +389,7 @@ export default function CountryIndex({ countries, defaults }: Props) {
                     </Table>
                 </div>
 
-                <CountryPagination countries={countries} />
+                <DataPagination paginator={countries} showRange={false} />
             </div>
         </>
     );

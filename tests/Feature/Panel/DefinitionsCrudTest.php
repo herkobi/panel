@@ -127,13 +127,13 @@ test('default definitions cannot be deactivated or deleted', function (array $ca
 
     $this->actingAs($admin)
         ->patch($case['status_route']($model))
-        ->assertSessionHasErrors('definition');
+        ->assertSessionHas('toast.type', 'warning');
 
     expect($model->refresh()->status)->toBe(Status::Active);
 
     $this->actingAs($admin)
         ->delete($case['destroy_route']($model))
-        ->assertSessionHasErrors('definition');
+        ->assertSessionHas('toast.type', 'warning');
 
     expect($model->refresh()->deleted_at)->toBeNull();
 })->with('default protected definition cases');
@@ -145,7 +145,7 @@ test('countries with cities and cities with districts cannot be deleted', functi
 
     $this->actingAs($admin)
         ->delete(route('panel.tools.definitions.countries.destroy', $country))
-        ->assertSessionHasErrors('definition');
+        ->assertSessionHas('toast.type', 'warning');
 
     expect($country->refresh()->deleted_at)->toBeNull();
 
@@ -153,7 +153,7 @@ test('countries with cities and cities with districts cannot be deleted', functi
 
     $this->actingAs($admin)
         ->delete(route('panel.tools.definitions.countries.cities.destroy', [$country, $city]))
-        ->assertSessionHasErrors('definition');
+        ->assertSessionHas('toast.type', 'warning');
 
     expect($city->refresh()->deleted_at)->toBeNull();
 });
@@ -213,6 +213,8 @@ dataset('definition cases', [
             'name' => 'Euro',
             'symbol' => 'EUR',
             'decimal_places' => 2,
+            'thousands_separator' => '.',
+            'decimal_separator' => ',',
             'status' => Status::Active->value,
             'sort_order' => 3,
         ],
@@ -221,6 +223,8 @@ dataset('definition cases', [
             'name' => 'Euro Updated',
             'symbol' => 'EUR',
             'decimal_places' => 2,
+            'thousands_separator' => '.',
+            'decimal_separator' => ',',
             'status' => Status::Active->value,
             'sort_order' => 3,
         ],

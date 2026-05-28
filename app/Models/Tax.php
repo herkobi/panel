@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\HasSortOrder;
 use App\Concerns\HasStatus;
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -16,10 +17,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'name',
     'rate',
     'status',
+    'sort_order',
 ])]
 class Tax extends Model
 {
-    use HasFactory, HasStatus, HasUuids, SoftDeletes;
+    use HasFactory, HasSortOrder, HasStatus, HasUuids, SoftDeletes;
 
     protected function casts(): array
     {

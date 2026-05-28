@@ -30,6 +30,8 @@ class SaveCurrencyRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'symbol' => ['required', 'string', 'max:8'],
             'decimal_places' => ['required', 'integer', 'min:0', 'max:6'],
+            'thousands_separator' => ['required', 'string', 'size:1'],
+            'decimal_separator' => ['required', 'string', 'size:1', 'different:thousands_separator'],
             'status' => [Rule::enum(Status::class)],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ];

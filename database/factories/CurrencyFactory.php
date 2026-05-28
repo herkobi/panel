@@ -20,6 +20,8 @@ class CurrencyFactory extends Factory
             'name' => fake()->currencyCode(),
             'symbol' => fake()->randomElement(['₺', '$', '€', '£']),
             'decimal_places' => 2,
+            'thousands_separator' => ',',
+            'decimal_separator' => '.',
             'status' => Status::Active,
             'sort_order' => 0,
         ];

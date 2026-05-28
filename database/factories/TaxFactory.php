@@ -19,6 +19,7 @@ class TaxFactory extends Factory
             'name' => 'KDV %'.fake()->randomElement([1, 10, 20]),
             'rate' => fake()->randomFloat(2, 0, 20),
             'status' => Status::Active,
+            'sort_order' => 0,
         ];
     }
 }

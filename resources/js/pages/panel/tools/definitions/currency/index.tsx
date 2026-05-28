@@ -2,10 +2,12 @@ import { Form, Head, Link, router } from '@inertiajs/react';
 import { Archive, Pencil, Plus, Save, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
+import { ConfirmDelete } from '@/components/confirm-delete';
+import { DataPagination } from '@/components/data-pagination';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -26,7 +28,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import {
     deleted as currencyDeleted,
@@ -35,7 +36,7 @@ import {
     store as currencyStore,
     update as currencyUpdate,
 } from '@/routes/panel/tools/definitions/currencies';
-import type { Currency, Paginated, PaginationLink, Status } from '@/types';
+import type { Currency, Paginated, Status } from '@/types';
 
 type Props = {
     currencies: Paginated<Currency>;
@@ -73,6 +74,45 @@ function CurrencyField({
                 min={min}
                 aria-invalid={Boolean(error)}
             />
+            <InputError message={error} />
+        </Field>
+    );
+}
+
+const SEPARATOR_OPTIONS: { value: string; label: string }[] = [
+    { value: ',', label: 'Virgül (,)' },
+    { value: '.', label: 'Nokta (.)' },
+    { value: ' ', label: 'Boşluk ( )' },
+];
+
+function SeparatorField({
+    name,
+    label,
+    defaultValue,
+    error,
+}: {
+    name: 'thousands_separator' | 'decimal_separator';
+    label: string;
+    defaultValue: string;
+    error?: string;
+}) {
+    return (
+        <Field data-invalid={Boolean(error)}>
+            <FieldLabel htmlFor={name}>{label}</FieldLabel>
+            <select
+                id={name}
+                name={name}
+                defaultValue={defaultValue}
+                required
+                aria-invalid={Boolean(error)}
+                className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+            >
+                {SEPARATOR_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                    </option>
+                ))}
+            </select>
             <InputError message={error} />
         </Field>
     );
@@ -118,48 +158,6 @@ function CurrencySaveButton({ processing }: { processing?: boolean }) {
     );
 }
 
-function CurrencyPagination({
-    currencies,
-}: {
-    currencies: Paginated<Currency>;
-}) {
-    const links = currencies.links.filter(
-        (link: PaginationLink) => link.url !== null || link.active,
-    );
-
-    if (links.length <= 1) {
-        return null;
-    }
-
-    return (
-        <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-sm text-muted-foreground">
-                Toplam {currencies.meta?.total ?? currencies.total ?? 0} kayıt
-            </div>
-            <div className="flex flex-wrap items-center gap-1">
-                {links.map((link) => (
-                    <Link
-                        key={`${link.label}-${link.url ?? 'current'}`}
-                        href={link.url ?? '#'}
-                        className={cn(
-                            buttonVariants({
-                                variant: link.active ? 'outline' : 'ghost',
-                                size: 'sm',
-                            }),
-                            !link.url && 'pointer-events-none opacity-50',
-                        )}
-                    >
-                        {link.label
-                            .replace('&laquo;', 'Önceki')
-                            .replace('&raquo;', 'Sonraki')
-                            .trim()}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
-}
-
 export default function CurrencyIndex({ currencies, defaults }: Props) {
     return (
         <>
@@ -196,7 +194,7 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                                 <Form
                                     {...currencyStore.form()}
                                     options={{ preserveScroll: true }}
-                                    className="flex flex-col gap-5 px-4"
+                                    className="flex flex-1 min-h-0 flex-col gap-5 overflow-y-auto px-4 pb-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
@@ -204,41 +202,61 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                                                 <input
                                                     type="hidden"
                                                     name="status"
-                                                    value="active"
+                                                    value="passive"
                                                 />
-                                                <CurrencyField
-                                                    name="code"
-                                                    label="Kod"
-                                                    error={errors.code}
-                                                />
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <CurrencyField
+                                                        name="sort_order"
+                                                        label="Sıra No"
+                                                        type="number"
+                                                        min={0}
+                                                        required={false}
+                                                        error={errors.sort_order}
+                                                    />
+                                                    <CurrencyField
+                                                        name="code"
+                                                        label="Kod"
+                                                        error={errors.code}
+                                                    />
+                                                </div>
                                                 <CurrencyField
                                                     name="name"
                                                     label="Ad"
                                                     error={errors.name}
                                                 />
-                                                <CurrencyField
-                                                    name="symbol"
-                                                    label="Sembol"
-                                                    error={errors.symbol}
-                                                />
-                                                <CurrencyField
-                                                    name="decimal_places"
-                                                    label="Ondalık basamak"
-                                                    type="number"
-                                                    min={0}
-                                                    defaultValue={2}
-                                                    error={
-                                                        errors.decimal_places
-                                                    }
-                                                />
-                                                <CurrencyField
-                                                    name="sort_order"
-                                                    label="Sıra"
-                                                    type="number"
-                                                    min={0}
-                                                    required={false}
-                                                    error={errors.sort_order}
-                                                />
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <CurrencyField
+                                                        name="symbol"
+                                                        label="Sembol"
+                                                        error={errors.symbol}
+                                                    />
+                                                    <CurrencyField
+                                                        name="decimal_places"
+                                                        label="Basamak sayısı"
+                                                        type="number"
+                                                        min={0}
+                                                        defaultValue={2}
+                                                        error={
+                                                            errors.decimal_places
+                                                        }
+                                                    />
+                                                    <SeparatorField
+                                                        name="thousands_separator"
+                                                        label="Binlik ayracı"
+                                                        defaultValue=","
+                                                        error={
+                                                            errors.thousands_separator
+                                                        }
+                                                    />
+                                                    <SeparatorField
+                                                        name="decimal_separator"
+                                                        label="Onluk ayracı"
+                                                        defaultValue="."
+                                                        error={
+                                                            errors.decimal_separator
+                                                        }
+                                                    />
+                                                </div>
                                             </FieldGroup>
                                             <div className="flex justify-end">
                                                 <CurrencySaveButton
@@ -258,10 +276,13 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Aktif</TableHead>
+                                <TableHead>Sıra No</TableHead>
                                 <TableHead>Kod</TableHead>
                                 <TableHead>Ad</TableHead>
                                 <TableHead>Sembol</TableHead>
-                                <TableHead>Ondalık</TableHead>
+                                <TableHead>Basamak</TableHead>
+                                <TableHead>Binlik ayracı</TableHead>
+                                <TableHead>Onluk ayracı</TableHead>
                                 <TableHead className="text-right">
                                     İşlem
                                 </TableHead>
@@ -278,6 +299,7 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                                             }
                                         />
                                     </TableCell>
+                                    <TableCell>{currency.sort_order}</TableCell>
                                     <TableCell className="font-medium">
                                         {currency.code}
                                     </TableCell>
@@ -295,6 +317,21 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                                     <TableCell>{currency.symbol}</TableCell>
                                     <TableCell>
                                         {currency.decimal_places}
+                                    </TableCell>
+                                    <TableCell>
+                                        <span className="font-mono">
+                                            {currency.thousands_separator ===
+                                            ' '
+                                                ? '␣'
+                                                : currency.thousands_separator}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <span className="font-mono">
+                                            {currency.decimal_separator === ' '
+                                                ? '␣'
+                                                : currency.decimal_separator}
+                                        </span>
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <Sheet>
@@ -320,7 +357,7 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                                                         düzenleyin.
                                                     </SheetDescription>
                                                 </SheetHeader>
-                                                <div className="flex flex-col gap-6 px-4">
+                                                <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-4">
                                                     <Form
                                                         {...currencyUpdate.form(
                                                             currency.id,
@@ -336,23 +373,35 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                                                         }) => (
                                                             <>
                                                                 <FieldGroup>
-                                                                    <input
-                                                                        type="hidden"
-                                                                        name="status"
-                                                                        value={
-                                                                            currency.status
-                                                                        }
-                                                                    />
-                                                                    <CurrencyField
-                                                                        name="code"
-                                                                        label="Kod"
-                                                                        defaultValue={
-                                                                            currency.code
-                                                                        }
-                                                                        error={
-                                                                            errors.code
-                                                                        }
-                                                                    />
+                                                                    <div className="grid grid-cols-2 gap-3">
+                                                                        <CurrencyField
+                                                                            name="sort_order"
+                                                                            label="Sıra No"
+                                                                            type="number"
+                                                                            min={
+                                                                                0
+                                                                            }
+                                                                            required={
+                                                                                false
+                                                                            }
+                                                                            defaultValue={
+                                                                                currency.sort_order
+                                                                            }
+                                                                            error={
+                                                                                errors.sort_order
+                                                                            }
+                                                                        />
+                                                                        <CurrencyField
+                                                                            name="code"
+                                                                            label="Kod"
+                                                                            defaultValue={
+                                                                                currency.code
+                                                                            }
+                                                                            error={
+                                                                                errors.code
+                                                                            }
+                                                                        />
+                                                                    </div>
                                                                     <CurrencyField
                                                                         name="name"
                                                                         label="Ad"
@@ -363,43 +412,52 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                                                                             errors.name
                                                                         }
                                                                     />
-                                                                    <CurrencyField
-                                                                        name="symbol"
-                                                                        label="Sembol"
-                                                                        defaultValue={
-                                                                            currency.symbol
-                                                                        }
-                                                                        error={
-                                                                            errors.symbol
-                                                                        }
-                                                                    />
-                                                                    <CurrencyField
-                                                                        name="decimal_places"
-                                                                        label="Ondalık basamak"
-                                                                        type="number"
-                                                                        min={0}
-                                                                        defaultValue={
-                                                                            currency.decimal_places
-                                                                        }
-                                                                        error={
-                                                                            errors.decimal_places
-                                                                        }
-                                                                    />
-                                                                    <CurrencyField
-                                                                        name="sort_order"
-                                                                        label="Sıra"
-                                                                        type="number"
-                                                                        min={0}
-                                                                        required={
-                                                                            false
-                                                                        }
-                                                                        defaultValue={
-                                                                            currency.sort_order
-                                                                        }
-                                                                        error={
-                                                                            errors.sort_order
-                                                                        }
-                                                                    />
+                                                                    <div className="grid grid-cols-2 gap-3">
+                                                                        <CurrencyField
+                                                                            name="symbol"
+                                                                            label="Sembol"
+                                                                            defaultValue={
+                                                                                currency.symbol
+                                                                            }
+                                                                            error={
+                                                                                errors.symbol
+                                                                            }
+                                                                        />
+                                                                        <CurrencyField
+                                                                            name="decimal_places"
+                                                                            label="Basamak sayısı"
+                                                                            type="number"
+                                                                            min={
+                                                                                0
+                                                                            }
+                                                                            defaultValue={
+                                                                                currency.decimal_places
+                                                                            }
+                                                                            error={
+                                                                                errors.decimal_places
+                                                                            }
+                                                                        />
+                                                                        <SeparatorField
+                                                                            name="thousands_separator"
+                                                                            label="Binlik ayracı"
+                                                                            defaultValue={
+                                                                                currency.thousands_separator
+                                                                            }
+                                                                            error={
+                                                                                errors.thousands_separator
+                                                                            }
+                                                                        />
+                                                                        <SeparatorField
+                                                                            name="decimal_separator"
+                                                                            label="Onluk ayracı"
+                                                                            defaultValue={
+                                                                                currency.decimal_separator
+                                                                            }
+                                                                            error={
+                                                                                errors.decimal_separator
+                                                                            }
+                                                                        />
+                                                                    </div>
                                                                 </FieldGroup>
                                                                 <div className="flex justify-end">
                                                                     <CurrencySaveButton
@@ -425,30 +483,20 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                                                                 alınabilir.
                                                             </p>
                                                         </div>
-                                                        <Form
-                                                            {...currencyDestroy.form(
-                                                                currency.id,
-                                                            )}
-                                                            options={{
-                                                                preserveScroll: true,
-                                                            }}
-                                                            className="flex justify-end"
-                                                        >
-                                                            {({
-                                                                processing,
-                                                            }) => (
-                                                                <Button
-                                                                    type="submit"
-                                                                    variant="destructive"
-                                                                    disabled={
-                                                                        processing
-                                                                    }
-                                                                >
+                                                        <div className="flex justify-end">
+                                                            <ConfirmDelete
+                                                                action={currencyDestroy(
+                                                                    currency.id,
+                                                                )}
+                                                                title={`${currency.name} para birimi silinsin mi?`}
+                                                                description="Silinen para birimi, silinenler sayfasından geri alınabilir."
+                                                            >
+                                                                <Button variant="destructive">
                                                                     <Trash2 data-icon="inline-start" />
                                                                     Kaydı sil
                                                                 </Button>
-                                                            )}
-                                                        </Form>
+                                                            </ConfirmDelete>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </SheetContent>
@@ -471,7 +519,7 @@ export default function CurrencyIndex({ currencies, defaults }: Props) {
                     </Table>
                 </div>
 
-                <CurrencyPagination currencies={currencies} />
+                <DataPagination paginator={currencies} showRange={false} />
             </div>
         </>
     );

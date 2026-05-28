@@ -5,13 +5,19 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { cn } from '@/lib/utils';
+import { index as permissions } from '@/routes/panel/settings/permissions';
 import { index } from '@/routes/panel/settings/roles';
 import type { NavItem } from '@/types';
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Görev ve Yetkiler',
+        title: 'Kullanıcı Görevleri',
         href: index(),
+        icon: null,
+    },
+    {
+        title: 'Kullanıcı Yetkileri',
+        href: permissions(),
         icon: null,
     },
 ];
