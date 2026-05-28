@@ -4,19 +4,24 @@ declare(strict_types=1);
 
 namespace App\Listeners\Panel\Tools\Definitions\Tax;
 
+use App\Concerns\LogsActivity;
 use App\Events\Panel\Tools\Definitions\Tax\TaxUpdatedEvent;
 
 class LogTaxUpdated
 {
+    use LogsActivity;
+
     public function handle(TaxUpdatedEvent $event): void
     {
         $userName = $event->causer->name;
         $taxName = $event->tax->name;
 
-        activity('tax_rate')
-            ->performedOn($event->tax)
-            ->causedBy($event->causer)
-            ->event('updated')
-            ->log("{$userName}, {$taxName} vergi oranını güncelledi.");
+        $this->logActivity(
+            logName: 'tax_rate',
+            subject: $event->tax,
+            causer: $event->causer,
+            event: 'updated',
+            message: "{$userName}, {$taxName} vergi oranını güncelledi.",
+        );
     }
 }

@@ -6,11 +6,13 @@ namespace App\Events\Panel\Settings\Roles;
 
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class RolePermissionsSyncedEvent
 {
-    use Dispatchable;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * @param  array<int, string>  $added

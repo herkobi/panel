@@ -1,246 +1,168 @@
 # Herkobi Panel
 
-> Laravel ile backend sistem geliştirmek isteyenler için, **kullanıcı ve etkinlik yönetimini hazır sunan** başlangıç altyapısı.
+> A free, open-source Laravel boilerplate that ships with a clean dual-area (admin + member) architecture, an account-scoped multi-tenancy primitive, role/permission management, polymorphic media, and a complete auth + profile stack — so you can focus on your product, not on the plumbing.
 
-Herkobi Panel; kimlik doğrulama, üye/kullanıcı yönetimi, rol-yetki, ayarlar, etkinlik kaydı ve admin/üye ayrımı gibi her projede tekrar tekrar yazılan parçaları **tek bir tutarlı iskelet** hâlinde sunar. İndir, kendi iş mantığını üstüne yaz, kullan.
-
-**MIT lisanslı, ücretsiz.**
+**MIT licensed. Use it for your CMS, your SaaS, your micro-ERP, whatever you need.**
 
 ---
 
-## Neler hazır geliyor?
+## What you get out of the box
 
-- **Kimlik doğrulama (Fortify)** — Giriş, kayıt, e-posta doğrulama, parola sıfırlama, parola onayı, **2FA / TOTP** (QR + kurtarma kodları).
-- **Çift alan mimarisi**
-  - `/panel` → Admin kullanıcılar (`user_type:admin`)
-  - `/app` → Üye kullanıcılar (`user_type:member`)
-- **Üye yönetimi** — Admin panelinden üye oluşturma, durum değiştirme, e-posta doğrulama / değiştirme, üye detayları.
-- **Rol ve yetki** — Spatie Permission ile rol CRUD ve granular yetki kontrolü; tüm panel/app rotalarında `permission:...` middleware desteği.
-- **Profil paketi (her iki alan için)**
-  - Profil bilgileri ve e-posta güncelleme (throttle korumalı)
-  - Güvenlik (parola değişikliği, 2FA)
-  - Aktif oturumlar (görüntüleme + uzaktan sonlandırma)
-  - Bildirimler (okunma durumu)
-  - Görünüm tercihi (light/dark/system)
-- **Hesap (App alanı)** — Üyenin firma/iletişim bilgileri yönetimi.
-- **Etkinlik kaydı** — `spatie/laravel-activitylog` ile model değişiklikleri ve önemli aksiyonlar; panelden listelenebilir.
-- **Giriş kaydı** — `yadahan/laravel-authentication-log` ile her oturumun cihaz/IP/konum izi; yeni cihaz bildirimi hazır listener'la.
-- **Tanımlamalar (definitions)** — Ülke, şehir, ilçe, dil, para birimi, vergi için CRUD + soft-delete + geri yükleme.
-- **Önbellek araçları** — Panel üzerinden tip bazlı cache temizleme.
-- **Çoklu dil** — Türkçe (`tr`, varsayılan) ve İngilizce (`en`) eş güncel tutulur.
-- **Karanlık mod** — `next-themes` üzerinden.
-- **Olay odaklı (event-driven)** — Yan etkiler (log, bildirim, e-posta, kuyruk işi) controller/servisten **değil**, `event → listener` zincirinden akar. Hâlihazırda 23 event, 24 listener tanımlı.
-- **Modern frontend** — React 19 + TypeScript + Inertia.js v3 + Tailwind v4 + shadcn/ui; **Wayfinder** ile uçtan uca tip güvenli rota fonksiyonları.
+- **Two cleanly separated areas**
+    - `/panel` for admins (`user_type:admin`)
+    - `/app` for members (`user_type:member`)
+    - Mirrored folders, mirrored code, zero leakage between them.
+
+- **Authentication (Fortify)** — login, registration, email verification, password reset & confirmation, **2FA / TOTP** (QR + recovery codes), new-device login detection with a notification + activity-log entry.
+
+- **Member & admin user management** — create, status changes, email verification, email change (signed confirmation link), role assignment.
+
+- **Account ownership layer** — every member belongs to an `Account` (created automatically on email verification with a unique `code`). Member-scoped data hangs off `account_id`, not `user_id`. A `BelongsToAccount` trait + `BindCurrentAccount` middleware auto-scope queries and auto-fill foreign keys **only in the member area**. Admins remain cross-account. The schema already supports multiple members per account — going multi-user-per-account later is a non-migration change.
+
+- **Role + permission (Spatie)** — full role CRUD with permission checkboxes grouped by section; permission registry in `config/panel-permissions.php` with `group`/`label` UI metadata; `permission:` route middleware. Super Admin seeded.
+
+- **Profile package (both areas)** — profile info & email update (throttled), password change, 2FA management, active sessions list + remote revocation, in-app notification center, light/dark/system appearance.
+
+- **Settings (admin)** — app identity (name, slogan, brand assets: logo / logo dark / favicon with immediate Upload / Delete buttons), default country/currency/tax/language/timezone.
+
+- **Definitions** — Country, City, District, Language, Currency, Tax CRUD with soft-delete + restore + force-delete.
+
+- **Tools** — activity log viewer, type-based cache clear.
+
+- **Polymorphic media system** — `Media` model + `HasMedia` trait + `MediaService` (attach / detach / reorder) on top of a clean `FileService` (`public` & `local` disks). Member-owned media lives under `public/{account.code}` and `private/{account.code}`; admin/global under `public/media` and `private/media`. `Media::url()` for public, `Media::temporaryUrl()` for signed private access. Reusable `ImageUpload` and `MediaGallery` React components.
+
+- **Event-driven architecture (hard rule)** — every side effect (activity log, notification, email) flows through `event → listener`. Controllers stay thin. Listener auto-discovery handles wiring.
+
+- **Notification standard** — `ShouldQueue` Notifications combine in-app (`database` channel) + queued mail (`toMail()` returning a Mailable). Listeners only call `$notifiable->notify(...)`; no Job wrapping for routine mail.
+
+- **Activity & login audit** — Spatie activitylog for actions, Yadahan authentication-log for every login.
+
+- **Multi-language** — Turkish (`tr`, default) and English (`en`) kept in lockstep in `lang/`.
+
+- **Modern frontend** — React 19 + TypeScript (strict) + Inertia.js v3 + Tailwind v4 + shadcn/ui. **Wayfinder** for end-to-end typed route / action functions — never hardcode URLs.
+
+- **DX defaults** — `Model::preventLazyLoading` in non-production (catches N+1 early), `DB::prohibitDestructiveCommands` in production, `CarbonImmutable` everywhere, strict Pest test suite, full CI parity via `composer ci:check`.
 
 ---
 
-## Teknoloji yığını
+## Tech stack
 
 **Backend**
 
-- Laravel 13.7 (PHP 8.3+)
-- Laravel Fortify · Wayfinder · Tinker
+- Laravel 13 (PHP 8.3+)
+- Laravel Fortify · Wayfinder
 - Spatie Laravel Permission · Spatie Activity Log
 - Yadahan Authentication Log
-- Pest 4 + Pest Browser
+- Pest 4
 
 **Frontend**
 
 - React 19 + TypeScript (strict)
 - Inertia.js v3
-- Tailwind CSS v4 (config dosyası yok, `resources/css/app.css` girişi)
+- Tailwind CSS v4 (no config file, `resources/css/app.css` entry)
 - shadcn/ui + Base UI primitives
-- Lucide React (ikonlar)
-- Vite 8 + babel-plugin-react-compiler
+- Lucide React icons · `next-themes`
+- Vite 8
 
-**Veritabanı / Çalışma zamanı**
+**Database / runtime**
 
-- Varsayılan: **MySQL** (SQLite / MariaDB / PostgreSQL / SQL Server'a geçilebilir)
-- **UUID** birincil anahtarlar (`HasUuids` tüm modellerde)
-- `User` modelinde **soft delete**
-- Queue · Cache · Session · sürücüsü: `database`
-
----
-
-## Sistem gereksinimleri
-
-- PHP **8.3+**
-- Composer 2.x
-- Node.js **20+** ve npm
-- Bir veritabanı — varsayılan **MySQL** (yerelde MySQL servisi çalışıyor olmalı; `.env`'de `DB_*` değerleri ayarlanır). SQLite'a geçilecekse `DB_CONNECTION=sqlite` yeterli.
+- MySQL by default (SQLite / MariaDB / Postgres compatible)
+- **UUID** primary keys everywhere (`HasUuids`)
+- `User` uses **soft deletes**
 
 ---
 
-## Kurulum
+## Quick start
 
 ```bash
-git clone <repo-url> herkobi-panel
-cd herkobi-panel
+# 1. Clone & install
+git clone <your-fork-or-this-repo>
+cd panel
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
 
-# Bağımlılıklar + .env + key + migrate + npm install + build
-composer setup
-```
+# 2. Configure DB credentials in .env, then:
+php artisan migrate --seed
 
-`composer setup` yapılan işler:
-
-1. `composer install`
-2. `.env` yoksa `.env.example`'dan kopyalanır
-3. `php artisan key:generate`
-4. `php artisan migrate --force`
-5. `npm install`
-6. `npm run build`
-
-Ardından geliştirme sunucusunu başlatın:
-
-```bash
+# 3. Start dev (Laravel + queue worker + Vite concurrently)
 composer dev
 ```
 
-Bu komut `php artisan serve`, `php artisan queue:listen` ve `npm run dev`'i **concurrently** ile aynı anda çalıştırır.
+**Seeded accounts (change before production):**
+
+| Email | Password | Role |
+| --- | --- | --- |
+| `admin@admin.com` | `password` | Super Admin |
+| `panel@admin.com` | `password` | Admin |
+| `user@user.com` | `password` | Member (with an Account + Address) |
 
 ---
 
-## Sık kullanılan komutlar
-
-```bash
-# Geliştirme (Laravel + queue + Vite)
-composer dev
-
-# Tek seferlik build
-npm run build
-
-# Rota değişikliğinden sonra mutlaka çalıştırın
-php artisan wayfinder:generate --with-form --no-interaction
-
-# Kod kalitesi
-composer lint           # Pint formatla
-composer lint:check     # Pint sadece kontrol
-npm run lint            # ESLint --fix
-npm run lint:check
-npm run format          # Prettier --write
-npm run types:check     # tsc --noEmit
-
-# Test
-composer test                              # config:clear + lint + pest
-php artisan test --filter=TestName         # tek test
-
-# Tam CI parite kontrolü (push öncesi)
-composer ci:check
-```
-
----
-
-## Mimari notlar
-
-### Bağımlılık yönü
-
-Üst katman alttakine bağımlı olabilir; tersi **yasak**:
-
-```
-Enum → Migration → Model → Service → Event → Listener →
-Notification → Job → Request → Controller → Resource →
-Page/UI → Middleware → Seeder → Permission
-```
-
-### Olay odaklı yan etki kuralı
-
-Controller ince kalır, servisler iş kuralını taşır. Her yan etki — aktivite kaydı, bildirim, e-posta, kuyruk işi — **`event() → listener` zinciri** üzerinden akar; controller veya servisten doğrudan tetiklenmez.
-
-### Inertia paylaşımlı `auth` sözleşmesi
-
-Tek bir paylaşımlı prop vardır: `auth`, ve `auth.type: 'app' | 'panel'` ile ayrılır.
-
-- App alanı React kodunda → `useAppAuth()`
-- Panel alanı React kodunda → `usePanelAuth()`
-
-`usePage().props.auth`'u doğrudan okumayın; `AppUser` ve `PanelUser` tiplerini karıştırmayın.
-
-### Özel middleware
-
-| Middleware | Görev |
-|---|---|
-| `active_user` | Pasif kullanıcının erişimini engeller |
-| `user_type:admin\|member` | Alan ayrımını uygular |
-| `write_access` | Yazma yetkisi olmayan kullanıcıları yalnızca okumaya kısıtlar |
-| `HandleInertiaRequests` | Paylaşımlı `auth` prop'unu üretir |
-| `SetSecurityHeaders` | Güvenlik başlıkları |
-
-### Modeller
-
-- Tüm modeller `HasUuids` kullanır — birincil ve yabancı anahtarlar **UUID string**.
-- `User` modeli `SoftDeletes` — adminler hard-delete edemez.
-- PHP 8.3 attribute'ları: `#[Fillable([...])]`, `#[Hidden([...])]`, `#[Scope]`.
-- Her PHP dosyası `declare(strict_types=1);` ile başlar.
-
----
-
-## Klasör yapısı
+## Project structure (highlights)
 
 ```
 app/
-  Actions/Fortify/      Fortify aksiyonları
-  Enums/                Status, UserStatus, UserType
-  Events/{Panel,App,Auth}
-  Http/Controllers/{Panel,App}
-  Http/Middleware/      Özel middleware
-  Listeners/{Panel,App,Auth}
-  Models/               UUID + HasUuids
-  Notifications/{Panel,App,Auth}
-  Services/{Panel,App,Support}
+  Concerns/             # Shared model traits (HasStatus, HasSortOrder, BelongsToAccount, HasMedia, LogsActivity)
+  Enums/                # Status, UserStatus, UserType
+  Events/Panel|App|Auth # Domain events (event-driven side effects)
+  Listeners/            # Log* (activity) + Send* (notify) + Provision* (account)
+  Http/
+    Controllers/Panel|App
+    Requests/Panel|App
+    Resources/Panel|App
+    Middleware/         # custom auth/area/scope middleware
+  Mail/                 # Mailables rendered by notifications
+  Models/               # all use HasUuids; User uses soft deletes
+  Notifications/        # all ShouldQueue, via=mail+database
+  Services/Panel|App    # business logic
+  Services/Account      # AccountProvisioner (idempotent account creation)
+  Services/Support      # FileService, MediaService
 resources/
-  css/app.css           Tailwind v4 girişi
   js/
-    actions/            Wayfinder action fonksiyonları (üretilen)
-    routes/             Wayfinder route helper'ları (üretilen)
-    components/ui/      shadcn/ui (elle düzenlenmez)
-    components/{app,panel}/
-    hooks/              useAppAuth, usePanelAuth, vb.
-    layouts/{app,panel,auth}/
-    pages/{app,panel,auth}/
-    types/
+    components/         # ui/ (shadcn, generated), image-upload, media-gallery, …
+    pages/panel/        # admin pages
+    pages/app/          # member pages
+    types/              # TS types (barrel via index.ts)
+  views/mail/           # mail markdown templates
 routes/
-  panel.php             /panel — admin
-  app.php               /app — üye
-  web.php               public + dashboard yönlendirme
-lang/{tr,en}/           Çeviriler (eş güncel tutulur)
+  panel.php  app.php  web.php  auth.php
+config/
+  panel-permissions.php # permission registry (name → group + label)
 ```
 
 ---
 
-## Test
+## How to extend
 
-Testler — uygulama varsayılanından bağımsız olarak — **SQLite `:memory:`** üzerinde, `sync` queue ve `array` cache/session ile koşar (bkz. [phpunit.xml](phpunit.xml)). DB'ye dokunan feature testlerinde `RefreshDatabase` kullanın.
+**Add a member-scoped model.** Create the model and migration, add `$table->foreignUuid('account_id')->constrained()->cascadeOnDelete()` in the migration, and on the model `use App\Concerns\BelongsToAccount;`. That's it — you now have an `account()` relation, queries are auto-scoped to the current account inside the member area, and `account_id` is auto-filled on create. Always create through the Account relation: `$user->account->foos()->create($validated)`. **Never** accept `account_id` from request input.
 
-```bash
-composer test           # Pint + Pest
-composer ci:check       # lint + format + types + test (CI'la birebir)
-```
+**Add a permission.** Add the route, register the permission name + group/label in `config/panel-permissions.php`, run `php artisan db:seed --class=RolePermissionSeeder`, and attach `permission:...` middleware on the route.
 
----
+**Add a notification.** Create a `Send{X}` listener that calls `$notifiable->notify(new {X}Notification(...))`. In the notification: `implements ShouldQueue`, `via=['mail','database']` (or a subset), return a Mailable from `toMail()` (templates in `resources/views/mail/`), write the in-app row via `toArray()`.
 
-## Bilinmesi gerekenler
-
-- Her rota değişikliğinden sonra `php artisan wayfinder:generate` çalıştırın; frontend hardcoded URL kullanmaz.
-- Yetkilendirme bugün **middleware tabanlı**dır; ihtiyaç çıkarsa Policy eklenir.
-- Yeni e-posta işleri için: kuyruğa alınan bir **Job**, içinden bir **Mailable** dispatch eder. Görünümler `resources/views/mail/` altına gelir.
-- shadcn/ui primitive'leri üretilmiştir ve ESLint/Prettier dışındadır — elle düzenlemeyin, regenerate edin.
+**Add media to a model.** `use App\Concerns\HasMedia;`. For an account-owned model, also `use App\Concerns\BelongsToAccount;` and override `mediaAccountCode()` to return `$this->account->code` (so its media lands under that folder). For admin / global owners, the default `media/` folder is used. Then `app(MediaService::class)->attach($owner, $file, 'gallery', private: false)`.
 
 ---
 
-## Katkı
+## Customization checklist before going live
 
-PR'lara açıktır. Göndermeden önce lütfen şunu çalıştırın:
-
-```bash
-composer ci:check
-```
-
-Yeşil değilse merge edilmez. Türkçe ve İngilizce çeviri dosyalarını eş güncel tutun.
+- [ ] Change seeded admin / member credentials.
+- [ ] Set `APP_KEY`, `APP_URL`, `MAIL_*`, real DB credentials.
+- [ ] Decide whether to gate admin panel CRUDs (Members, Definitions, Cache, Settings/Users) with finer-grained `permission:` middleware — currently only the Roles area is gated; the rest rely on `user_type:admin`, meaning **every admin can do everything** in those areas by default.
+- [ ] Review activity log retention; some events log PII (e.g., old/new email on email change).
+- [ ] Configure file storage (`FILESYSTEM_DISK`) — defaults are local; switch to S3 in `config/filesystems.php` if needed.
+- [ ] Pick a real queue connection (defaults work but `redis` / `sqs` recommended in production).
+- [ ] Localize: keep `lang/en` and `lang/tr` in sync, or remove the one you don't need.
+- [ ] Run `composer ci:check` to ensure lint + format + types + tests pass.
 
 ---
 
-## Lisans
+## Contributing
 
-[MIT](LICENSE) © Herkobi
+Issues and PRs welcome. Please run `composer ci:check` before submitting.
 
-Bu proje **özgürce** indirilebilir, değiştirilebilir, ticari ve kişisel projelerde kullanılabilir. Tek koşul lisans dosyasının dağıtımda korunmasıdır.
+## License
+
+MIT — see [LICENSE](LICENSE).

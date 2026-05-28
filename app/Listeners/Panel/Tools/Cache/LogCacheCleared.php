@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Listeners\Panel\Tools\Cache;
 
+use App\Concerns\LogsActivity;
 use App\Events\Panel\Tools\Cache\CacheClearedEvent;
 
 class LogCacheCleared
 {
+    use LogsActivity;
+
     public function handle(CacheClearedEvent $event): void
     {
         $userName = $event->causer->name;
@@ -23,10 +26,12 @@ class LogCacheCleared
             default => $event->type,
         };
 
-        activity('cache')
-            ->causedBy($event->causer)
-            ->event('cleared')
-            ->withProperties(['type' => $event->type])
-            ->log("{$userName} {$cacheName} temizledi.");
+        $this->logActivity(
+            logName: 'cache',
+            causer: $event->causer,
+            event: 'cleared',
+            message: "{$userName} {$cacheName} temizledi.",
+            properties: ['type' => $event->type],
+        );
     }
 }

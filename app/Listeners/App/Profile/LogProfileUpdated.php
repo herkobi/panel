@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace App\Listeners\App\Profile;
 
+use App\Concerns\LogsActivity;
 use App\Events\App\Profile\ProfileUpdatedEvent;
 
 class LogProfileUpdated
 {
+    use LogsActivity;
+
     public function handle(ProfileUpdatedEvent $event): void
     {
         $userName = $event->updatedBy->name;
         $message = $event->emailChanged
-            ? "{$userName}, profil e-posta adresini güncelledi."
-            : "{$userName}, profil bilgilerini güncelledi.";
+            ? "{$userName}, e-posta adresini güncelledi."
+            : "{$userName}, bilgilerini güncelledi.";
 
-        activity('profile')
-            ->performedOn($event->updatedBy)
-            ->causedBy($event->updatedBy)
-            ->event($event->emailChanged ? 'email_updated' : 'updated')
-            ->log($message);
+        $this->logActivity(
+            logName: 'profile',
+            subject: $event->updatedBy,
+            causer: $event->updatedBy,
+            event: $event->emailChanged ? 'email_updated' : 'updated',
+            message: $message,
+        );
     }
 }

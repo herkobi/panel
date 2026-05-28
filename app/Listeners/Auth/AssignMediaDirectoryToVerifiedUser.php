@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Listeners\Auth;
 
+use App\Concerns\LogsActivity;
 use App\Models\User;
 use App\Services\Support\FileService;
 use Illuminate\Auth\Events\Verified;
 
 class AssignMediaDirectoryToVerifiedUser
 {
+    use LogsActivity;
+
     public function __construct(
         private readonly FileService $files,
     ) {}
@@ -22,11 +25,13 @@ class AssignMediaDirectoryToVerifiedUser
 
         $directory = $this->files->ensureUserMediaCode($event->user);
 
-        activity('auth')
-            ->causedBy($event->user)
-            ->performedOn($event->user)
-            ->event('media_directory_assigned')
-            ->withProperties(['media_directory' => $directory])
-            ->log('Kullanıcı medya dizini atandı');
+        $this->logActivity(
+            logName: 'auth',
+            causer: $event->user,
+            event: 'media_directory_assigned',
+            message: 'Kullanıcı medya dizini atandı',
+            subject: $event->user,
+            properties: ['media_directory' => $directory],
+        );
     }
 }

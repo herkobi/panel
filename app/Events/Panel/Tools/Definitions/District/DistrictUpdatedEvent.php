@@ -6,11 +6,13 @@ namespace App\Events\Panel\Tools\Definitions\District;
 
 use App\Models\District;
 use App\Models\User;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class DistrictUpdatedEvent
 {
-    use Dispatchable;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
         public readonly District $district,

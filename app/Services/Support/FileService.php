@@ -102,15 +102,6 @@ class FileService
         return $code;
     }
 
-    public function ensureUserPublicDirectory(User $user): string
-    {
-        $directory = 'users/'.$this->ensureUserMediaCode($user);
-
-        Storage::disk(self::PUBLIC_DISK)->makeDirectory($directory);
-
-        return $directory;
-    }
-
     private function uniqueUserMediaCode(): string
     {
         do {

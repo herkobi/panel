@@ -11,7 +11,7 @@ use App\Http\Controllers\App\Profile\SecurityController;
 use App\Http\Controllers\App\Profile\SessionsController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'verified', 'user_type:member', 'active_user', 'write_access'])->group(function () {
+Route::middleware(['auth', 'verified', 'user_type:member', 'active_user', 'write_access', 'bind_account'])->group(function () {
 
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');

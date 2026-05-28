@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace App\Listeners\App\Profile;
 
+use App\Concerns\LogsActivity;
 use App\Events\App\Profile\PreferencesUpdatedEvent;
 
 class LogPreferencesUpdated
 {
+    use LogsActivity;
+
     public function handle(PreferencesUpdatedEvent $event): void
     {
         $userName = $event->updatedBy->name;
 
-        activity('profile')
-            ->performedOn($event->updatedBy)
-            ->causedBy($event->updatedBy)
-            ->event('preferences_updated')
-            ->log("{$userName}, profil tercihlerini güncelledi.");
+        $this->logActivity(
+            logName: 'profile',
+            subject: $event->updatedBy,
+            causer: $event->updatedBy,
+            event: 'preferences_updated',
+            message: "{$userName}, profil tercihlerini güncelledi.",
+        );
     }
 }

@@ -6,11 +6,13 @@ namespace App\Events\Panel\Tools\Definitions\Country;
 
 use App\Models\Country;
 use App\Models\User;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class CountryUpdatedEvent
 {
-    use Dispatchable;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
         public readonly Country $country,

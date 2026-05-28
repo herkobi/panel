@@ -6,11 +6,13 @@ namespace App\Events\Panel\Tools\Definitions\City;
 
 use App\Models\City;
 use App\Models\User;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class CityRestoredEvent
 {
-    use Dispatchable;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
         public readonly City $city,

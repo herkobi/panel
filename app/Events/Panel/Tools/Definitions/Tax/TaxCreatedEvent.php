@@ -6,11 +6,13 @@ namespace App\Events\Panel\Tools\Definitions\Tax;
 
 use App\Models\Tax;
 use App\Models\User;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class TaxCreatedEvent
 {
-    use Dispatchable;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
         public readonly Tax $tax,
