@@ -1,3 +1,4 @@
+import type { PageProps } from '@inertiajs/core';
 import { usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -9,9 +10,7 @@ type Props = {
 };
 
 export function AppShell({ children, variant = 'sidebar' }: Props) {
-    const { sidebarOpen } = usePage<{
-        sidebarOpen: boolean;
-    }>().props;
+    const { sidebarOpen } = usePage<PageProps>().props;
 
     if (variant === 'header') {
         return (

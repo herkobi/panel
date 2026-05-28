@@ -1,3 +1,4 @@
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import {
     Activity as ActivityIcon,
@@ -38,7 +39,7 @@ type ActivityPaginator = Paginated<Activity> & {
     links: PaginationLink[];
 };
 
-type PageProps = {
+type PageProps = InertiaPageProps & {
     activities: ActivityPaginator;
     filters: ActivityFilters;
     users: { id: string; name: string }[];

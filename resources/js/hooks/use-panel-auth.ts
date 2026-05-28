@@ -1,13 +1,9 @@
+import type { PageProps } from '@inertiajs/core';
 import { usePage } from '@inertiajs/react';
-import type { PanelAuth, Auth } from '@/types/auth';
-
-type SharedPageProps = {
-    auth: Auth;
-    [key: string]: unknown;
-};
+import type { PanelAuth } from '@/types/auth';
 
 export function usePanelAuth(): PanelAuth {
-    const { auth } = usePage<SharedPageProps>().props;
+    const { auth } = usePage<PageProps>().props;
 
     if (auth.type !== 'panel') {
         throw new Error('Invalid auth type..');

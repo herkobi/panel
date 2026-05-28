@@ -1,13 +1,9 @@
+import type { PageProps } from '@inertiajs/core';
 import { usePage } from '@inertiajs/react';
-import type { AppAuth, Auth } from '@/types/auth';
-
-type SharedPageProps = {
-    auth: Auth;
-    [key: string]: unknown;
-};
+import type { AppAuth } from '@/types/auth';
 
 export function useAppAuth(): AppAuth {
-    const { auth } = usePage<SharedPageProps>().props;
+    const { auth } = usePage<PageProps>().props;
 
     if (auth.type !== 'app') {
         throw new Error('Invalid auth type.');

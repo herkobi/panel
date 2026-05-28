@@ -20,8 +20,11 @@ class UpdateRoleRequest extends FormRequest
         $role = $this->route('role');
 
         return [
+            // Sistem rollerinde isim alanı disable; payload'a hiç eklenmez.
+            // `sometimes` ile yalnız gönderildiğinde doğrulanır, gönderilmezse
+            // RoleService::update ad değişikliğini atlar.
             'name' => [
-                'required',
+                'sometimes',
                 'string',
                 'max:255',
                 Rule::unique(Role::class, 'name')

@@ -1,10 +1,11 @@
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { router, usePage } from '@inertiajs/react';
 import { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import type { FlashMessages, FlashToast } from '@/types/ui';
 
 export function useFlashToast(): void {
-    const page = usePage<{ flash?: FlashMessages }>();
+    const page = usePage<InertiaPageProps & { flash?: FlashMessages }>();
     const lastToastRef = useRef<string | null>(null);
     const toastCounterRef = useRef<number>(0);
     const resetLastToastRef = useRef<ReturnType<typeof setTimeout> | null>(

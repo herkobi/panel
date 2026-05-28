@@ -28,8 +28,6 @@ composer ci:check          # lint:check + format:check + types:check + test
 php artisan wayfinder:generate --with-form --no-interaction
 ```
 
-**Windows PHP path:** `C:\Users\bulent\.config\herd\bin\php.bat` (use directly if `php` is not on PATH).
-
 **Tests** run on SQLite `:memory:` with `array` cache/session and `sync` queue. Use `RefreshDatabase` for feature tests touching the DB.
 
 ## Architecture

@@ -4,54 +4,61 @@ declare(strict_types=1);
 
 namespace App\Services\Panel\Settings\Permissions;
 
+use App\Events\Panel\Settings\Permissions\PermissionCreatedEvent;
+use App\Events\Panel\Settings\Permissions\PermissionDeletedEvent;
+use App\Events\Panel\Settings\Permissions\PermissionForceDeletedEvent;
+use App\Events\Panel\Settings\Permissions\PermissionRestoredEvent;
+use App\Events\Panel\Settings\Permissions\PermissionsBulkAddedEvent;
+use App\Events\Panel\Settings\Permissions\PermissionUpdatedEvent;
 use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\PermissionRegistrar;
 
 class PermissionService
 {
     /**
-     * Tüm izinleri group alanına göre grupla. UI tablosu için kullanılır.
+     * Aktif izinleri group alanına göre grupla. Soft-deleted olanlar dahil değil.
      *
      * @return array<string, array<int, array{uuid: string, name: string, group: ?string, label: ?string, roles_count: int}>>
      */
     public function grouped(): array
     {
-        $permissions = Permission::query()
-            ->withCount('roles')
-            ->orderBy('group')
-            ->orderBy('name')
-            ->get();
-
-        $groups = [];
-        foreach ($permissions as $permission) {
-            $key = $permission->group !== null && $permission->group !== ''
-                ? $permission->group
-                : 'Diğer';
-
-            $groups[$key][] = [
-                'uuid' => $permission->getKey(),
-                'name' => $permission->name,
-                'group' => $permission->group,
-                'label' => $permission->label,
-                'roles_count' => (int) $permission->roles_count,
-            ];
-        }
-
-        ksort($groups);
-
-        return $groups;
+        return $this->groupPermissions(
+            Permission::query()
+                ->withCount('roles')
+                ->orderBy('group')
+                ->orderBy('name')
+                ->get()
+        );
     }
 
     /**
-     * Panel rotalarından henüz DB'de izin satırı olmayanları listele.
+     * Soft-deleted izinleri group alanına göre grupla ("Silinenler" tabı için).
+     *
+     * @return array<string, array<int, array{uuid: string, name: string, group: ?string, label: ?string, roles_count: int}>>
+     */
+    public function deletedGrouped(): array
+    {
+        return $this->groupPermissions(
+            Permission::onlyTrashed()
+                ->withCount('roles')
+                ->orderBy('group')
+                ->orderBy('name')
+                ->get()
+        );
+    }
+
+    /**
+     * Panel rotalarından henüz DB'de (aktif veya silinmiş) izin satırı olmayanları listele.
      *
      * @return Collection<int, array{name: string, suggested_group: string, suggested_label: string}>
      */
     public function discoverableRoutes(): Collection
     {
-        $existing = Permission::query()->pluck('name')->all();
+        $existing = Permission::withTrashed()->pluck('name')->all();
         $existingFlip = array_flip($existing);
 
         $candidates = collect(Route::getRoutes())
@@ -74,48 +81,100 @@ class PermissionService
     /**
      * @param  array{name: string, group?: ?string, label?: ?string}  $data
      */
-    public function create(array $data): Permission
+    public function create(array $data, User $causer): Permission
     {
-        return DB::transaction(fn () => Permission::query()->create([
+        $permission = DB::transaction(fn () => Permission::query()->create([
             'name' => $data['name'],
             'guard_name' => 'web',
             'group' => $data['group'] ?? null,
             'label' => $data['label'] ?? null,
         ]));
+
+        $this->forgetPermissionCache();
+
+        PermissionCreatedEvent::dispatch($permission, $causer);
+
+        return $permission;
     }
 
     /**
      * @param  array{group?: ?string, label?: ?string}  $data
      */
-    public function update(Permission $permission, array $data): Permission
+    public function update(Permission $permission, array $data, User $causer): Permission
     {
-        return DB::transaction(function () use ($permission, $data): Permission {
-            $permission->update([
-                'group' => array_key_exists('group', $data) ? $data['group'] : $permission->group,
-                'label' => array_key_exists('label', $data) ? $data['label'] : $permission->label,
-            ]);
+        $changes = [];
 
-            return $permission->refresh();
+        DB::transaction(function () use ($permission, $data, &$changes): void {
+            foreach (['group', 'label'] as $field) {
+                if (! array_key_exists($field, $data)) {
+                    continue;
+                }
+
+                $newValue = $data[$field];
+
+                if ($permission->{$field} === $newValue) {
+                    continue;
+                }
+
+                $changes[$field] = ['from' => $permission->{$field}, 'to' => $newValue];
+                $permission->{$field} = $newValue;
+            }
+
+            if ($changes !== []) {
+                $permission->save();
+            }
         });
+
+        if ($changes !== []) {
+            $this->forgetPermissionCache();
+
+            PermissionUpdatedEvent::dispatch($permission->refresh(), $causer, $changes);
+        }
+
+        return $permission;
     }
 
-    public function delete(Permission $permission): void
+    public function delete(Permission $permission, User $causer): void
     {
         DB::transaction(fn () => $permission->delete());
+
+        $this->forgetPermissionCache();
+
+        PermissionDeletedEvent::dispatch($permission, $causer);
+    }
+
+    public function restore(Permission $permission, User $causer): Permission
+    {
+        DB::transaction(fn () => $permission->restore());
+
+        $this->forgetPermissionCache();
+
+        PermissionRestoredEvent::dispatch($permission->refresh(), $causer);
+
+        return $permission;
+    }
+
+    public function forceDelete(Permission $permission, User $causer): void
+    {
+        $name = $permission->name;
+
+        DB::transaction(fn () => $permission->forceDelete());
+
+        $this->forgetPermissionCache();
+
+        PermissionForceDeletedEvent::dispatch($name, $causer);
     }
 
     /**
-     * Discover sayfasından gelen rota adlarını toplu DB'ye yaz.
-     *
      * @param  array<int, string>  $names
      * @return int Eklenen kayıt sayısı
      */
-    public function bulkCreate(array $names): int
+    public function bulkCreate(array $names, User $causer): int
     {
-        $existing = Permission::query()->whereIn('name', $names)->pluck('name')->all();
+        $existing = Permission::withTrashed()->whereIn('name', $names)->pluck('name')->all();
         $existingFlip = array_flip($existing);
 
-        $created = 0;
+        $created = [];
 
         DB::transaction(function () use ($names, $existingFlip, &$created): void {
             foreach ($names as $name) {
@@ -130,27 +189,59 @@ class PermissionService
                     'label' => $this->suggestLabel($name),
                 ]);
 
-                $created++;
+                $created[] = $name;
             }
         });
 
-        return $created;
+        if ($created !== []) {
+            $this->forgetPermissionCache();
+
+            PermissionsBulkAddedEvent::dispatch($created, $causer);
+        }
+
+        return count($created);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Collection<int, Permission>  $permissions
+     * @return array<string, array<int, array{uuid: string, name: string, group: ?string, label: ?string, roles_count: int}>>
+     */
+    private function groupPermissions($permissions): array
+    {
+        $groups = [];
+        foreach ($permissions as $permission) {
+            $key = $permission->group !== null && $permission->group !== ''
+                ? $permission->group
+                : 'Diğer';
+
+            $groups[$key][] = [
+                'uuid' => $permission->getKey(),
+                'name' => $permission->name,
+                'group' => $permission->group,
+                'label' => $permission->label,
+                'roles_count' => (int) $permission->roles_count,
+            ];
+        }
+
+        ksort($groups);
+
+        return $groups;
+    }
+
+    private function forgetPermissionCache(): void
+    {
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
     /**
      * `panel.tools.definitions.units.index` → "Tanımlamalar / Birimler"
-     * Basit heuristik: ilk üç segmentten okunabilir bir grup üret.
      */
     private function suggestGroup(string $name): string
     {
         $segments = explode('.', $name);
-
-        // panel.tools.definitions.units.index → segments[2,3] => "Definitions / Units"
-        // panel.settings.users.store         → segments[1,2] => "Settings / Users"
         $relevant = array_slice($segments, 1, 3);
 
-        // Son segment fiilse onu at (index, store, vb.).
-        $verbs = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy', 'status', 'deleted', 'restore', 'force-delete', 'clear', 'verify', 'change', 'confirm', 'welcome', 'role', 'discover'];
+        $verbs = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy', 'status', 'deleted', 'restore', 'force-delete', 'clear', 'verify', 'change', 'confirm', 'welcome', 'role', 'discover', 'bulk-store'];
         if ($relevant !== [] && in_array(end($relevant), $verbs, true)) {
             array_pop($relevant);
         }
@@ -182,6 +273,7 @@ class PermissionService
             'welcome' => 'Hoş Geldin',
             'role' => 'Rol Ata',
             'discover' => 'Keşfet',
+            'bulk-store' => 'Toplu Ekle',
         ];
 
         $segments = explode('.', $name);

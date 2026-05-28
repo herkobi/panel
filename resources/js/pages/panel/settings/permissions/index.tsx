@@ -1,5 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Pencil, Plus, Radar, Trash2 } from 'lucide-react';
+import { Archive, Pencil, Plus, Radar, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import PermissionsController from '@/actions/App/Http/Controllers/Panel/Settings/Permissions/PermissionsController';
@@ -36,7 +36,10 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { dashboard } from '@/routes';
-import { discover as discoverRoute } from '@/routes/panel/settings/permissions';
+import {
+    deleted as deletedRoute,
+    discover as discoverRoute,
+} from '@/routes/panel/settings/permissions';
 
 type Permission = {
     uuid: string;
@@ -67,6 +70,12 @@ export default function PermissionsIndex({ groups }: Props) {
                         description="Sistemdeki izinleri tanımla, grupla ve etiketle. Rotalara karşılık gelmeyen özel izinler de buradan eklenir."
                     />
                     <div className="flex gap-2">
+                        <Button asChild variant="ghost">
+                            <Link href={deletedRoute().url}>
+                                <Archive data-icon="inline-start" />
+                                Silinenler
+                            </Link>
+                        </Button>
                         <Button asChild variant="outline">
                             <Link href={discoverRoute().url}>
                                 <Radar data-icon="inline-start" />
@@ -181,8 +190,8 @@ export default function PermissionsIndex({ groups }: Props) {
                 open={deleting !== null}
                 onOpenChange={(open) => {
                     if (!open) {
-setDeleting(null);
-}
+                        setDeleting(null);
+                    }
                 }}
             >
                 <AlertDialogContent>
@@ -202,8 +211,8 @@ setDeleting(null);
                         <AlertDialogAction
                             onClick={() => {
                                 if (!deleting) {
-return;
-}
+                                    return;
+                                }
 
                                 router.delete(
                                     PermissionsController.destroy({
@@ -274,8 +283,8 @@ function PermissionDialog(props: DialogProps) {
             open
             onOpenChange={(open) => {
                 if (!open) {
-props.onClose();
-}
+                    props.onClose();
+                }
             }}
         >
             <DialogContent>

@@ -57,8 +57,8 @@ export default function PermissionsDiscover({ routes }: Props) {
 
     function submit() {
         if (selected.size === 0) {
-return;
-}
+            return;
+        }
 
         setProcessing(true);
         router.post(

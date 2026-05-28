@@ -3,6 +3,9 @@
     "style": "new-york",
     "rsc": false,
     "tsx": true,
+    "registries": {
+        "@acme": "https://acme.com/r/{name}.json"
+    },
     "tailwind": {
         "config": "",
         "css": "resources/css/app.css",

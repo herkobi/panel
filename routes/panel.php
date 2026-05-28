@@ -141,11 +141,14 @@ Route::middleware(['auth', 'verified', 'user_type:admin', 'active_user', 'write_
 
         Route::controller(PermissionsController::class)->prefix('permissions')->name('permissions.')->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/deleted', 'deleted')->name('deleted');
             Route::post('/', 'store')->name('store');
             Route::get('/discover', 'discover')->name('discover');
             Route::post('/discover', 'bulkStore')->name('bulk-store');
             Route::put('/{permission}', 'update')->name('update');
             Route::delete('/{permission}', 'destroy')->name('destroy');
+            Route::patch('/deleted/{permission}', 'restore')->name('restore');
+            Route::delete('/deleted/{permission}', 'forceDelete')->name('force-delete');
         });
 
         Route::controller(RolesController::class)->prefix('roles')->name('roles.')->group(function () {

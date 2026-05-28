@@ -307,17 +307,6 @@ composer audit
 npm audit --omit=dev
 ```
 
-### PHP Location (Windows)
-
-PHP is available at: **C:\Users\bulent\.config\herd\bin\php.bat**
-
-You can run artisan commands directly using this path if needed:
-```powershell
-C:\Users\bulent\.config\herd\bin\php.bat artisan migrate:fresh --seed
-C:\Users\bulent\.config\herd\bin\php.bat artisan wayfinder:generate
-C:\Users\bulent\.config\herd\bin\php.bat artisan optimize:clear
-```
-
 ## Testing
 
 - **Pest PHP 4** with Laravel plugin
