@@ -19,7 +19,7 @@
 
 - **Account ownership layer** — every member belongs to an `Account` (created automatically on email verification with a unique `code`). Member-scoped data hangs off `account_id`, not `user_id`. A `BelongsToAccount` trait + `BindCurrentAccount` middleware auto-scope queries and auto-fill foreign keys **only in the member area**. Admins remain cross-account. The schema already supports multiple members per account — going multi-user-per-account later is a non-migration change.
 
-- **Role + permission (Spatie)** — full role CRUD with permission checkboxes grouped by section; permission registry in `config/panel-permissions.php` with `group`/`label` UI metadata; `permission:` route middleware. Super Admin seeded.
+- **Role + permission (Spatie), UI-driven** — every named panel route is auto-protected via a single `route_permission` middleware (convention: route name = permission name). `Gate::before` grants `Super Admin` everything. A dedicated **Yetkiler** admin UI lets you list/edit/delete permissions, add ad-hoc ones, or bulk-discover new panel routes and import them as permissions with auto-derived group + label. Roles UI groups the permission checkboxes by the same metadata.
 
 - **Profile package (both areas)** — profile info & email update (throttled), password change, 2FA management, active sessions list + remote revocation, in-app notification center, light/dark/system appearance.
 
@@ -138,7 +138,7 @@ config/
 
 **Add a member-scoped model.** Create the model and migration, add `$table->foreignUuid('account_id')->constrained()->cascadeOnDelete()` in the migration, and on the model `use App\Concerns\BelongsToAccount;`. That's it — you now have an `account()` relation, queries are auto-scoped to the current account inside the member area, and `account_id` is auto-filled on create. Always create through the Account relation: `$user->account->foos()->create($validated)`. **Never** accept `account_id` from request input.
 
-**Add a permission.** Add the route, register the permission name + group/label in `config/panel-permissions.php`, run `php artisan db:seed --class=RolePermissionSeeder`, and attach `permission:...` middleware on the route.
+**Add a permission.** Just add the route and give it a name (`->name('panel.units.index')`). The `route_permission` middleware on the panel group will auto-protect it. Then log in as Super Admin → **Yetkiler → Rotalardan Keşfet** → tick the new route names → save. Edit `group`/`label` in the Yetkiler UI as needed. No config file, no Artisan command. For non-route permissions, click **Yeni İzin** in the same UI.
 
 **Add a notification.** Create a `Send{X}` listener that calls `$notifiable->notify(new {X}Notification(...))`. In the notification: `implements ShouldQueue`, `via=['mail','database']` (or a subset), return a Mailable from `toMail()` (templates in `resources/views/mail/`), write the in-app row via `toArray()`.
 
@@ -150,7 +150,7 @@ config/
 
 - [ ] Change seeded admin / member credentials.
 - [ ] Set `APP_KEY`, `APP_URL`, `MAIL_*`, real DB credentials.
-- [ ] Decide whether to gate admin panel CRUDs (Members, Definitions, Cache, Settings/Users) with finer-grained `permission:` middleware — currently only the Roles area is gated; the rest rely on `user_type:admin`, meaning **every admin can do everything** in those areas by default.
+- [ ] After first login, open **Yetkiler → Rotalardan Keşfet** to import every panel route as a permission, refine the auto-derived `group`/`label` if you wish, then create non-Super-Admin roles in Roller and assign exactly the permissions each role needs. Until permissions are curated, only `Super Admin` can use panel pages (other admins land on the dashboard and 403 elsewhere).
 - [ ] Review activity log retention; some events log PII (e.g., old/new email on email change).
 - [ ] Configure file storage (`FILESYSTEM_DISK`) — defaults are local; switch to S3 in `config/filesystems.php` if needed.
 - [ ] Pick a real queue connection (defaults work but `redis` / `sqs` recommended in production).

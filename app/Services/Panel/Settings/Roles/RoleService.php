@@ -21,6 +21,12 @@ use RuntimeException;
 class RoleService
 {
     /**
+     * Kilitli sistem rolleri: UI'dan silinemez/yeniden adlandırılamaz.
+     * Super Admin Gate::before ile her yetkiye sahiptir.
+     */
+    public const SYSTEM_ROLES = ['Super Admin', 'Admin'];
+
+    /**
      * @param  array{q?: string}  $filters
      */
     public function paginate(array $filters): LengthAwarePaginator
@@ -40,8 +46,8 @@ class RoleService
     }
 
     /**
-     * Süper Admin tüm rolleri atayabilir; sadece `users.create.admin` izni olanlar
-     * "Admin" veya "Super Admin" rolü atayabilir.
+     * Super Admin tüm rolleri atayabilir. Diğerleri sistem rollerini
+     * (Super Admin / Admin) atayamaz.
      *
      * @return Collection<int, Role>
      */
@@ -49,39 +55,35 @@ class RoleService
     {
         $all = Role::query()->orderBy('name')->get();
 
-        if ($causer->can('users.create.admin')) {
+        if ($causer->hasRole('Super Admin')) {
             return $all;
         }
 
-        $restricted = ['Super Admin', 'Admin'];
-
-        return $all->reject(fn (Role $role): bool => in_array($role->name, $restricted, true))->values();
+        return $all->reject(fn (Role $role): bool => in_array($role->name, self::SYSTEM_ROLES, true))->values();
     }
 
     /**
-     * UI gruplandırması için izinleri grup başlıklarına böl.
+     * UI gruplandırması için izinleri grup başlıklarına böl. Metadata DB'deki
+     * Permission satırlarından okunur (group / label kolonları). Null group →
+     * "Diğer"; null label → permission adı.
      *
      * @return array<string, array<int, array{name: string, label: string}>>
      */
     public function permissionGroups(): array
     {
-        $registry = config('panel-permissions.permissions');
-        $available = Permission::query()->orderBy('name')->get()->pluck('name')->all();
-
-        // Bu gruplar UI'da izin editörlerinde gösterilmez; sadece seeder Super Admin'e atar.
-        $hiddenGroups = ['Özel Yetkiler'];
+        $permissions = Permission::query()->orderBy('group')->orderBy('name')->get();
 
         $groups = [];
-        foreach ($available as $name) {
-            $meta = $registry[$name] ?? ['group' => 'Diğer', 'label' => $name];
+        foreach ($permissions as $permission) {
+            $group = $permission->group !== null && $permission->group !== ''
+                ? $permission->group
+                : 'Diğer';
 
-            if (in_array($meta['group'], $hiddenGroups, true)) {
-                continue;
-            }
-
-            $groups[$meta['group']][] = [
-                'name' => $name,
-                'label' => $meta['label'],
+            $groups[$group][] = [
+                'name' => $permission->name,
+                'label' => $permission->label !== null && $permission->label !== ''
+                    ? $permission->label
+                    : $permission->name,
             ];
         }
 
@@ -188,7 +190,7 @@ class RoleService
 
     public function isSystemRole(Role $role): bool
     {
-        return in_array($role->name, array_keys(config('panel-permissions.system_roles', [])), true);
+        return in_array($role->name, self::SYSTEM_ROLES, true);
     }
 
     /**

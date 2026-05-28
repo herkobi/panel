@@ -27,6 +27,12 @@ return new class extends Migration
             $table->uuid('uuid')->primary(); // permission uuid
             $table->string('name');
             $table->string('guard_name');
+
+            // UI metadata: izinler "Yetkiler" ekranından gruplanıp etiketlenir.
+            // İkisi de null olabilir; yeni keşfedilen rotalarda admin bu alanları doldurur.
+            $table->string('group')->nullable();
+            $table->string('label')->nullable();
+
             $table->timestamps();
 
             $table->unique(['name', 'guard_name']);

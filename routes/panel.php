@@ -10,6 +10,7 @@ use App\Http\Controllers\Panel\Profile\ProfileController;
 use App\Http\Controllers\Panel\Profile\SecurityController;
 use App\Http\Controllers\Panel\Profile\SessionsController;
 use App\Http\Controllers\Panel\Settings\General\SettingsController;
+use App\Http\Controllers\Panel\Settings\Permissions\PermissionsController;
 use App\Http\Controllers\Panel\Settings\Roles\RolesController;
 use App\Http\Controllers\Panel\Settings\User\UsersController;
 use App\Http\Controllers\Panel\Tools\Activity\ActivityController;
@@ -22,7 +23,7 @@ use App\Http\Controllers\Panel\Tools\Definitions\LanguageController;
 use App\Http\Controllers\Panel\Tools\Definitions\TaxController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'verified', 'user_type:admin', 'active_user', 'write_access'])->group(function () {
+Route::middleware(['auth', 'verified', 'user_type:admin', 'active_user', 'write_access', 'route_permission'])->group(function () {
 
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
@@ -138,7 +139,16 @@ Route::middleware(['auth', 'verified', 'user_type:admin', 'active_user', 'write_
             Route::get('/{user}', 'show')->name('show');
         });
 
-        Route::middleware('permission:panel.settings.roles.index')->controller(RolesController::class)->prefix('roles')->name('roles.')->group(function () {
+        Route::controller(PermissionsController::class)->prefix('permissions')->name('permissions.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'store')->name('store');
+            Route::get('/discover', 'discover')->name('discover');
+            Route::post('/discover', 'bulkStore')->name('bulk-store');
+            Route::put('/{permission}', 'update')->name('update');
+            Route::delete('/{permission}', 'destroy')->name('destroy');
+        });
+
+        Route::controller(RolesController::class)->prefix('roles')->name('roles.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/', 'store')->name('store');

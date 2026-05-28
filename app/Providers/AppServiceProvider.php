@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -29,7 +30,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureAuthorization();
         $this->configureUserPreferences();
+    }
+
+    /**
+     * Super Admin rolü TÜM yetkilere otomatik sahip — Spatie permission listesine
+     * eklenmesine gerek yok. Diğer roller yalnızca açıkça atanmış izinlerle çalışır.
+     */
+    protected function configureAuthorization(): void
+    {
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('Super Admin') ? true : null;
+        });
     }
 
     /**

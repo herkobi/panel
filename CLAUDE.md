@@ -67,11 +67,19 @@ The split is mirrored in `app/Http/Controllers/{Panel,App}/*`, `Requests/{Panel,
 - `Media::url()` for public files, `Media::temporaryUrl(?DateTimeInterface $expiresAt)` for signed access to private files (default 5 min).
 - Folder layout: member-owned media → `public/{account.code}` and `private/{account.code}`; admin/global → `public/media` and `private/media`. The `mediaAccountCode()` hook in `HasMedia` returns the Account code for member-owned models; default is `null` → `media/`.
 
-**Authorization model.** Spatie laravel-permission. Permission registry in `config/panel-permissions.php` with `group`/`label` UI metadata; `RolePermissionSeeder` writes them to the DB. Route-level guards via `permission:...` middleware. **Important:** only the Roles management group is currently gated by `permission:`; other panel CRUDs (Members, Settings/Users, Tools/Definitions, Cache) rely only on `user_type:admin`. Tighten with finer-grained `permission:` middleware as your product requires.
+**Authorization model.** Spatie laravel-permission, UI-driven (no permission config, no Artisan sync). Three pieces work together:
+
+- **`Gate::before` for Super Admin** ([AppServiceProvider](app/Providers/AppServiceProvider.php)) — any user with the `Super Admin` role automatically passes every `can()` check. Super Admin is **not** assigned individual permissions.
+- **`EnsureRoutePermission` middleware** (`route_permission`) applied to the entire panel route group — convention: **route name = permission name**. Every named panel route is auto-protected by `$user->can($routeName)`. Newly added panel routes are accessible only by Super Admin until the permission is curated.
+- **Yetkiler admin UI** (`panel/settings/permissions`) — list/edit/delete permissions, manually add ad-hoc ones, or use the **"Rotalardan Keşfet"** button to bulk-import panel route names as permissions (with auto-derived `group` / `label` you can refine).
+
+`permissions` table carries two extra UI-metadata columns: `group` and `label` (both nullable; null falls back to "Diğer" + the permission name). Roles UI groups checkboxes by `group`. The `RolePermissionSeeder` only seeds the two system roles (`Super Admin`, `Admin`) — Admin starts empty and is curated via the UI. Two system roles cannot be deleted/renamed (`RoleService::SYSTEM_ROLES`).
+
+Exempt routes (those that do not require a permission, e.g., `panel.dashboard`) are listed in `EnsureRoutePermission::EXEMPT_ROUTE_NAMES`.
 
 **Data model.** Every model uses `HasUuids`. `User` uses soft deletes. Enums in `app/Enums/` (`Status`, `UserStatus`, `UserType`). PHP 8.3 model attributes: `#[Fillable([...])]`, `#[Hidden([...])]`, `#[Scope]`. Every PHP file starts with `declare(strict_types=1);`.
 
-**Custom middleware:** `EnsureActiveUser` (`active_user`), `EnsureUserType` (`user_type:admin|member`), `EnsureWriteAccess` (`write_access`), `BindCurrentAccount` (`bind_account`, member area only), `HandleAppearance`, `HandleInertiaRequests` (shares the `auth` prop), `SetSecurityHeaders`.
+**Custom middleware:** `EnsureActiveUser` (`active_user`), `EnsureUserType` (`user_type:admin|member`), `EnsureWriteAccess` (`write_access`), `EnsureRoutePermission` (`route_permission`, panel area only — route name = permission name), `BindCurrentAccount` (`bind_account`, member area only), `HandleAppearance`, `HandleInertiaRequests` (shares the `auth` prop), `SetSecurityHeaders`.
 
 **Frontend conventions.** TS strict mode; alias `@/* → ./resources/js/*`. React Compiler enabled. `shadcn/ui` primitives in `resources/js/components/ui/` are generated — do not hand-edit; excluded from ESLint/Prettier. Use Inertia's `useForm` and Wayfinder action/route functions for endpoints. Tailwind v4 (no `tailwind.config.js`); stylesheet entry `resources/css/app.css`. Dark mode via `next-themes`.
 
@@ -88,6 +96,6 @@ Reusable upload components: [components/image-upload.tsx](resources/js/component
 - Run `php artisan wayfinder:generate` after adding/modifying routes.
 - New email/notification work → create a `ShouldQueue` Notification whose `toMail()` returns a Mailable (views in `resources/views/mail/`), triggered from a `Send{X}` listener via `notify()`. Avoid wrapping routine mail in a Job.
 - Member-scoped data: `use BelongsToAccount`; never accept `account_id` from request input; create via the Account relation so Eloquent + the trait auto-fill the FK.
-- Authorization is currently middleware-based (`user_type` + `permission:`); introduce Policies only when middleware no longer fits.
+- Authorization: every panel route is auto-protected by `route_permission` middleware (route name = permission name). Super Admin bypasses via `Gate::before`. New routes get a permission row when an admin uses **Yetkiler → Rotalardan Keşfet** in the UI. Introduce Policies only when route-level checks no longer fit.
 - Listener auto-discovery handles `event → listener` wiring; do not register listeners explicitly unless you must.
 - See [komutlar.md](komutlar.md) for project-specific Turkish notes on commands.

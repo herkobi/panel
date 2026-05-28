@@ -25,6 +25,7 @@ import {
     index as members,
 } from '@/routes/panel/members';
 import { edit as general } from '@/routes/panel/settings/general';
+import { index as permissions } from '@/routes/panel/settings/permissions';
 import { index as roles } from '@/routes/panel/settings/roles';
 import {
     create as createUser,
@@ -123,8 +124,12 @@ const settingsNavItems: NavItem[] = [
                 href: createUser(),
             },
             {
-                title: 'Roller ve Yetkiler',
+                title: 'Roller',
                 href: roles(),
+            },
+            {
+                title: 'Yetkiler',
+                href: permissions(),
             },
         ],
     },

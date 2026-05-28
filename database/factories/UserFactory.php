@@ -6,7 +6,6 @@ namespace Database\Factories;
 
 use App\Enums\UserStatus;
 use App\Enums\UserType;
-use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -57,40 +56,33 @@ class UserFactory extends Factory
         ]);
     }
 
+    /**
+     * Test ortamında "admin" = panele erişebilen kullanıcı. Gate::before ile
+     * Super Admin tüm yetkilere otomatik geçer; bu yüzden testlerde admin'i
+     * Super Admin rolüyle yaratıyoruz. Üretimde admin@admin.com seeder ile
+     * Super Admin atanır, diğer adminler UI'dan kurulurken rol verilir.
+     */
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
             'user_type' => UserType::Admin,
-        ]);
-    }
+        ])->afterCreating(function (User $user): void {
+            $role = Role::query()->firstOrCreate([
+                'name' => 'Super Admin',
+                'guard_name' => 'web',
+            ]);
 
-    public function superAdmin(): static
-    {
-        return $this->admin()->afterCreating(function (User $user): void {
-            // Tüm sistem rollerini ve izinleri DB'de hazır tut (testte sıfırdan kurulum).
-            $systemRoles = (array) (config('panel-permissions.system_roles') ?? []);
-            foreach (array_keys($systemRoles) as $roleName) {
-                Role::query()->firstOrCreate([
-                    'name' => $roleName,
-                    'guard_name' => 'web',
-                ]);
-            }
-
-            $registry = (array) (config('panel-permissions.permissions') ?? []);
-            $permissions = [];
-            foreach (array_keys($registry) as $name) {
-                $permissions[] = Permission::query()->firstOrCreate([
-                    'name' => $name,
-                    'guard_name' => 'web',
-                ]);
-            }
-
-            $superAdmin = Role::query()->where('name', 'Super Admin')->firstOrFail();
-            $superAdmin->syncPermissions($permissions);
-
-            $user->syncRoles([$superAdmin]);
+            $user->syncRoles([$role]);
             app(PermissionRegistrar::class)->forgetCachedPermissions();
         });
+    }
+
+    /**
+     * `admin()` için açık takma ad — okunaklı olması için.
+     */
+    public function superAdmin(): static
+    {
+        return $this->admin();
     }
 
     public function withRole(string $roleName): static

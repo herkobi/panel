@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Middleware\BindCurrentAccount;
 use App\Http\Middleware\EnsureActiveUser;
+use App\Http\Middleware\EnsureRoutePermission;
 use App\Http\Middleware\EnsureUserType;
 use App\Http\Middleware\EnsureWriteAccess;
 use App\Http\Middleware\HandleAppearance;
@@ -42,6 +43,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'active_user' => EnsureActiveUser::class,
             'write_access' => EnsureWriteAccess::class,
             'bind_account' => BindCurrentAccount::class,
+            'route_permission' => EnsureRoutePermission::class,
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
