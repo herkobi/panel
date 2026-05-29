@@ -13,6 +13,7 @@ import {
     NativeSelect,
     NativeSelectOption,
 } from '@/components/ui/native-select';
+import { useBranding } from '@/hooks/use-branding';
 import { dashboard } from '@/routes';
 import type { Country, Currency, Language, Tax } from '@/types';
 
@@ -113,6 +114,7 @@ export default function Settings({
     languages,
     timezones,
 }: Props) {
+    const branding = useBranding();
     const [assetErrors, setAssetErrors] = useState<Record<string, string>>({});
     const [processingKey, setProcessingKey] = useState<string | null>(null);
 
@@ -232,6 +234,7 @@ export default function Settings({
                                         title="Logo"
                                         description="Açık tema ve genel kullanım."
                                         currentUrl={settings.logo_url}
+                                        fallbackUrl={branding.logo}
                                         error={assetErrors.logo_path}
                                         processing={
                                             processingKey === 'logo_path'
@@ -247,6 +250,7 @@ export default function Settings({
                                         title="Logo dark"
                                         description="Koyu tema kullanımı."
                                         currentUrl={settings.logo_dark_url}
+                                        fallbackUrl={branding.logo_dark}
                                         error={assetErrors.logo_dark_path}
                                         processing={
                                             processingKey === 'logo_dark_path'
@@ -262,6 +266,7 @@ export default function Settings({
                                         title="Favicon"
                                         description="Tarayıcı sekmesi ikonu."
                                         currentUrl={settings.favicon_url}
+                                        fallbackUrl={branding.favicon}
                                         error={assetErrors.favicon_path}
                                         processing={
                                             processingKey === 'favicon_path'

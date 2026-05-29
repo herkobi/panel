@@ -29,13 +29,22 @@ class EnsureRoutePermission
     ];
 
     /**
+     * Yetki kontrolünden muaf rota ön ekleri. Kişiye özel alanlar (kendi profili,
+     * güvenlik, oturumlar, bildirimler) izinle yönetilmez; her panel kullanıcısı
+     * kendi bilgilerine erişebilir.
+     */
+    private const EXEMPT_ROUTE_PREFIXES = [
+        'panel.profile.',
+    ];
+
+    /**
      * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         $name = $request->route()?->getName();
 
-        if ($name === null || in_array($name, self::EXEMPT_ROUTE_NAMES, true)) {
+        if ($name === null || $this->isExempt($name)) {
             return $next($request);
         }
 
@@ -44,5 +53,20 @@ class EnsureRoutePermission
         abort_unless($user !== null && $user->can($name), 403);
 
         return $next($request);
+    }
+
+    private function isExempt(string $name): bool
+    {
+        if (in_array($name, self::EXEMPT_ROUTE_NAMES, true)) {
+            return true;
+        }
+
+        foreach (self::EXEMPT_ROUTE_PREFIXES as $prefix) {
+            if (str_starts_with($name, $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

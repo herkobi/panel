@@ -43,32 +43,81 @@ type PageProps = InertiaPageProps & {
     subject_types: ActivitySubjectTypeOption[];
 };
 
+const EVENT_LABELS: Record<string, string> = {
+    created: 'Oluşturuldu',
+    updated: 'Güncellendi',
+    deleted: 'Silindi',
+    restored: 'Geri Yüklendi',
+    force_deleted: 'Kalıcı Silindi',
+    activated: 'Aktifleştirildi',
+    deactivated: 'Pasifleştirildi',
+    cleared: 'Temizlendi',
+    bulk_added: 'Toplu Eklendi',
+    permissions_synced: 'Yetkiler Güncellendi',
+    role_assigned: 'Rol Atandı',
+    role_revoked: 'Rol Kaldırıldı',
+    status_updated: 'Durum Güncellendi',
+    preferences_updated: 'Tercihler Güncellendi',
+    password_updated: 'Şifre Güncellendi',
+    password_reset_requested: 'Şifre Sıfırlama İstendi',
+    email_updated: 'E-posta Güncellendi',
+    email_changed: 'E-posta Değiştirildi',
+    email_change_requested: 'E-posta Değişikliği İstendi',
+    email_verified: 'E-posta Doğrulandı',
+    email_verification_requested: 'E-posta Doğrulaması İstendi',
+    verified: 'Doğrulandı',
+    session_revoked: 'Oturum Kapatıldı',
+    new_device_login: 'Yeni Cihaz Girişi',
+    media_directory_assigned: 'Medya Dizini Atandı',
+};
+
+const DESTRUCTIVE_EVENTS = new Set([
+    'deleted',
+    'force_deleted',
+    'deactivated',
+    'role_revoked',
+    'session_revoked',
+]);
+
+const POSITIVE_EVENTS = new Set([
+    'created',
+    'restored',
+    'activated',
+    'role_assigned',
+    'email_verified',
+    'verified',
+    'bulk_added',
+]);
+
 function getEventVariant(
     event: string | null,
 ): 'default' | 'secondary' | 'destructive' | 'outline' {
-    switch (event) {
-        case 'created':
-            return 'default';
-        case 'updated':
-            return 'secondary';
-        case 'deleted':
-            return 'destructive';
-        default:
-            return 'outline';
+    if (event === null) {
+        return 'outline';
     }
+
+    if (DESTRUCTIVE_EVENTS.has(event)) {
+        return 'destructive';
+    }
+
+    if (POSITIVE_EVENTS.has(event)) {
+        return 'default';
+    }
+
+    return 'secondary';
 }
 
 function getEventLabel(event: string | null): string {
-    switch (event) {
-        case 'created':
-            return 'Oluşturuldu';
-        case 'updated':
-            return 'Güncellendi';
-        case 'deleted':
-            return 'Silindi';
-        default:
-            return event ?? '-';
+    if (event === null) {
+        return '-';
     }
+
+    return (
+        EVENT_LABELS[event] ??
+        event
+            .replace(/_/g, ' ')
+            .replace(/^\w/, (char) => char.toLocaleUpperCase('tr-TR'))
+    );
 }
 
 export default function ActivityIndex() {
@@ -89,7 +138,15 @@ export default function ActivityIndex() {
     };
 
     const handleReset = () => {
-        form.reset();
+        // form.reset() başlangıç (uygulanmış filtre) değerlerine döndüğü için
+        // seçimi temizlemez; alanları açıkça boşaltıp filtresiz sayfaya gidiyoruz.
+        form.setData({
+            user_id: '',
+            subject_type: '',
+            causer_type: '',
+            from: '',
+            to: '',
+        });
         form.get(activity().url);
     };
 

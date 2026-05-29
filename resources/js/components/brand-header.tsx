@@ -24,7 +24,7 @@ export function BrandHeader({
             <SidebarMenuItem>
                 <SidebarMenuButton size="lg" asChild>
                     <Link href={href} prefetch>
-                        <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-lg bg-sidebar-primary/10">
+                        <div className="flex aspect-square size-8 items-center justify-center overflow-hidden">
                             <img
                                 src={branding.favicon}
                                 alt={branding.name}

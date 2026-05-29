@@ -1,6 +1,6 @@
 // Components
 import { Form, Head } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import { LoaderCircle, Send } from 'lucide-react';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -49,8 +49,10 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                     disabled={processing}
                                     data-test="email-password-reset-link-button"
                                 >
-                                    {processing && (
+                                    {processing ? (
                                         <LoaderCircle className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Send />
                                     )}
                                     Şifre sıfırlama bağlantısı gönder
                                 </Button>

@@ -46,20 +46,24 @@ class RoleService
     }
 
     /**
-     * Super Admin tüm rolleri atayabilir. Diğerleri sistem rollerini
-     * (Super Admin / Admin) atayamaz.
+     * Atanabilir roller. Super Admin hiçbir yerde (Super Admin için bile)
+     * listelenmez; yalnızca seeder/konsol ile atanır. Süper admin dışındaki
+     * kullanıcılar ayrıca diğer sistem rollerini (Admin) de atayamaz.
      *
      * @return Collection<int, Role>
      */
     public function assignableRolesFor(User $causer): Collection
     {
-        $all = Role::query()->orderBy('name')->get();
+        $roles = Role::query()
+            ->where('name', '!=', 'Super Admin')
+            ->orderBy('name')
+            ->get();
 
         if ($causer->hasRole('Super Admin')) {
-            return $all;
+            return $roles->values();
         }
 
-        return $all->reject(fn (Role $role): bool => in_array($role->name, self::SYSTEM_ROLES, true))->values();
+        return $roles->reject(fn (Role $role): bool => in_array($role->name, self::SYSTEM_ROLES, true))->values();
     }
 
     /**

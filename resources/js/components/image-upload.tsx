@@ -11,6 +11,8 @@ type Props = {
     description?: string;
     /** Currently stored image URL (server source of truth). */
     currentUrl?: string | null;
+    /** Varsayılan görsel: özel bir görsel yokken önizlemede gösterilir. */
+    fallbackUrl?: string | null;
     accept?: string;
     previewClassName?: string;
     /** Disables the actions while a request is in flight. */
@@ -30,6 +32,7 @@ export default function ImageUpload({
     title,
     description,
     currentUrl,
+    fallbackUrl,
     accept = '.jpg,.jpeg,.png,image/jpeg,image/png',
     previewClassName = 'object-contain',
     processing = false,
@@ -39,7 +42,10 @@ export default function ImageUpload({
 }: Props) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [objectUrl, setObjectUrl] = useState<string | null>(null);
-    const previewUrl = objectUrl ?? currentUrl ?? null;
+    // Gerçek (özel) görsel: optimistik blob veya kayıtlı URL.
+    const customUrl = objectUrl ?? currentUrl ?? null;
+    // Önizleme: özel görsel yoksa varsayılana düşer.
+    const previewUrl = customUrl ?? fallbackUrl ?? null;
 
     // Revoke the optimistic blob URL on unmount to avoid leaks.
     useEffect(() => {
@@ -115,7 +121,7 @@ export default function ImageUpload({
                             <UploadCloud data-icon="inline-start" />
                             Değiştir
                         </Button>
-                        {previewUrl ? (
+                        {customUrl ? (
                             <Button
                                 type="button"
                                 variant="outline"

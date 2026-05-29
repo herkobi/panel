@@ -64,6 +64,9 @@ class PermissionService
         $candidates = collect(Route::getRoutes())
             ->map(fn ($route) => $route->getName())
             ->filter(fn ($name) => is_string($name) && str_starts_with($name, 'panel.'))
+            // Kişiye özel profil rotaları izinle yönetilmez (herkes kendi
+            // bilgisine erişir); keşif listesinde de görünmemeli.
+            ->reject(fn (string $name): bool => str_starts_with($name, 'panel.profile.'))
             ->unique()
             ->values();
 

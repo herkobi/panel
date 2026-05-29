@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { ShieldCheck } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
@@ -33,7 +34,7 @@ export default function ConfirmPassword() {
                                 disabled={processing}
                                 data-test="confirm-password-button"
                             >
-                                {processing && <Spinner />}
+                                {processing ? <Spinner /> : <ShieldCheck />}
                                 Şifreyi doğrula
                             </Button>
                         </div>
