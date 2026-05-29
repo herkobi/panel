@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import UsersController from '@/actions/App/Http/Controllers/Panel/Settings/User/UsersController';
 import InputError from '@/components/input-error';
@@ -176,7 +177,7 @@ export default function Create({ statuses, roles }: Props) {
                                     type="submit"
                                     disabled={processing || roles.length === 0}
                                 >
-                                    {processing && <Spinner />}
+                                    {processing ? <Spinner /> : <UserPlus />}
                                     Kullanıcı oluştur
                                 </Button>
                             </div>

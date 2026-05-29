@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowLeft, RotateCcw, Trash2 } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 
 import PermissionsController from '@/actions/App/Http/Controllers/Panel/Settings/Permissions/PermissionsController';
@@ -171,7 +171,10 @@ export default function PermissionsDeleted({ groups }: Props) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>İptal</AlertDialogCancel>
+                        <AlertDialogCancel>
+                            <X />
+                            İptal
+                        </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={() => {
                                 if (!forcing) {
@@ -189,6 +192,7 @@ export default function PermissionsDeleted({ groups }: Props) {
                                 );
                             }}
                         >
+                            <Trash2 />
                             Kalıcı Sil
                         </AlertDialogAction>
                     </AlertDialogFooter>

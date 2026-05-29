@@ -6,9 +6,14 @@ import {
     Globe2,
     LogIn,
     LogOut,
+    Mail,
+    MailCheck,
     MoreHorizontal,
     MonitorCheck,
+    RefreshCw,
+    Send,
     ShieldCheck,
+    X,
 } from 'lucide-react';
 import { useState } from 'react';
 import MembersController from '@/actions/App/Http/Controllers/Panel/Members/MembersController';
@@ -232,6 +237,7 @@ export default function Show({ user, activities, sessions }: Props) {
                                                     )
                                                 }
                                             >
+                                                <MailCheck />
                                                 E-posta Adresini Onayla
                                             </DropdownMenuItem>
                                         )}
@@ -240,11 +246,13 @@ export default function Show({ user, activities, sessions }: Props) {
                                                 setEmailChangeDialogOpen(true)
                                             }
                                         >
+                                            <Mail />
                                             E-posta Adresini Değiştir
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                             onSelect={openStatusDialog}
                                         >
+                                            <RefreshCw />
                                             Durum Değiştir
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
@@ -492,11 +500,12 @@ export default function Show({ user, activities, sessions }: Props) {
                                         variant="outline"
                                         disabled={processing}
                                     >
+                                        <X />
                                         Vazgeç
                                     </Button>
                                 </DialogClose>
                                 <Button type="submit" disabled={processing}>
-                                    {processing && <Spinner />}
+                                    {processing ? <Spinner /> : <MailCheck />}
                                     E-postayı onayla
                                 </Button>
                             </DialogFooter>
@@ -567,11 +576,12 @@ export default function Show({ user, activities, sessions }: Props) {
                                             variant="outline"
                                             disabled={processing}
                                         >
+                                            <X />
                                             Vazgeç
                                         </Button>
                                     </DialogClose>
                                     <Button type="submit" disabled={processing}>
-                                        {processing && <Spinner />}
+                                        {processing ? <Spinner /> : <Send />}
                                         Onay bağlantısı gönder
                                     </Button>
                                 </DialogFooter>
@@ -641,11 +651,12 @@ export default function Show({ user, activities, sessions }: Props) {
                                             variant="outline"
                                             disabled={processing}
                                         >
+                                            <X />
                                             Vazgeç
                                         </Button>
                                     </DialogClose>
                                     <Button type="submit" disabled={processing}>
-                                        {processing && <Spinner />}
+                                        {processing ? <Spinner /> : <RefreshCw />}
                                         Durumu güncelle
                                     </Button>
                                 </DialogFooter>

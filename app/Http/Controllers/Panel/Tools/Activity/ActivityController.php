@@ -26,7 +26,7 @@ class ActivityController extends Controller
         return Inertia::render('panel/tools/activity/index', [
             'activities' => $activities,
             'filters' => $filters,
-            'users' => $service->users(),
+            'causer_types' => $service->causerTypes(),
             'subject_types' => $service->subjectTypes(),
         ]);
     }
@@ -39,7 +39,7 @@ class ActivityController extends Controller
         return [
             'user_id' => $request->string('user_id')->toString(),
             'subject_type' => $request->string('subject_type')->toString(),
-            'causer_id' => $request->string('causer_id')->toString(),
+            'causer_type' => $request->string('causer_type')->toString(),
             'from' => $request->string('from')->toString(),
             'to' => $request->string('to')->toString(),
         ];

@@ -158,6 +158,7 @@ export default function Sessions({
                                                 title="Oturum kapatılsın mı?"
                                                 description="Bu cihazdaki oturum sonlandırılacak."
                                                 confirmLabel="Oturumu kapat"
+                                                confirmIcon={Power}
                                             >
                                                 <Button
                                                     size="sm"

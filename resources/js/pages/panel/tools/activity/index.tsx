@@ -30,6 +30,7 @@ import { dashboard } from '@/routes';
 import { activity } from '@/routes/panel/tools';
 import type {
     Activity,
+    ActivityCauserTypeOption,
     ActivityFilters,
     ActivitySubjectTypeOption,
 } from '@/types/activity';
@@ -38,7 +39,7 @@ import type { Paginated } from '@/types/pagination';
 type PageProps = InertiaPageProps & {
     activities: Paginated<Activity>;
     filters: ActivityFilters;
-    users: { id: string; name: string }[];
+    causer_types: ActivityCauserTypeOption[];
     subject_types: ActivitySubjectTypeOption[];
 };
 
@@ -71,13 +72,13 @@ function getEventLabel(event: string | null): string {
 }
 
 export default function ActivityIndex() {
-    const { activities, filters, users, subject_types } =
+    const { activities, filters, causer_types, subject_types } =
         usePage<PageProps>().props;
 
     const form = useForm<ActivityFilters>({
         user_id: filters.user_id,
         subject_type: filters.subject_type,
-        causer_id: filters.causer_id,
+        causer_type: filters.causer_type,
         from: filters.from,
         to: filters.to,
     });
@@ -103,24 +104,24 @@ export default function ActivityIndex() {
                 >
                     <div className="flex flex-col gap-1.5">
                         <label
-                            htmlFor="causer_id"
+                            htmlFor="causer_type"
                             className="text-sm font-medium"
                         >
-                            Kullanıcı
+                            Kullanıcı Türü
                         </label>
                         <div className="relative w-full">
                             <select
-                                id="causer_id"
-                                value={form.data.causer_id}
+                                id="causer_type"
+                                value={form.data.causer_type}
                                 onChange={(e) =>
-                                    form.setData('causer_id', e.target.value)
+                                    form.setData('causer_type', e.target.value)
                                 }
                                 className="h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-transparent px-3 py-2 pr-9 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed dark:bg-input/30 dark:hover:bg-input/50"
                             >
                                 <option value="">Tümü</option>
-                                {users.map((user) => (
-                                    <option key={user.id} value={user.id}>
-                                        {user.name}
+                                {causer_types.map((type) => (
+                                    <option key={type.value} value={type.value}>
+                                        {type.label}
                                     </option>
                                 ))}
                             </select>

@@ -24,7 +24,7 @@ class NewDeviceLoginMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' - Yeni Cihaz Girisi Algilandi',
+            subject: config('app.name').' - Farklı Bir Cihazdan Oturum Açıldı',
         );
     }
 

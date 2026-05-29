@@ -1,4 +1,5 @@
 import { Form, Head, router } from '@inertiajs/react';
+import { Save } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import AccountController from '@/actions/App/Http/Controllers/App/Account/AccountController';
@@ -284,7 +285,10 @@ export default function Account({
                                 </div>
                             </div>
 
-                            <Button disabled={processing}>Kaydet</Button>
+                            <Button disabled={processing}>
+                                <Save />
+                                Kaydet
+                            </Button>
                         </>
                     )}
                 </Form>

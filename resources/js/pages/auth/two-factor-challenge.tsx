@@ -1,5 +1,6 @@
 import { Form, Head, setLayoutProps } from '@inertiajs/react';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
+import { ArrowRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -108,6 +109,7 @@ export default function TwoFactorChallenge() {
                                 className="w-full"
                                 disabled={processing}
                             >
+                                <ArrowRight />
                                 Devam et
                             </Button>
 

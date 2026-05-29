@@ -1,27 +1,17 @@
-import { GalleryVerticalEnd, LayoutGrid, UserRound } from 'lucide-react';
+import { LayoutGrid, UserRound } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { NavMain } from '@/components/app/nav-main';
 import { NavUser } from '@/components/app/nav-user';
-import { TeamSwitcher } from '@/components/app/team-switcher';
+import { BrandHeader } from '@/components/brand-header';
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarHeader,
-    SidebarRail,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes/app';
 import { account } from '@/routes/app';
 import type { NavItem } from '@/types';
-
-const teams = [
-    {
-        name: 'Uygulama',
-        logo: GalleryVerticalEnd,
-        plan: 'Kullanıcı Alanı',
-        href: dashboard(),
-    },
-];
 
 const mainNavItems: NavItem[] = [
     {
@@ -46,7 +36,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
-                <TeamSwitcher teams={teams} />
+                <BrandHeader href={dashboard()} />
             </SidebarHeader>
 
             <SidebarContent>
@@ -56,8 +46,6 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
             <SidebarFooter>
                 <NavUser />
             </SidebarFooter>
-
-            <SidebarRail />
         </Sidebar>
     );
 }

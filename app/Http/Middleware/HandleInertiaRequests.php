@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Enums\UserType;
+use App\Support\Branding;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -49,7 +50,8 @@ class HandleInertiaRequests extends Middleware
 
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
+            'name' => Branding::name(),
+            'branding' => Branding::toArray(),
             'auth' => [
                 'type' => $user?->user_type === UserType::Admin ? 'panel' : 'app',
                 'user' => $authUserPayload,

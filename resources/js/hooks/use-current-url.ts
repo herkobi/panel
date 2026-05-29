@@ -81,3 +81,33 @@ export function useCurrentUrl(): UseCurrentUrlReturn {
         whenCurrentUrl,
     };
 }
+
+/**
+ * İç sidebar / alt menü navigasyonu için en iyi eşleşen item'ı seçer.
+ *
+ * Bir grup link arasında, mevcut URL'ye prefix olarak uyan en uzun (en spesifik)
+ * href kazanır. Böylece `/panel/members/create` sayfasında yalnızca "Üye Ekle"
+ * aktif olur; "Üyeler" (`/panel/members`) aktif kalmaz. Buna karşın
+ * `/panel/members/{uuid}` gibi detay sayfalarında "Üyeler" aktif olur.
+ */
+export function useActiveNavHref(
+    hrefs: NonNullable<InertiaLinkProps['href']>[],
+): string {
+    const { currentUrl } = useCurrentUrl();
+
+    let bestPath = '';
+
+    for (const href of hrefs) {
+        const raw = toUrl(href);
+        const path = raw.startsWith('http') ? new URL(raw).pathname : raw;
+
+        const matches =
+            currentUrl === path || currentUrl.startsWith(`${path}/`);
+
+        if (matches && path.length > bestPath.length) {
+            bestPath = path;
+        }
+    }
+
+    return bestPath;
+}

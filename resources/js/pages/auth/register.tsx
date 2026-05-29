@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { UserPlus } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -90,7 +91,7 @@ export default function Register() {
                                 tabIndex={5}
                                 data-test="register-user-button"
                             >
-                                {processing && <Spinner />}
+                                {processing ? <Spinner /> : <UserPlus />}
                                 Hesap oluştur
                             </Button>
                         </div>

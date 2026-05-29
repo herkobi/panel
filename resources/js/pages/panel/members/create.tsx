@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import MembersController from '@/actions/App/Http/Controllers/Panel/Members/MembersController';
 import InputError from '@/components/input-error';
@@ -136,7 +137,7 @@ export default function Create({ statuses }: Props) {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    {processing && <Spinner />}
+                                    {processing ? <Spinner /> : <UserPlus />}
                                     Üye oluştur
                                 </Button>
                             </div>

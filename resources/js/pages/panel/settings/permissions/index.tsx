@@ -1,5 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Archive, Pencil, Plus, Radar, Trash2 } from 'lucide-react';
+import { Archive, Pencil, Plus, Radar, Save, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 
 import PermissionsController from '@/actions/App/Http/Controllers/Panel/Settings/Permissions/PermissionsController';
@@ -63,13 +63,13 @@ export default function PermissionsIndex({ groups }: Props) {
             <Head title="Yetkiler" />
 
             <div className="flex flex-col gap-6 p-4">
-                <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-4">
+                <div className="flex flex-col gap-4 border-b pb-4 md:flex-row md:items-start md:justify-between">
                     <Heading
                         variant="small"
                         title="Yetkiler"
                         description="Sistemdeki izinleri tanımla, grupla ve etiketle. Rotalara karşılık gelmeyen özel izinler de buradan eklenir."
                     />
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2 md:shrink-0">
                         <Button asChild variant="ghost">
                             <Link href={deletedRoute().url}>
                                 <Archive data-icon="inline-start" />
@@ -207,7 +207,10 @@ export default function PermissionsIndex({ groups }: Props) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>İptal</AlertDialogCancel>
+                        <AlertDialogCancel>
+                            <X />
+                            İptal
+                        </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={() => {
                                 if (!deleting) {
@@ -225,6 +228,7 @@ export default function PermissionsIndex({ groups }: Props) {
                                 );
                             }}
                         >
+                            <Trash2 />
                             Sil
                         </AlertDialogAction>
                     </AlertDialogFooter>
@@ -341,9 +345,11 @@ function PermissionDialog(props: DialogProps) {
                             variant="outline"
                             onClick={props.onClose}
                         >
+                            <X />
                             İptal
                         </Button>
                         <Button type="submit" disabled={processing}>
+                            {isEdit ? <Save /> : <Plus />}
                             {isEdit ? 'Kaydet' : 'Ekle'}
                         </Button>
                     </DialogFooter>

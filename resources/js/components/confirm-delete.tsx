@@ -1,7 +1,8 @@
 import type { Method } from '@inertiajs/core';
 import { router } from '@inertiajs/react';
+import { Trash2, X } from 'lucide-react';
 import { useState } from 'react';
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
 import {
     AlertDialog,
@@ -23,6 +24,7 @@ type ConfirmDeleteProps = {
     description?: string;
     confirmLabel?: string;
     cancelLabel?: string;
+    confirmIcon?: ComponentType<{ className?: string }>;
     preserveScroll?: boolean;
     children: ReactNode;
 };
@@ -33,6 +35,7 @@ export function ConfirmDelete({
     description,
     confirmLabel = 'Sil',
     cancelLabel = 'Vazgeç',
+    confirmIcon: ConfirmIcon = Trash2,
     preserveScroll = true,
     children,
 }: ConfirmDeleteProps) {
@@ -67,6 +70,7 @@ export function ConfirmDelete({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel disabled={processing}>
+                        <X />
                         {cancelLabel}
                     </AlertDialogCancel>
                     <AlertDialogAction
@@ -74,6 +78,7 @@ export function ConfirmDelete({
                         disabled={processing}
                         className="bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/30"
                     >
+                        <ConfirmIcon />
                         {confirmLabel}
                     </AlertDialogAction>
                 </AlertDialogFooter>

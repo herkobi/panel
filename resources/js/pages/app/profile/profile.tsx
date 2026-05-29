@@ -1,4 +1,5 @@
 import { Form, Head, Link } from '@inertiajs/react';
+import { Mail, Save, X } from 'lucide-react';
 import { useState } from 'react';
 import ProfileController from '@/actions/App/Http/Controllers/App/Profile/ProfileController';
 import Heading from '@/components/heading';
@@ -126,6 +127,7 @@ export default function Profile({
                                     disabled={processing}
                                     data-test="update-profile-button"
                                 >
+                                    <Save />
                                     Kaydet
                                 </Button>
                             </div>
@@ -176,6 +178,7 @@ export default function Profile({
                                                 variant="outline"
                                                 disabled={processing}
                                             >
+                                                <X />
                                                 Vazgeç
                                             </Button>
                                         </DialogClose>
@@ -183,7 +186,7 @@ export default function Profile({
                                             type="submit"
                                             disabled={processing}
                                         >
-                                            {processing && <Spinner />}
+                                            {processing ? <Spinner /> : <Mail />}
                                             E-postayı değiştir
                                         </Button>
                                     </DialogFooter>

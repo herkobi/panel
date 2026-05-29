@@ -1,12 +1,9 @@
 @props(['url'])
+@php($branding = \App\Support\Branding::toArray())
 <tr>
 <td class="header">
 <a href="{{ $url }}" style="display: inline-block;">
-@if (trim($slot) === 'Laravel')
-<img src="https://laravel.com/img/notification-logo-v2.1.png" class="logo" alt="Laravel Logo">
-@else
-{!! $slot !!}
-@endif
+<img src="{{ $branding['logo'] }}" class="logo" alt="{{ $branding['name'] }}">
 </a>
 </td>
 </tr>

@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { KeyRound } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
@@ -77,7 +78,7 @@ export default function ResetPassword({ token, email }: Props) {
                             disabled={processing}
                             data-test="reset-password-button"
                         >
-                            {processing && <Spinner />}
+                            {processing ? <Spinner /> : <KeyRound />}
                             Şifreyi sıfırla
                         </Button>
                     </div>

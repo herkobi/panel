@@ -3,8 +3,8 @@ import type { PropsWithChildren } from 'react';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useCurrentUrl } from '@/hooks/use-current-url';
-import { cn } from '@/lib/utils';
+import { useActiveNavHref } from '@/hooks/use-current-url';
+import { cn, toUrl } from '@/lib/utils';
 import { index as countriesIndex } from '@/routes/panel/tools/definitions/countries';
 import { index as currenciesIndex } from '@/routes/panel/tools/definitions/currencies';
 import { index as languagesIndex } from '@/routes/panel/tools/definitions/languages';
@@ -37,7 +37,9 @@ const sidebarNavItems: NavItem[] = [
 export default function PanelDefinitionsLayout({
     children,
 }: PropsWithChildren) {
-    const { isCurrentOrParentUrl } = useCurrentUrl();
+    const activeHref = useActiveNavHref(
+        sidebarNavItems.map((item) => item.href),
+    );
 
     return (
         <div className="px-4 py-6">
@@ -59,7 +61,7 @@ export default function PanelDefinitionsLayout({
                                 variant="ghost"
                                 asChild
                                 className={cn('w-full justify-start', {
-                                    'bg-muted': isCurrentOrParentUrl(item.href),
+                                    'bg-muted': toUrl(item.href) === activeHref,
                                 })}
                             >
                                 <Link href={item.href}>

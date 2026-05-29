@@ -7,6 +7,14 @@ import {
     CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
@@ -15,6 +23,7 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import type { NavItem } from '@/types';
@@ -27,6 +36,8 @@ export function NavMain({
     items: NavItem[];
 }) {
     const { isCurrentUrl } = useCurrentUrl();
+    const { state, isMobile } = useSidebar();
+    const isCollapsed = state === 'collapsed' && !isMobile;
 
     const isItemActive = (item: NavItem): boolean => {
         return item.isActive === true || isCurrentUrl(item.href);
@@ -61,6 +72,51 @@ export function NavMain({
                         isItemActive(item) ||
                         item.items?.some((subItem) => isItemActive(subItem)) ===
                             true;
+
+                    // Sidebar ikon moduna küçüldüğünde alt menüler flyout
+                    // (yana açılan) dropdown olarak gösterilir; aksi halde
+                    // tekrar genişletmeden alt menülere erişilemezdi.
+                    if (isCollapsed) {
+                        return (
+                            <SidebarMenuItem key={item.title}>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <SidebarMenuButton
+                                            isActive={isActive}
+                                            tooltip={{ children: item.title }}
+                                        >
+                                            {item.icon && <item.icon />}
+                                            <span>{item.title}</span>
+                                            <ChevronRight className="ml-auto" />
+                                        </SidebarMenuButton>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                        side="right"
+                                        align="start"
+                                        className="min-w-48"
+                                    >
+                                        <DropdownMenuLabel>
+                                            {item.title}
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        {item.items?.map((subItem) => (
+                                            <DropdownMenuItem
+                                                key={subItem.title}
+                                                asChild
+                                            >
+                                                <Link
+                                                    href={subItem.href}
+                                                    prefetch
+                                                >
+                                                    {subItem.title}
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </SidebarMenuItem>
+                        );
+                    }
 
                     return (
                         <Collapsible

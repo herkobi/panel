@@ -21,7 +21,12 @@ export type ActivitySubjectTypeOption = {
 export type ActivityFilters = {
     user_id: string;
     subject_type: string;
-    causer_id: string;
+    causer_type: string;
     from: string;
     to: string;
+};
+
+export type ActivityCauserTypeOption = {
+    value: string;
+    label: string;
 };

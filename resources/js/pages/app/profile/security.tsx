@@ -1,5 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
-import { ShieldCheck } from 'lucide-react';
+import { Save, ShieldCheck, ShieldOff, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import SecurityController from '@/actions/App/Http/Controllers/App/Profile/SecurityController';
 import Heading from '@/components/heading';
@@ -152,6 +152,7 @@ export default function Security({
                                     disabled={processing}
                                     data-test="update-password-button"
                                 >
+                                    <Save />
                                     Şifreyi kaydet
                                 </Button>
                             </div>
@@ -180,6 +181,7 @@ export default function Security({
                             >
                                 <AlertDialogTrigger asChild>
                                     <Button variant="destructive">
+                                        <ShieldOff />
                                         2FA kapat
                                     </Button>
                                 </AlertDialogTrigger>
@@ -207,6 +209,7 @@ export default function Security({
                                                 <AlertDialogCancel
                                                     disabled={processing}
                                                 >
+                                                    <X />
                                                     Vazgeç
                                                 </AlertDialogCancel>
                                                 <Button
@@ -214,6 +217,7 @@ export default function Security({
                                                     type="submit"
                                                     disabled={processing}
                                                 >
+                                                    <ShieldOff />
                                                     2FA kapat
                                                 </Button>
                                             </AlertDialogFooter>
@@ -256,6 +260,7 @@ export default function Security({
                                                 type="submit"
                                                 disabled={processing}
                                             >
+                                                <ShieldCheck />
                                                 2FA aç
                                             </Button>
                                         )}

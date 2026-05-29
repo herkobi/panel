@@ -1,5 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
-import { Trash2 } from 'lucide-react';
+import { CheckCheck, Save, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 import RolesController from '@/actions/App/Http/Controllers/Panel/Settings/Roles/RolesController';
 import InputError from '@/components/input-error';
@@ -152,6 +152,11 @@ export default function ShowRole({ role, permissionGroups, isSystem }: Props) {
                                                             toggleGroup(rows)
                                                         }
                                                     >
+                                                        {allSelected ? (
+                                                            <X />
+                                                        ) : (
+                                                            <CheckCheck />
+                                                        )}
                                                         {allSelected
                                                             ? 'Tümünü Kaldır'
                                                             : 'Tümünü Seç'}
@@ -199,7 +204,7 @@ export default function ShowRole({ role, permissionGroups, isSystem }: Props) {
                                     <span />
                                 )}
                                 <Button type="submit" disabled={processing}>
-                                    {processing && <Spinner />}
+                                    {processing ? <Spinner /> : <Save />}
                                     Değişiklikleri kaydet
                                 </Button>
                             </div>
@@ -230,6 +235,7 @@ export default function ShowRole({ role, permissionGroups, isSystem }: Props) {
                                         variant="outline"
                                         disabled={processing}
                                     >
+                                        <X />
                                         Vazgeç
                                     </Button>
                                 </DialogClose>
@@ -238,7 +244,7 @@ export default function ShowRole({ role, permissionGroups, isSystem }: Props) {
                                     variant="destructive"
                                     disabled={processing}
                                 >
-                                    {processing && <Spinner />}
+                                    {processing ? <Spinner /> : <Trash2 />}
                                     Sil
                                 </Button>
                             </DialogFooter>

@@ -174,21 +174,19 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                                     name="status"
                                                     value="passive"
                                                 />
-                                                <div className="grid grid-cols-2 gap-3">
-                                                    <DistrictField
-                                                        name="sort_order"
-                                                        label="Sıra No"
-                                                        type="number"
-                                                        min={0}
-                                                        required={false}
-                                                        error={errors.sort_order}
-                                                    />
-                                                    <DistrictField
-                                                        name="name"
-                                                        label="Ad"
-                                                        error={errors.name}
-                                                    />
-                                                </div>
+                                                <DistrictField
+                                                    name="sort_order"
+                                                    label="Sıra No"
+                                                    type="number"
+                                                    min={0}
+                                                    required={false}
+                                                    error={errors.sort_order}
+                                                />
+                                                <DistrictField
+                                                    name="name"
+                                                    label="Ad"
+                                                    error={errors.name}
+                                                />
                                             </FieldGroup>
                                             <div className="flex justify-end">
                                                 <DistrictSaveButton
@@ -279,35 +277,33 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                                             }) => (
                                                                 <>
                                                                     <FieldGroup>
-                                                                        <div className="grid grid-cols-2 gap-3">
-                                                                            <DistrictField
-                                                                                name="sort_order"
-                                                                                label="Sıra No"
-                                                                                type="number"
-                                                                                min={
-                                                                                    0
-                                                                                }
-                                                                                required={
-                                                                                    false
-                                                                                }
-                                                                                defaultValue={
-                                                                                    district.sort_order
-                                                                                }
-                                                                                error={
-                                                                                    errors.sort_order
-                                                                                }
-                                                                            />
-                                                                            <DistrictField
-                                                                                name="name"
-                                                                                label="Ad"
-                                                                                defaultValue={
-                                                                                    district.name
-                                                                                }
-                                                                                error={
-                                                                                    errors.name
-                                                                                }
-                                                                            />
-                                                                        </div>
+                                                                        <DistrictField
+                                                                            name="sort_order"
+                                                                            label="Sıra No"
+                                                                            type="number"
+                                                                            min={
+                                                                                0
+                                                                            }
+                                                                            required={
+                                                                                false
+                                                                            }
+                                                                            defaultValue={
+                                                                                district.sort_order
+                                                                            }
+                                                                            error={
+                                                                                errors.sort_order
+                                                                            }
+                                                                        />
+                                                                        <DistrictField
+                                                                            name="name"
+                                                                            label="Ad"
+                                                                            defaultValue={
+                                                                                district.name
+                                                                            }
+                                                                            error={
+                                                                                errors.name
+                                                                            }
+                                                                        />
                                                                     </FieldGroup>
                                                                     <div className="flex justify-end">
                                                                         <DistrictSaveButton

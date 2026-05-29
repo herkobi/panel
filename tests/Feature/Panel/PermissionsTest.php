@@ -344,3 +344,22 @@ test('admin assigning permissions to a role works after permission name is curat
 
     expect($role->fresh()->hasPermissionTo('panel.units.index'))->toBeTrue();
 });
+
+test('updating a system role permissions preserves its name', function () {
+    // Sistem rolünde isim alanı disable; payload'a `name` gönderilmez.
+    // Controller bu durumda ismi korumalı, boş stringe çekmemeli.
+    $admin = User::factory()->admin()->create();
+    $role = Role::query()->where('name', 'Admin')->firstOrFail();
+    $permission = Permission::query()->create([
+        'name' => 'panel.units.index',
+        'guard_name' => 'web',
+    ]);
+
+    $this->actingAs($admin)
+        ->patch(route('panel.settings.roles.update', $role), [
+            'permissions' => [$permission->name],
+        ])
+        ->assertSessionHasNoErrors();
+
+    expect($role->fresh()->name)->toBe('Admin');
+});

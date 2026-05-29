@@ -8,6 +8,7 @@ import {
     Route,
     Settings,
     Trash2,
+    X,
 } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -184,11 +185,15 @@ export default function Cache() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>İptal</AlertDialogCancel>
+                        <AlertDialogCancel>
+                            <X />
+                            İptal
+                        </AlertDialogCancel>
                         <AlertDialogAction
                             variant="destructive"
                             onClick={handleConfirm}
                         >
+                            <Trash2 />
                             Evet, Temizle
                         </AlertDialogAction>
                     </AlertDialogFooter>

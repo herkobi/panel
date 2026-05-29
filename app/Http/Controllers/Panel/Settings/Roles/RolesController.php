@@ -72,10 +72,17 @@ class RolesController extends Controller
         /** @var User $causer */
         $causer = $request->user();
 
-        $service->update($role, [
-            'name' => (string) $request->validated('name'),
+        $data = [
             'permissions' => (array) $request->validated('permissions', []),
-        ], $causer);
+        ];
+
+        // Sistem rollerinde `name` alanı disable olduğu için payload'a hiç
+        // eklenmez; yalnızca gönderildiğinde güncellenir, aksi halde dokunulmaz.
+        if ($request->has('name')) {
+            $data['name'] = (string) $request->validated('name');
+        }
+
+        $service->update($role, $data, $causer);
 
         return back()->with('toast', [
             'type' => 'success',

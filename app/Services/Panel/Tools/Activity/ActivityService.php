@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Services\Panel\Tools\Activity;
 
+use App\Enums\UserType;
 use App\Models\User;
 use App\Support\ActivitySubjectLabels;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Spatie\Activitylog\Models\Activity;
 
 class ActivityService
 {
     /**
-     * @param  array{user_id?: string, subject_type?: string, causer_id?: string, from?: string, to?: string}  $filters
+     * @param  array{user_id?: string, subject_type?: string, causer_type?: string, from?: string, to?: string}  $filters
      */
     public function paginate(array $filters): LengthAwarePaginator
     {
@@ -24,12 +24,19 @@ class ActivityService
             ->withQueryString();
     }
 
-    public function users(): Collection
+    /**
+     * Eylemi yapan (causer) kullanıcının türüne göre filtre seçenekleri.
+     *
+     * @return array<int, array{value: string, label: string}>
+     */
+    public function causerTypes(): array
     {
-        return User::query()
-            ->select(['id', 'name'])
-            ->orderBy('name')
-            ->get();
+        return collect(UserType::cases())
+            ->map(fn (UserType $type): array => [
+                'value' => $type->value,
+                'label' => $type->label(),
+            ])
+            ->all();
     }
 
     /**
@@ -50,7 +57,7 @@ class ActivityService
     }
 
     /**
-     * @param  array{user_id?: string, subject_type?: string, causer_id?: string, from?: string, to?: string}  $filters
+     * @param  array{user_id?: string, subject_type?: string, causer_type?: string, from?: string, to?: string}  $filters
      */
     private function query(array $filters): Builder
     {
@@ -61,9 +68,13 @@ class ActivityService
             $query->where('subject_type', 'like', '%'.addcslashes($subjectType, '%_\\').'%');
         }
 
-        $causerId = $filters['causer_id'] ?? '';
-        if ($causerId !== '') {
-            $query->where('causer_id', $causerId);
+        $causerType = $filters['causer_type'] ?? '';
+        if ($causerType !== '') {
+            $query->whereHasMorph(
+                'causer',
+                [User::class],
+                fn (Builder $causer) => $causer->where('user_type', $causerType),
+            );
         }
 
         $from = $filters['from'] ?? '';

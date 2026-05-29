@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import RolesController from '@/actions/App/Http/Controllers/Panel/Settings/Roles/RolesController';
 import InputError from '@/components/input-error';
@@ -151,7 +152,7 @@ export default function CreateRole({ permissionGroups }: Props) {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    {processing && <Spinner />}
+                                    {processing ? <Spinner /> : <Plus />}
                                     Rol oluştur
                                 </Button>
                             </div>

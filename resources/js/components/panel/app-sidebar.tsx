@@ -1,5 +1,4 @@
 import {
-    GalleryVerticalEnd,
     LayoutGrid,
     Bolt,
     Users,
@@ -9,15 +8,14 @@ import {
     BookMarked,
 } from 'lucide-react';
 import type { ComponentProps } from 'react';
+import { BrandHeader } from '@/components/brand-header';
 import { NavMain } from '@/components/panel/nav-main';
 import { NavUser } from '@/components/panel/nav-user';
-import { TeamSwitcher } from '@/components/panel/team-switcher';
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarHeader,
-    SidebarRail,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes/panel';
 import {
@@ -36,16 +34,7 @@ import { index as countries } from '@/routes/panel/tools/definitions/countries';
 import { index as currencies } from '@/routes/panel/tools/definitions/currencies';
 import { index as languages } from '@/routes/panel/tools/definitions/languages';
 import { index as taxes } from '@/routes/panel/tools/definitions/taxes';
-import type { NavItem, TeamItem } from '@/types';
-
-const teams: TeamItem[] = [
-    {
-        name: 'Panel',
-        logo: GalleryVerticalEnd,
-        plan: 'Yönetim Alanı',
-        href: dashboard(),
-    },
-];
+import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
@@ -139,7 +128,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
-                <TeamSwitcher teams={teams} />
+                <BrandHeader href={dashboard()} />
             </SidebarHeader>
 
             <SidebarContent>
@@ -151,8 +140,6 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
             <SidebarFooter>
                 <NavUser />
             </SidebarFooter>
-
-            <SidebarRail />
         </Sidebar>
     );
 }

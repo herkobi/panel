@@ -6,9 +6,15 @@ import {
     Globe2,
     LogIn,
     LogOut,
+    Mail,
+    MailCheck,
     MoreHorizontal,
     MonitorCheck,
+    RefreshCw,
+    Send,
     ShieldCheck,
+    UserCog,
+    X,
 } from 'lucide-react';
 import { useState } from 'react';
 import UsersController from '@/actions/App/Http/Controllers/Panel/Settings/User/UsersController';
@@ -251,6 +257,7 @@ export default function Show({
                                                     )
                                                 }
                                             >
+                                                <MailCheck />
                                                 E-posta Adresini Onayla
                                             </DropdownMenuItem>
                                         )}
@@ -259,11 +266,13 @@ export default function Show({
                                                 setEmailChangeDialogOpen(true)
                                             }
                                         >
+                                            <Mail />
                                             E-posta Adresini Değiştir
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                             onSelect={openStatusDialog}
                                         >
+                                            <RefreshCw />
                                             Durum Değiştir
                                         </DropdownMenuItem>
                                         {canChangeRole && (
@@ -272,6 +281,7 @@ export default function Show({
                                                     setRoleDialogOpen(true)
                                                 }
                                             >
+                                                <UserCog />
                                                 Rol Değiştir
                                             </DropdownMenuItem>
                                         )}
@@ -521,11 +531,12 @@ export default function Show({
                                         variant="outline"
                                         disabled={processing}
                                     >
+                                        <X />
                                         Vazgeç
                                     </Button>
                                 </DialogClose>
                                 <Button type="submit" disabled={processing}>
-                                    {processing && <Spinner />}
+                                    {processing ? <Spinner /> : <MailCheck />}
                                     E-postayı onayla
                                 </Button>
                             </DialogFooter>
@@ -596,11 +607,12 @@ export default function Show({
                                             variant="outline"
                                             disabled={processing}
                                         >
+                                            <X />
                                             Vazgeç
                                         </Button>
                                     </DialogClose>
                                     <Button type="submit" disabled={processing}>
-                                        {processing && <Spinner />}
+                                        {processing ? <Spinner /> : <Send />}
                                         Onay bağlantısı gönder
                                     </Button>
                                 </DialogFooter>
@@ -665,11 +677,12 @@ export default function Show({
                                             variant="outline"
                                             disabled={processing}
                                         >
+                                            <X />
                                             Vazgeç
                                         </Button>
                                     </DialogClose>
                                     <Button type="submit" disabled={processing}>
-                                        {processing && <Spinner />}
+                                        {processing ? <Spinner /> : <UserCog />}
                                         Rolü güncelle
                                     </Button>
                                 </DialogFooter>
@@ -739,11 +752,12 @@ export default function Show({
                                             variant="outline"
                                             disabled={processing}
                                         >
+                                            <X />
                                             Vazgeç
                                         </Button>
                                     </DialogClose>
                                     <Button type="submit" disabled={processing}>
-                                        {processing && <Spinner />}
+                                        {processing ? <Spinner /> : <RefreshCw />}
                                         Durumu güncelle
                                     </Button>
                                 </DialogFooter>

@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { LogIn } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -93,7 +94,7 @@ export default function Login({
                                 disabled={processing}
                                 data-test="login-button"
                             >
-                                {processing && <Spinner />}
+                                {processing ? <Spinner /> : <LogIn />}
                                 Giriş yap
                             </Button>
                         </div>
