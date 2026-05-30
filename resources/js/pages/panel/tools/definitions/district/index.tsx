@@ -164,7 +164,7 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                 <Form
                                     {...districtStore.form(parentArgs)}
                                     options={{ preserveScroll: true }}
-                                    className="flex flex-1 min-h-0 flex-col gap-5 overflow-y-auto px-4 pb-4"
+                                    className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 pb-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
@@ -261,7 +261,7 @@ export default function DistrictIndex({ districts, country, city }: Props) {
                                                             kaydını düzenleyin.
                                                         </SheetDescription>
                                                     </SheetHeader>
-                                                    <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-4">
+                                                    <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-4 pb-4">
                                                         <Form
                                                             {...districtUpdate.form(
                                                                 routeArgs,

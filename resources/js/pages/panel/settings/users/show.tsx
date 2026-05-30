@@ -748,7 +748,11 @@ export default function Show({
                                         </Button>
                                     </DialogClose>
                                     <Button type="submit" disabled={processing}>
-                                        {processing ? <Spinner /> : <RefreshCw />}
+                                        {processing ? (
+                                            <Spinner />
+                                        ) : (
+                                            <RefreshCw />
+                                        )}
                                         Durumu güncelle
                                     </Button>
                                 </DialogFooter>

@@ -12,6 +12,7 @@ export type PaginationMeta = {
     per_page?: number;
     to: number | null;
     total: number;
+    links?: PaginationLink[];
 };
 
 export interface PaginationResponse<T> {

@@ -186,7 +186,11 @@ export default function Profile({
                                             type="submit"
                                             disabled={processing}
                                         >
-                                            {processing ? <Spinner /> : <Mail />}
+                                            {processing ? (
+                                                <Spinner />
+                                            ) : (
+                                                <Mail />
+                                            )}
                                             E-postayı değiştir
                                         </Button>
                                     </DialogFooter>

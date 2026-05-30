@@ -51,6 +51,7 @@ function TaxField({
     defaultValue,
     error,
     type = 'text',
+    required = true,
     min,
     step,
 }: {
@@ -59,6 +60,7 @@ function TaxField({
     defaultValue?: string | number | null;
     error?: string;
     type?: string;
+    required?: boolean;
     min?: number;
     step?: string;
 }) {
@@ -70,7 +72,7 @@ function TaxField({
                 name={name}
                 type={type}
                 defaultValue={defaultValue ?? ''}
-                required
+                required={required}
                 min={min}
                 step={step}
                 aria-invalid={Boolean(error)}
@@ -150,7 +152,7 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                                 <Form
                                     {...taxStore.form()}
                                     options={{ preserveScroll: true }}
-                                    className="flex flex-1 min-h-0 flex-col gap-5 overflow-y-auto px-4 pb-4"
+                                    className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 pb-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
@@ -254,7 +256,7 @@ export default function TaxIndex({ taxes, defaults }: Props) {
                                                         düzenleyin.
                                                     </SheetDescription>
                                                 </SheetHeader>
-                                                <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-4">
+                                                <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-4 pb-4">
                                                     <Form
                                                         {...taxUpdate.form(
                                                             tax.id,

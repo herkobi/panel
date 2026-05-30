@@ -154,7 +154,7 @@ export default function CityIndex({ cities, country }: Props) {
                                 <Form
                                     {...cityStore.form(parent)}
                                     options={{ preserveScroll: true }}
-                                    className="flex flex-1 min-h-0 flex-col gap-5 overflow-y-auto px-4 pb-4"
+                                    className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 pb-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
@@ -171,7 +171,9 @@ export default function CityIndex({ cities, country }: Props) {
                                                         type="number"
                                                         min={0}
                                                         required={false}
-                                                        error={errors.sort_order}
+                                                        error={
+                                                            errors.sort_order
+                                                        }
                                                     />
                                                     <CityField
                                                         name="code"
@@ -270,7 +272,7 @@ export default function CityIndex({ cities, country }: Props) {
                                                                 düzenleyin.
                                                             </SheetDescription>
                                                         </SheetHeader>
-                                                        <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-4">
+                                                        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-4 pb-4">
                                                             <Form
                                                                 {...cityUpdate.form(
                                                                     routeArgs,
