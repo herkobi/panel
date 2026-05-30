@@ -19,19 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { index } from '@/routes/panel/settings/roles';
-
-type PermissionRow = {
-    name: string;
-    label: string;
-};
-
-type RoleDetail = {
-    uuid: string;
-    name: string;
-    is_system: boolean;
-    permissions: string[];
-    users_count?: number;
-};
+import type { PermissionRow, RoleDetail } from '@/types';
 
 type Props = {
     role: { data: RoleDetail };

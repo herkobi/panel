@@ -19,20 +19,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { dashboard } from '@/routes';
-import type { Account as AccountType } from '@/types';
-
-type CountryOption = {
-    id: string;
-    name: string;
-};
-
-type CityOption = CountryOption & {
-    country_id: string;
-};
-
-type DistrictOption = CountryOption & {
-    city_id: string;
-};
+import type {
+    Account as AccountType,
+    CityOption,
+    CountryOption,
+    DistrictOption,
+} from '@/types';
 
 type Props = {
     account: {

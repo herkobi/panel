@@ -16,18 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { edit as editAppearance } from '@/routes/app/profile/appearance';
-
-type LanguageOption = {
-    id: string;
-    code: string;
-    name: string;
-    native_name: string;
-};
-
-type TimezoneOption = {
-    value: string;
-    label: string;
-};
+import type { LanguageOption, Option } from '@/types';
 
 type Preferences = {
     locale: string;
@@ -36,7 +25,7 @@ type Preferences = {
 
 type Props = {
     languages: LanguageOption[];
-    timezones: TimezoneOption[];
+    timezones: Option[];
     preferences: Preferences;
 };
 

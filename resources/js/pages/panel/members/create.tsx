@@ -17,15 +17,10 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { create } from '@/routes/panel/members';
-import type { UserStatus } from '@/types';
-
-type StatusOption = {
-    value: UserStatus;
-    label: string;
-};
+import type { Option, UserStatus } from '@/types';
 
 type Props = {
-    statuses: StatusOption[];
+    statuses: Option<UserStatus>[];
 };
 
 export default function Create({ statuses }: Props) {

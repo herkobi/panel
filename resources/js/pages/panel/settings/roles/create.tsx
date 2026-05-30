@@ -9,11 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { create, index } from '@/routes/panel/settings/roles';
-
-type PermissionRow = {
-    name: string;
-    label: string;
-};
+import type { PermissionRow } from '@/types';
 
 type Props = {
     permissionGroups: Record<string, PermissionRow[]>;

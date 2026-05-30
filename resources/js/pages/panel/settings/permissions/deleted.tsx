@@ -26,14 +26,7 @@ import {
 } from '@/components/ui/table';
 import { dashboard } from '@/routes';
 import { index as permissionsIndex } from '@/routes/panel/settings/permissions';
-
-type Permission = {
-    uuid: string;
-    name: string;
-    group: string | null;
-    label: string | null;
-    roles_count: number;
-};
+import type { Permission } from '@/types';
 
 type Props = {
     groups: Record<string, Permission[]>;

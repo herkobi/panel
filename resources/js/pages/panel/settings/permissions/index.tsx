@@ -40,14 +40,7 @@ import {
     deleted as deletedRoute,
     discover as discoverRoute,
 } from '@/routes/panel/settings/permissions';
-
-type Permission = {
-    uuid: string;
-    name: string;
-    group: string | null;
-    label: string | null;
-    roles_count: number;
-};
+import type { Permission } from '@/types';
 
 type Props = {
     groups: Record<string, Permission[]>;

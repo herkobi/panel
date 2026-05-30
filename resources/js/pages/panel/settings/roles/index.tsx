@@ -26,16 +26,7 @@ import {
     index,
     show,
 } from '@/routes/panel/settings/roles';
-import type { Paginated } from '@/types';
-
-type RoleItem = {
-    uuid: string;
-    name: string;
-    is_system: boolean;
-    permissions_count: number;
-    users_count: number;
-    created_at: string;
-};
+import type { Paginated, RoleItem } from '@/types';
 
 type Props = {
     roles: Paginated<RoleItem>;

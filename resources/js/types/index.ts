@@ -8,6 +8,8 @@ export type * from './navigation';
 export type * from './notifications';
 export type * from './option';
 export type * from './pagination';
+export type * from './permission';
+export type * from './role';
 export type * from './session';
 export type * from './status';
 export type * from './ui';

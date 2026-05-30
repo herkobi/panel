@@ -60,3 +60,19 @@ export type Tax = {
     sort_order: number;
     deleted_at?: string | null;
 };
+
+/**
+ * Form select'lerinde kullanılan, ilgili tanım kaynağının küçültülmüş
+ * "seçenek" görünümleri. Tam tipten türetilir, böylece backend alanı
+ * değişince burası da derleme zamanında uyarır.
+ */
+export type LanguageOption = Pick<
+    Language,
+    'id' | 'code' | 'name' | 'native_name'
+>;
+
+export type CountryOption = Pick<Country, 'id' | 'name'>;
+
+export type CityOption = Pick<City, 'id' | 'name' | 'country_id'>;
+
+export type DistrictOption = Pick<District, 'id' | 'name' | 'city_id'>;

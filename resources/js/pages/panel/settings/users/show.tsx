@@ -66,20 +66,13 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { index } from '@/routes/panel/settings/users';
-import type { Activity as ActivityItem, PanelUser } from '@/types';
-
-type UserSessionLog = {
-    id: number;
-    ip_address: string | null;
-    user_agent: string | null;
-    device: string;
-    browser: string;
-    platform: string;
-    login_at: string | null;
-    logout_at: string | null;
-};
-
-type RoleOption = { name: string };
+import type {
+    Activity as ActivityItem,
+    EditableUserStatus,
+    PanelUser,
+    RoleOption,
+    UserSessionLog,
+} from '@/types';
 
 type Props = {
     user: {
@@ -93,8 +86,6 @@ type Props = {
     };
     assignableRoles: RoleOption[];
 };
-
-type EditableUserStatus = 'active' | 'passive';
 
 function formatDate(value: string | null | undefined): string {
     if (!value) {

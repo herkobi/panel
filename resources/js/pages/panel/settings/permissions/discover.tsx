@@ -16,12 +16,7 @@ import {
 } from '@/components/ui/table';
 import { dashboard } from '@/routes';
 import { index as permissionsIndex } from '@/routes/panel/settings/permissions';
-
-type DiscoverableRoute = {
-    name: string;
-    suggested_group: string;
-    suggested_label: string;
-};
+import type { DiscoverableRoute } from '@/types';
 
 type Props = {
     routes: DiscoverableRoute[];

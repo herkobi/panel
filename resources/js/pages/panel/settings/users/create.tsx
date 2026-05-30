@@ -17,19 +17,10 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { create } from '@/routes/panel/settings/users';
-import type { UserStatus } from '@/types';
-
-type StatusOption = {
-    value: UserStatus;
-    label: string;
-};
-
-type RoleOption = {
-    name: string;
-};
+import type { Option, RoleOption, UserStatus } from '@/types';
 
 type Props = {
-    statuses: StatusOption[];
+    statuses: Option<UserStatus>[];
     roles: RoleOption[];
 };
 
