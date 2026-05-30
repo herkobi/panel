@@ -134,6 +134,16 @@ Usage: Blade root `<title>` + favicon link; the sidebar [BrandHeader](resources/
 - **Sidebar:** `nav-main` shows sub-menus as a flyout **dropdown** when collapsed to icon mode; there is no resize rail.
 - **Buttons:** if a group of buttons uses icons, all of them do — keep icon usage consistent (submit→Save, filter→Search, cancel→X, delete→Trash2, etc.).
 
+### Intentional scaffolding (ready, not all wired up)
+
+Herkobi ships as a **starter kit**, so a number of components/hooks/helpers are present and complete but **not currently imported anywhere** — they exist so a consumer can reach for them immediately. **This is deliberate; do not treat it as dead code or delete it during cleanup.** Known unused-but-ready pieces:
+
+- **shadcn/ui primitives** (`components/ui/*`) — the **full set** is installed; only a subset is mounted today. Keep them all.
+- **Permission hooks** — [use-permissions.ts](resources/js/hooks/use-permissions.ts) exports `useCan` / `useHasRole` / `useIsSuperAdmin` for gating UI; ready even where not yet called.
+- **Enum view-helpers** — `*_LABEL` / `*_OPTIONS` / `*_VALUES` in [types/status.ts](resources/js/types/status.ts), [types/user-status.ts](resources/js/types/user-status.ts), [types/user-type.ts](resources/js/types/user-type.ts) for building selects/badges off the PHP enums.
+- **Alternative layouts** — `auth/auth-card-layout`, `auth/auth-split-layout`, `app/app-header-layout`, `panel/app-header-layout` are unused variants; the active choices are `auth-simple-layout` and `app-sidebar-layout` (app + panel). Swap one in via the wrapper in `layouts/{auth,app,panel}-layout.tsx`.
+- **[media-gallery](resources/js/components/media-gallery.tsx)** — kept ready, not currently mounted (see above).
+
 ### Toasts & flash
 
 Controllers flash `->with('toast', ['type' => 'success|info|warning|error', 'message' => __('...')])`. [use-flash-toast](resources/js/hooks/use-flash-toast.ts) renders it through **sonner** (top-center, `richColors`). Domain guards surface user-facing warnings by throwing a renderable exception — e.g. [DefinitionGuardException](app/Exceptions/DefinitionGuardException.php) returns a `warning` toast instead of a generic 422.
@@ -157,3 +167,4 @@ Controllers flash `->with('toast', ['type' => 'success|info|warning|error', 'mes
 - Side effects only via `event() → listener` (auto-discovery); don't register listeners manually.
 - Shared/duplicated TS types → `@/types`; page `Props` stay inline.
 - Don't hand-edit `components/ui/*` (generated).
+- Unused-but-ready scaffolding is deliberate (full shadcn set, permission hooks, enum helpers, alternative layouts, `media-gallery`) — don't delete it as "dead code". See [Intentional scaffolding](#intentional-scaffolding-ready-not-all-wired-up).
