@@ -1,493 +1,159 @@
 # AGENTS.md
 
-> Agent-specific context for the Laravel Panel project.
+Canonical engineering guide for **Herkobi** — read this before writing code. It
+describes the architecture, the hard rules, and the day-to-day commands. Humans
+and AI agents both work from this file; `CLAUDE.md` simply imports it.
 
-## Project Overview
+## Stack
 
-This is a Laravel 13 + React 19 admin panel application built on the Laravel React Starter Kit. It uses Inertia.js for seamless SPA-like navigation. The application serves two distinct user types: Admins (panel routes) and Members (app routes).
+- **Backend:** Laravel 13 · PHP 8.3+ · Pest 4 (tests on SQLite `:memory:`).
+- **Frontend:** React 19 · TypeScript (strict) · Inertia.js v3 · Tailwind v4 · shadcn/ui · Vite.
+- **Auth:** Laravel Fortify (login, registration, email verification, password reset, 2FA/TOTP).
+- **Typed routes:** Laravel **Wayfinder** generates route/action helpers into `resources/js/{routes,actions}`. Never hardcode URLs — regenerate after any route change.
+- **Packages of note:** `spatie/laravel-permission`, `spatie/laravel-activitylog`, `yadahan/laravel-authentication-log`.
 
-The project follows an event-driven architecture with strict layer separation. All side effects (logging, notifications, emails) are handled through events and listeners, never directly in controllers or services.
+Every PHP file starts with `declare(strict_types=1);`. Every model uses `HasUuids`. `CarbonImmutable` everywhere.
 
-## Technology Stack
+## Commands
 
-### Backend
-
-- **Laravel 13.7** (PHP ^8.3)
-- **Laravel Fortify** — Authentication (login, registration, 2FA/TOTP, email verification, password reset)
-- **Laravel Wayfinder** — Auto-generates typed route functions for the frontend
-- **Spatie Laravel Activity Log** — User action auditing
-- **Yadahan Laravel Authentication Log** — Login/session tracking
-- **Pest PHP 4** — Testing framework
-
-### Frontend
-
-- **React 19** with TypeScript
-- **Inertia.js v3**
-- **Tailwind CSS v4**
-- **shadcn/ui** (New York style, Neutral base color)
-- **Radix UI primitives**
-- **Lucide React** — Icons
-- **Vite 8** — Build tool
-- **babel-plugin-react-compiler** — React compiler enabled
-
-### Database & Runtime
-
-- **Default database**: MySQL (configurable to SQLite, MariaDB, PostgreSQL, SQL Server). Tests always run on SQLite in-memory.
-- **UUID primary keys** (`HasUuids` trait on all models)
-- **Soft deletes** enabled on User model
-- **Queue connection**: `database`
-- **Cache store**: `database`
-- **Session driver**: `database`
-- **Broadcast connection**: `log`
-- **Mail driver**: `log` (local), configurable
-
-## Project Structure
-
-```
-app/
-  Actions/Fortify/          # Custom Fortify actions (CreateNewUser, ResetUserPassword)
-  Enums/                    # Status, UserStatus, UserType
-  Events/                   # Domain events (Panel, App, Auth namespaces)
-  Http/
-    Controllers/            # Panel/* and App/* namespaces
-    Middleware/             # Custom middleware (see below)
-    Requests/               # Form requests (Panel/* and App/*)
-    Resources/              # API resources (Panel/* and App/*)
-  Jobs/                     # Queueable jobs (1: Auth/DetectNewDeviceLogin — device detection, not mail)
-  Listeners/                # Event listeners (Panel, App, Auth namespaces)
-  Mail/                     # Mailables (rendered by notifications' toMail())
-  Models/                   # Eloquent models (10 files)
-  Notifications/            # ShouldQueue notifications (Auth, App/Panel Profile, Members, Settings/User)
-  Services/                 # Business logic (Panel/* namespaces)
-bootstrap/
-config/                     # Standard Laravel config
-database/
-  factories/                # UserFactory
-  migrations/               # 18 migrations (framework + app)
-  seeders/                  # DatabaseSeeder
-lang/
-  en/                       # auth, pagination, passwords, validation
-  tr/                       # auth (Turkish locale actively maintained)
-resources/
-  css/                      # app.css (Tailwind v4 entry)
-  js/
-    actions/                # Wayfinder-generated action functions
-    components/
-      ui/                   # shadcn/ui primitives (~50 components)
-      app/                  # App-area shared components
-      panel/                # Panel-area shared components
-    hooks/                  # Custom React hooks (useAppAuth, usePanelAuth, etc.)
-    layouts/                # Page layouts (auth, app, panel, nested)
-    pages/                  # Inertia page components
-    routes/                 # Wayfinder-generated route helpers
-    types/                  # TypeScript definitions
-  views/                    # Blade views (app.blade.php, mail templates)
-routes/
-  web.php                   # Public routes + dashboard redirect
-  panel.php                 # Admin panel routes (prefix: /panel)
-  app.php                   # Member app routes (prefix: /app)
-  console.php               # Artisan commands
-tests/
-  Feature/                  # 11 feature tests
-  Unit/                     # 1 unit test
-```
-
-## Architecture Decisions
-
-### User Type System
-
-Users have a `user_type` enum (`admin`, `member`, `supplier`). Routes are protected by middleware:
-
-- `user_type:admin` — Panel routes
-- `user_type:member` — App routes
-- `active_user` — Ensures user status is Active
-- `write_access` — Ensures user has write permissions
-
-The dashboard route (`/dashboard`) redirects based on user type:
-
-- Admins -> `/panel/dashboard`
-- Members -> `/app/dashboard`
-- Suppliers or inactive users -> Logout with error toast
-
-### Route Organization
-
-```
-routes/
-  web.php      - Public routes + dashboard redirect
-  panel.php    - Admin panel routes (prefix: /panel)
-  app.php      - Member app routes (prefix: /app)
-```
-
-All panel routes share middleware: `['auth', 'verified', 'user_type:admin', 'active_user', 'write_access']`
-
-All app routes share middleware: `['auth', 'verified', 'user_type:member', 'active_user', 'write_access']`
-
-### Controller Structure
-
-- `App\Http\Controllers\Panel\*` — Admin functionality
-- `App\Http\Controllers\App\*` — Member functionality
-- Definitions (CRUD resources) live under `Panel\Tools\Definitions\`
-
-### Frontend Page Structure
-
-```
-resources/js/pages/
-  auth/              - Fortify auth pages (login, register, 2FA, etc.)
-  panel/             - Admin pages
-    dashboard.tsx
-    profile/
-    settings/
-    tools/           - Activity log, cache, definitions (CRUD)
-  app/               - Member pages (mirrors panel structure)
-```
-
-### Route Functions (Wayfinder)
-
-Always use Wayfinder-generated functions instead of hardcoded URLs.
-
-Run `php artisan wayfinder:generate` when adding/modifying routes.
-
-### Dependency Control (Bağımlılık Kontrolü)
-
-The following layer order defines the dependency direction within the application. Upper layers may depend on lower layers, but lower layers must never depend on upper layers.
-
-`Enum → Migration → Model → Service → Event → Listener → Notification → Job → Request → Controller → Resource → Page/UI → Middleware → Seeder → Permission`
-
-- **Enum** — Type definitions used by models and business logic.
-- **Migration** — Database schema definitions.
-- **Model** — Eloquent models; may reference enums but nothing above.
-- **Service** — Business logic; may use models, enums, and events.
-- **Event** — Domain events fired from services or models.
-- **Listener** — Reacts to events; may queue jobs or send notifications.
-- **Notification** — User-facing alerts triggered by listeners or services.
-- **Job** — Queueable units of work dispatched by listeners or controllers.
-- **Request** — Form requests validating incoming HTTP data.
-- **Controller** — Handles HTTP requests; may use requests, services, resources, and jobs.
-- **Resource** — API response transformers.
-- **Page / UI** — React pages and components; consumes controllers via Inertia.
-- **Middleware** — HTTP layer filters; run before controllers.
-- **Seeder** — Database seeders; may use models, enums, and services.
-- **Permission** — Authorization rules applied to routes or controllers.
-
-### Event Driven Development (Olay Odaklı Geliştirme)
-
-Uygulama olay odaklı mimariyi takip eder. İş mantığı ve yan etkiler şu şekilde ayrılır:
-
-- **Event (Olay)** — Domain olayları; model veya servis katmanından `event()` yardımcısı ile tetiklenir.
-- **Listener (Dinleyici)** — Olayları dinler ve yan etkileri yürütür (örn. bildirim gönderme, job kuyruğa ekleme, loglama).
-- **Controller** — İnce tutulur; iş mantığını doğrudan içermez. İşlemleri servis veya event'lere devreder.
-- **Service** — İş kurallarını içerir; gerekli durumlarda event fırlatır.
-
-Kural: Yan etkiler (bildirim, e-posta, kuyruk işi) doğrudan controller veya servis içinde gerçekleştirilmez; mutlaka bir event → listener zinciri üzerinden yürütülür.
-
-Currently, the application has (approximate, grows over time):
-- **~74 Events** — definitions CRUD events, profile/settings/members/cache/auth events
-- **~109 Listeners** — activity log listeners plus `Send{X}` notification listeners
-- **1 Job** — `Auth/DetectNewDeviceLogin` (device detection); routine mail goes through notifications, not jobs
-- **~22 Notifications** — all `ShouldQueue`; Auth, App/Panel Profile, Members, Settings/User. Each handles in-app (`database`) and/or mail (`toMail()` → Mailable)
-- **12 Mailables** — rendered by the notifications' `toMail()`
-- **0 Policies** — authorization is handled via middleware currently
-
-## Coding Standards
-
-### PHP
-
-- `declare(strict_types=1);` at the top of every PHP file
-- Use PHP 8.3 attributes for Eloquent models: `#[Fillable([...])]`, `#[Hidden([...])]`, `#[Scope]`
-- Use return type hints everywhere
-- Pest for all tests (not PHPUnit syntax)
-- Format with Laravel Pint (`composer lint`)
-
-### React / TypeScript
-
-- Functional components with explicit return types where helpful
-- Use Inertia's `useForm` hook for form handling
-- Use generated Wayfinder types for route parameters
-- shadcn/ui components are in `resources/js/components/ui/`
-- Custom components go in `resources/js/components/`
-- TypeScript strict mode enabled
-- Base URL alias: `@/*` maps to `./resources/js/*`
-
-### Tailwind CSS
-
-- Tailwind v4 syntax (no `tailwind.config.js`)
-- Use `prettier-plugin-tailwindcss` for class sorting
-- Dark mode support via `next-themes` (`dark:` prefix)
-- Stylesheet entry: `resources/css/app.css`
-
-### Form Requests and Validation
-
-- Use Form Request classes for validation (not inline)
-- Turkish (`tr`) and English (`en`) localization supported
-
-### Linting & Formatting Rules
-
-**ESLint** (`eslint.config.js`):
-- Extends `@eslint/js`, `typescript-eslint`, `react`, `react-hooks`, `@stylistic/eslint-plugin`, `eslint-plugin-import`, `prettier`
-- Enforces `consistent-type-imports` with separate type imports
-- Enforces `import/order` with alphabetical sorting
-- Enforces `curly: all` (always use braces)
-- Enforces `@stylistic/brace-style: 1tbs`
-- Enforces padding lines around control statements
-- Ignores: `vendor`, `node_modules`, `public`, `bootstrap/ssr`, generated Wayfinder files, shadcn UI components
-
-**Prettier** (`.prettierrc`):
-- `semi: true`, `singleQuote: true`, `printWidth: 80`, `tabWidth: 4` (2 for YAML)
-- Plugin: `prettier-plugin-tailwindcss` with `tailwindStylesheet: resources/css/app.css`
-- Ignores: `resources/js/components/ui/*`, `resources/views/mail/*`
-
-## Key Features
-
-### Authentication (Fortify)
-- Email/password login with rate limiting
-- Registration with email verification
-- Two-factor authentication (TOTP)
-- Password reset flow
-- Profile: update info, change password, 2FA setup, sessions, notifications
-
-### Panel Tools (Admin)
-- Activity Log — View user activity stream
-- Cache Management — Clear application caches by type
-- Definitions — CRUD for: Languages, Currencies, Countries, Cities, Districts, Taxes
-
-### Settings
-- General settings edit/update
-- User listing and detail view
-
-## Development Commands
-
-### Start Development
 ```bash
-# Start dev server (Laravel + Queue + Vite)
-composer dev
+composer dev              # Laravel serve + queue listener + Vite, concurrently
+composer setup            # First-time install (env, key, migrate, npm, build)
+
+composer lint             # Pint (fix)
+composer lint:check       # Pint (check only)
+composer test             # config:clear + pint check + pest
+php artisan test --filter=TestName
+
+npm run lint              # ESLint --fix
+npm run lint:check        # ESLint check
+npm run format            # Prettier write
+npm run format:check      # Prettier check
+npm run types:check       # tsc --noEmit
+npm run build             # Vite production build
+
+composer ci:check         # lint:check + format:check + types:check + test (CI parity)
+
+php artisan wayfinder:generate --with-form --no-interaction   # after any route change
 ```
 
-### PHP
-```bash
-# Lint PHP
-composer lint          # Fix with Pint
-composer lint:check    # Check only
+Feature tests touching the DB use `RefreshDatabase`. Cache/session are `array`, queue is `sync` in tests.
 
-# Tests
-composer test          # Config clear + lint check + artisan test
-php artisan test       # Run Pest tests directly
-./vendor/bin/pest      # Run Pest directly
-```
+## Architecture
 
-### JavaScript / TypeScript
-```bash
-# Lint JS/TS
-npm run lint           # Fix with ESLint
-npm run lint:check     # Check only
+### Dual area: Panel (admin) vs App (member)
 
-# Format
-npm run format         # Fix with Prettier
-npm run format:check   # Check only
+Code is mirrored under `Panel/*` (admin) and `App/*` (member):
 
-# Type check
-npm run types:check    # tsc --noEmit
+- `routes/panel.php` — prefix `/panel`, middleware `auth, verified, user_type:admin, active_user, write_access, route_permission`.
+- `routes/app.php` — prefix `/app`, middleware `auth, verified, user_type:member, active_user, write_access, bind_account`.
+- `/dashboard` redirects by `user_type`; suppliers / inactive users are logged out.
 
-# Build
-npm run build          # Vite production build
-npm run build:ssr      # Vite build with SSR
-```
+The split is mirrored in `app/Http/Controllers/{Panel,App}/*`, `Requests/{Panel,App}/*`, `Resources/{Panel,App}/*`, `Events/{Panel,App,Auth}/*`, `Listeners/{Panel,App,Auth}/*`, `Services/{Panel,App}/*`, `resources/js/pages/{panel,app}/*`, and layouts `panel/` vs `app/`.
 
-### Full CI Check
-```bash
-composer ci:check      # lint:check + format:check + types:check + test
-```
+### Inertia shared props
 
-### Maintenance
-```bash
-php artisan wayfinder:generate         # Regenerate typed routes
-php artisan wayfinder:generate --with-form --no-interaction
-php artisan optimize:clear
-php artisan migrate:fresh --seed
-composer audit
-npm audit --omit=dev
-```
+`HandleInertiaRequests::share()` exposes exactly these app-wide props:
 
-## Testing
+- **`auth`** — the single auth contract, discriminated by `auth.type: 'app' | 'panel'`. In React **never** read `usePage().props.auth` directly: use `useAppAuth()` in app-area code and `usePanelAuth()` in panel-area code. Never mix `AppUser` and `PanelUser`. Never add a second auth prop. Types in [resources/js/types/auth.ts](resources/js/types/auth.ts).
+- **`branding`** — app identity (see [Branding](#branding)). Read via `useBranding()`.
+- **`flash`** — toast/flash payloads (see [Toasts & flash](#toasts--flash)).
+- **`name`**, **`sidebarOpen`**.
 
-- **Pest PHP 4** with Laravel plugin
-- **Feature tests** in `tests/Feature/` (11 files)
-- **Unit tests** in `tests/Unit/` (1 file)
-- Tests run on **SQLite in-memory** (`DB_DATABASE=:memory:`)
-- Cache/session use `array` driver in testing
-- Queue uses `sync` driver in testing
-- Pulse, Telescope, and Nightwatch are disabled in testing
-- `RefreshDatabase` trait is used for feature tests that need database isolation
+### Account ownership & scoping
 
-### CI/CD (GitHub Actions)
+`Account` is the central owner of member data. Members (`user_type:member`) and member-scoped records hang off `account_id`; admins have `account_id = null` and are cross-account.
 
-**`.github/workflows/tests.yml`**:
-- Triggers on push/PR to `develop`, `main`, `master`, `workos`
-- Matrix: PHP 8.3, 8.4, 8.5
-- Steps: checkout -> setup PHP (with xdebug) -> setup Node 22 -> `npm install` -> `composer install` -> copy `.env.example` -> `php artisan key:generate` -> `npm run build` -> run `./vendor/bin/pest`
+Member-scoped models `use App\Concerns\BelongsToAccount`, which adds the `account()` relation **plus** a conditional global scope and a `creating` hook. The `BindCurrentAccount` middleware (alias `bind_account`, applied **only** in the member `app` group) binds the authenticated user's Account; while bound, every `BelongsToAccount` query auto-filters by `account_id` and new records get `account_id` auto-filled. Outside that context (panel/admin, seeders, jobs) nothing is bound → no scope, so admins stay cross-account.
 
-**`.github/workflows/lint.yml`**:
-- Triggers on push/PR to `develop`, `main`, `master`, `workos`
-- Runs on `ubuntu-latest` with PHP 8.4
-- Steps: checkout -> install PHP & Node deps -> `composer lint` (Pint) -> `npm run format` (Prettier) -> `npm run lint` (ESLint)
+**`account_id` is NEVER taken from request input** — derive it from the bound account or set it via the relation (`$account->things()->create([...])`).
 
-## Security Considerations
+### Event-driven side effects (hard rule)
 
-### Authentication & Authorization
-- Single `web` session guard using Eloquent `User` model
-- Fortify handles all auth flows with rate limiting (`throttle:6,1` on password updates)
-- Two-factor authentication requires confirmation and password confirmation
-- Password reset tokens expire in 60 minutes
-- Password confirmation timeout: 3 hours (`AUTH_PASSWORD_TIMEOUT`)
-- Users cannot be permanently deleted (soft deletes only)
+Controllers stay thin; services hold business rules. Any side effect (activity log, notification, email) MUST flow through an `event() → listener` chain — never directly from a controller/service. Listener **auto-discovery** is used (no `EventServiceProvider $listen` array). Roughly ~80 events, ~119 listeners, ~22 notifications, 12 mailables, 1 job, 0 policies.
 
-### Middleware Security Stack
-- `EnsureActiveUser` — Blocks inactive users
-- `EnsureUserType` — Enforces admin/member route separation
-- `EnsureWriteAccess` — Enforces write permission checks
-- `HandleAppearance` — Manages theme/appearance preferences
-- `HandleInertiaRequests` — Shares auth data and flash messages with Inertia
-- `SetSecurityHeaders` — Applies security headers to responses
+### Notification / email standard
 
-### Data Integrity
-- All models use UUID primary keys (`HasUuids`)
-- Foreign keys are UUID strings
-- Form requests handle all validation; no inline validation in controllers
-- `declare(strict_types=1)` on all PHP files
+A `Send{X}` listener stays thin and calls `$notifiable->notify(new {X}Notification(...))` (building any URL/token first). The `{X}Notification implements ShouldQueue`, declares `via = ['mail','database']` (or a subset), returns the Mailable from `toMail()`, and writes the in-app row via `toArray()`. The Notification is the single orchestration point for both in-app and (queued) mail — do **not** dispatch a Job from a listener for routine mail. Reach for a Job only when the mail needs an independent lifecycle (custom queue/retry/batch); the only Job today is `Auth/DetectNewDeviceLogin`. Mail views live in `resources/views/mail/`.
 
-## Inertia Auth Architecture
+### Authorization
 
-The application uses a dual auth architecture:
+Spatie laravel-permission, **UI-driven** (no permission config file, no Artisan sync). Three pieces work together:
 
-- App
-- Panel
+- **`Gate::before` for Super Admin** ([AppServiceProvider](app/Providers/AppServiceProvider.php)) — any user with the `Super Admin` role passes every `can()` check. Super Admin is **not** assigned individual permissions and is **never offered in role selects** (assigned only via seeder/console).
+- **`EnsureRoutePermission` middleware** (`route_permission`, panel group only) — convention: **route name = permission name**. Every named panel route is auto-protected by `$user->can($routeName)`. New panel routes are accessible only by Super Admin until the permission is curated. Exemptions: `panel.dashboard` and any `panel.profile.*` route (personal areas — profile/security/sessions/notifications are not permission-gated and are excluded from permission discovery).
+- **Yetkiler UI** (`panel/settings/permissions`) — list/edit/delete permissions, add ad-hoc ones, or use **"Rotalardan Keşfet"** to bulk-import panel route names as permissions (auto-derived `group` / `label`). `permissions` carries two UI-metadata columns: `group` and `label` (nullable; null → "Diğer" + the permission name). The `RolePermissionSeeder` seeds only the two system roles (`Super Admin`, `Admin`); Admin starts empty and is curated via the UI. System roles cannot be deleted/renamed (`RoleService::SYSTEM_ROLES`).
 
-Both use the same Inertia shared prop key:
+Spatie's own `role` / `permission` / `role_or_permission` route-middleware aliases are registered (package default) but **unused** — this app gates by the `route_permission` convention, not per-route annotations. Introduce Policies only when route-level checks no longer fit (none today).
 
-```ts
-auth
-```
+### Branding
 
-but are discriminated using:
+[App\Support\Branding](app/Support/Branding.php) is the **single source** for app identity:
 
-```ts
-auth.type
-```
+- `name()` / `slogan()` → `settings` table, falling back to `config('app.name')`.
+- `logo()` / `logoDark()` / `favicon()` → uploaded image URL from `settings`, falling back to the public defaults `public/herkobi.png`, `public/herkobi-white.png`, `public/herkobi-ikon.png`.
+- `toArray()` is shared on every Inertia request as the `branding` prop (consumed via `useBranding()`).
 
-Possible values:
+Usage: Blade root `<title>` + favicon link; the sidebar [BrandHeader](resources/js/components/brand-header.tsx) (favicon + app name); the auth layout (logo, light/dark); the mail header (logo). **Favicon is used only in the sidebar; everywhere else uses the normal logo.** Custom values are managed from **Genel Ayarlar** (`panel/settings/general`) via the [ImageUpload](resources/js/components/image-upload.tsx) component, whose `fallbackUrl` previews the branding default when nothing is uploaded.
 
-- `'app'`
-- `'panel'`
+### Shared model concerns (`app/Concerns/`)
 
-## Type Definitions
+- `HasStatus` — `Active`/`Passive` scopes + `isActive()` for models using the `Status` enum.
+- `HasSortOrder` — `ordered()` scope + auto `sort_order` integer cast.
+- `BelongsToAccount` — Account relation + conditional global scope + creating hook (see above).
+- `HasMedia` — polymorphic `media()` relation, `mediaIn()` / `firstMediaIn()`, and a `mediaAccountCode()` hook routing per-owner storage.
+- `LogsActivity` — thin helper used in `Log*` / `Send*` listeners to DRY `spatie/laravel-activitylog` writes.
 
-Auth types are defined in:
+### Media system
 
-- `resources/js/types/auth.ts`
+`app/Models/Media.php`, `app/Services/Support/MediaService.php`, `app/Concerns/HasMedia.php`. Polymorphic `media` table with `disk`, `path`, `original_name`, `mime_type`, `size`, `collection`, `sort_order`, and a free-form `custom_properties` JSON column. `MediaService::attach/detach/reorder` (transactional, auto sort_order). `Media::url()` for public files, `Media::temporaryUrl(?DateTimeInterface)` for signed private access (default 5 min). Folder layout: member-owned → `public/{account.code}` and `private/{account.code}`; admin/global → `public/media` and `private/media`.
 
-Structure:
+### Settings & activity log
 
-```ts
-export type AppAuth = {
-    type: 'app';
-    user: AppUser | null;
-};
+- **Settings** — `Setting` model (cached via `Setting::allCached()`), groups `general` / `branding` / `defaults`. Managed by `SettingsService` and the Genel Ayarlar screen.
+- **Activity log** — `spatie/laravel-activitylog`. [ActivitySubjectLabels](app/Support/ActivitySubjectLabels.php) maps subject classes to Turkish labels. The activity screen (`panel/tools/activity`) localizes event names to Turkish and filters by **causer user type** (Yönetici/Üye) via `whereHasMorph`. Logins are tracked by `yadahan/laravel-authentication-log`.
 
-export type PanelAuth = {
-    type: 'panel';
-    user: PanelUser | null;
-};
+## Frontend conventions
 
-export type Auth = AppAuth | PanelAuth;
-```
+- TS strict; alias `@/* → ./resources/js/*`. React Compiler is enabled.
+- **shadcn/ui primitives** in `resources/js/components/ui/` are generated — **do not hand-edit** (excluded from ESLint/Prettier). The one deliberate exception is the global `cursor-pointer` baked into [button.tsx](resources/js/components/ui/button.tsx).
+- Use Inertia's `useForm` + Wayfinder action/route functions for endpoints. Tailwind v4 (no `tailwind.config.js`); entry `resources/css/app.css`. Dark mode via `next-themes`.
 
-## Inertia Shared Props
+### TypeScript types
 
-`HandleInertiaRequests` middleware MUST always share auth data using:
+- **Shared, duplicated, or backend-reflecting types → `resources/js/types/`** (barrel: `@/types`). Page `Props` / `PageProps` and trivial one-off view-models stay **inline** in the page.
+- Reuse `Option<TValue>` (`types/option.ts`) for `{ value, label }` shapes — don't redefine per page.
+- Domain types live with their domain: `definitions.ts` (Currency/Tax/Country/City/District/Language + their `*Option` `Pick<>` views), `permission.ts`, `role.ts`, `session.ts`, `user-status.ts`, etc.
 
-```php
-'auth' => [
-    'type' => ...,
-    'user' => $user,
-],
-```
+### Shared components & hooks
 
-Never rename:
+- [DataPagination](resources/js/components/data-pagination.tsx) — renders any Laravel paginator (reads `meta.*` or top-level `total/from/to/links`). Backend pairs it with `PaginatedResource::make($paginator, ResourceClass, $request)`.
+- [ConfirmDelete](resources/js/components/confirm-delete.tsx) — AlertDialog-based delete confirmation (props: `action`, `title`, `description`, `confirmLabel`, `confirmIcon`). Every destructive action confirms first.
+- [BrandHeader](resources/js/components/brand-header.tsx), [ImageUpload](resources/js/components/image-upload.tsx), [media-gallery](resources/js/components/media-gallery.tsx) (kept ready, not currently mounted).
+- Hooks: `useAppAuth` / `usePanelAuth`, `useBranding`, `usePermissions`, `useActiveNavHref` (longest-prefix match for inner-sidebar active state), `useFlashToast`, `useCurrentUrl`.
+- **Sidebar:** `nav-main` shows sub-menus as a flyout **dropdown** when collapsed to icon mode; there is no resize rail.
+- **Buttons:** if a group of buttons uses icons, all of them do — keep icon usage consistent (submit→Save, filter→Search, cancel→X, delete→Trash2, etc.).
 
-- `auth`
-- `auth.type`
-- `auth.user`
+### Toasts & flash
 
-## Frontend Usage Rules
+Controllers flash `->with('toast', ['type' => 'success|info|warning|error', 'message' => __('...')])`. [use-flash-toast](resources/js/hooks/use-flash-toast.ts) renders it through **sonner** (top-center, `richColors`). Domain guards surface user-facing warnings by throwing a renderable exception — e.g. [DefinitionGuardException](app/Exceptions/DefinitionGuardException.php) returns a `warning` toast instead of a generic 422.
 
-DO NOT use:
+## Data & definitions
 
-```ts
-const { auth } = usePage().props;
-```
+- Enums in `app/Enums/`: `Status`, `UserStatus`, `UserType`. PHP 8.3 model attributes: `#[Fillable([...])]`, `#[Hidden([...])]`, `#[Scope]`.
+- **Tanımlamalar** (`panel/tools/definitions`): countries/cities/districts, currencies, languages, taxes. Records are created **passive by default**; status is toggled from the table via a dedicated `/status` endpoint (its own activity event), not from the create/edit form. Currency carries `thousands_separator` + `decimal_separator`; Tax carries `sort_order`. Default selections (country/currency/tax/language/timezone) are guarded by `DefinitionGuard` (a default cannot be deactivated/deleted, and a record with children cannot be deleted).
 
-inside pages/components.
+## Localization & strictness
 
-Use dedicated hooks instead.
+- Turkish (`tr`) is primary, English (`en`) parallel — keep both in `lang/` synchronized.
+- `Model::preventLazyLoading(! production)` catches N+1 in dev/test. `DB::prohibitDestructiveCommands(production)`.
 
-### App Area
+## Rules worth re-stating
 
-Use:
-
-```ts
-useAppAuth()
-```
-
-Example:
-
-```ts
-const { user } = useAppAuth();
-```
-
-### Panel Area
-
-Use:
-
-```ts
-usePanelAuth()
-```
-
-Example:
-
-```ts
-const { user } = usePanelAuth();
-```
-
-## Strict Rules
-
-- App components/pages/layouts must only use `useAppAuth()`
-- Panel components/pages/layouts must only use `usePanelAuth()`
-- Never mix AppUser and PanelUser types
-- Never access auth data directly from `usePage().props`
-- Never introduce separate shared props like:
-  - `appAuth`
-  - `panelAuth`
-- Always keep a single shared prop:
-  - `auth`
-
-## Important Notes
-
-1. **Never hardcode URLs** — Always use Wayfinder-generated route functions.
-2. **UUIDs everywhere** — All models use `HasUuids`. Foreign keys are UUID strings.
-3. **Soft deletes on User** — Admins cannot permanently delete users.
-4. **Turkish localization** — The `tr` locale is actively maintained alongside `en`.
-5. **Fortify views enabled** — Inertia handles the frontend, but Fortify view routes are active.
-6. **Authentication log** — Every login is tracked via `yadahan/laravel-authentication-log`.
-7. **Activity log** — Key actions are logged via `spatie/laravel-activitylog`.
-8. **Event-driven side effects** — Every database change must trigger an activity log entry via a listener. For user-facing alerts/email, a `Send{X}` listener calls `$notifiable->notify(new {X}Notification(...))`; the `ShouldQueue` notification handles both the in-app record (`toArray()`/`database`) and the queued mail (`toMail()` → Mailable, views in `resources/views/mail/`). Do not dispatch a Job for routine mail.
-9. **No policies exist yet** — Authorization is currently middleware-based.
-10. **Jobs are the exception, not the rule** — Routine mail flows through notifications. Add a Job only for work needing an independent lifecycle (custom queue/retry/batch); today only `Auth/DetectNewDeviceLogin` exists.
-
-## Goal
-
-This architecture exists to provide:
-
-- strict type safety
-- App/Panel isolation
-- predictable frontend auth structure
-- scalable long-term maintainability
-- clear separation of business logic and side effects through event-driven design
+- Run `php artisan wayfinder:generate` after adding/modifying routes.
+- New email/notification → `ShouldQueue` Notification whose `toMail()` returns a Mailable, triggered from a `Send{X}` listener via `notify()`. Don't wrap routine mail in a Job.
+- Member-scoped data: `use BelongsToAccount`; never accept `account_id` from input; create via the Account relation.
+- Authorization: every panel route is auto-protected by `route_permission` (route name = permission name); Super Admin bypasses via `Gate::before`; new permissions are curated from **Yetkiler → Rotalardan Keşfet**. Profile routes are exempt.
+- Side effects only via `event() → listener` (auto-discovery); don't register listeners manually.
+- Shared/duplicated TS types → `@/types`; page `Props` stay inline.
+- Don't hand-edit `components/ui/*` (generated).

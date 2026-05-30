@@ -1,79 +1,58 @@
 # Contributing
 
-Thanks for considering a contribution to **Herkobi Panel**. This file covers the day-to-day basics; the deeper architectural notes live in [CLAUDE.md](CLAUDE.md).
+Thanks for working on **Herkobi**. This file covers the workflow and quality bar.
+For *what the system is and how it's built*, read **[AGENTS.md](AGENTS.md)** first —
+the rules there are not optional.
 
 ## Setup
 
 ```bash
-composer install
-npm install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-composer dev   # Laravel + queue + Vite, concurrently
+composer setup     # deps, .env, key, migrate, build
+composer dev       # serve + queue + vite
 ```
 
-## Before opening a PR
+Tests run on SQLite `:memory:` with `array` cache/session and `sync` queue — no
+extra services required.
 
-Run the full CI parity check locally — same command CI runs:
+## Workflow
 
-```bash
-composer ci:check
-```
+1. **Branch** off the default branch; never commit straight to it.
+2. Make the change, following the architecture rules in AGENTS.md.
+3. **Regenerate typed routes** if you touched routes:
+   `php artisan wayfinder:generate --with-form --no-interaction`.
+4. **Keep `lang/tr` and `lang/en` in sync** for any user-facing string (Turkish is primary).
+5. Add/adjust **Pest** tests for behavior changes (feature tests use `RefreshDatabase`).
+6. Run the full check locally before opening a PR:
+   ```bash
+   composer ci:check   # ESLint + Prettier + tsc + Pest
+   ```
+7. Open a PR with a clear description and the passing-check summary.
 
-This executes, in order:
+## Code style
 
-1. `npm run lint:check` — ESLint (no fixes)
-2. `npm run format:check` — Prettier (no fixes)
-3. `npm run types:check` — `tsc --noEmit`
-4. `composer test` — Pint check + Pest suite
+- **PHP** — Pint (Laravel preset). Every file `declare(strict_types=1);`. Models use
+  `HasUuids` and PHP 8.3 attributes (`#[Fillable]`, `#[Scope]`, …). `CarbonImmutable`.
+- **TypeScript / React** — ESLint + Prettier. Strict TS, alias `@/* → resources/js/*`.
+  Do **not** hand-edit `resources/js/components/ui/*` (shadcn-generated).
+- **Types** — shared / duplicated / backend-reflecting types go in `@/types`; page
+  `Props` and trivial one-off shapes stay inline. Reuse `Option<T>` for `{value,label}`.
+- **Commits** — small, focused, imperative subject lines.
 
-Fixers:
+## The rules that bite if ignored
 
-```bash
-composer lint   # Pint --fix
-npm run lint    # ESLint --fix
-npm run format  # Prettier --write
-```
+- **Side effects only via `event() → listener`** (auto-discovered) — not from controllers/services.
+- **`account_id` never comes from request input** — use the bound account or the Account relation.
+- **New panel routes are auto-protected** by `route_permission` (route name = permission
+  name) and reachable only by Super Admin until an admin curates the permission from
+  **Yetkiler → Rotalardan Keşfet**. Personal `panel.profile.*` routes are exempt.
+- **Email/notifications** — a `ShouldQueue` Notification whose `toMail()` returns a
+  Mailable, triggered by a `Send{X}` listener via `notify()`. Don't wrap routine mail in a Job.
+- **Destructive UI actions confirm first** via the `ConfirmDelete` component.
+- **Branding** (app name / logo / favicon) is read from `App\Support\Branding`, never
+  hardcoded; favicon is used only in the sidebar, the logo everywhere else.
 
-After adding/modifying routes, regenerate Wayfinder typed actions/routes:
+## Definition of done
 
-```bash
-php artisan wayfinder:generate --with-form --no-interaction
-```
-
-## Architectural conventions (please respect)
-
-These are the rules the codebase is built on; PRs that break them won't be merged.
-
-- **Dual area separation:** `/panel` (admin) and `/app` (member) are mirrored, never mixed. New controllers, requests, resources, services, events, listeners, frontend pages live under `Panel/*` or `App/*`.
-- **Event-driven side effects:** activity log, notifications, mail — all flow through `event() → listener`. Controllers stay thin, services hold business rules.
-- **Notification standard:** `Send{X}` listener → `$notifiable->notify(new {X}Notification(...))`. The notification implements `ShouldQueue` and orchestrates both in-app (`database` channel) and queued mail (`toMail()` returning a Mailable). Don't dispatch a Job for routine mail.
-- **Account ownership:** member-scoped models `use App\Concerns\BelongsToAccount`. Never accept `account_id` from request input; always create via `$account->relation()->create(...)` so Eloquent + the trait fill it.
-- **Authorization:** every named panel route is auto-protected by `route_permission` middleware (convention: route name = permission name). Super Admin bypasses via `Gate::before`. New routes are curated in **Yetkiler → Rotalardan Keşfet**.
-- **Shared concerns:** `HasStatus`, `HasSortOrder`, `HasMedia`, `LogsActivity`, `BelongsToAccount` — use them instead of duplicating scopes / casts / activity-log chains.
-- **PHP file headers:** every file starts with `declare(strict_types=1);`.
-- **UUIDs everywhere:** every model uses `HasUuids`.
-
-## Writing tests
-
-- Use Pest feature tests under `tests/Feature/`.
-- Always `use RefreshDatabase` for DB-touching tests.
-- For panel access, `User::factory()->admin()->create()` auto-assigns `Super Admin` (test ergonomics — Gate::before then bypasses everything). For middleware/permission-specific tests, instantiate via `User::factory()->state(['user_type' => UserType::Admin])->create()` so no role is attached.
-
-## Localization
-
-Turkish (`tr`) is primary; English (`en`) is parallel. Keep both `lang/tr/*.php` and `lang/en/*.php` in sync.
-
-## Reporting issues
-
-Please include:
-
-- Laravel / PHP / Node versions
-- Steps to reproduce
-- Expected vs. actual behavior
-- Output of `composer ci:check` if relevant
-
-## Code of conduct
-
-Be respectful, focus on the code, assume good intent. That's it.
+- `composer ci:check` is green.
+- Routes regenerated (if changed); `tr`/`en` strings in sync.
+- Behavior covered by tests; no `components/ui/*` hand-edits; no hardcoded URLs or branding.
