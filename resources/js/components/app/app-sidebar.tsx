@@ -1,4 +1,4 @@
-import { LayoutGrid, UserRound } from 'lucide-react';
+import { usePage } from '@inertiajs/react';
 import type { ComponentProps } from 'react';
 import { NavMain } from '@/components/app/nav-main';
 import { NavUser } from '@/components/app/nav-user';
@@ -10,29 +10,10 @@ import {
     SidebarHeader,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes/app';
-import { account } from '@/routes/app';
-import type { NavItem } from '@/types';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Başlangıç',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Hesabım',
-        href: '#',
-        icon: UserRound,
-        items: [
-            {
-                title: 'Hesabım',
-                href: account(),
-            },
-        ],
-    },
-];
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+    const { navigation = [] } = usePage().props;
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
@@ -40,7 +21,13 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain label="Platform" items={mainNavItems} />
+                {navigation.map((group) => (
+                    <NavMain
+                        key={group.key}
+                        label={group.label}
+                        items={group.items}
+                    />
+                ))}
             </SidebarContent>
 
             <SidebarFooter>

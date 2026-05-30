@@ -47,4 +47,8 @@ Route::middleware(['auth', 'verified', 'user_type:member', 'active_user', 'write
             Route::put('/', 'update')->name('update');
         });
     });
+
+    // Modüller buraya app rotalarını ekler; çekirdeğin tam middleware yığınını
+    // (`bind_account` dahil) ve `app.` adlandırma önekini otomatik miras alırlar.
+    hooks()->do('app.routes.register');
 });

@@ -58,6 +58,7 @@ The split is mirrored in `app/Http/Controllers/{Panel,App}/*`, `Requests/{Panel,
 - **`auth`** — the single auth contract, discriminated by `auth.type: 'app' | 'panel'`. In React **never** read `usePage().props.auth` directly: use `useAppAuth()` in app-area code and `usePanelAuth()` in panel-area code. Never mix `AppUser` and `PanelUser`. Never add a second auth prop. Types in [resources/js/types/auth.ts](resources/js/types/auth.ts).
 - **`branding`** — app identity (see [Branding](#branding)). Read via `useBranding()`.
 - **`flash`** — toast/flash payloads (see [Toasts & flash](#toasts--flash)).
+- **`navigation`** — the sidebar menu tree, built per-request from `MenuRegistry` for the user's area, permission-filtered and `order`-sorted (see [Module system](#module-system-extensibility)).
 - **`name`**, **`sidebarOpen`**.
 
 ### Account ownership & scoping
@@ -85,6 +86,78 @@ Spatie laravel-permission, **UI-driven** (no permission config file, no Artisan 
 - **Yetkiler UI** (`panel/settings/permissions`) — list/edit/delete permissions, add ad-hoc ones, or use **"Rotalardan Keşfet"** to bulk-import panel route names as permissions (auto-derived `group` / `label`). `permissions` carries two UI-metadata columns: `group` and `label` (nullable; null → "Diğer" + the permission name). The `RolePermissionSeeder` seeds only the two system roles (`Super Admin`, `Admin`); Admin starts empty and is curated via the UI. System roles cannot be deleted/renamed (`RoleService::SYSTEM_ROLES`).
 
 Spatie's own `role` / `permission` / `role_or_permission` route-middleware aliases are registered (package default) but **unused** — this app gates by the `route_permission` convention, not per-route annotations. Introduce Policies only when route-level checks no longer fit (none today).
+
+### Module system (extensibility)
+
+Herkobi is a starter kit, so it ships a **module system** that lets composer packages add panel/app **menu, routes, permissions, screens and mail** without editing core. The mechanism is **Hook + Registry**, and it builds on Laravel's own primitives (package auto-discovery, provider lifecycle, typed registries) so dependency management, versioning, and namespace isolation come from the framework.
+
+**Guiding principle:** `module.json` *declares* what to do (data); the artisan commands enforce *how* and the *safety*; real logic stays in typed PHP when needed (never inside strings/JSON).
+
+#### Hook + Registry
+
+- **Hooks** ([app/Support/Hooks/HookManager.php](app/Support/Hooks/HookManager.php), global `hooks()` helper) — the core fires named extension points; modules attach callbacks. `hooks()->do('panel.routes.register')` fires **inside** the panel middleware group, so module routes inherit the full stack (`route_permission`, etc.) and the `panel.` name prefix — they never hardcode the middleware. API: `action`/`do` for side effects, `filter`/`apply` for value transforms. Register callbacks in a provider's **`register()`** (before the core fires them); if a module depends on another module's registry contribution, write from `booted()` instead so ordering is moot.
+- **Registries** ([MenuRegistry](app/Support/Registry/MenuRegistry.php), [PermissionRegistry](app/Support/Registry/PermissionRegistry.php)) — typed builders modules write into from the `{area}.menu.register` / `{area}.permissions.register` hooks. The **core's own menu** is registered the same way ([ModuleServiceProvider](app/Providers/ModuleServiceProvider.php)). The menu is permission-aware (`MenuRegistry` filters by `$user->can()`), `order`-sorted, rebuilt per request, and shared as the `navigation` Inertia prop. The sidebar ([components/{panel,app}/app-sidebar.tsx](resources/js/components/panel/app-sidebar.tsx)) renders it data-driven; PHP sends a **string icon key** resolved to a Lucide component via [navigation-icons.ts](resources/js/lib/navigation-icons.ts).
+
+> In short: **hook = "when / where to contribute", registry = "what to add, typed".** The backbone is the registries' typed API, not arbitrary string logic; the hook only fires the contribution at the right moment.
+
+#### Module = composer package
+
+A module is an ordinary composer package, loaded by Laravel **auto-discovery** (`extra.laravel.providers` in its `composer.json`). There is **no PHP build step** — routes, controllers and registry contributions work the moment the package is required. **Build is front-end only** (Vite), after publishing.
+
+```bash
+composer require herkobi/todo      # backend works immediately (auto-discovery)
+php artisan herkobi:install todo   # reads module.json: publish + migrate + seed permissions
+npm run build                      # compile the published front-end (or npm run dev)
+
+php artisan herkobi:uninstall todo # reverse — BEFORE composer remove; --purge-data drops tables
+composer remove herkobi/todo
+```
+
+**Lifecycle order matters:** `herkobi:uninstall` must run **before** `composer remove`, because it reads what to reverse from `module.json`; remove the package first and the manifest is gone. Local development can skip publishing by adding a path repository (`packages/*`) to the root `composer.json`.
+
+#### `module.json` manifest
+
+Lives at the module root: identity + dependency gate + publish map + lifecycle flags. [ModuleManifest](app/Support/Modules/ModuleManifest.php) / [ModuleDiscovery](app/Support/Modules/ModuleDiscovery.php) are **read-only metadata** (for the install commands + a future Modules screen) — provider boot is left to Laravel.
+
+```jsonc
+{
+  "key": "todo",
+  "name": "Todo",
+  "provider": "Herkobi\\Todo\\TodoServiceProvider",
+  "areas": ["panel", "app"],
+  "requires": { "php": "^8.3", "laravel": "^13.0", "herkobi": "^1.0" }, // soft gate + UI; real deps live in composer.json
+  "publish": [                                                          // source (pkg-relative) → target (project-relative)
+    { "from": "resources/js/pages/panel", "to": "resources/js/pages/panel/todo" },
+    { "from": "resources/views/mail",     "to": "resources/views/vendor/todo" }
+  ],
+  "migrate": true,            // run install migrations
+  "permissions": "remove",    // uninstall behavior: "remove" | "keep"
+  "purge_data": false,        // uninstall default: keep data unless --purge-data
+  "enabled": true
+}
+```
+
+The `publish` map is reversed on uninstall (DRY); a module that needs different behavior may declare separate `install` / `uninstall` blocks.
+
+#### Routes, menu, permissions
+
+- **Routes** — the core fires `hooks()->do('{area}.routes.register')` *inside* the middleware group; a module registers its routes there and inherits the stack + name prefix. Per the `route_permission` convention (route name = permission name) a module's panel routes are Super-Admin-only until their matching permission is curated.
+- **Permissions** — modules register permissions in `PermissionRegistry` with a `source` (the module key, e.g. `$permissions->addMany('panel', [...], source: 'todo')`). They surface in **"Rotalardan Keşfet"** on `composer require` (no install needed); `herkobi:install` also seeds them by `forSource('todo')` **without assigning to any role** (role distribution stays an admin decision; Super Admin passes via `Gate::before`).
+- **Menu** — same `MenuRegistry` as core; the `navigation` prop is **in addition** to the `auth` / `branding` / `flash` contract — never alter those.
+
+#### Install / uninstall safety
+
+- **install** verifies `requires`, runs **conflict detection** (a route/permission name colliding with an existing record warns), copies the `publish` map (`--force` to overwrite), migrates if `migrate: true`, seeds permissions, then prints the `npm run build` reminder.
+- **uninstall** is a **safe default**: it deletes only publish targets that are **unmodified** (byte-identical to source) and reports edited ones instead of clobbering them; it does **not** touch tables/data unless `--purge-data` (migration rollback + the module's settings rows). Permissions follow `module.json`'s `"permissions"` flag (`remove` → confirm + report affected roles, then delete; `keep` → leave them). **Path safety:** both `from` (inside the package root) and `to` (inside the project root) are validated — `../` escapes are rejected.
+- **PHP `Installer` escape hatch** — for logic `module.json` can't express (data migration, external cleanup) a module may ship an optional class with `installed()` / `uninstalling()`; the command calls it if present.
+
+#### Front-end consistency
+
+Modules carry no design system of their own: they import the core's components via the **`@` alias** (`@/components/ui/*`, layouts, hooks) and ship pages as `.tsx`, compiled by the host's Vite/TS/alias. Published pages land in the host's `pages/**` scan path, so `Inertia::render('panel/todo/index')` resolves with no extra config.
+
+#### Deferred by design
+
+The admin **"Modules"** screen (runtime enable/disable) and **user sidebar ordering** (drag-and-drop) are intentionally not built yet; `module.json` and the order-aware registry are ready data sources for them. When adding a *core* panel feature, prefer registering its menu entry in `ModuleServiceProvider` (so it stays permission-gated and consistent).
 
 ### Branding
 
@@ -168,3 +241,4 @@ Controllers flash `->with('toast', ['type' => 'success|info|warning|error', 'mes
 - Shared/duplicated TS types → `@/types`; page `Props` stay inline.
 - Don't hand-edit `components/ui/*` (generated).
 - Unused-but-ready scaffolding is deliberate (full shadcn set, permission hooks, enum helpers, alternative layouts, `media-gallery`) — don't delete it as "dead code". See [Intentional scaffolding](#intentional-scaffolding-ready-not-all-wired-up).
+- Extensibility goes through the **module system** (Hook + Registry): contribute menu/permissions from a provider via the `{area}.menu.register` / `{area}.permissions.register` hooks and routes via `{area}.routes.register`; never hardcode the sidebar or hand-edit the `navigation` prop. See [Module system](#module-system-extensibility).

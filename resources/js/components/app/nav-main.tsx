@@ -1,5 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
+import { createElement } from 'react';
+import type { ReactNode } from 'react';
 
 import {
     Collapsible,
@@ -26,7 +28,17 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/hooks/use-current-url';
+import { resolveNavIcon } from '@/lib/navigation-icons';
 import type { NavItem } from '@/types';
+
+// Icon string anahtarını Lucide bileşenine çözüp createElement ile render eder.
+// (Bileşeni render sırasında bir değişkene atayıp <Icon /> yazmak react-hooks
+// kuralını tetiklediği için createElement kullanılır.)
+function renderNavIcon(icon: NavItem['icon']): ReactNode {
+    const resolved = resolveNavIcon(icon);
+
+    return resolved ? createElement(resolved) : null;
+}
 
 export function NavMain({
     label,
@@ -50,17 +62,18 @@ export function NavMain({
             <SidebarMenu>
                 {items.map((item) => {
                     const hasChildren = item.items && item.items.length > 0;
+                    const key = item.key ?? item.title;
 
                     if (!hasChildren) {
                         return (
-                            <SidebarMenuItem key={item.title}>
+                            <SidebarMenuItem key={key}>
                                 <SidebarMenuButton
                                     asChild
                                     isActive={isItemActive(item)}
                                     tooltip={{ children: item.title }}
                                 >
                                     <Link href={item.href} prefetch>
-                                        {item.icon && <item.icon />}
+                                        {renderNavIcon(item.icon)}
                                         <span>{item.title}</span>
                                     </Link>
                                 </SidebarMenuButton>
@@ -78,14 +91,14 @@ export function NavMain({
                     // tekrar genişletmeden alt menülere erişilemezdi.
                     if (isCollapsed) {
                         return (
-                            <SidebarMenuItem key={item.title}>
+                            <SidebarMenuItem key={key}>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <SidebarMenuButton
                                             isActive={isActive}
                                             tooltip={{ children: item.title }}
                                         >
-                                            {item.icon && <item.icon />}
+                                            {renderNavIcon(item.icon)}
                                             <span>{item.title}</span>
                                             <ChevronRight className="ml-auto" />
                                         </SidebarMenuButton>
@@ -101,7 +114,9 @@ export function NavMain({
                                         <DropdownMenuSeparator />
                                         {item.items?.map((subItem) => (
                                             <DropdownMenuItem
-                                                key={subItem.title}
+                                                key={
+                                                    subItem.key ?? subItem.title
+                                                }
                                                 asChild
                                             >
                                                 <Link
@@ -120,7 +135,7 @@ export function NavMain({
 
                     return (
                         <Collapsible
-                            key={item.title}
+                            key={key}
                             asChild
                             defaultOpen={isActive}
                             className="group/collapsible"
@@ -131,7 +146,7 @@ export function NavMain({
                                         isActive={isActive}
                                         tooltip={{ children: item.title }}
                                     >
-                                        {item.icon && <item.icon />}
+                                        {renderNavIcon(item.icon)}
                                         <span>{item.title}</span>
                                         <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                     </SidebarMenuButton>
@@ -141,7 +156,9 @@ export function NavMain({
                                     <SidebarMenuSub>
                                         {item.items?.map((subItem) => (
                                             <SidebarMenuSubItem
-                                                key={subItem.title}
+                                                key={
+                                                    subItem.key ?? subItem.title
+                                                }
                                             >
                                                 <SidebarMenuSubButton
                                                     asChild

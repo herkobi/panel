@@ -12,6 +12,7 @@ use App\Events\Panel\Settings\Permissions\PermissionsBulkAddedEvent;
 use App\Events\Panel\Settings\Permissions\PermissionUpdatedEvent;
 use App\Models\Permission;
 use App\Models\User;
+use App\Support\Registry\PermissionRegistry;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -52,7 +53,11 @@ class PermissionService
     }
 
     /**
-     * Panel rotalarından henüz DB'de (aktif veya silinmiş) izin satırı olmayanları listele.
+     * Panel rotalarından ve modül registry'sinden henüz DB'de (aktif veya
+     * silinmiş) izin satırı olmayanları listele.
+     *
+     * Modüller yetkilerini `PermissionRegistry`'ye yazar; `composer require`
+     * edilir edilmez (install gerekmeden) bu keşif listesinde görünürler.
      *
      * @return Collection<int, array{name: string, suggested_group: string, suggested_label: string}>
      */
@@ -61,21 +66,34 @@ class PermissionService
         $existing = Permission::withTrashed()->pluck('name')->all();
         $existingFlip = array_flip($existing);
 
-        $candidates = collect(Route::getRoutes())
+        $routeCandidates = collect(Route::getRoutes())
             ->map(fn ($route) => $route->getName())
             ->filter(fn ($name) => is_string($name) && str_starts_with($name, 'panel.'))
             // Kişiye özel profil rotaları izinle yönetilmez (herkes kendi
             // bilgisine erişir); keşif listesinde de görünmemeli.
             ->reject(fn (string $name): bool => str_starts_with($name, 'panel.profile.'))
-            ->unique()
-            ->values();
-
-        return $candidates
-            ->reject(fn (string $name): bool => isset($existingFlip[$name]))
             ->map(fn (string $name): array => [
                 'name' => $name,
-                'suggested_group' => $this->suggestGroup($name),
-                'suggested_label' => $this->suggestLabel($name),
+                'group' => null,
+                'label' => null,
+            ]);
+
+        // Modüllerin registry'ye yazdığı yetkiler (group/label metadatasıyla).
+        $registryCandidates = collect(app(PermissionRegistry::class)->all())
+            ->map(fn (array $permission): array => [
+                'name' => $permission['name'],
+                'group' => $permission['group'] ?? null,
+                'label' => $permission['label'] ?? null,
+            ]);
+
+        return $routeCandidates
+            ->merge($registryCandidates)
+            ->unique('name')
+            ->reject(fn (array $candidate): bool => isset($existingFlip[$candidate['name']]))
+            ->map(fn (array $candidate): array => [
+                'name' => $candidate['name'],
+                'suggested_group' => $candidate['group'] ?: $this->suggestGroup($candidate['name']),
+                'suggested_label' => $candidate['label'] ?: $this->suggestLabel($candidate['name']),
             ])
             ->sortBy('name')
             ->values();

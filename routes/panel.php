@@ -186,4 +186,8 @@ Route::middleware(['auth', 'verified', 'user_type:admin', 'active_user', 'write_
             Route::put('/', 'update')->name('update');
         });
     });
+
+    // Modüller buraya panel rotalarını ekler; çekirdeğin tam middleware
+    // yığınını ve `panel.` adlandırma önekini otomatik miras alırlar.
+    hooks()->do('panel.routes.register');
 });

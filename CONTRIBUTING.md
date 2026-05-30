@@ -1,8 +1,8 @@
 # Contributing
 
-Thanks for working on **Herkobi**. This file covers the workflow and quality bar.
-For *what the system is and how it's built*, read **[AGENTS.md](AGENTS.md)** first —
-the rules there are not optional.
+Thanks for working on **Herkobi**. This file covers the workflow and the quality
+bar. For *what the system is and how it's built*, read **[AGENTS.md](AGENTS.md)**
+first — the rules there are not optional.
 
 ## Setup
 
@@ -50,6 +50,18 @@ extra services required.
 - **Destructive UI actions confirm first** via the `ConfirmDelete` component.
 - **Branding** (app name / logo / favicon) is read from `App\Support\Branding`, never
   hardcoded; favicon is used only in the sidebar, the logo everywhere else.
+- **Extend through the module system**, not by editing core: contribute menu / permissions /
+  routes from a provider via the `{area}.menu.register` / `{area}.permissions.register` /
+  `{area}.routes.register` hooks. Never hardcode the sidebar or hand-edit the `navigation` prop.
+
+## Don't delete the scaffolding
+
+Herkobi is a starter kit, so some complete pieces ship **unused on purpose** — the
+full shadcn/ui set, the `useCan` / `useHasRole` / `useIsSuperAdmin` permission hooks,
+the `*_LABEL` / `*_OPTIONS` / `*_VALUES` enum helpers, the alternative layouts, and
+`media-gallery`. These are there so a consumer can reach for them immediately; do
+**not** remove them as "dead code" during cleanup. See *Intentional scaffolding* in
+AGENTS.md.
 
 ## Definition of done
 

@@ -6,6 +6,7 @@ namespace App\Http\Middleware;
 
 use App\Enums\UserType;
 use App\Support\Branding;
+use App\Support\Registry\MenuRegistry;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -56,6 +57,11 @@ class HandleInertiaRequests extends Middleware
                 'type' => $user?->user_type === UserType::Admin ? 'panel' : 'app',
                 'user' => $authUserPayload,
             ],
+            // Modül-farkında sidebar menüsü: MenuRegistry'den kullanıcıya göre
+            // (alan + yetki) kurulur. Mevcut auth/branding/flash sözleşmesine ektir.
+            'navigation' => fn (): array => $user === null
+                ? []
+                : app(MenuRegistry::class)->forUser($user),
             'flash' => [
                 'toast' => $request->session()->get('toast'),
                 'success' => $request->session()->get('success'),

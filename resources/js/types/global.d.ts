@@ -1,4 +1,5 @@
 import type { Auth } from '@/types/auth';
+import type { NavigationGroup } from '@/types/navigation';
 
 export type Branding = {
     name: string;
@@ -13,6 +14,7 @@ declare module '@inertiajs/core' {
         name: string;
         branding: Branding;
         auth: Auth;
+        navigation: NavigationGroup[];
         sidebarOpen: boolean;
         [key: string]: unknown;
     }
