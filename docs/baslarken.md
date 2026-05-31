@@ -1,12 +1,12 @@
 # Başlarken
 
-Herkobi® Panel; **Laravel 13 + PHP 8.3**, **React 19 + TypeScript + Inertia v3**,
+Herkobi® Panel; **Laravel 13 + PHP 8.4**, **React 19 + TypeScript + Inertia v3**,
 **Tailwind v4 + shadcn/ui** ve **Vite** üzerine kuruludur. Tek bir kod tabanı iki
 alanı birden besler: yönetim paneli (`/panel`) ve üye uygulaması (`/app`).
 
 ## Gereksinimler
 
-- PHP **8.3+** ve Composer
+- PHP **8.4+** ve Composer
 - Node.js **20+** ve npm
 - **MySQL** (8.0+) veya **MariaDB** (10.6+)
 

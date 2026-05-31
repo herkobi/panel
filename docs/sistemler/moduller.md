@@ -68,7 +68,7 @@ bayrakları.
   "name": "Todo",
   "provider": "Herkobi\\Todo\\TodoServiceProvider",
   "areas": ["panel", "app"],
-  "requires": { "php": "^8.3", "laravel": "^13.0", "herkobi": "^1.0" }, // yumuşak kapı; gerçek bağımlılık composer.json'da
+  "requires": { "php": "^8.4", "laravel": "^13.0", "herkobi": "^1.0" }, // yumuşak kapı; gerçek bağımlılık composer.json'da
   "publish": [                                                          // from (paket) → to (proje)
     { "from": "resources/js/pages/panel", "to": "resources/js/pages/panel/todo" },
     { "from": "resources/views/mail",     "to": "resources/views/vendor/todo" }

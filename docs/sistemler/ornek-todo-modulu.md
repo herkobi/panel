@@ -59,7 +59,7 @@ yeterlidir; çekirdek tarafında elle boot yoktur.
   "name": "herkobi/todo",
   "description": "Herkobi için Todo modülü.",
   "type": "library",
-  "require": { "php": "^8.3" },
+  "require": { "php": "^8.4" },
   "autoload": { "psr-4": { "Herkobi\\Todo\\": "src/" } },
   "extra": {
     "laravel": {
@@ -89,7 +89,7 @@ tipli karşılığa çözülür.
   "provider": "Herkobi\\Todo\\TodoServiceProvider",
   "areas": ["panel"],
 
-  "requires": { "php": "^8.3", "laravel": "^13.0", "herkobi": "^1.0" },
+  "requires": { "php": "^8.4", "laravel": "^13.0", "herkobi": "^1.0" },
 
   "publish": [
     { "from": "resources/js/pages/panel", "to": "resources/js/pages/panel/todo" }

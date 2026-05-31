@@ -11,7 +11,7 @@ place so you can focus on what you actually want to build.
 
 | Layer | Choice |
 |---|---|
-| Backend | Laravel 13 · PHP 8.3+ |
+| Backend | Laravel 13 · PHP 8.4+ |
 | Frontend | React 19 · TypeScript · Inertia.js v3 |
 | Styling | Tailwind v4 · shadcn/ui · dark mode (`next-themes`) |
 | Auth | Laravel Fortify (login, registration, email verification, password reset, 2FA) |

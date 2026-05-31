@@ -6,7 +6,7 @@ and AI agents both work from this file; `CLAUDE.md` simply imports it.
 
 ## Stack
 
-- **Backend:** Laravel 13 · PHP 8.3+ · Pest 4 (tests on SQLite `:memory:`).
+- **Backend:** Laravel 13 · PHP 8.4+ · Pest 4 (tests on SQLite `:memory:`).
 - **Frontend:** React 19 · TypeScript (strict) · Inertia.js v3 · Tailwind v4 · shadcn/ui · Vite.
 - **Auth:** Laravel Fortify (login, registration, email verification, password reset, 2FA/TOTP).
 - **Typed routes:** Laravel **Wayfinder** generates route/action helpers into `resources/js/{routes,actions}`. Never hardcode URLs — regenerate after any route change.
@@ -125,7 +125,7 @@ Lives at the module root: identity + dependency gate + publish map + lifecycle f
   "name": "Todo",
   "provider": "Herkobi\\Todo\\TodoServiceProvider",
   "areas": ["panel", "app"],
-  "requires": { "php": "^8.3", "laravel": "^13.0", "herkobi": "^1.0" }, // soft gate + UI; real deps live in composer.json
+  "requires": { "php": "^8.4", "laravel": "^13.0", "herkobi": "^1.0" }, // soft gate + UI; real deps live in composer.json
   "publish": [                                                          // source (pkg-relative) → target (project-relative)
     { "from": "resources/js/pages/panel", "to": "resources/js/pages/panel/todo" },
     { "from": "resources/views/mail",     "to": "resources/views/vendor/todo" }
@@ -223,7 +223,7 @@ Controllers flash `->with('toast', ['type' => 'success|info|warning|error', 'mes
 
 ## Data & definitions
 
-- Enums in `app/Enums/`: `Status`, `UserStatus`, `UserType`. PHP 8.3 model attributes: `#[Fillable([...])]`, `#[Hidden([...])]`, `#[Scope]`.
+- Enums in `app/Enums/`: `Status`, `UserStatus`, `UserType`. PHP 8.4 model attributes: `#[Fillable([...])]`, `#[Hidden([...])]`, `#[Scope]`.
 - **Tanımlamalar** (`panel/tools/definitions`): countries/cities/districts, currencies, languages, taxes. Records are created **passive by default**; status is toggled from the table via a dedicated `/status` endpoint (its own activity event), not from the create/edit form. Currency carries `thousands_separator` + `decimal_separator`; Tax carries `sort_order`. Default selections (country/currency/tax/language/timezone) are guarded by `DefinitionGuard` (a default cannot be deactivated/deleted, and a record with children cannot be deleted).
 
 ## Localization & strictness

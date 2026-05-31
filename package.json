@@ -7,7 +7,7 @@
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
         "docs:dev": "vitepress dev docs",
-        "docs:build": "node -e \"const fs=require('fs');['cache','dist'].forEach(d=>fs.rmSync('docs/.vitepress/'+d,{recursive:true,force:true}))\" && vitepress build docs",
+        "docs:build": "node scripts/docs-build.mjs",
         "docs:preview": "vitepress preview docs",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",

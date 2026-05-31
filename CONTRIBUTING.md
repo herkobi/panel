@@ -31,7 +31,7 @@ extra services required.
 ## Code style
 
 - **PHP** — Pint (Laravel preset). Every file `declare(strict_types=1);`. Models use
-  `HasUuids` and PHP 8.3 attributes (`#[Fillable]`, `#[Scope]`, …). `CarbonImmutable`.
+  `HasUuids` and PHP 8.4 attributes (`#[Fillable]`, `#[Scope]`, …). `CarbonImmutable`.
 - **TypeScript / React** — ESLint + Prettier. Strict TS, alias `@/* → resources/js/*`.
   Do **not** hand-edit `resources/js/components/ui/*` (shadcn-generated).
 - **Types** — shared / duplicated / backend-reflecting types go in `@/types`; page

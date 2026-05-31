@@ -31,7 +31,7 @@ lang/{tr,en}/                     Türkçe birincil, İngilizce paralel
 ## Backend konvansiyonları
 
 - **Katılık:** her dosya `declare(strict_types=1);`. Modeller `HasUuids` ve PHP
-  8.3 attribute'ları (`#[Fillable]`, `#[Hidden]`, `#[Scope]`). `CarbonImmutable`.
+  8.4 attribute'ları (`#[Fillable]`, `#[Hidden]`, `#[Scope]`). `CarbonImmutable`.
 - **İnce controller, kalın servis:** iş kuralları `Services/{Panel,App}` altında.
 - **Yan etki yalnızca olayla:** etkinlik kaydı / bildirim / mail
   `event() → listener` ile; controller/servisten doğrudan tetiklenmez.
