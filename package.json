@@ -6,6 +6,9 @@
         "build": "vite build",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
+        "docs:dev": "vitepress dev docs",
+        "docs:build": "node -e \"const fs=require('fs');['cache','dist'].forEach(d=>fs.rmSync('docs/.vitepress/'+d,{recursive:true,force:true}))\" && vitepress build docs",
+        "docs:preview": "vitepress preview docs",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
@@ -26,7 +29,8 @@
         "eslint-plugin-react-hooks": "^7.1.1",
         "prettier": "^3.8.3",
         "prettier-plugin-tailwindcss": "^0.8.0",
-        "typescript-eslint": "^8.60.0"
+        "typescript-eslint": "^8.60.0",
+        "vitepress": "^1.6.4"
     },
     "dependencies": {
         "@base-ui/react": "^1.5.0",

@@ -9,7 +9,7 @@ namespace App\Support\Modules;
  *
  * `publish` haritası `{from, to}` çiftlerinden oluşur: `from` paket köküne,
  * `to` proje köküne görelidir. Lifecycle bayrakları install/uninstall
- * davranışını belirler (bkz. docs/modules.md).
+ * davranışını belirler (bkz. AGENTS.md → Module system).
  */
 final readonly class ModuleManifest
 {

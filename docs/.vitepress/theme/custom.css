@@ -1,0 +1,49 @@
+/* Navbar logosunu biraz büyüt (tema varsayılanı ~24px). */
+.VPNavBarTitle .logo {
+  height: 36px;
+  width: auto;
+}
+
+/* --- Ana sayfa hero --- */
+
+/* Hero görselini (dashboard ekran görüntüsü) büyük ve dikdörtgen göster:
+   dairesel arka planı kaldır, kolonu tam doldur, köşeleri yuvarla + gölge. */
+.VPHero .image-bg {
+  display: none;
+}
+
+.VPHero .image-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 0;
+  transform: none;
+}
+
+/* Yüksek specificity (.image .image-src = 0,3,0) ile VitePress'in scoped
+   [data-v-...] .image-src (0,2,0) kuralını ez; konum/transform sıfırlanır. */
+.VPHero .image .image-src {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  max-width: 100%;
+  max-height: none;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+}
+
+/* Soldaki başlık/metni biraz küçült ki görsele daha çok yer kalsın. */
+@media (min-width: 960px) {
+  .VPHero .name,
+  .VPHero .text {
+    font-size: 40px;
+    line-height: 1.2;
+  }
+
+  .VPHero .tagline {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}

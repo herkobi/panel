@@ -1,5 +1,7 @@
 /.phpunit.cache
 /bootstrap/ssr
+/docs/.vitepress/cache
+/docs/.vitepress/dist
 /node_modules
 /public/build
 /public/fonts-manifest.dev.json
