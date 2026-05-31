@@ -34,6 +34,11 @@ jobs:
           node-version: 22
           cache: npm
 
+      # package-lock.json npm 11 ile üretildi; CI'daki npm'i eşitle ki
+      # `npm ci` kilit dosyasıyla aynı bağımlılık ağacını çözsün.
+      - name: npm sürümünü sabitle
+        run: npm install -g npm@11
+
       - name: Bağımlılıklar
         run: npm ci
 
