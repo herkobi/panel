@@ -4,6 +4,9 @@
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+/* Modül ön yüzleri host'a kopyalanmaz; Tailwind class'larını görebilmesi için
+   paketlerin kaynağı da taranır. */
+@source '../../vendor/herkobi/*/resources/js/**/*.tsx';
 
 @custom-variant dark (&:is(.dark *));
 

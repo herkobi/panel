@@ -115,6 +115,8 @@
     "include": [
         "resources/js/**/*.ts",
         "resources/js/**/*.d.ts",
-        "resources/js/**/*.tsx"
+        "resources/js/**/*.tsx",
+        "vendor/herkobi/*/resources/js/**/*.ts",
+        "vendor/herkobi/*/resources/js/**/*.tsx"
     ]
 }

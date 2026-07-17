@@ -7,6 +7,14 @@ import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    server: {
+        fs: {
+            // Modüller kardeş klasörlerde geliştirilir ve vendor/herkobi/* içine
+            // symlink'lenir. Vite symlink'i gerçek yola çözdüğü için hedef proje
+            // kökünün dışında kalır; okumaya izin verilmezse dev sunucu engeller.
+            allow: ['..'],
+        },
+    },
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],

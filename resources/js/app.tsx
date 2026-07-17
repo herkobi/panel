@@ -1,4 +1,5 @@
 import { createInertiaApp } from '@inertiajs/react';
+import type { ResolvedComponent } from '@inertiajs/react';
 import 'sonner/dist/styles.css';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -21,6 +22,37 @@ const appName = import.meta.env.VITE_APP_NAME || 'Herkobi';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
+    // Sayfalar iki kökten çözülür: çekirdeğin pages/'ı ve modüllerin kendi
+    // paketleri. Modül .tsx'leri host'a kopyalanmaz; buradan taranır. Her iki
+    // glob da statik literaldir (import.meta.glob değişken kabul etmez); '*'
+    // bütün herkobi modüllerini karşılar.
+    //
+    // Kural: modül sayfayı servis edileceği yola koyar —
+    // vendor/herkobi/service/resources/js/pages/panel/records/index.tsx  →  'panel/records/index'
+    //
+    // Bu resolve verildiği için @inertiajs/vite kendi çözücüsünü enjekte etmez.
+    resolve: async (name: string): Promise<ResolvedComponent> => {
+        const pages = {
+            ...import.meta.glob('./pages/**/*.tsx'),
+            ...import.meta.glob(
+                '../../vendor/herkobi/*/resources/js/pages/**/*.tsx',
+            ),
+        };
+
+        const loader =
+            pages[`./pages/${name}.tsx`] ??
+            pages[
+                Object.keys(pages).find((key) =>
+                    key.endsWith(`/resources/js/pages/${name}.tsx`),
+                ) ?? ''
+            ];
+
+        if (!loader) {
+            throw new Error(`Page not found: ${name}`);
+        }
+
+        return ((await loader()) as { default: ResolvedComponent }).default;
+    },
     layout: (name) => {
         switch (true) {
             case name === 'welcome':
